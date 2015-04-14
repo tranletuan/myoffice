@@ -4,6 +4,8 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<import resource="sysConfig/hibernate-config.xml" />
-	<import resource="sysConfig/activiti-config.xml" />
+	<import resource="system-config/hibernate-config.xml" />
+	<import resource="system-config/activiti-config.xml" />
+	<import resource="dao-config/dao-config.xml"/>
+	<import resource="security-config/security-config.xml"/>
 </beans>

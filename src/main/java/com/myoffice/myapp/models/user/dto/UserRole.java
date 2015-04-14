@@ -12,12 +12,12 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "user_roles", uniqueConstraints = @UniqueConstraint(columnNames = { "role_id, user_id" }))
+@Table(name = "user_roles")
 public class UserRole {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_role_id", unique = true, nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer userRoleId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -38,10 +38,6 @@ public class UserRole {
 
 	public Integer getUserRoleId() {
 		return userRoleId;
-	}
-
-	public void setUserRoleId(Integer userRoleId) {
-		this.userRoleId = userRoleId;
 	}
 
 	public User getUser() {
