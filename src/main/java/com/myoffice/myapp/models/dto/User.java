@@ -1,9 +1,10 @@
-package com.myoffice.myapp.models.user.dto;
+package com.myoffice.myapp.models.dto;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,8 +31,8 @@ public class User {
 	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	private Set<UserRole> userRole = new HashSet<UserRole>(0);
+	@ElementCollection(fetch=FetchType.EAGER)
+	private Set<Role> roles = new HashSet<Role>(0);
 
 	public User() {
 
@@ -46,12 +47,12 @@ public class User {
 	}
 
 	public User(Integer userId, String username, String password,
-			boolean enabled, Set<UserRole> userRole) {
+			boolean enabled, Set<Role> roles) {
 		this.userId = userId;
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
-		this.userRole = userRole;
+		this.roles = roles;
 	}
 
 	public Integer getUserId() {
@@ -82,12 +83,12 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	public Set<UserRole> getUserRole() {
-		return userRole;
+	public Set<Role> getRoles() {
+		return roles;
 	}
 
-	public void setUserRole(Set<UserRole> userRole) {
-		this.userRole = userRole;
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 
 }
