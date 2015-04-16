@@ -52,11 +52,7 @@
 			<artifactId>spring-tx</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
+
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -87,23 +83,30 @@
 			<artifactId>activiti-spring</artifactId>
 			<version>5.17.0</version>
 		</dependency>
-		<!-- Hibiernate -->
+
+		<!-- Hibernate -->
+		<!-- http://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.2.8.Final</version>
+			<version>4.2.9.Final</version>
 		</dependency>
+
+		<!-- http://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>4.2.8.Final</version>
+			<version>4.2.9.Final</version>
 		</dependency>
-		
+
+
+		<!-- http://mvnrepository.com/artifact/org.hibernate/hibernate-c3p0 -->
 		<dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-c3p0</artifactId>
-            <version>4.2.8.Final</version>
-        </dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>4.2.9.Final</version>
+		</dependency>
+
 		<!-- JDBC MySQL Driver -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -115,6 +118,14 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
 		</dependency>
+
+		<!-- AOP dependency -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.2</version>
+		</dependency>
+
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
