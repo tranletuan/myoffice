@@ -1,9 +1,10 @@
-package com.myoffice.myapp.models.dao;
+package com.myoffice.myapp.models.dao.common;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 public abstract class AbstractDao {
 
@@ -17,9 +18,7 @@ public abstract class AbstractDao {
 	public void persit(Object obj) {
 		try {
 			Session session = getSession();
-			Transaction trans = session.beginTransaction();
 			session.persist(obj);
-			trans.commit();
 			
 		} catch (Exception e) {
 			System.out.println("ERROR : can't persit object :  "
@@ -30,9 +29,7 @@ public abstract class AbstractDao {
 	public void delete(Object obj) {
 		try {
 			Session session = getSession();
-			Transaction trans = session.beginTransaction();
 			session.delete(obj);
-			trans.commit();
 		} catch (Exception e) {
 			System.out.println("ERROR : can't delete object : "
 					+ obj.getClass() + " cause of session : " + e.getMessage());

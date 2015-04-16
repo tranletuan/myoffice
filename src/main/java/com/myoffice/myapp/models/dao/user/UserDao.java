@@ -2,6 +2,8 @@ package com.myoffice.myapp.models.dao.user;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.myoffice.myapp.models.dto.User;
 
 public interface UserDao {
