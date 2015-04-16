@@ -2,24 +2,31 @@ package com.myoffice.myapp.models.dao.user;
 
 import java.util.List;
 
-import javax.persistence.Query;
+
+
+
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 import com.myoffice.myapp.models.dao.AbstractDao;
 import com.myoffice.myapp.models.dto.User;
 
-@Repository("userDao")
+@Repository
 public class UserDaoImp extends AbstractDao implements UserDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public User findUserByName(String username) {
+		Transaction trans = getSession().beginTransaction();
+		
 		Query query = (Query)getSession().createQuery("from User where username=?");
 		query.setParameter(0, username);
-		List<User> result = query.getResultList();
-		
+		List<User> result =  query.list();
+	
 		if(result.size() > 0) {
 			return result.get(0);
 		}
@@ -41,9 +48,13 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 
 	@Override
 	public void deleteUserByName(String username) {
-		Query query = (Query) getSession().createSQLQuery("delete from User where username=?");
+		Transaction trans = getSession().beginTransaction();
+	
+		Query query = (Query) getSession().createQuery("delete from User where username=?");
 		query.setParameter(0, username);
 		query.executeUpdate();
+		
+		trans.commit();
 	}
 
 }

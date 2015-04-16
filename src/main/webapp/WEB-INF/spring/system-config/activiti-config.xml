@@ -19,5 +19,6 @@
 	<bean id="taskService" factory-bean="processEngine"
 		factory-method="getTaskService" />
 	<bean id="repositoryService" factory-bean="processEngine"
-		factory-method="getRepositoryService" />
+		factory-method="getRepositoryService" /> 
 </beans>
+ 

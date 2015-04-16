@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.myoffice.myapp.models.dao.user.UserDao;
 import com.myoffice.myapp.models.dto.User;
 
-@Service("dataService")
+@Service
 @Transactional
 public class DataService {
 

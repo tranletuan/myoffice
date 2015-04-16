@@ -4,15 +4,13 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.ibatis.session.Configuration;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.service.ServiceRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.myoffice.myapp.models.dao.user.UserDao;
+import com.myoffice.myapp.models.dao.user.UserDaoImp;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataService;
 
@@ -29,20 +29,16 @@ import com.myoffice.myapp.models.service.DataService;
  */
 @Controller
 public class HomeController {
-	
-	
-	@Autowired 
-	private SessionFactory sessionFactory;
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(HomeController.class);
+
+	@Autowired
+	private DataService dataService;
+
 
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
 
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,
@@ -54,8 +50,7 @@ public class HomeController {
 		return "home";
 	}
 
-	@RequestMapping(value = "/{username}/{password}/{role}")
-	@Transactional
+	@RequestMapping(value = "/{username}/{password}/{role}", method = RequestMethod.GET)
 	public ModelAndView newAccount(@PathVariable("username") String username,
 			@PathVariable("password") String password,
 			@PathVariable("role") String role) {
@@ -66,10 +61,17 @@ public class HomeController {
 		user.setPassword(password);
 		user.setEnabled(true);
 		
-		System.out.println(sessionFactory.getCurrentSession());
+		dataService.saveUser(user);
+		user = null;
+		user = (User) dataService.findUserByName(username);
+		System.out.println(user.getUsername());
 		
-		model.addObject("msg", "Create account : " + username + " has completed!");
-		return model;
+		dataService.deleteUserByName(username);
+		
+		
 
+		model.addObject("msg", "Create account : " + username
+				+ " has completed!");
+		return model;
 	}
 }
