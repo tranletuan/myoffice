@@ -37,7 +37,6 @@
 				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2dll.auto}</prop>
 			</props>
 		</property>
-		
 	</bean>
 
 </beans>

@@ -42,10 +42,11 @@ public class User {
 
 	// mapping
 	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinColumn(name = "role_id", unique = false, nullable = true, updatable = true)
 	private Set<Role> roles = new HashSet<Role>(0);
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "level_id", nullable = true)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "level_id", nullable = true, insertable = true, updatable = true)
 	private Level level;
 
 	public User() {

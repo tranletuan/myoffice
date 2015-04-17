@@ -8,22 +8,22 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="role")
+@Table(name = "role")
 public class Role {
-	
+
 	@Id
-	@Column(name = "role_id", unique= true, nullable = false)
+	@Column(name = "role_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer roleId;
-	
+
 	@Column(name = "role_name", unique = true, nullable = false)
 	private String roleName;
-	
-	public Role(){
-		
+
+	public Role() {
+
 	}
-	
-	public Role(String roleName){
+
+	public Role(String roleName) {
 		this.roleName = roleName;
 	}
 
@@ -43,7 +43,5 @@ public class Role {
 	public Integer getRoleId() {
 		return roleId;
 	}
-	
-	
-	
+
 }
