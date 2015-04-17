@@ -2,6 +2,7 @@ package com.myoffice.myapp.models.dao.user;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -13,11 +14,13 @@ import com.myoffice.myapp.models.dto.User;
 @Repository
 public class UserDaoImp extends AbstractDao implements UserDao {
 
+	private static final Logger log = Logger.getLogger(UserDaoImp.class);
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public User findUserByName(String username) {
 		
-		Query query = (Query)getSession().createQuery("from User where username=?");
+		Query query = (Query)getSession().createQuery("from User where user_name=?");
 		query.setParameter(0, username);
 		List<User> result =  query.list();
 	
@@ -42,7 +45,7 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 
 	@Override
 	public void deleteUserByName(String username) {
-		Query query = (Query) getSession().createQuery("delete from User where username=?");
+		Query query = (Query) getSession().createQuery("delete from User where user_name=?");
 		query.setParameter(0, username);
 		query.executeUpdate();
 		

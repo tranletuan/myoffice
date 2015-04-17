@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +35,15 @@ public class HomeController {
 
 	@Autowired
 	private DataService dataService;
-
+	
+	private static final Logger log = Logger.getLogger("Home Controller");
 
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-
+		
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,
 				DateFormat.LONG, locale);

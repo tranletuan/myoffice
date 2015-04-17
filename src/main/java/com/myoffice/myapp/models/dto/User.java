@@ -3,6 +3,7 @@ package com.myoffice.myapp.models.dto;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -10,8 +11,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.engine.spi.CascadeStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name = "users")
@@ -22,7 +28,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer userId;
 
-	@Column(name = "username", unique = true, nullable = false, length = 45)
+	@Column(name = "user_name", unique = true, nullable = false, length = 45)
 	private String username;
 
 	@Column(name = "password", nullable = false, length = 60)
@@ -31,8 +37,16 @@ public class User {
 	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 
-	@ElementCollection(fetch=FetchType.EAGER)
+	@Column(name = "description", length = 255)
+	private String description;
+
+	// mapping
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<Role> roles = new HashSet<Role>(0);
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "level_id", nullable = true)
+	private Level level;
 
 	public User() {
 
@@ -89,6 +103,14 @@ public class User {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public Level getLevel() {
+		return level;
+	}
+
+	public void setLevel(Level level) {
+		this.level = level;
 	}
 
 }

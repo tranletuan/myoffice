@@ -19,8 +19,9 @@ public abstract class AbstractDao {
 		try {
 			Session session = getSession();
 			session.persist(obj);
-			
+
 		} catch (Exception e) {
+
 			System.out.println("ERROR : can't persit object :  "
 					+ obj.getClass() + " cause of session : " + e.getMessage());
 		}
@@ -28,9 +29,9 @@ public abstract class AbstractDao {
 
 	public void delete(Object obj) {
 		try {
-			Session session = getSession();
-			session.delete(obj);
+			getSession().delete(obj);
 		} catch (Exception e) {
+
 			System.out.println("ERROR : can't delete object : "
 					+ obj.getClass() + " cause of session : " + e.getMessage());
 		}
