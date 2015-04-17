@@ -4,14 +4,22 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dto.Level;
 
 @Repository
-public class LvelDAOImp extends AbstractDao implements LevelDAO {
+public class LevelDAOImp extends AbstractDao implements LevelDAO {
 
+	private static final Logger logger = LoggerFactory.getLogger(LevelDAOImp.class);
+	
+	public LevelDAOImp() {
+		logger.info("LEVEL DAO HAS CONSTRUCTED");
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public Level findLevelByName(String levelName) {
@@ -35,14 +43,12 @@ public class LvelDAOImp extends AbstractDao implements LevelDAO {
 
 	@Override
 	public void saveLevel(Level level) {
-		persit(level);
+		persist(level);
 	}
 
 	@Override
-	public void deleteLevelByName(String levelName) {
-		Query query = (Query)getSession().createSQLQuery("delete from Level where level_name?");
-		query.setParameter(0, levelName);
-		query.executeUpdate();
+	public void deleteLevel(Level level) {
+		delete(level);
 	}
 
 }

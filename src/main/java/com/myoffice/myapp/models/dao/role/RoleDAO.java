@@ -8,10 +8,11 @@ public interface RoleDAO {
 	
 	Role findRoleByName(String roleName);
 	
+	List<Role> findAllRoles();
+	
 	void saveRole(Role role);
 	
-	void deleteRoleByName(String roleName);
-	
-	List<Role> findAllRoles();
+	void deleteRole(Role role);
+
 
 }

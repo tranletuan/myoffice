@@ -20,7 +20,7 @@ import org.hibernate.engine.spi.CascadeStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User {
 
 	@Id

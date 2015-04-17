@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.myoffice.myapp.models.dao.user.UserDao;
 import com.myoffice.myapp.models.dao.user.UserDaoImp;
+import com.myoffice.myapp.models.dto.Level;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataService;
 
@@ -64,16 +65,19 @@ public class HomeController {
 		user.setUsername(username);
 		user.setPassword(password);
 		user.setEnabled(true);
+		Level level = new Level();
+		level.setLevelName("CVP");
+		user.setLevel(level);
 		
 		dataService.saveUser(user);
 		user = null;
 		user = (User) dataService.findUserByName(username);
 		System.out.println(user.getUsername());
 		
-		dataService.deleteUserByName(username);
+		dataService.deleteUser(user);
 		
 		
-
+		
 		model.addObject("msg", "Create account : " + username
 				+ " has completed!");
 		return model;

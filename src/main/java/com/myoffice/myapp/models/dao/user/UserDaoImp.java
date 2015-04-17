@@ -2,11 +2,11 @@ package com.myoffice.myapp.models.dao.user;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dto.User;
@@ -14,8 +14,12 @@ import com.myoffice.myapp.models.dto.User;
 @Repository
 public class UserDaoImp extends AbstractDao implements UserDao {
 
-	private static final Logger log = Logger.getLogger(UserDaoImp.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserDaoImp.class);
 
+	public UserDaoImp(){
+		logger.info("USER DAO HAS CONSTRUCTED");
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public User findUserByName(String username) {
@@ -30,12 +34,7 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 		
 		return null;
 	}
-
-	@Override
-	public void saveUser(User user) {
-		persit(user);
-	}
-
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<User> findAllUsers() {
@@ -44,11 +43,15 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 	}
 
 	@Override
-	public void deleteUserByName(String username) {
-		Query query = (Query) getSession().createQuery("delete from User where user_name=?");
-		query.setParameter(0, username);
-		query.executeUpdate();
-		
+	public void saveUser(User user) {
+		persist(user);
 	}
 
+	@Override
+	public void deleteUser(User user) {
+		delete(user);
+		
+	}
+	
+	
 }

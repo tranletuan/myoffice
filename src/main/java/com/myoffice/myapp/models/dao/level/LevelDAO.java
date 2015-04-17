@@ -12,5 +12,5 @@ public interface LevelDAO {
 	
 	void saveLevel(Level level);
 	
-	void deleteLevelByName(String levelName);
+	void deleteLevel(Level level);
 }

@@ -3,11 +3,14 @@ package com.myoffice.myapp.models.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.myoffice.myapp.models.dao.level.LevelDAO;
+import com.myoffice.myapp.models.dao.role.RoleDAO;
 import com.myoffice.myapp.models.dao.user.UserDao;
+import com.myoffice.myapp.models.dto.Level;
+import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.User;
 
 @Service
@@ -29,11 +32,51 @@ public class DataService {
 		return userDao.findAllUsers();
 	}
 
-	public void deleteUserByName(String username) {
-		userDao.deleteUserByName(username);
+	public void deleteUser(User user) {
+		userDao.deleteUser(user);
 	}
 	
 	//=================
+	@Autowired
+	private RoleDAO roleDao;
+	
+	public Role findRoleByName(String roleName){
+		return roleDao.findRoleByName(roleName);
+	}
+	
+	public List<Role> findAllRoles(){
+		return roleDao.findAllRoles();
+	}
+	
+	public void saveRole(Role role){
+		roleDao.saveRole(role);
+	}
+	
+	public void deleteRole(Role role) {
+		roleDao.deleteRole(role);
+	}
+	
+	//===================
+	@Autowired
+	private LevelDAO levelDao;
+	
+	public Level findLevelByName(String levelName){
+		return levelDao.findLevelByName(levelName);
+	}
+	
+	public List<Level> findAllLevels(){
+		return levelDao.findAllLevels();
+	}
+	
+	public void saveLevel(Level level){
+		levelDao.saveLevel(level);
+	}
+	
+	public void deleteLevel(Level level){
+		levelDao.deleteLevel(level);
+	}
+	
+	//=====================
 	
 	
 }

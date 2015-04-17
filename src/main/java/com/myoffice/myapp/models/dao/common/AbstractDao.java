@@ -15,11 +15,9 @@ public abstract class AbstractDao {
 		return sessionFactory.getCurrentSession();
 	}
 
-	public void persit(Object obj) {
+	public void persist(Object obj) {
 		try {
-			Session session = getSession();
-			session.persist(obj);
-
+			getSession().persist(obj);
 		} catch (Exception e) {
 
 			System.out.println("ERROR : can't persit object :  "
