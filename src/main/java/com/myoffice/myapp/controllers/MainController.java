@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,34 +28,41 @@ import com.myoffice.myapp.models.service.DataService;
 @Controller
 public class MainController {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(MainController.class);
+
 	@Autowired
 	private DataService dataService;
-	
-	@RequestMapping(value = "/{user_name}/{password}/{role_name}", method = RequestMethod.GET)
-	public ModelAndView createNewAccount(
-			@PathVariable("user_name") String username,
-			@PathVariable("password") String password,
-			@PathVariable("role_name") String roleName) {
+
+	@RequestMapping(value = "/init", method = RequestMethod.GET)
+	public ModelAndView createNewAccount() {
 		ModelAndView model = new ModelAndView("home");
-		try{
-		User user = new User();
-		user.setUsername(username);
-		user.setPassword(password);
-		user.setEnabled(true);
-		
-		Role role = new Role();
-		role.setRoleName(roleName);
-		dataService.saveRole(role);
-		
-		Set<Role> roles = new HashSet<Role>();
-		roles.add(role);
-		
-		user.setRoles(roles);
-		dataService.saveUser(user);
-		}catch(Exception e){
+		try {
+			User user1 = new User();
+			user1.setUsername("tuantl");
+			user1.setPassword("$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y");
+			user1.setEnabled(true);
+			dataService.saveUser(user1);
+			
+			User user2 = new User();
+			user2.setUsername("tuanta");
+			user2.setPassword("$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y");
+			user2.setEnabled(true);
+			dataService.saveUser(user2);
+			
+			Role role1 = new Role();
+			role1.setRoleName("ROLE_ADMIN");
+			dataService.saveRole(role1);
+			
+			Role role2 = new Role();
+			role2.setRoleName("ROLE_USER");
+			dataService.saveRole(role2);
+			
+			
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		model.addObject("msg", "Create account : " + username + " has completed!");
+		model.addObject("msg", "Init has completed!");
 		return model;
 	}
 
@@ -95,6 +104,7 @@ public class MainController {
 		if (logout != null) {
 			model.addObject("msg", "You've been logged out successfully.");
 		}
+		
 		model.setViewName("login");
 
 		return model;
@@ -115,6 +125,8 @@ public class MainController {
 		} else {
 			error = "Invalid username and password!";
 		}
+		
+		logger.info(error);
 
 		return error;
 	}

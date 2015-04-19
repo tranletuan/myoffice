@@ -12,10 +12,14 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.myoffice.myapp.models.dao.user.UserDao;
 import com.myoffice.myapp.models.dto.Role;
 
+@Service
+@Transactional(readOnly = true)
 public class SecurityService implements UserDetailsService {
 
 	@Autowired
@@ -40,13 +44,14 @@ public class SecurityService implements UserDetailsService {
 
 	private List<GrantedAuthority> buildUserAuthority(Set<Role> roles) {
 		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
-		
-		for(Role role : roles){
+
+		for (Role role : roles) {
 			setAuths.add(new SimpleGrantedAuthority(role.getRoleName()));
 		}
-		
-		List<GrantedAuthority> result = new ArrayList<GrantedAuthority>(setAuths);
-		
+
+		List<GrantedAuthority> result = new ArrayList<GrantedAuthority>(
+				setAuths);
+
 		return result;
 	}
 }

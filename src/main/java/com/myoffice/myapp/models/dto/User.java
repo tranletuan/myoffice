@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class User {
 
 	@Id
-	@Column(name = "user_id", unique = true, nullable = false)
+	@Column(name = "user_id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer userId;
 
@@ -42,9 +42,8 @@ public class User {
 
 	// mapping
 	@ElementCollection(fetch = FetchType.EAGER)
-	@JoinColumn(name = "role_id", unique = false, nullable = true, updatable = true)
 	private Set<Role> roles = new HashSet<Role>(0);
-
+	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "level_id", nullable = true, insertable = true, updatable = true)
 	private Level level;
