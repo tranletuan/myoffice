@@ -18,5 +18,6 @@
 	<bean id="dataService" class="com.myoffice.myapp.models.service.DataService"></bean>
 	<bean id="securityService" class="com.myoffice.myapp.models.service.SecurityService"></bean>
 	<bean id="userDaoImp" class="com.myoffice.myapp.models.dao.user.UserDaoImp"></bean>
+	<bean id="parameterDaoImp" class="com.myoffice.myapp.models.dao.parameter.ParameterDaoImp"></bean>
 
 </beans>

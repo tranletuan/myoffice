@@ -38,7 +38,7 @@ public class FlowUtilImp implements FlowUtil {
 	public boolean deployProcess(String resourceName, String filePath) {
 		try {
 			// Deploy process
-			Deployment deploy = repositoryService
+			repositoryService
 					.createDeployment()
 					.enableDuplicateFiltering()
 					.addInputStream(resourceName, new FileInputStream(filePath))
@@ -69,7 +69,9 @@ public class FlowUtilImp implements FlowUtil {
 			runtimeService.startProcessInstanceById(processDefinitionId);
 
 			logger.info("Process Instances Id: "
-					+ runtimeService.createProcessInstanceQuery().processDefinitionId(processDefinitionId).singleResult().getId());
+					+ runtimeService.createProcessInstanceQuery()
+							.processDefinitionId(processDefinitionId)
+							.singleResult().getId());
 			return true;
 		} catch (ActivitiException e) {
 			logger.error("WORKFLOW ERROR : " + e.getMessage());

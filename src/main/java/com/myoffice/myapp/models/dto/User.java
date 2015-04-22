@@ -24,14 +24,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class User {
 
 	@Id
-	@Column(name = "user_id", nullable = false)
+	@Column(name = "user_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer userId;
 
 	@Column(name = "user_name", unique = true, nullable = false, length = 45)
 	private String username;
 
-	@Column(name = "password", nullable = false, length = 60)
+	@Column(name = "password", unique = true, nullable = false, length = 60)
 	private String password;
 
 	@Column(name = "enabled", nullable = false)
