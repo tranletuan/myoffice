@@ -1,9 +1,17 @@
 package com.myoffice.myapp.utils;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.List;
+
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
+import org.activiti.engine.runtime.Execution;
+import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,40 +35,66 @@ public class FlowUtilImp implements FlowUtil {
 	}
 
 	@Override
-	public boolean deployProcess(String resource) {
-
+	public boolean deployProcess(String resourceName, String filePath) {
 		try {
-			//Deploy process
-			repositoryService.createDeployment().addClasspathResource(resource)
+			// Deploy process
+			Deployment deploy = repositoryService
+					.createDeployment()
+					.enableDuplicateFiltering()
+					.addInputStream(resourceName, new FileInputStream(filePath))
 					.deploy();
-			
-			//Number of process definition
-			logger.info("Number of Process Definition : "
-					+ repositoryService.createProcessDefinitionQuery().count());
-			
+
+			// Number of process definition
+			logger.info("Process Definition Id : "
+					+ repositoryService.createProcessDefinitionQuery()
+							.processDefinitionResourceName(resourceName)
+							.latestVersion().singleResult().getId());
+
 			return true;
 		} catch (ActivitiException e) {
-			logger.info("WORKFLOW ERROR : " + e.getMessage());
+			logger.error("WORKFLOW ERROR : " + e.getMessage());
+			return false;
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 			return false;
 		}
 
 	}
 
 	@Override
-	public boolean startProcess(String processDefinitionKey) {
+	public boolean startProcess(String processDefinitionId) {
 		try {
-			//Start process instance by key
-			runtimeService.startProcessInstanceByKey(processDefinitionKey);
-			
-			logger.info("Number of Process Instances : " + runtimeService.createProcessInstanceQuery().count());
+			// Start process instance
+			runtimeService.startProcessInstanceById(processDefinitionId);
+
+			logger.info("Process Instances Id: "
+					+ runtimeService.createProcessInstanceQuery().processDefinitionId(processDefinitionId).singleResult().getId());
 			return true;
-		}
-		catch (ActivitiException e){
-			logger.info("WORKFLOW ERROR : " + e.getMessage());
+		} catch (ActivitiException e) {
+			logger.error("WORKFLOW ERROR : " + e.getMessage());
 			return false;
 		}
 	}
-	
-	
 
+	@Override
+	public Task getCurrentTask(String processInstanceId) {
+
+		try {
+			Task task = taskService.createTaskQuery()
+					.processInstanceId(processInstanceId).singleResult();
+
+			logger.info("Current Task : " + task.toString());
+			return task;
+		} catch (ActivitiException e) {
+			logger.error("TASK ERROR : " + e.getMessage());
+			return null;
+		}
+	}
+
+	@Override
+	public Execution getCurrentExecution(String processInstanceId) {
+
+		return null;
+	}
 }
