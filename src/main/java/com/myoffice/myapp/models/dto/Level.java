@@ -8,17 +8,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="level")
+@Table(name = "level")
 public class Level {
 
 	@Id
-	@Column(name="level_id", unique=true, nullable=false)
+	@Column(name = "id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer levelId;
-	
-	@Column(name="level_name", unique=true, nullable=false)
+
+	@Column(name = "level_name", unique = true, nullable = false)
 	private String levelName;
-	
+
 	@Column(name = "description")
 	private String description;
 
@@ -28,10 +28,10 @@ public class Level {
 		this.description = description;
 	}
 
-	public Level(){
-		
+	public Level() {
+
 	}
-	
+
 	public Level(String levelName, String description) {
 		this.levelName = levelName;
 		this.description = description;
@@ -56,6 +56,5 @@ public class Level {
 	public Integer getLevelId() {
 		return levelId;
 	}
-	
-	
+
 }

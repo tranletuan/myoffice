@@ -12,10 +12,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ManyToAny;
 import org.hibernate.engine.spi.CascadeStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,7 +34,7 @@ public class User {
 	@Column(name = "user_name", unique = true, nullable = false, length = 45)
 	private String username;
 
-	@Column(name = "password", unique = true, nullable = false, length = 60)
+	@Column(name = "password", nullable = false, length = 60)
 	private String password;
 
 	@Column(name = "enabled", nullable = false)
@@ -41,9 +44,10 @@ public class User {
 	private String description;
 
 	// mapping
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<Role>(0);
-	
+
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "level_id", nullable = true, insertable = true, updatable = true)
 	private Level level;

@@ -1,6 +1,7 @@
 package com.myoffice.myapp.models.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,10 +43,10 @@ public class SecurityService implements UserDetailsService {
 				user.isEnabled(), true, true, true, authorities);
 	}
 
-	private List<GrantedAuthority> buildUserAuthority(Set<Role> roles) {
+	private List<GrantedAuthority> buildUserAuthority(Set<Role> set) {
 		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
 
-		for (Role role : roles) {
+		for (Role role : set) {
 			setAuths.add(new SimpleGrantedAuthority(role.getRoleName()));
 		}
 
