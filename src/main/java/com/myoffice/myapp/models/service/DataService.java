@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.myoffice.myapp.models.dao.level.LevelDAO;
 import com.myoffice.myapp.models.dao.role.RoleDAO;
 import com.myoffice.myapp.models.dao.user.UserDao;
-import com.myoffice.myapp.models.dto.Level;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.User;
 
@@ -57,24 +55,7 @@ public class DataService {
 	}
 	
 	//===================
-	@Autowired
-	private LevelDAO levelDao;
-	
-	public Level findLevelByName(String levelName){
-		return levelDao.findLevelByName(levelName);
-	}
-	
-	public List<Level> findAllLevels(){
-		return levelDao.findAllLevels();
-	}
-	
-	public void saveLevel(Level level){
-		levelDao.saveLevel(level);
-	}
-	
-	public void deleteLevel(Level level){
-		levelDao.deleteLevel(level);
-	}
+
 	
 	//=====================
 	
