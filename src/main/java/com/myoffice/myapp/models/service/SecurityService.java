@@ -39,7 +39,7 @@ public class SecurityService implements UserDetailsService {
 	private User buildUserForAuthentication(
 			com.myoffice.myapp.models.dto.User user,
 			List<GrantedAuthority> authorities) {
-		return new User(user.getPassword(), user.getPassword(),
+		return new User(user.getUsername(), user.getPassword(),
 				user.isEnabled(), true, true, true, authorities);
 	}
 

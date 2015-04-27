@@ -1,7 +1,5 @@
 package com.myoffice.myapp.controllers;
 
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,10 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.myoffice.myapp.models.dto.Role;
@@ -26,6 +24,7 @@ import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataService;
 
 @Controller
+@SessionAttributes("userObj")
 public class MainController {
 
 	private static final Logger logger = LoggerFactory
@@ -70,9 +69,12 @@ public class MainController {
 	public ModelAndView defaultPage() {
 
 		ModelAndView model = new ModelAndView();
-		model.addObject("title", "Spring Security + Hibernate Example");
-		model.addObject("message", "This is default page!");
 		model.setViewName("hello");
+		UserDetails userDeital = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = dataService.findUserByName(userDeital.getUsername());
+		model.addObject("userObj", user);
+		logger.info(user.getUsername());
+		
 		return model;
 
 	}
@@ -142,13 +144,13 @@ public class MainController {
 				.getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 			UserDetails userDetail = (UserDetails) auth.getPrincipal();
-			System.out.println(userDetail);
 
 			model.addObject("username", userDetail.getUsername());
 
 		}
 
 		model.setViewName("403");
+		
 		return model;
 
 	}
