@@ -1,6 +1,5 @@
 package com.myoffice.myapp.controllers;
 
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -42,22 +41,21 @@ public class MainController {
 			user1.setPassword("$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y");
 			user1.setEnabled(true);
 			dataService.saveUser(user1);
-			
+
 			User user2 = new User();
 			user2.setUsername("tuanta");
 			user2.setPassword("$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y");
 			user2.setEnabled(true);
 			dataService.saveUser(user2);
-			
+
 			Role role1 = new Role();
 			role1.setRoleName("ROLE_ADMIN");
 			dataService.saveRole(role1);
-			
+
 			Role role2 = new Role();
 			role2.setRoleName("ROLE_USER");
 			dataService.saveRole(role2);
-			
-			
+
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -70,10 +68,14 @@ public class MainController {
 
 		ModelAndView model = new ModelAndView();
 		model.setViewName("hello");
-		UserDetails userDeital = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User user = dataService.findUserByName(userDeital.getUsername());
-		model.addObject("userObj", user);
-		logger.info(user.getUsername());
+		Authentication auth = SecurityContextHolder.getContext()
+				.getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			UserDetails userDetail = (UserDetails) auth.getPrincipal();
+			User user = dataService.findUserByName(userDetail.getUsername());
+			model.addObject("userObj", user);
+			logger.info(user.getUsername());
+		}
 		
 		return model;
 
@@ -106,7 +108,7 @@ public class MainController {
 		if (logout != null) {
 			model.addObject("msg", "You've been logged out successfully.");
 		}
-		
+
 		model.setViewName("login");
 
 		return model;
@@ -127,7 +129,7 @@ public class MainController {
 		} else {
 			error = "Invalid username and password!";
 		}
-		
+
 		logger.info(error);
 
 		return error;
@@ -150,7 +152,7 @@ public class MainController {
 		}
 
 		model.setViewName("403");
-		
+
 		return model;
 
 	}

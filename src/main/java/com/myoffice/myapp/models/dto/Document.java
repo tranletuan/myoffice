@@ -44,6 +44,12 @@ public class Document {
 	@Column(name = "document_path", nullable = false)
 	private String docPath;
 
+	@Column(name = "processId", nullable = false, length = 60)
+	private String processInstanceId;
+	
+	@Column(name = "completed")
+	private boolean completed = false;
+
 	@Column(name = "incomming")
 	private boolean incoming;
 
@@ -117,6 +123,22 @@ public class Document {
 
 	public void setDocPath(String docPath) {
 		this.docPath = docPath;
+	}
+
+	public String getProcessInstanceId() {
+		return processInstanceId;
+	}
+
+	public void setProcessInstanceId(String processInstanceId) {
+		this.processInstanceId = processInstanceId;
+	}
+
+	public boolean isCompleted() {
+		return completed;
+	}
+
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
 	}
 
 	public boolean isIncoming() {

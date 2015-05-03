@@ -27,8 +27,8 @@ public class TestController {
 		ModelAndView model = new ModelAndView("home");
 
 		if (execution.equals("deploy")) {
-			flowUtil.deployProcess("release_document_process.bpmn20.xml",
-					"D:/Research/XML Process/release_document_process.bpmn20.xml");
+			flowUtil.deployProcess("process.bpmn20.xml",
+					"D:/Research/XML Process/process.bpmn20.xml");
 		} else if (execution.equals("start")) {
 			flowUtil.startProcess("release_document_process:5:22504");
 		} else if (execution.equals("task")) {

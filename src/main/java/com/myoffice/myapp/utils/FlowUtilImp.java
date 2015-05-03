@@ -63,19 +63,20 @@ public class FlowUtilImp implements FlowUtil {
 	}
 
 	@Override
-	public boolean startProcess(String processDefinitionId) {
+	public String startProcess(String processDefinitionId) {
 		try {
 			// Start process instance
 			runtimeService.startProcessInstanceById(processDefinitionId);
+			String processInstanceId = runtimeService
+					.createProcessInstanceQuery()
+					.processDefinitionId(processDefinitionId).singleResult()
+					.getId();
+			logger.info("Process Instances Id: " + processInstanceId);
+			return processInstanceId;
 
-			logger.info("Process Instances Id: "
-					+ runtimeService.createProcessInstanceQuery()
-							.processDefinitionId(processDefinitionId)
-							.singleResult().getId());
-			return true;
 		} catch (ActivitiException e) {
 			logger.error("WORKFLOW ERROR : " + e.getMessage());
-			return false;
+			return null;
 		}
 	}
 
@@ -96,7 +97,28 @@ public class FlowUtilImp implements FlowUtil {
 
 	@Override
 	public Execution getCurrentExecution(String processInstanceId) {
+		try {
+			Execution execution = runtimeService.createExecutionQuery()
+					.processInstanceId(processInstanceId).singleResult();
+			
+			logger.info("Current Execution : " + execution.toString());
+			return execution;
+			
+		} catch (ActivitiException e) {
+			logger.error("EXECUTION ERROR : " + e.getMessage());
+			return null;
+		}
+	}
 
-		return null;
+	public RuntimeService getRuntimeService() {
+		return runtimeService;
+	}
+
+	public TaskService getTaskService() {
+		return taskService;
+	}
+
+	public RepositoryService getRepositoryService() {
+		return repositoryService;
 	}
 }

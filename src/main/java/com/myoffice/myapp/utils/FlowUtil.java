@@ -8,11 +8,13 @@ public interface FlowUtil {
 	
 	boolean deployProcess(String resourceName, String filePath);
 	
-	boolean startProcess(String processDefinitionId);
+	String startProcess(String processDefinitionId);
 	
 	Task getCurrentTask(String processInstanceId);
 	
 	Execution getCurrentExecution(String processInstanceId);
+	
+	
 	
 	
 }
