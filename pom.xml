@@ -87,6 +87,18 @@
 			<artifactId>activiti-spring</artifactId>
 			<version>${org.activiti-version}</version>
 		</dependency>
+		<!-- Thymeleaf Spring 4 -->
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf-spring4</artifactId>
+			<version>2.1.2.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf</artifactId>
+			<version>2.1.2.RELEASE</version>
+		</dependency>
 
 		<!-- Hibernate -->
 		<!-- http://mvnrepository.com/artifact/org.hibernate/hibernate-core -->

@@ -64,20 +64,19 @@ public class MainController {
 	}
 
 	@RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
-	public ModelAndView defaultPage() {
+	public String defaultPage() {
 
-		ModelAndView model = new ModelAndView();
-		model.setViewName("hello");
-		Authentication auth = SecurityContextHolder.getContext()
-				.getAuthentication();
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			UserDetails userDetail = (UserDetails) auth.getPrincipal();
-			User user = dataService.findUserByName(userDetail.getUsername());
-			model.addObject("userObj", user);
-			logger.info(user.getUsername());
-		}
+//		ModelAndView model = new ModelAndView("login");
+//		Authentication auth = SecurityContextHolder.getContext()
+//				.getAuthentication();
+//		if (!(auth instanceof AnonymousAuthenticationToken)) {
+//			UserDetails userDetail = (UserDetails) auth.getPrincipal();
+//			User user = dataService.findUserByName(userDetail.getUsername());
+//			model.addObject("userObj", user);
+//			logger.info(user.getUsername());
+//		}
 		
-		return model;
+		return "login";
 
 	}
 
@@ -93,27 +92,27 @@ public class MainController {
 
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView login(
-			@RequestParam(value = "error", required = false) String error,
-			@RequestParam(value = "logout", required = false) String logout,
-			HttpServletRequest request) {
-
-		ModelAndView model = new ModelAndView();
-		if (error != null) {
-			model.addObject("error",
-					getErrorMessage(request, "SPRING_SECURITY_LAST_EXCEPTION"));
-		}
-
-		if (logout != null) {
-			model.addObject("msg", "You've been logged out successfully.");
-		}
-
-		model.setViewName("login");
-
-		return model;
-
-	}
+//	@RequestMapping(value = "/login", method = RequestMethod.GET)
+//	public ModelAndView login(
+//			@RequestParam(value = "error", required = false) String error,
+//			@RequestParam(value = "logout", required = false) String logout,
+//			HttpServletRequest request) {
+//
+//		ModelAndView model = new ModelAndView();
+//		if (error != null) {
+//			model.addObject("error",
+//					getErrorMessage(request, "SPRING_SECURITY_LAST_EXCEPTION"));
+//		}
+//
+//		if (logout != null) {
+//			model.addObject("msg", "You've been logged out successfully.");
+//		}
+//
+//		model.setViewName("login");
+//
+//		return model;
+//
+//	}
 
 	// customize the error message
 	private String getErrorMessage(HttpServletRequest request, String key) {
