@@ -45,8 +45,15 @@ public class MainController {
 //			logger.info(user.getUsername());
 //		}
 		
-		return "login";
+		return "home";
 
+	}
+	
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public ModelAndView testPage(){
+		ModelAndView model = new ModelAndView("home");
+		
+		return model;
 	}
 
 	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
