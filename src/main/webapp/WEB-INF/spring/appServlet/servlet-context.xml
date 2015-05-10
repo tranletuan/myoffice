@@ -20,6 +20,8 @@
 
 	<!-- Resolves views selected for rendering by @Controllers to .html resources 
 		in the /WEB-INF/views directory -->
+		
+	
 
 	<bean id="templateResolver"
 		class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
@@ -31,11 +33,25 @@
 
 	<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
 		<property name="templateResolver" ref="templateResolver" />
+		<property name="additionalDialects">
+			<set>
+				<bean class="org.thymeleaf.extras.tiles2.dialect.TilesDialect"></bean>
+			</set>
+		</property>
 	</bean>
-
-	<bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+	
+	<bean id="tilesViewResolver" class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
 		<property name="templateEngine" ref="templateEngine" />
+		<property name="viewClass" value="org.thymeleaf.extras.tiles2.spring4.web.view.ThymeleafTilesView"></property>
 		<property name="characterEncoding" value="UTF-8"/>
+	</bean>
+	
+	<bean id="tilesConfigurer" class="org.thymeleaf.extras.tiles2.spring4.web.configurer.ThymeleafTilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/spring/tiles-config/tiles-defs.xml</value>
+			</list>
+		</property>
 	</bean>
 
 

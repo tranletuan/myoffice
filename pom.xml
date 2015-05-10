@@ -107,11 +107,17 @@
 			<artifactId>thymeleaf-extras-tiles2</artifactId>
 			<version>${thymeleaf-extras-version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-tiles2-spring4</artifactId>
 			<version>${thymeleaf-extras-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>nz.net.ultraq.thymeleaf</groupId>
+			<artifactId>thymeleaf-layout-dialect</artifactId>
+			<version>1.2.1</version>
 		</dependency>
 
 		<!-- Hibernate -->
