@@ -32,37 +32,6 @@ public class MainController {
 	@Autowired
 	private DataService dataService;
 
-	@RequestMapping(value = "/init", method = RequestMethod.GET)
-	public ModelAndView createNewAccount() {
-		ModelAndView model = new ModelAndView("home");
-		try {
-			User user1 = new User();
-			user1.setUsername("tuantl");
-			user1.setPassword("$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y");
-			user1.setEnabled(true);
-			dataService.saveUser(user1);
-
-			User user2 = new User();
-			user2.setUsername("tuanta");
-			user2.setPassword("$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y");
-			user2.setEnabled(true);
-			dataService.saveUser(user2);
-
-			Role role1 = new Role();
-			role1.setRoleName("ROLE_ADMIN");
-			dataService.saveRole(role1);
-
-			Role role2 = new Role();
-			role2.setRoleName("ROLE_USER");
-			dataService.saveRole(role2);
-
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		model.addObject("msg", "Init has completed!");
-		return model;
-	}
-
 	@RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
 	public String defaultPage() {
 
@@ -133,27 +102,4 @@ public class MainController {
 
 		return error;
 	}
-
-	// for 403 access denied page
-	@RequestMapping(value = "/403", method = RequestMethod.GET)
-	public ModelAndView accesssDenied() {
-
-		ModelAndView model = new ModelAndView();
-
-		// check if user is login
-		Authentication auth = SecurityContextHolder.getContext()
-				.getAuthentication();
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			UserDetails userDetail = (UserDetails) auth.getPrincipal();
-
-			model.addObject("username", userDetail.getUsername());
-
-		}
-
-		model.setViewName("403");
-
-		return model;
-
-	}
-
 }

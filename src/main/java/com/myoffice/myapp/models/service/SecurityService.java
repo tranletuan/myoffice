@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,12 +29,13 @@ public class SecurityService implements UserDetailsService {
 	@Autowired
 	private UserDao userDao;
 
+	private com.myoffice.myapp.models.dto.User user;
+
 	@Override
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 
-		com.myoffice.myapp.models.dto.User user = userDao
-				.findUserByName(username);
+		user = userDao.findUserByName(username);
 		List<GrantedAuthority> authorities = buildUserAuthority(user.getRoles());
 		return buildUserForAuthentication(user, authorities);
 	}
@@ -54,5 +58,22 @@ public class SecurityService implements UserDetailsService {
 				setAuths);
 
 		return result;
+	}
+
+	public com.myoffice.myapp.models.dto.User getCurrentUser() {
+
+		// check if user is login
+		Authentication auth = SecurityContextHolder.getContext()
+				.getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			UserDetails userDetail = (UserDetails) auth.getPrincipal();
+			if(userDetail.getUsername() != user.getUsername()){
+				user = userDao.findUserByName(userDetail.getUsername());
+			}
+			
+			return user;
+		}
+
+		return null;
 	}
 }

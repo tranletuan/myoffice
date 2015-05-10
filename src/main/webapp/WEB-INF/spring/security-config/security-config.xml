@@ -8,14 +8,17 @@
 
 	<http auto-config="true" use-expressions="true">
 
-		<session-management invalid-session-url="/">
+		<session-management invalid-session-url="/home">
 			<concurrency-control max-sessions="1"
 				expired-url="/login" />
 		</session-management>
 
 		<intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/manager**" access="hasRole('ROLE_MANAGER')" />
+		<intercept-url pattern="/leader**" access="hasRole('ROLE_LEADER')" />
+		<intercept-url pattern="/user**" access="hasRole('ROLE_USER')" />
 
-		<access-denied-handler error-page="/login" />
+		<access-denied-handler error-page="/home" />
 		
 		<form-login 
 			login-page="/login" default-target-url="/welcome"
