@@ -1,87 +1,23 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8"></meta>
-<title>Đăng nhập</title>
-<link rel="stylesheet"
-	th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css}"></link>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<style type="text/css">
-body {
-	padding-top: 40px;
-	padding-bottom: 40px;
-	background-color: #eee;
-}
-
-.form-signin {
-	max-width: 330px;
-	padding: 15px;
-	margin: 0 auto;
-}
-
-.form-signin .form-signin-heading, .form-signin .checkbox {
-	margin-bottom: 10px;
-}
-
-.form-signin .checkbox {
-	font-weight: normal;
-}
-
-.form-signin .form-control {
-	position: relative;
-	height: auto;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	padding: 10px;
-	font-size: 16px;
-}
-
-.form-signin .form-control:focus {
-	z-index: 2;
-}
-
-.form-signin input[type="text"] {
-	margin-bottom: -1px;
-	border-bottom-right-radius: 0;
-	border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-	margin-bottom: 10px;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
-}
-</style>
-</head>
-
-<body>
-
-	<div class="container">
-		<form class="form-signin">
-			<h2 class="form-signin-heading">Vui lòng đăng nhập</h2>
-			<div class="alert alert-danger" role="alert">
-				<span class="glyphicon glyphicon-exclamation-sign"
-					aria-hidden="true"></span> <span class="sr-only">Lỗi:</span>
-				<p>Sai tên hoặc mật khẩu</p>
-			</div>
-			<label for="inputUsername" class="sr-only">Tên tài khoản</label> 
-			<input
-				type="text" id="inputUsername" class="form-control"
-				placeholder="Tên tài khoản" required="true" autofocus="true"></input> 
-				<label for="inputPassword" class="sr-only">Mật khẩu</label> 
-			<input
-				type="password" id="inputPassword" class="form-control"
-				placeholder="Mật khẩu" required="true"></input>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Đăng
-				nhập</button>
-		</form>
-
-	</div>
-	<!-- /container -->
-</body>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Login page</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="css/main.css" th:href="@{/css/main.css}" />
+	</head>
+    <body>
+        <h1>Login page</h1>
+        <p>Example administrator: jim / demo</p>
+        <p>Example user: bob / demo</p>
+        <p>Example user and administrator: ted / demo</p>
+        <p th:if="${loginError}" class="error">Wrong user or password</p>
+        <form th:action="@{/j_spring_security_check}" method="post">
+            <label for="j_username">Username</label>:
+            <input type="text" id="j_username" name="j_username" autofocus="autofocus" /> <br />
+            <label for="j_password">Password</label>:
+            <input type="password" id="j_password" name="j_password" /> <br />
+            <input type="submit" value="Log in" />
+        </form>
+        <p><a href="../index.html" th:href="@{/index.html}">Back to home page</a></p>
+    </body>
 </html>

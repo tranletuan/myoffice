@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,9 +23,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataService;
+import com.myoffice.myapp.models.service.SecurityService;
 
 @Controller
-@SessionAttributes("userObj")
+@SessionAttributes("curUser")
 public class MainController {
 
 	private static final Logger logger = LoggerFactory
@@ -32,81 +35,51 @@ public class MainController {
 	@Autowired
 	private DataService dataService;
 
-	@RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
-	public String defaultPage() {
+	@Autowired
+	private SecurityService securityService;
 
-//		ModelAndView model = new ModelAndView("login");
-//		Authentication auth = SecurityContextHolder.getContext()
-//				.getAuthentication();
-//		if (!(auth instanceof AnonymousAuthenticationToken)) {
-//			UserDetails userDetail = (UserDetails) auth.getPrincipal();
-//			User user = dataService.findUserByName(userDetail.getUsername());
-//			model.addObject("userObj", user);
-//			logger.info(user.getUsername());
-//		}
-		
-		return "home";
+	@RequestMapping(value = { "/", "/home**" }, method = RequestMethod.GET)
+	public ModelAndView defaultPage() {
 
-	}
-	
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public ModelAndView testPage(){
 		ModelAndView model = new ModelAndView("home");
-		
-		return model;
-	}
 
-	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
-	public ModelAndView adminPage() {
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("title", "Spring Security + Hibernate Example");
-		model.addObject("message", "This page is for ROLE_ADMIN only!");
-		model.setViewName("admin");
-
-		return model;
-
-	}
-
-//	@RequestMapping(value = "/login", method = RequestMethod.GET)
-//	public ModelAndView login(
-//			@RequestParam(value = "error", required = false) String error,
-//			@RequestParam(value = "logout", required = false) String logout,
-//			HttpServletRequest request) {
-//
-//		ModelAndView model = new ModelAndView();
-//		if (error != null) {
-//			model.addObject("error",
-//					getErrorMessage(request, "SPRING_SECURITY_LAST_EXCEPTION"));
-//		}
-//
-//		if (logout != null) {
-//			model.addObject("msg", "You've been logged out successfully.");
-//		}
-//
-//		model.setViewName("login");
-//
-//		return model;
-//
-//	}
-
-	// customize the error message
-	private String getErrorMessage(HttpServletRequest request, String key) {
-
-		Exception exception = (Exception) request.getSession()
-				.getAttribute(key);
-
-		String error = "";
-		if (exception instanceof BadCredentialsException) {
-			error = "Invalid username and password!";
-		} else if (exception instanceof LockedException) {
-			error = exception.getMessage();
-		} else {
-			error = "Invalid username and password!";
+		// Kiểm tra tình trạng đăng nhập
+		User user = securityService.getCurrentUser();
+		if (user != null) {
+			model.addObject("curUser", user);
 		}
 
-		logger.info(error);
+		return model;
+	}
 
-		return error;
+	@RequestMapping(value = "/signin", method = RequestMethod.GET)
+	public String login() {
+		return "signin";
+	}
+
+	@RequestMapping(value = "/signin-{msg}", method = RequestMethod.GET)
+	public ModelAndView loginMessage(@PathVariable("msg") String message) {
+		ModelAndView model = new ModelAndView("signin");
+		
+		if (message.equals("error")) {
+			model.addObject("error", message);
+		} else if (message.equals("logout")) {
+			model.addObject("logout", message);
+		}
+		return model;
+	}
+
+	@RequestMapping("/error")
+	public String error(HttpServletRequest request, Model model) {
+		model.addAttribute("errorCode",
+				request.getAttribute("javax.servlet.error.status_code"));
+		Throwable throwable = (Throwable) request
+				.getAttribute("javax.servlet.error.exception");
+		String errorMessage = null;
+		if (throwable != null) {
+			errorMessage = throwable.getMessage();
+		}
+		model.addAttribute("errorMessage", errorMessage);
+		return "error";
 	}
 }
