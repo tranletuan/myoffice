@@ -13,10 +13,11 @@
 
 		<form-login login-page='/signin' default-target-url="/home"
 			login-processing-url="/j_spring_security_check"
-			authentication-failure-url="/signin-error" username-parameter="j_username"
+			authentication-failure-url="/signin-error" 
+			username-parameter="j_username"
 			password-parameter="j_password" />
 
-		<logout logout-success-url="/signin-logout" logout-url="/j_spring_security_logout" />
+		<logout logout-success-url="/signin-logout" logout-url="/j_spring_security_logout"/>
 
 		<session-management invalid-session-url="/signin">
 			<concurrency-control max-sessions="1"

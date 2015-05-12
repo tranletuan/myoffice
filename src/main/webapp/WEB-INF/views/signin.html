@@ -70,11 +70,19 @@ body {
 		<form th:action="@{/j_spring_security_check}" method="post"
 			class="form-signin">
 			<h2 class="form-signin-heading">Vui lòng đăng nhập</h2>
+
 			<div th:if="${error}" class="alert alert-danger" role="alert">
 				<span class="glyphicon glyphicon-exclamation-sign"
 					aria-hidden="true"></span> <span class="sr-only">Lỗi:</span> Sai
 				tên hoặc mật khẩu
 			</div>
+
+			<div th:if="${logout}" class="alert alert-success" role="alert">
+				<span class="glyphicon glyphicon-exclamation-sign"
+					aria-hidden="true"></span> <span class="sr-only">Thông báo:</span>
+				Đăng xuất thành công
+			</div>
+
 			<label for="j_username" class="sr-only">Tên tài khoản</label> <input
 				type="text" id="j_username" name="j_username" class="form-control"
 				placeholder="Tên tài khoản" required="true" autofocus="true" /> <label
