@@ -62,10 +62,11 @@ public class MainController {
 		ModelAndView model = new ModelAndView("signin");
 		
 		if (message.equals("error")) {
-			model.addObject("error", message);
-		} else if (message.equals("logout")) {
-			model.addObject("logout", message);
+			model.addObject("error", true);
+		}else if(message.equals("signout")){
+			model.addObject("signout", true);
 		}
+
 		return model;
 	}
 

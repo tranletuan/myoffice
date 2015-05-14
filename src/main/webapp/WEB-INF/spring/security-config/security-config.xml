@@ -11,23 +11,22 @@
 		<intercept-url pattern="/signin*" access="permitAll" />
 		<intercept-url pattern="/*" access="hasRole('ROLE_USER')" />
 
-		<form-login login-page='/signin' default-target-url="/home"
+		<form-login login-page="/signin" default-target-url="/home"
+			always-use-default-target="true"
 			login-processing-url="/j_spring_security_check"
-			authentication-failure-url="/signin-error" 
-			username-parameter="j_username"
+			authentication-failure-url="/signin-error" username-parameter="j_username"
 			password-parameter="j_password" />
 
-		<logout logout-success-url="/signin-logout" logout-url="/j_spring_security_logout"/>
+		<logout logout-success-url="/signin-signout" invalidate-session="false" logout-url="/j_spring_security_logout"
+			delete-cookies="JSESSIONID" />
 
 		<session-management invalid-session-url="/signin">
 			<concurrency-control max-sessions="1"
-				expired-url="/signin" />
+				expired-url="/signin-timeout" />
 		</session-management>
-
-
-
+		
 		<access-denied-handler error-page="/error" />
-
+		
 		<!-- enable csrf protection -->
 		<csrf />
 	</http>
@@ -35,6 +34,11 @@
 	<authentication-manager>
 		<authentication-provider user-service-ref="securityService">
 			<password-encoder hash="bcrypt"></password-encoder>
+		</authentication-provider>
+		<authentication-provider>
+			<user-service>
+				<user name="admin" password="admin" authorities="ROLE_USER, ROLE_ADMIN"/>
+			</user-service>
 		</authentication-provider>
 	</authentication-manager>
 </beans:bean>
