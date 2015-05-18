@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+
+<title>Lưu trữ</title>
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+<style type="text/css">
+
+.p-doc {
+    max-height: 55px;
+    overflow: auto;
+}
+
+.btn-doc {
+	width: 100%;
+	height: 50px;
+	font-style: italic;
+}
+
+.list-menu-doc, .ul-doc {
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+.doc-group {
+	max-height: 87%;
+}
+
+.doc {
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+
+</style>
+</head>
+<body>
+	<div th:replace="fragment/menu :: menu"></div>
+	<div>
+		<table class="table">
+			<colgroup>
+				<col class="col-xs-3 col-md-2" />
+				<col class="col-xs-15 col-md-10" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row">
+						<div id="doc-in">
+							<button type="button" class="btn btn-primary btn-doc"
+								data-toggle="collapse" data-target="#collapse-doc-in">
+								Văn bản đến <span class="badge">4</span>
+							</button>
+
+							<div class="collapse in" id="collapse-doc-in"
+								aria-expanded="true">
+								<div class="list-group list-menu-doc">
+									<a href="#" class="list-group-item"> <span class="badge">14</span>
+										Loại 1
+									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
+										Loại 2
+									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
+										Loại 3
+									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
+										Loại 4
+									</a>
+								</div>
+							</div>
+						</div>
+
+						<div id="doc-out">
+							<button type="button" class="btn btn-primary  btn-doc"
+								data-toggle="collapse" data-target="#collapse-doc-out">
+								Văn bản đi <span class="badge">6</span>
+							</button>
+
+							<div class="collapse in" id="collapse-doc-out"
+								aria-expanded="true">
+								<div class="list-group list-menu-doc">
+									<a href="#" class="list-group-item"> <span class="badge">14</span>
+										Loại 1
+									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
+										Loại 2
+									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
+										Loại 3
+									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
+										Loại 4
+									</a>
+								</div>
+							</div>
+						</div>
+					</th>
+					<td>
+						<div class="list-group doc-group">
+							<a href="#" class="list-group-item doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
+									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
+									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
+									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
+									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
+									Đoòng trên tạp chí National Geographic.</p>
+							</a> 
+							
+							<a href="#" class="list-group-item doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
+									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
+									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
+									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
+									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
+									Đoòng trên tạp chí National Geographic.</p>
+							</a> 
+							
+							<a href="#" class="list-group-item doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
+									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
+									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
+									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
+									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
+									Đoòng trên tạp chí National Geographic.</p>
+							</a> 
+							
+							<a href="#" class="list-group-item doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
+									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
+									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
+									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
+									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
+									Đoòng trên tạp chí National Geographic.</p>
+							</a> 
+							
+							<a href="#" class="list-group-item doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
+									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
+									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
+									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
+									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
+									Đoòng trên tạp chí National Geographic.</p>
+							</a> 
+							
+							<a href="#" class="list-group-item doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
+									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
+									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
+									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
+									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
+									Đoòng trên tạp chí National Geographic.</p>
+							</a> 
+							
+							<a href="#" class="list-group-item doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
+									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
+									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
+									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
+									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
+									Đoòng trên tạp chí National Geographic.</p>
+							</a>
+						</div>
+
+						<nav>
+							<ul class="pager">
+								<li class="previous disabled"><a href="#"><span
+										aria-hidden="true">&larr;</span> Cũ</a></li>
+								<li><span>1</span></li>
+								<li class="next"><a href="#">Mới <span
+										aria-hidden="true">&rarr;</span></a></li>
+							</ul>
+						</nav>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div th:replace="fragment/footer :: footer"></div>
+</body>
+</html>
