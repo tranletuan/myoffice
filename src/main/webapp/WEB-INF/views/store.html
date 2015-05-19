@@ -3,7 +3,8 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
-
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	
 <title>Lưu trữ</title>
 
 <script
@@ -47,6 +48,7 @@
 </style>
 </head>
 <body>
+<div class="container-fluid">
 	<div th:replace="fragment/menu :: menu"></div>
 	<div>
 		<table class="table">
@@ -196,5 +198,6 @@
 		</table>
 	</div>
 	<div th:replace="fragment/footer :: footer"></div>
+</div>
 </body>
 </html>
