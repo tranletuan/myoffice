@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Danh sách chỉnh sửa</title>
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</head>
+<style type="text/css">
+.p-doc {
+	max-height: 55px;
+	overflow: auto;
+}
+
+.list-menu-doc, .ul-doc {
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+.doc-group {
+	max-height: 87%;
+}
+
+.doc {
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+</style>
+
+<body>
+	<div class="container-fluid">
+		<div th:replace="fragment/menu :: menu"></div>
+		<table class="table">
+			<colgroup>
+				<col class="col-xs-6 col-md-3" />
+				<col class="col-xs-12 col-md-9" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row">
+						<div class="list-group">
+							<a href="#" class="list-group-item"> <span class="badge">14</span>
+								Loại 1
+							</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
+								Loại 2
+							</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
+								Loại 3
+							</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
+								Loại 4
+							</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
+								Loại 5
+							</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
+								Loại 6
+							</a>
+						</div>
+					</th>
+					<td>
+						<div class="list-group doc-group">
+							<a href="#" class="list-group-item list-group-item-success doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010:
+									Telegraph tiếp tục đưa tin "Bên trong hang động khổng lồ rừng
+									nhiệt đới". Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà
+									cao 40 tầng, thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo
+									bài viết là bức hình của nhiếp ảnh gia Carsten Peter chụp bên
+									trong Sơn Đoòng trên tạp chí National Geographic.</p>
+							</a> <a href="#" class="list-group-item list-group-item-success doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010:
+									Telegraph tiếp tục đưa tin "Bên trong hang động khổng lồ rừng
+									nhiệt đới". Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà
+									cao 40 tầng, thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo
+									bài viết là bức hình của nhiếp ảnh gia Carsten Peter chụp bên
+									trong Sơn Đoòng trên tạp chí National Geographic.</p>
+							</a> <a href="#" class="list-group-item list-group-item-success doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010:
+									Telegraph tiếp tục đưa tin "Bên trong hang động khổng lồ rừng
+									nhiệt đới". Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà
+									cao 40 tầng, thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo
+									bài viết là bức hình của nhiếp ảnh gia Carsten Peter chụp bên
+									trong Sơn Đoòng trên tạp chí National Geographic.</p>
+							</a> <a href="#" class="list-group-item list-group-item-warning doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010:
+									Telegraph tiếp tục đưa tin "Bên trong hang động khổng lồ rừng
+									nhiệt đới". Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà
+									cao 40 tầng, thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo
+									bài viết là bức hình của nhiếp ảnh gia Carsten Peter chụp bên
+									trong Sơn Đoòng trên tạp chí National Geographic.</p>
+							</a> <a href="#" class="list-group-item list-group-item-warning doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010:
+									Telegraph tiếp tục đưa tin "Bên trong hang động khổng lồ rừng
+									nhiệt đới". Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà
+									cao 40 tầng, thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo
+									bài viết là bức hình của nhiếp ảnh gia Carsten Peter chụp bên
+									trong Sơn Đoòng trên tạp chí National Geographic.</p>
+							</a> <a href="#" class="list-group-item list-group-item-warning doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010:
+									Telegraph tiếp tục đưa tin "Bên trong hang động khổng lồ rừng
+									nhiệt đới". Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà
+									cao 40 tầng, thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo
+									bài viết là bức hình của nhiếp ảnh gia Carsten Peter chụp bên
+									trong Sơn Đoòng trên tạp chí National Geographic.</p>
+							</a> <a href="#" class="list-group-item list-group-item-warning doc">
+								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
+									Ẩn 5</h4>
+								<p class="list-group-item-text p-doc">Ngày 30/12/2010:
+									Telegraph tiếp tục đưa tin "Bên trong hang động khổng lồ rừng
+									nhiệt đới". Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà
+									cao 40 tầng, thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo
+									bài viết là bức hình của nhiếp ảnh gia Carsten Peter chụp bên
+									trong Sơn Đoòng trên tạp chí National Geographic.</p>
+							</a>
+
+						</div>
+
+						<nav>
+							<ul class="pager">
+								<li class="previous disabled"><a href="#"><span
+										aria-hidden="true">&larr;</span> Cũ</a></li>
+								<li><span>1</span></li>
+								<li class="next"><a href="#">Mới <span
+										aria-hidden="true">&rarr;</span></a></li>
+							</ul>
+						</nav>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div th:replace="fragment/footer :: footer"></div>
+	</div>
+</body>
+</html>

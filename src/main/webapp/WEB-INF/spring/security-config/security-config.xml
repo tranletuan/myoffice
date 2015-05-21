@@ -22,7 +22,7 @@
 
 		<session-management invalid-session-url="/signin">
 			<concurrency-control max-sessions="1"
-				expired-url="/signin-timeout" />
+				expired-url="/signin" />
 		</session-management>
 		
 		<access-denied-handler error-page="/error" />
