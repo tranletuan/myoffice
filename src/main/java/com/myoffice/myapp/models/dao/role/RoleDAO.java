@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.myoffice.myapp.models.dto.Role;
 
-public interface RoleDAO {
+public interface RoleDao {
 	
 	Role findRoleByName(String roleName);
 	

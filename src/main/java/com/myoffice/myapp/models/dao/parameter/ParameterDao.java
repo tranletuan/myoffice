@@ -2,13 +2,15 @@ package com.myoffice.myapp.models.dao.parameter;
 
 import java.util.List;
 
-public interface Parameter {
+import com.myoffice.myapp.models.dto.Parameter;
+
+public interface ParameterDao {
 	
 	Parameter findParameterByName(String paramName);
 	
 	List<Parameter> findAllParameters();
 	
-	void saveParameter(Parameter param);
+	void saveParameter(ParameterDao param);
 	
-	void deleteParameter(Parameter param);
+	void deleteParameter(ParameterDao param);
 }

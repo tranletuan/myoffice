@@ -1,5 +1,7 @@
 package com.myoffice.myapp.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataService;
@@ -48,7 +51,7 @@ public class MainController {
 		if (user != null) {
 			model.addObject("curUser", user);
 		}
-
+		
 		return model;
 	}
 

@@ -7,10 +7,12 @@ import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
 import com.myoffice.myapp.models.dao.common.AbstractDao;
+import com.myoffice.myapp.models.dto.Parameter;
 
 @Repository
-public class ParameterDaoImp extends AbstractDao implements Parameter {
+public class ParameterDaoImp extends AbstractDao implements ParameterDao {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ParameterDaoImp.class);
@@ -38,17 +40,17 @@ public class ParameterDaoImp extends AbstractDao implements Parameter {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Parameter> findAllParameters() {
-		Criteria criteria = getSession().createCriteria(Parameter.class);
+		Criteria criteria = getSession().createCriteria(ParameterDao.class);
 		return (List<Parameter>) criteria.list();
 	}
 
 	@Override
-	public void saveParameter(Parameter param) {
+	public void saveParameter(ParameterDao param) {
 		persist(param);
 	}
 
 	@Override
-	public void deleteParameter(Parameter param) {
+	public void deleteParameter(ParameterDao param) {
 		delete(param);
 	}
 

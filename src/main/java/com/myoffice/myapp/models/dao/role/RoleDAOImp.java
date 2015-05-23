@@ -12,11 +12,11 @@ import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dto.Role;
 
 @Repository
-public class RoleDAOImp extends AbstractDao implements RoleDAO {
+public class RoleDaoImp extends AbstractDao implements RoleDao {
 
-	private static final Logger logger = LoggerFactory.getLogger(RoleDAOImp.class);
+	private static final Logger logger = LoggerFactory.getLogger(RoleDaoImp.class);
 	
-	public RoleDAOImp() {
+	public RoleDaoImp() {
 		logger.info("ROLE DAO HAS CONSTRUCTED");
 	}
 	

@@ -68,15 +68,14 @@
 							<div class="collapse in" id="collapse-doc-in"
 								aria-expanded="true">
 								<div class="list-group list-menu-doc">
-									<a href="#" class="list-group-item"> <span class="badge">14</span>
-										Loại 1
-									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
-										Loại 2
-									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
-										Loại 3
-									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
-										Loại 4
-									</a>
+										<a th:each="docType : ${typeList}" href="#"
+											th:href="@{'/store/in/' + ${docType.typeId}}"
+											class="list-group-item"> 
+											
+											<span th:text="${docType.typeName}"></span> 
+											<span class="badge">14</span>
+										</a>
+
 								</div>
 							</div>
 						</div>
@@ -90,14 +89,12 @@
 							<div class="collapse in" id="collapse-doc-out"
 								aria-expanded="true">
 								<div class="list-group list-menu-doc">
-									<a href="#" class="list-group-item"> <span class="badge">14</span>
-										Loại 1
-									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
-										Loại 2
-									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
-										Loại 3
-									</a> <a href="#" class="list-group-item"> <span class="badge">14</span>
-										Loại 4
+									<a th:each="docType : ${typeList}" href="#"
+											th:href="@{'/store/out/' + ${docType.typeId}}"
+											class="list-group-item"> 
+											
+											<span th:text="${docType.typeName}"></span> 
+											<span class="badge">14</span>
 									</a>
 								</div>
 							</div>
