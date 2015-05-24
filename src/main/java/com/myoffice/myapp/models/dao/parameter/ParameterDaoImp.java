@@ -40,18 +40,17 @@ public class ParameterDaoImp extends AbstractDao implements ParameterDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Parameter> findAllParameters() {
-		Criteria criteria = getSession().createCriteria(ParameterDao.class);
-		return (List<Parameter>) criteria.list();
+		Criteria criteria = getSession().createCriteria(Parameter.class);
+		return criteria.list();
 	}
 
 	@Override
-	public void saveParameter(ParameterDao param) {
+	public void saveParameter(Parameter param) {
 		persist(param);
 	}
 
 	@Override
-	public void deleteParameter(ParameterDao param) {
+	public void deleteParameter(Parameter param) {
 		delete(param);
 	}
-
 }

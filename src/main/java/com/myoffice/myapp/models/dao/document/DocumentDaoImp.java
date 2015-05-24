@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.myoffice.myapp.models.dao.common.AbstractDao;
@@ -13,15 +15,18 @@ import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
+import com.myoffice.myapp.utils.FlowUtilImp;
 
 @Repository
 public class DocumentDaoImp extends AbstractDao  implements DocumentDao {
 
-	@Override
-	public void rollBackDocument() {
-		rollBack();
+	private static final Logger logger = LoggerFactory
+			.getLogger(DocumentDaoImp.class);
+	
+	public DocumentDaoImp() {
+		logger.info("DOCUMENT DAO HAS CONSTRUCTED");
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Document findDocumentByName(String docName) {
@@ -68,6 +73,7 @@ public class DocumentDaoImp extends AbstractDao  implements DocumentDao {
 		return query.list();
 	}
 
+	//DocumentType
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentType> findAllDocType() {
@@ -75,13 +81,26 @@ public class DocumentDaoImp extends AbstractDao  implements DocumentDao {
 		return criteria.list();
 	}
 
+	@Override
+	public DocumentType findDocTypeById(Integer typeId) {
+		return (DocumentType) getSession().get(DocumentType.class, typeId);
+	}
+
+	
+	//========EMERGENCY LEVEL
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<EmergencyLevel> findAllEmergencyLevel() {
 		Criteria criteria = getSession().createCriteria(EmergencyLevel.class);
 		return criteria.list();
 	}
+	
+	@Override
+	public EmergencyLevel findEmergencyLevelById(Integer emergencyLevelId) {
+		return (EmergencyLevel)getSession().get(EmergencyLevel.class, emergencyLevelId);
+	}
 
+	//=======PRIVACY LEVEL
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PrivacyLevel> findAllPrivacyLevel() {
@@ -89,6 +108,12 @@ public class DocumentDaoImp extends AbstractDao  implements DocumentDao {
 		return criteria.list();
 	}
 
+	@Override
+	public PrivacyLevel findPrivacyLevelById(Integer privacyLevelId) {
+		return (PrivacyLevel)getSession().get(PrivacyLevel.class, privacyLevelId);
+	}
+
+	
 	
 	
 

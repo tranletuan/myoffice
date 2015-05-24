@@ -21,5 +21,6 @@
 	<bean id="userDaoImp" class="com.myoffice.myapp.models.dao.user.UserDaoImp"></bean>
 	<bean id="parameterDaoImp" class="com.myoffice.myapp.models.dao.parameter.ParameterDaoImp"></bean>
 	<bean id="documentDaoImp" class="com.myoffice.myapp.models.dao.document.DocumentDaoImp"></bean>
+	<bean id="unitDaoImp" class="com.myoffice.myapp.models.dao.unit.UnitDaoImp"></bean> 
 
 </beans>

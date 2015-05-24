@@ -10,8 +10,9 @@ public interface ParameterDao {
 	
 	List<Parameter> findAllParameters();
 	
-	void saveParameter(ParameterDao param);
+	void saveParameter(Parameter param);
 	
-	void deleteParameter(ParameterDao param);
+	void deleteParameter(Parameter param);
+	
 
 }

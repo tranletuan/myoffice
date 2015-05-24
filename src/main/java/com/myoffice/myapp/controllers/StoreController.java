@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.myoffice.myapp.models.dto.DocumentType;
+import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.service.DataService;
 
 @Controller
@@ -23,7 +24,7 @@ public class StoreController {
 		
 		List<DocumentType> typeList = dataService.findAllDocType();
 		model.addObject("typeList", typeList);
-		
+
 		return model;
 	}
 }

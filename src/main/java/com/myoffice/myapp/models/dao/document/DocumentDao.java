@@ -19,12 +19,21 @@ public interface DocumentDao {
 	
 	List<Document> findDocumentBy(DocumentType docType, boolean completed, boolean incomming);
 	
+	//DocumentType
+	DocumentType findDocTypeById(Integer typeId);
+	
 	List<DocumentType> findAllDocType();
 	
+	//EmergencyLevel
 	List<EmergencyLevel> findAllEmergencyLevel();
 	
+	EmergencyLevel findEmergencyLevelById(Integer emergencyLevelId);
+	
+	//PrivacyLevel
 	List<PrivacyLevel> findAllPrivacyLevel();
 	
-	void rollBackDocument();
+	PrivacyLevel findPrivacyLevelById(Integer privacyLevelId);
+	
+	
 
 }

@@ -1,5 +1,6 @@
 package com.myoffice.myapp.models.service;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,13 +8,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.myoffice.myapp.models.dao.document.DocumentDao;
+import com.myoffice.myapp.models.dao.parameter.ParameterDao;
 import com.myoffice.myapp.models.dao.role.RoleDao;
+import com.myoffice.myapp.models.dao.unit.UnitDao;
 import com.myoffice.myapp.models.dao.user.UserDao;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
+import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
+import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
 
 @Service
@@ -63,22 +68,69 @@ public class DataService {
 		return docDao.findDocumentBy(docType, completed, incomming);
 	}
 	
+	//DOCUMENT TYPE
 	public List<DocumentType> findAllDocType(){
 		return docDao.findAllDocType();
 	}
 	
+	public DocumentType findDocTypeById(Integer typeId){
+		return docDao.findDocTypeById(typeId);
+	}
+	
+	//EMERGENCY LEVEL
 	public List<EmergencyLevel> findAllEmergencyLevel(){
 		return docDao.findAllEmergencyLevel();
 	}
 	
+	public EmergencyLevel findEmergencyLevelById(Integer emergencyLevelId){
+		return docDao.findEmergencyLevelById(emergencyLevelId);
+	}
+	
+	//PRIVACY LEVEL
 	public List<PrivacyLevel> findAllPrivacyLevel(){
 		return docDao.findAllPrivacyLevel();
 	}
 	
-	public void rollBackDocument(){
-		docDao.rollBackDocument();
+	public PrivacyLevel findPrivacyLevelById(Integer privacyLevelId){
+		return docDao.findPrivacyLevelById(privacyLevelId);
 	}
+	
 	//=====================
+	@Autowired
+	private ParameterDao paramDao;
+	
+	public Parameter findParameterByName(String paramName){
+		return paramDao.findParameterByName(paramName);
+	}
+	
+	public void saveParameter(Parameter param){
+		paramDao.saveParameter(param);
+	}
+	
+	public void deleteParameter(Parameter param){
+		paramDao.deleteParameter(param);
+	}
+	
+	//=====================
+	@Autowired
+	private UnitDao unitDao;
+	
+	public List<Unit> findAllUnit(){
+		return unitDao.findAllUnit();
+	}
+	
+	public Unit findUnitById(Integer unitId){
+		return unitDao.findUnitById(unitId);
+	}
+	
+	public void saveUnit(Unit unit){
+		unitDao.saveUnit(unit);
+	}
+	
+	public void deleteUnit(Unit unit){
+		unitDao.deleteUnit(unit);
+	}
+	
 	
 	
 }

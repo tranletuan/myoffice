@@ -34,9 +34,5 @@ public abstract class AbstractDao {
 		}
 	}
 	
-	public void rollBack(){
-		getSession().getTransaction().rollback();
-		System.out.println("ROLLBACK");
-	}
 
 }
