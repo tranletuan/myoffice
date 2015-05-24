@@ -28,11 +28,11 @@ public class Document {
 	@Column(name = "document_id", nullable = false, unique = true)
 	private Integer docId;
 
-	@Column(name = "document_name", nullable = false, length = 100)
-	private String docName;
-
 	@Column(name = "title", nullable = false, length = 60)
 	private String title;
+	
+	@Column(name = "document_name", nullable = false, length = 100)
+	private String docName;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "release_time")
@@ -51,7 +51,7 @@ public class Document {
 	private boolean completed = false;
 
 	@Column(name = "incomming")
-	private boolean incoming;
+	private boolean incoming = false;
 
 	@Column(name = "description")
 	private String description;
@@ -208,5 +208,4 @@ public class Document {
 	public Integer getDocId() {
 		return docId;
 	}
-
 }

@@ -10,10 +10,17 @@ import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentType;
+import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Parameter;
+import com.myoffice.myapp.models.dto.PrivacyLevel;
 
 @Repository
 public class DocumentDaoImp extends AbstractDao  implements DocumentDao {
+
+	@Override
+	public void rollBackDocument() {
+		rollBack();
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -65,6 +72,20 @@ public class DocumentDaoImp extends AbstractDao  implements DocumentDao {
 	@Override
 	public List<DocumentType> findAllDocType() {
 		Criteria criteria = getSession().createCriteria(DocumentType.class);
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<EmergencyLevel> findAllEmergencyLevel() {
+		Criteria criteria = getSession().createCriteria(EmergencyLevel.class);
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PrivacyLevel> findAllPrivacyLevel() {
+		Criteria criteria = getSession().createCriteria(PrivacyLevel.class);
 		return criteria.list();
 	}
 

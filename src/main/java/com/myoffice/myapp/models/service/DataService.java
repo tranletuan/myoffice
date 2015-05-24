@@ -11,6 +11,8 @@ import com.myoffice.myapp.models.dao.role.RoleDao;
 import com.myoffice.myapp.models.dao.user.UserDao;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentType;
+import com.myoffice.myapp.models.dto.EmergencyLevel;
+import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.User;
 
@@ -65,6 +67,17 @@ public class DataService {
 		return docDao.findAllDocType();
 	}
 	
+	public List<EmergencyLevel> findAllEmergencyLevel(){
+		return docDao.findAllEmergencyLevel();
+	}
+	
+	public List<PrivacyLevel> findAllPrivacyLevel(){
+		return docDao.findAllPrivacyLevel();
+	}
+	
+	public void rollBackDocument(){
+		docDao.rollBackDocument();
+	}
 	//=====================
 	
 	

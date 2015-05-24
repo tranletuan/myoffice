@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Chỉnh sửa</title>
+
+	<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+	<style type="text/css">
+		.table th, .table td { 
+			border-top: none !important; 
+		}
+	</style>
+
+</head>
+<body>
+<div class="container-fluid">
+	<div th:replace="fragment/menu :: menu"></div>
+	<div>
+		<table class="table">
+			<colgroup>
+				<col class="col-xs-3 col-md-1" />
+				<col class="col-xs-12 col-md-10" />
+				<col class="col-xs-3 col-md-1" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<td></td>
+					<td>
+						<form th:action="@{/impl/create_new_doc}" method="post">
+							<div class="form-group">
+								<table class="table">
+									<colgroup>
+										<col class="col-xs-5 col-md-3" />
+										<col class="col-xs-10 col-md-8" />
+										<col class="col-xs-3 col-md-1" />
+									</colgroup>
+									<tbody>
+										<th>
+											<h3>Tạo văn bản</h3>
+										</th>
+										<th></th>
+										<th></th>
+										
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Tên văn bản : </span></h4>
+											</th>
+											<td>
+												<h4><input type="text" class="form-control" placeholder="Tên văn bản" required="true" th:name="docName"/></h4>
+											</td>
+										</tr>
+										
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Tiêu đề : </span></h4>
+											</th>
+											<td>
+												<h4><input type="text" class="form-control" placeholder="Tiêu đề" required="true" th:name="title"/></h4>
+											</td>
+										</tr>
+										
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Cơ quan ban hành : </span></h4>
+											</th>
+											<td>
+												<h4><input type="text" class="form-control" placeholder="Đơn vị ban hành" required="true" th:name="unit"/></h4>
+											</td>
+										</tr>
+										
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Ngày ban hành : </span></h4>
+											</th>
+											<td>
+												<h4><input type="text" class="form-control" placeholder="Ngày ban hành" required="true" th:name="releaseTime"/></h4>
+											</td>
+										</tr>
+										
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Loại văn bản : </span></h4>
+											</th>
+											<td>
+												<select class="form-control" data-style="btn-primary" th:name="docType">
+													<option th:each="docType : ${typeList}" th:value="${docType.typeId}" th:text="${docType.typeName}"></option>
+												</select>
+											</td>
+										</tr>
+
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Trích yếu : </span></h4>
+											</th>
+											<td>
+												<textarea class="form-control" rows="5" placeholder="Nội dung tóm tắt" required="true" th:name="epitome"></textarea>
+											</td>
+										</tr>
+										
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Số và ký hiệu : </span></h4>
+											</th>
+											
+											<td>
+												<h4><input type="text" class="form-control" placeholder="Số và ký hiệu" required="true" /></h4>
+											</td>
+										</tr>
+										
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Nơi nhận : </span></h4>
+											</th>
+											<td>
+											</td>
+										</tr>
+										
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Mức độ mật : </span></h4>
+											</th>
+											<td>
+												<select class="form-control" data-style="btn-primary" th:name="privacyLevel">
+													<option th:each="privacyLv : ${privacyList}" th:value="${privacyLv.privacyId}" th:text="${privacyLv.privacyName}"></option>
+												</select>
+											</td>
+										</tr>
+
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Mức độ khẩn : </span></h4>
+											</th>
+											<td>
+												<select class="form-control" data-style="btn-primary" th:name="emergencyLevel">
+													<option th:each="emeLv : ${emeList}" th:value="${emeLv.emeId}" th:text="${emeLv.emeName}"></option>
+												</select>
+											</td>
+										</tr>
+
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Tập tin : </span></h4>
+											</th>	
+
+											<td>
+												<div class="form-group" style="margin-top:10px;">
+													<input type="file" required="true" th:name="docPath"/>
+													<p class="help-block"></p>
+												</div>	
+											</td>
+										</tr>
+
+										<tr>
+											<td>
+											</td>
+											<td>
+												<nav>
+													<button type="submit" class="btn btn-success">Tạo văn bản</button>
+												</nav>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</form>
+					</td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div th:replace="fragment/footer :: footer"></div>
+</div>
+</body>
+</html>

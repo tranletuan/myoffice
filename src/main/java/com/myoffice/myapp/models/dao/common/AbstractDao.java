@@ -19,7 +19,6 @@ public abstract class AbstractDao {
 		try {
 			getSession().persist(obj);
 		} catch (Exception e) {
-
 			System.out.println("ERROR : can't persit object :  "
 					+ obj.getClass() + " cause of session : " + e.getMessage());
 		}
@@ -33,7 +32,11 @@ public abstract class AbstractDao {
 			System.out.println("ERROR : can't delete object : "
 					+ obj.getClass() + " cause of session : " + e.getMessage());
 		}
-
+	}
+	
+	public void rollBack(){
+		getSession().getTransaction().rollback();
+		System.out.println("ROLLBACK");
 	}
 
 }

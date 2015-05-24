@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentType;
+import com.myoffice.myapp.models.dto.EmergencyLevel;
+import com.myoffice.myapp.models.dto.PrivacyLevel;
 
 public interface DocumentDao {
 	
@@ -19,5 +21,10 @@ public interface DocumentDao {
 	
 	List<DocumentType> findAllDocType();
 	
+	List<EmergencyLevel> findAllEmergencyLevel();
+	
+	List<PrivacyLevel> findAllPrivacyLevel();
+	
+	void rollBackDocument();
 
 }
