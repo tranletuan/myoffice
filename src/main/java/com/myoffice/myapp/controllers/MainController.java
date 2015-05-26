@@ -29,7 +29,6 @@ import com.myoffice.myapp.models.service.DataService;
 import com.myoffice.myapp.models.service.SecurityService;
 
 @Controller
-@SessionAttributes("curUser")
 public class MainController {
 
 	private static final Logger logger = LoggerFactory

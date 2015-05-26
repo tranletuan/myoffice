@@ -72,7 +72,7 @@ body {
 <body>
 	<div class="container-fluid">
 		<form th:action="@{/j_spring_security_check}" method="post"
-			class="form-signin">
+			class="form-signin" autocomplete="off">
 			<h2 class="form-signin-heading">Vui lòng đăng nhập</h2>
 
 			<div th:if="${error}" class="alert alert-danger" role="alert">

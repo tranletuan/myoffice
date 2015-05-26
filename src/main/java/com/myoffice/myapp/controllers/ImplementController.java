@@ -1,7 +1,9 @@
 package com.myoffice.myapp.controllers;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.myoffice.myapp.models.dto.Document;
@@ -17,7 +20,9 @@ import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Unit;
+import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataService;
+import com.myoffice.myapp.models.service.SecurityService;
 import com.myoffice.myapp.utils.FlowUtil;
 
 @Controller
@@ -30,6 +35,9 @@ public class ImplementController {
 	@Autowired
 	private FlowUtil flowUtil;
 	
+	@Autowired
+	private SecurityService securityService;
+	
 	private static final String pdId = "processDefinitionId";
 
 	@RequestMapping(value = "/create_form", method = RequestMethod.GET)
@@ -39,10 +47,14 @@ public class ImplementController {
 		List<DocumentType> typeList = dataService.findAllDocType();
 		List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
 		List<PrivacyLevel> privacyList = dataService.findAllPrivacyLevel();
+		List<Unit>	unitList = dataService.findAllUnit();
+		User user = securityService.getCurrentUser();
 		
 		model.addObject("typeList", typeList);
 		model.addObject("emeList", emeList);
 		model.addObject("privacyList", privacyList);
+		model.addObject("unitList", unitList);
+		model.addObject("unit", user.getUnit());
 		
 		return model;
 	}
@@ -54,12 +66,13 @@ public class ImplementController {
 			@RequestParam("releaseTime") Date releaseTime,
 			@RequestParam("epitome") String epitome,
 			@RequestParam("docPath") String docPath,
-			@RequestParam("docType") Integer docTypeId,
-			@RequestParam("unit") Integer unitId,
-			@RequestParam("privacyLevel") Integer privacyLevelId,
-			@RequestParam("emergencyLevel") Integer emergencyLevelId){
+			@ModelAttribute("docType") DocumentType docType,
+			@ModelAttribute("sendUnit") Unit unit,
+			@ModelAttribute("privacyLevel") PrivacyLevel privacyLevel,
+			@ModelAttribute("emergencyLevel") EmergencyLevel emergencyLevel,
+			@RequestParam("recipientUnits") Integer[] arrUnitId){
 		ModelAndView model = new ModelAndView("implement");
-		
+	
 		//Set data to save
 		Document doc = new Document();
 		doc.setTitle(title);
@@ -67,21 +80,17 @@ public class ImplementController {
 		doc.setReleaseTime(releaseTime);
 		doc.setEpitome(epitome);
 		doc.setDocPath(docPath);
-		
-		DocumentType docType = dataService.findDocTypeById(docTypeId);
 		doc.setDocType(docType);
-		
-		Unit unit = dataService.findUnitById(unitId);
+		doc.setEmergencyLevel(emergencyLevel);
+		doc.setPrivacyLevel(privacyLevel);
 		doc.setUnit(unit);
 		
-		EmergencyLevel emergencyLevel = dataService.findEmergencyLevelById(emergencyLevelId);
-		doc.setEmergencyLevel(emergencyLevel);
+		Set<Unit> recipientUnits = new HashSet<Unit>(dataService.findUnitByArray(arrUnitId));
+		doc.setRecipientUnits(recipientUnits);
 		
-		PrivacyLevel privacyLevel = dataService.findPrivacyLevelById(privacyLevelId);
-		doc.setPrivacyLevel(privacyLevel);
 		
 		//create new flow
-		Parameter processDefinitionIdParam = dataService.findParameterByName(pdId);
+		/*Parameter processDefinitionIdParam = dataService.findParameterByName(pdId);
 		try{
 			String processInstanceId = flowUtil.startProcess(processDefinitionIdParam.getValue());
 			doc.setProcessInstanceId(processInstanceId);
@@ -90,7 +99,7 @@ public class ImplementController {
 		}catch(Exception e){
 			model.setViewName("error");
 			model.addObject("errorMessage", "Lỗi!Không thể tạo văn bản");
-		}
+		}*/
 		
 		return model;
 	}

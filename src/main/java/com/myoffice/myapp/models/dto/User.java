@@ -110,6 +110,14 @@ public class User {
 		this.userDetail = userDetail;
 	}
 
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
+	}
+
 
 
 

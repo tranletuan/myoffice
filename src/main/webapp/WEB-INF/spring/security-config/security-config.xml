@@ -20,10 +20,10 @@
 		<logout logout-success-url="/signin-signout" invalidate-session="false" logout-url="/j_spring_security_logout"
 			delete-cookies="JSESSIONID" />
 
-		<session-management invalid-session-url="/signin">
+		<!-- <session-management invalid-session-url="/signin">
 			<concurrency-control max-sessions="1"
 				expired-url="/signin" />
-		</session-management>
+		</session-management> -->
 		
 		<access-denied-handler error-page="/error" />
 		

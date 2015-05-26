@@ -131,6 +131,9 @@ public class DataService {
 		unitDao.deleteUnit(unit);
 	}
 	
+	public List<Unit> findUnitByArray(Integer[] arrId){
+		return unitDao.findUnitByArray(arrId);
+	}
 	
 	
 }

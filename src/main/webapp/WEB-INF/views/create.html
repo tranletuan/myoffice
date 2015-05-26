@@ -39,7 +39,7 @@ xmlns:th="http://www.thymeleaf.org">
 				<tr>
 					<td></td>
 					<td>
-						<form th:action="@{/impl/create_new_doc}" method="post">
+						<form th:action="@{/impl/create_new_doc}" method="post" autocomplete="off">
 							<div class="form-group">
 								<table class="table">
 									<colgroup>
@@ -59,7 +59,7 @@ xmlns:th="http://www.thymeleaf.org">
 												<h4><span class="label label-primary">Tên văn bản : </span></h4>
 											</th>
 											<td>
-												<h4><input type="text" class="form-control" placeholder="Tên văn bản" required="true" th:name="docName"/></h4>
+												<h4><input type="text" class="form-control" placeholder="Tên văn bản" required="false" th:name="docName"/></h4>
 											</td>
 										</tr>
 										
@@ -68,7 +68,7 @@ xmlns:th="http://www.thymeleaf.org">
 												<h4><span class="label label-primary">Tiêu đề : </span></h4>
 											</th>
 											<td>
-												<h4><input type="text" class="form-control" placeholder="Tiêu đề" required="true" th:name="title"/></h4>
+												<h4><input type="text" class="form-control" placeholder="Tiêu đề" required="false" th:name="title"/></h4>
 											</td>
 										</tr>
 										
@@ -77,7 +77,7 @@ xmlns:th="http://www.thymeleaf.org">
 												<h4><span class="label label-primary">Cơ quan ban hành : </span></h4>
 											</th>
 											<td>
-												<h4><input type="text" class="form-control" placeholder="Đơn vị ban hành" required="true" th:name="unit"/></h4>
+												<h4><p th:text="${unit.unitName}" th:name="sendUnit"></p></h4>
 											</td>
 										</tr>
 										
@@ -86,7 +86,7 @@ xmlns:th="http://www.thymeleaf.org">
 												<h4><span class="label label-primary">Ngày ban hành : </span></h4>
 											</th>
 											<td>
-												<h4><input type="text" class="form-control" placeholder="Ngày ban hành" required="true" th:name="releaseTime"/></h4>
+												<h4><input type="text" class="form-control" placeholder="Ngày ban hành" required="false" th:name="releaseTime"/></h4>
 											</td>
 										</tr>
 										
@@ -96,7 +96,7 @@ xmlns:th="http://www.thymeleaf.org">
 											</th>
 											<td>
 												<select class="form-control" data-style="btn-primary" th:name="docType">
-													<option th:each="docType : ${typeList}" th:value="${docType.typeId}" th:text="${docType.typeName}"></option>
+													<option th:each="docType : ${typeList}" th:value="${docType}" th:text="${docType.typeName}"></option>
 												</select>
 											</td>
 										</tr>
@@ -106,7 +106,7 @@ xmlns:th="http://www.thymeleaf.org">
 												<h4><span class="label label-primary">Trích yếu : </span></h4>
 											</th>
 											<td>
-												<textarea class="form-control" rows="5" placeholder="Nội dung tóm tắt" required="true" th:name="epitome"></textarea>
+												<textarea class="form-control" rows="5" placeholder="Nội dung tóm tắt" required="false" th:name="epitome"></textarea>
 											</td>
 										</tr>
 										
@@ -116,7 +116,7 @@ xmlns:th="http://www.thymeleaf.org">
 											</th>
 											
 											<td>
-												<h4><input type="text" class="form-control" placeholder="Số và ký hiệu" required="true" /></h4>
+												<h4><input type="text" class="form-control" placeholder="Số và ký hiệu" required="false" /></h4>
 											</td>
 										</tr>
 										
@@ -125,6 +125,18 @@ xmlns:th="http://www.thymeleaf.org">
 												<h4><span class="label label-primary">Nơi nhận : </span></h4>
 											</th>
 											<td>
+												<select class="form-control" multiple="true" th:name="recipientUnits">
+													<option th:each="unit : ${unitList}" th:value="${unit.unitId}" th:text="${unit.unitName}"></option>
+												</select>
+											</td>
+										</tr>
+
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Người nhận : </span></h4>
+											</th>
+											<td>
+												<h4><input type="text" class="form-control" placeholder="Người nhận" /></h4>
 											</td>
 										</tr>
 										
@@ -134,7 +146,7 @@ xmlns:th="http://www.thymeleaf.org">
 											</th>
 											<td>
 												<select class="form-control" data-style="btn-primary" th:name="privacyLevel">
-													<option th:each="privacyLv : ${privacyList}" th:value="${privacyLv.privacyId}" th:text="${privacyLv.privacyName}"></option>
+													<option th:each="privacyLv : ${privacyList}" th:value="${privacyLv}" th:text="${privacyLv.privacyName}"></option>
 												</select>
 											</td>
 										</tr>
@@ -145,7 +157,7 @@ xmlns:th="http://www.thymeleaf.org">
 											</th>
 											<td>
 												<select class="form-control" data-style="btn-primary" th:name="emergencyLevel">
-													<option th:each="emeLv : ${emeList}" th:value="${emeLv.emeId}" th:text="${emeLv.emeName}"></option>
+													<option th:each="emeLv : ${emeList}" th:value="${emeLv}" th:text="${emeLv.emeName}"></option>
 												</select>
 											</td>
 										</tr>
@@ -157,7 +169,7 @@ xmlns:th="http://www.thymeleaf.org">
 
 											<td>
 												<div class="form-group" style="margin-top:10px;">
-													<input type="file" required="true" th:name="docPath"/>
+													<input type="file" required="false" th:name="docPath"/>
 													<p class="help-block"></p>
 												</div>	
 											</td>
