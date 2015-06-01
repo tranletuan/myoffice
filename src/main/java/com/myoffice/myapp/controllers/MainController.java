@@ -29,27 +29,15 @@ import com.myoffice.myapp.models.service.DataService;
 import com.myoffice.myapp.models.service.SecurityService;
 
 @Controller
-public class MainController {
+public class MainController extends AbstractController {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(MainController.class);
-
-	@Autowired
-	private DataService dataService;
-
-	@Autowired
-	private SecurityService securityService;
 
 	@RequestMapping(value = { "/", "/home**" }, method = RequestMethod.GET)
 	public ModelAndView defaultPage() {
 
 		ModelAndView model = new ModelAndView("home");
-
-		// Kiểm tra tình trạng đăng nhập
-		User user = securityService.getCurrentUser();
-		if (user != null) {
-			model.addObject("curUser", user);
-		}
 		
 		return model;
 	}

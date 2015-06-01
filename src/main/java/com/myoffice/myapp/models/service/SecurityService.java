@@ -43,7 +43,7 @@ public class SecurityService implements UserDetailsService {
 	private User buildUserForAuthentication(
 			com.myoffice.myapp.models.dto.User user,
 			List<GrantedAuthority> authorities) {
-		return new User(user.getUsername(), user.getPassword(),
+		return new User(user.getUserName(), user.getPassword(),
 				user.isEnabled(), true, true, true, authorities);
 	}
 
@@ -67,7 +67,7 @@ public class SecurityService implements UserDetailsService {
 				.getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 			UserDetails userDetail = (UserDetails) auth.getPrincipal();
-			if(userDetail.getUsername() != user.getUsername()){
+			if(userDetail.getUsername() != user.getUserName()){
 				user = userDao.findUserByName(userDetail.getUsername());
 			}
 			

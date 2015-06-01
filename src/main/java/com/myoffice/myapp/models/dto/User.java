@@ -30,7 +30,7 @@ public class User {
 	private Integer userId;
 
 	@Column(name = "user_name", unique = true, nullable = false, length = 45)
-	private String username;
+	private String userName;
 
 	@Column(name = "password", nullable = false, length = 60)
 	private String password;
@@ -62,12 +62,12 @@ public class User {
 		return userId;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUsername(String userName) {
+		this.userName = userName;
 	}
 
 	public String getPassword() {

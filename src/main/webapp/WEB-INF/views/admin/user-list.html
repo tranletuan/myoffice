@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Admin</title>
+
+	<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.table tr').click(function() {
+				$('.table tr').attr('class', ' ');
+   				$(this).attr('class', 'active');
+			});
+    	});
+
+	</script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="fragment/menu :: menu"></div>
+		<div>
+			<button type="button" class="btn btn-info" data-toggle="modal" data-target=".form-user-account">Thêm</button>
+			<button type="button" class="btn btn-warning">Sửa</button>
+			<button type="button" class="btn btn-danger">Xóa</button>				
+		</div>
+		<table class="table">
+			<colgroup>
+				<col class="col-xs-3 col-md-1" />
+				<col class="col-xs-12 col-md-10" />
+				<col class="col-xs-3 col-md-1" />
+			</colgroup>
+			<tbody>
+				<!-- Container -->
+				<table class="table table-hover">
+					<tbody>
+						<thead>
+							<th>STT</th>
+							<th>Tên tài khoản</th>
+							<th>Đơn vị</th>
+							<th>Khả dụng</th>
+						</thead>
+						<tr th:each="user : ${userList}">
+							<td th:text="${user.userId}"></td>
+							<td th:text="${user.userName}"></td>
+							<td>Công nghệ phần mềm</td>
+							<td>Có</td>
+						</tr> 
+					</tbody>
+				</table>
+			</tbody>
+		</table>
+
+		<div class="modal fade form-user-account" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<form class="form-horizontal" method="post" style="margin: 15px;">
+
+						
+						<div class="form-group">
+							<label for="input-user-name" class="col-sm-2 control-label">Tên tài khoản</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="input-user-name" placeholder="Tên tài khoản"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="input-user-unit" class="col-sm-2 control-label">Đơn vị</label>
+							<div class="col-sm-10">
+								<select class="form-control">
+									<option>CNPM</option>
+									<option>HTTT</option>
+									<option>KTMT</option>
+								</select>
+							</div>
+						</div>	
+
+						<div class="form-group">
+							<label for="input-user-account" class="col-sm-2 control-label">Khả dụng</label>
+							<div class="col-sm-10">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" value="true" checked="true"/>
+									</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<button type="submit" class="btn btn-primary">Lưu</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close" aria-hidden="true">Bỏ qua</button>
+							</div>
+						</div>
+  					</form>
+				</div>
+			</div>
+		</div>
+
+		<div th:replace="fragment/footer :: footer"></div>
+	</div>
+</body>
+</html>
