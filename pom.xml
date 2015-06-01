@@ -16,7 +16,7 @@
 		<org.hibernate-version>4.2.9.Final</org.hibernate-version>
 		<org.activiti-version>5.17.0</org.activiti-version>
 		<thymeleaf-version>2.1.2.RELEASE</thymeleaf-version>
-		<thymeleaf-extras-version>2.1.1.RELEASE</thymeleaf-extras-version>
+		<thymeleaf-extras-version>2.1.2.RELEASE</thymeleaf-extras-version>
 
 	</properties>
 	<dependencies>
@@ -60,6 +60,7 @@
 		</dependency>
 
 		<!-- Spring Security -->
+
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
@@ -105,7 +106,7 @@
 
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity3</artifactId>
+			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
 			<version>${thymeleaf-extras-version}</version>
 		</dependency>
 

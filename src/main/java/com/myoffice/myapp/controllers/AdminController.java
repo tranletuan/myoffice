@@ -1,11 +1,15 @@
 package com.myoffice.myapp.controllers;
 
+
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.myoffice.myapp.models.dto.User;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -18,7 +22,9 @@ public class AdminController extends AbstractController {
 	public ModelAndView userList(){
 		ModelAndView model = new ModelAndView("admin/user-list");
 		
-		
+		List<User> userList = dataService.findAllUsers();
+		model.addObject("userList", userList);
+
 		return model;
 	}
 

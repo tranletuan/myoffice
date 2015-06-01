@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.springframework.stereotype.Repository;
 
 import com.myoffice.myapp.models.dao.common.AbstractDao;
@@ -39,6 +40,7 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 	@SuppressWarnings("unchecked")
 	public List<User> findAllUsers() {
 		Criteria criteria = getSession().createCriteria(User.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return (List<User>)criteria.list();
 	}
 

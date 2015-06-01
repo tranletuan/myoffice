@@ -6,14 +6,13 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-
+	
      
-   
 	<context:component-scan base-package="com.myoffice.myapp">
 		<context:exclude-filter expression="org.springframework.stereotype.Controller"
 			type="annotation" />
 	</context:component-scan>
-	
+
 	<bean id="flowUtilImp" class="com.myoffice.myapp.utils.FlowUtilImp"></bean>
 	<bean id="dataService" class="com.myoffice.myapp.models.service.DataService"></bean>
 	<bean id="securityService" class="com.myoffice.myapp.models.service.SecurityService"></bean>

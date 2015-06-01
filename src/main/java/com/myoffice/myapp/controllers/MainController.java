@@ -38,12 +38,16 @@ public class MainController extends AbstractController {
 	public ModelAndView defaultPage() {
 
 		ModelAndView model = new ModelAndView("home");
-		
 		return model;
 	}
 
 	@RequestMapping(value = "/signin", method = RequestMethod.GET)
 	public String login() {
+		
+		User user = securityService.getCurrentUser();
+		if(user != null) {
+			return "home";
+		}
 		return "signin";
 	}
 
