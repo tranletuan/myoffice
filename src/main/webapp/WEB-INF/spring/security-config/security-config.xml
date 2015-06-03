@@ -11,7 +11,7 @@
 		<intercept-url pattern="/signin*" access="permitAll" />
 		<intercept-url pattern="/store/**" access="isAuthenticated()" />
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
-		<intercept-url pattern="/impl/**" access="hasAnyRole('ROLE_USER','ROLE_MANA')"/>
+		<intercept-url pattern="/impl/**" access="hasAnyRole('ROLE_USER','ROLE_MANAGER')"/>
 
 		<form-login 
 			login-page="/signin" 

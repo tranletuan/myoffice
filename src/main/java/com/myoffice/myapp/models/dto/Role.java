@@ -18,9 +18,12 @@ public class Role {
 
 	@Column(name = "role_name", unique = true, nullable = false)
 	private String roleName;
+	
+	@Column(name= "full_name", unique = true, nullable = false)
+	private String fullName;
 
 	public Role() {
-
+		
 	}
 
 	public Role(String roleName) {
@@ -42,6 +45,14 @@ public class Role {
 
 	public Integer getRoleId() {
 		return roleId;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 }

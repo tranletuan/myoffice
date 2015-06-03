@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -39,6 +40,7 @@ public class RoleDaoImp extends AbstractDao implements RoleDao {
 	@SuppressWarnings("unchecked")
 	public List<Role> findAllRoles() {
 		Criteria criteria = getSession().createCriteria(Role.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return (List<Role>)criteria.list();
 	}
 	

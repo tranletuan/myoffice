@@ -135,5 +135,25 @@ public class DataService {
 		return unitDao.findUnitByArray(arrId);
 	}
 	
+	//=====================
+	@Autowired
+	private RoleDao roleDao;
+	
+    public Role findRoleByName(String roleName){
+    	return roleDao.findRoleByName(roleName);
+    }
+	
+	public List<Role> findAllRoles(){
+		return roleDao.findAllRoles();
+	}
+	
+	public void saveRole(Role role){
+		roleDao.saveRole(role);
+	}
+	
+	public void deleteRole(Role role){
+		roleDao.deleteRole(role);
+	}
+	
 	
 }

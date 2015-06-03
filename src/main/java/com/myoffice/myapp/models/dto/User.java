@@ -17,6 +17,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
@@ -51,7 +52,7 @@ public class User {
 	private UserDetail userDetail;
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "unit_id", nullable = true, insertable = true, updatable = true)
+	@JoinColumn(name = "unit_id", nullable = false)
 	private Unit unit;
 
 	public User() {
@@ -75,7 +76,9 @@ public class User {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String hashedPassword = passwordEncoder.encode(password);
+		this.password = hashedPassword;
 	}
 
 	public boolean isEnabled() {
@@ -117,8 +120,19 @@ public class User {
 	public void setUnit(Unit unit) {
 		this.unit = unit;
 	}
-
-
-
-
+	
+	public String getRoleNames(){
+		String rs = "";
+		int size = roles.size();
+		int i = 0;
+		for(Role r : roles){
+			rs += r.getFullName();
+			if(i >= 0 && i < size - 1){
+				rs += ", ";
+			}
+			i++;
+		}
+		
+		return rs;
+	}
 }
