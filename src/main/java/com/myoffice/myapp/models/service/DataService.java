@@ -44,6 +44,9 @@ public class DataService {
 		userDao.deleteUser(user);
 	}
 	
+	public User findUserById(Integer userId){
+		return userDao.findUserById(userId);
+	}
 	//===================
 	@Autowired
 	private DocumentDao docDao;
@@ -153,6 +156,10 @@ public class DataService {
 	
 	public void deleteRole(Role role){
 		roleDao.deleteRole(role);
+	}
+	
+	public List<Role> findRolesByArrId(Integer[] rolesId){
+		return roleDao.findRolesByArrId(rolesId);
 	}
 	
 	

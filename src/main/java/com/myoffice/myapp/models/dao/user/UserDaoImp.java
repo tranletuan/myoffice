@@ -54,6 +54,11 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 		delete(user);
 		
 	}
+
+	@Override
+	public User findUserById(Integer userId) {
+		return (User)getSession().get(User.class, userId);
+	}
 	
 	
 }

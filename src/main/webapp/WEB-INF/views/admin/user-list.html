@@ -43,18 +43,18 @@ xmlns:th="http://www.thymeleaf.org">
 					<table class="table table-hover">
 						<tbody>
 							<thead>
-								<th>STT</th>
+								<th>ID</th>
 								<th>Tên tài khoản</th>
 								<th>Đơn vị</th>
 								<th>Khả dụng</th>
 								<th>Quyền hạn</th>
 								
 							</thead>
-							<tr th:each="user : ${userList}" id="${user.userId}">
+							<tr th:each="user : ${userList}" th:attr="id=${user.userId}">
 								<td th:text="${user.userId}"></td>
-								<td th:text="${user.userName}"></td>
-								<td th:text="${user.unit.unitName}"></td>
-								<td th:text="${user.enabled}"></td>
+								<td th:text="${user.userName}" class="userName"></td>
+								<td th:text="${user.unit.unitName}" class="unit"></td>
+								<td th:text="${user.enabled}" class="enabled"></td>
 								<td th:text="${user.getRoleNames()}"></td>
 							</tr> 
 						</tbody>
@@ -67,26 +67,31 @@ xmlns:th="http://www.thymeleaf.org">
 					<div class="modal-content">
 						<form class="form-horizontal" method="post" style="margin: 15px;">
 	
-							<div th:name="userId" class="hidden"></div>
+							<div class="form-group">
+								<label for="userId" class="col-sm-2 control-label">ID</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" disabled="true" id="userId" th:name="userId" value=""/>
+								</div>
+							</div>
 
 							<div class="form-group">
 								<label for="input-user-name" class="col-sm-2 control-label">Tên tài khoản</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="input-user-name" placeholder="Tên tài khoản" th:name="userName"/>
+									<input type="text" class="form-control" id="userName" placeholder="Tên tài khoản" th:name="userName" required="true"/>
 								</div>
 							</div>
 
 							<div class="form-group">
 								<label for="input-user-name" class="col-sm-2 control-label">Mật khẩu</label>
 								<div class="col-sm-10">
-									<input type="password" class="form-control" id="input-password" placeholder="Mật khẩu" th:name="password"/>
+									<input type="password" class="form-control" id="password" placeholder="Mật khẩu" th:name="password" value="" />
 								</div>
 							</div>
 	
 							<div class="form-group">
 								<label for="input-user-unit" class="col-sm-2 control-label">Đơn vị</label>
 								<div class="col-sm-10">
-									<select class="form-control" th:name="unit" id="select-unit">
+									<select class="form-control" th:name="unit" id="unit">
 										<option th:each="unit : ${unitList}"
 												th:value="${unit}"
 												th:text="${unit.unitName}">
@@ -112,7 +117,7 @@ xmlns:th="http://www.thymeleaf.org">
 								<div class="col-sm-10">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" value="true" checked="true" th:name="enabled" id="checkbox-enabled"/>
+											<input type="checkbox" value="true" checked="true" th:name="enabled" id="enabled"/>
 										</label>
 									</div>
 								</div>

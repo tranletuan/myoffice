@@ -54,6 +54,22 @@ public class RoleDaoImp extends AbstractDao implements RoleDao {
 		delete(role);
 		
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Role> findRolesByArrId(Integer[] rolesId) {
+		String queryString = "from Role where ";
+		
+		for(int i = 0; i < rolesId.length; i++){
+			queryString += "role_id=" + rolesId[i];
+			if(i >= 0 && i < rolesId.length - 1){
+				queryString += " or ";
+			}
+		}
+		
+		Query query = (Query)getSession().createQuery(queryString);
+		return query.list();
+	}
 	
 	
 

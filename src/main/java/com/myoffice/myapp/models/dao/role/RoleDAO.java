@@ -14,5 +14,6 @@ public interface RoleDao {
 	
 	void deleteRole(Role role);
 
+	List<Role> findRolesByArrId(Integer[] rolesId);
 
 }
