@@ -2,35 +2,42 @@
  * 
  */
 
-$(document).ready(function() {
+ $(document).ready(function() {
 
-	var userId;
-	var userName;
-	var unit;
-	var enabled;
+ 	var userId;
+ 	var userName;
+ 	var unit;
+ 	var enabled;
 
-	$('.table tr').click(function() {
-		$('.table tr').attr('class', ' ');
-		$(this).attr('class', 'active');
+ 	$('.table tr').click(function() {
+ 		$('.table tr').attr('class', ' ');
+ 		$(this).attr('class', 'active');
 
-		userId = $(this).attr('id');
-		userName = $(this).find('.userName').html();
-		unit = $(this).find('.unit').html();
-		enabled = $(this).find('.enabled').html();
-	});
-	
-	$('#btn-change').click(function(){
-		$('#userId').attr('value', userId);
-		$('#userName').val(userName);
-		$('#enabled').attr('checked', enabled);
+ 		userId = $(this).attr('id');
+ 		userName = $(this).find('.userName').html();
+ 		unit = $(this).find('.unit').html();
+ 		enabled = $(this).find('.enabled').html();
+ 	});
 
-		var unitList = $('#unit').find('option');
-		for(var i = 0; i < unitList.length; i++){
+ 	$('#btn-change').click(function(){
+ 		$('#userId').attr('value', userId);
+ 		$('#userName').val(userName);
+ 		$('#enabled').attr('checked', enabled);
 
-			if(unitList[i].innerText == unit){
-				unitList[i].setAttribute('selected', 'true');
-				break;
-			}
-		}
-	});
-});
+
+ 		var unitList = $('#unit').find('option');
+ 		for(var i = 0; i < unitList.length; i++){
+
+ 			if(unitList[i].innerText == unit){
+ 				unitList[i].setAttribute('selected', 'true');
+ 				break;
+ 			}
+ 		}
+ 	});
+
+ 	$('#btn-add').click(function(){
+ 		$('#userId').attr('value', '-1');
+ 		$('#userName').val('');
+ 		$('#enabled').attr('checked', 'true');
+ 	});
+ });

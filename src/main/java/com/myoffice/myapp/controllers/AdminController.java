@@ -40,36 +40,53 @@ public class AdminController extends AbstractController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/save_user", method = RequestMethod.GET)
+	@RequestMapping(value = "/save_user", method = RequestMethod.POST)
 	public ModelAndView saveUser(
 			@RequestParam("userId") Integer userId,
 			@RequestParam("userName") String userName,
-			@RequestParam("password") String password,
+			@RequestParam(value = "password", required = false) String password,
 			@ModelAttribute("unit") Unit unit,
-			@RequestParam("roles") Integer[] rolesId,
-			@RequestParam("enabled") boolean enabled){
+			@RequestParam(value = "roles", required = false) Integer[] rolesId,
+			@RequestParam(value = "userEnabled", required = false) boolean enabled){
 		ModelAndView model = new ModelAndView("admin/user-list");
-		User user = new User();
-		Set<Role> roles = new HashSet<Role>(dataService.findRolesByArrId(rolesId));
 		
-		if(userId != null){
+		Set<Role> roles = new HashSet<Role>(dataService.findAllRoles());
+		
+		/*if(userId > 0) {
 			user = dataService.findUserById(userId);
 		}
 		
-		if(password != null){
+		if(password != ""){
 			user.setPassword(password);
-		}
+		}*/
 		
-		user.setUsername(userName);
+/*		user.setUsername(userName);
 		user.setUnit(unit);
 		user.setEnabled(enabled);
 		user.setRoles(roles);
+*/		
+		User user = new User();
+		user.setUsername("haovc");
+		user.setPassword("123");
+		user.setRoles(roles);
+		user.setUnit(dataService.findUnitById(2));
+		user.setEnabled(false);
 		
 		logger.info(userId.toString());
 		logger.info(userName);
 		logger.info(password);
-		logger.info(unit.getUnitName());
+		logger.info(unit.toString());
 		logger.info(String.valueOf(enabled));
+		
+		dataService.saveUser(user);
+		
+		List<User> userList = dataService.findAllUsers();
+		List<Role> roleList = dataService.findAllRoles();
+		List<Unit> unitList = dataService.findAllUnit();
+		
+ 		model.addObject("userList", userList);
+ 		model.addObject("roleList", roleList);
+ 		model.addObject("unitList", unitList);
 		
 		return model;
 	}

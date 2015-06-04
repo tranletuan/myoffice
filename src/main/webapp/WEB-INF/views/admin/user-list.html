@@ -65,12 +65,12 @@ xmlns:th="http://www.thymeleaf.org">
 			<div class="modal fade form-user-account" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
-						<form class="form-horizontal" method="post" style="margin: 15px;">
+						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_user}">
 	
-							<div class="form-group">
+							<div class="form-group hidden">
 								<label for="userId" class="col-sm-2 control-label">ID</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" disabled="true" id="userId" th:name="userId" value=""/>
+									<input type="text" class="form-control" id="userId" th:name="userId" value=""/>
 								</div>
 							</div>
 
@@ -117,7 +117,7 @@ xmlns:th="http://www.thymeleaf.org">
 								<div class="col-sm-10">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" value="true" checked="true" th:name="enabled" id="enabled"/>
+											<input type="checkbox" value="true" checked="unchecked" th:name="userEnabled" id="enabled"/>
 										</label>
 									</div>
 								</div>
