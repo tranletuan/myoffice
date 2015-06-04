@@ -41,7 +41,7 @@ public class MainController extends AbstractController {
 		return model;
 	}
 
-	@RequestMapping(value = "/signin", method = RequestMethod.GET)
+	@RequestMapping(value = "/signin")
 	public String login() {
 		
 		User user = securityService.getCurrentUser();

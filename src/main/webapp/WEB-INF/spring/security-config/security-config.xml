@@ -31,7 +31,7 @@
 				expired-url="/signin-time-out"/>
 		</session-management>
 		
-		<access-denied-handler error-page="/error" />
+		<access-denied-handler error-page="/" />
 		
 		<!-- enable csrf protection -->
 		<csrf />

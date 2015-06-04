@@ -23,10 +23,6 @@ public class DocumentDaoImp extends AbstractDao  implements DocumentDao {
 	private static final Logger logger = LoggerFactory
 			.getLogger(DocumentDaoImp.class);
 	
-	public DocumentDaoImp() {
-		logger.info("DOCUMENT DAO HAS CONSTRUCTED");
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Document findDocumentByName(String docName) {

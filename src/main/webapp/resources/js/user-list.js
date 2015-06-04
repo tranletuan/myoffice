@@ -4,7 +4,7 @@
 
  $(document).ready(function() {
 
- 	var userId;
+ 	var userId = -1;
  	var userName;
  	var unit;
  	var enabled;
@@ -17,6 +17,10 @@
  		userName = $(this).find('.userName').html();
  		unit = $(this).find('.unit').html();
  		enabled = $(this).find('.enabled').html();
+
+ 		if(userId > 0){
+ 			$("#btn-change").removeAttr('disabled');
+ 		}
  	});
 
  	$('#btn-change').click(function(){
@@ -33,11 +37,21 @@
  				break;
  			}
  		}
+
+ 		$('.change-required').removeAttr('required');
  	});
 
  	$('#btn-add').click(function(){
  		$('#userId').attr('value', '-1');
  		$('#userName').val('');
  		$('#enabled').attr('checked', 'true');
+ 	
+ 		$('.change-required').attr('required', 'true');
  	});
+
+ 	$("table.sort_table").sort_table({
+        "action" : "init"
+    });
+
+    $("#table-body").remove();
  });

@@ -17,7 +17,7 @@ public abstract class AbstractDao {
 
 	public void persist(Object obj) {
 		try {
-			getSession().persist(obj);
+			getSession().saveOrUpdate(obj);
 		} catch (Exception e) {
 			System.out.println("ERROR : can't persit object :  "
 					+ obj.getClass() + " cause of session : " + e.getMessage());

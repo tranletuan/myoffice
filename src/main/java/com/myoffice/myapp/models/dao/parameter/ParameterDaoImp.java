@@ -17,10 +17,6 @@ public class ParameterDaoImp extends AbstractDao implements ParameterDao {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ParameterDaoImp.class);
 
-	public ParameterDaoImp() {
-		logger.info("PARAMETER DAO HAS CONSTRUCTED");
-	}
-
 	@Override
 	@SuppressWarnings("unchecked")
 	public Parameter findParameterByName(String paramName) {

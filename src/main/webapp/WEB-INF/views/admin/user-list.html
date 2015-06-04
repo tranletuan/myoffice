@@ -20,8 +20,9 @@ xmlns:th="http://www.thymeleaf.org">
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	
 	<script type="text/javascript" th:src="@{/js/user-list.js}" ></script>
-	
+	<script type="text/javascript" th:src="@{/js/jquery.table-sort.js}" ></script>
 	<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}" />
+
 	
 </head>
 <body>
@@ -30,7 +31,7 @@ xmlns:th="http://www.thymeleaf.org">
 		<div class="container">
 			<div>
 				<button id="btn-add" type="button" class="btn btn-info" data-toggle="modal" data-target=".form-user-account">Thêm</button>
-				<button id="btn-change" type="button" class="btn btn-warning" data-toggle="modal" data-target=".form-user-account">Sửa</button>				
+				<button id="btn-change" type="button" class="btn btn-warning" disabled="true" data-toggle="modal" data-target=".form-user-account">Sửa</button>				
 			</div>
 			<table class="table">
 				<colgroup>
@@ -40,8 +41,8 @@ xmlns:th="http://www.thymeleaf.org">
 				</colgroup>
 				<tbody>
 					<!-- Container -->
-					<table class="table table-hover">
-						<tbody>
+					<table class="table table-hover sort_table">
+						<tbody id="table-body">
 							<thead>
 								<th>ID</th>
 								<th>Tên tài khoản</th>
@@ -84,16 +85,16 @@ xmlns:th="http://www.thymeleaf.org">
 							<div class="form-group">
 								<label for="input-user-name" class="col-sm-2 control-label">Mật khẩu</label>
 								<div class="col-sm-10">
-									<input type="password" class="form-control" id="password" placeholder="Mật khẩu" th:name="password" value="" />
+									<input type="password" class="form-control change-required" id="password" placeholder="Mật khẩu" th:name="password" value="" />
 								</div>
 							</div>
 	
 							<div class="form-group">
 								<label for="input-user-unit" class="col-sm-2 control-label">Đơn vị</label>
 								<div class="col-sm-10">
-									<select class="form-control" th:name="unit" id="unit">
+									<select class="form-control" id="unit"  th:name="unitId">
 										<option th:each="unit : ${unitList}"
-												th:value="${unit}"
+												th:value="${unit.unitId}"
 												th:text="${unit.unitName}">
 										</option>
 									</select>
@@ -103,7 +104,7 @@ xmlns:th="http://www.thymeleaf.org">
 							<div class="form-group">
 								<label for="input-user-account" class="col-sm-2 control-label">Quyền hạn</label>
 								<div class="col-sm-10">
-									<select class="form-control" th:name="roles" multiple="true" id="select-roles">
+									<select class="form-control change-required" th:name="roles" multiple="true" id="select-roles">
 										<option th:each="role : ${roleList}"
 												th:value="${role.roleId}"
 												th:text="${role.fullName}">
@@ -117,7 +118,7 @@ xmlns:th="http://www.thymeleaf.org">
 								<div class="col-sm-10">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" value="true" checked="unchecked" th:name="userEnabled" id="enabled"/>
+											<input type="checkbox" value="true" checked="unchecked" th:name="enabled" id="enabled"/>
 										</label>
 									</div>
 								</div>

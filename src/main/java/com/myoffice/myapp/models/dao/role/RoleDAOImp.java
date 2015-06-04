@@ -17,10 +17,6 @@ public class RoleDaoImp extends AbstractDao implements RoleDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(RoleDaoImp.class);
 	
-	public RoleDaoImp() {
-		logger.info("ROLE DAO HAS CONSTRUCTED");
-	}
-	
 	@Override
 	@SuppressWarnings("unchecked")
 	public Role findRoleByName(String roleName) {
@@ -58,6 +54,9 @@ public class RoleDaoImp extends AbstractDao implements RoleDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Role> findRolesByArrId(Integer[] rolesId) {
+		
+		if(rolesId == null) return null;
+		
 		String queryString = "from Role where ";
 		
 		for(int i = 0; i < rolesId.length; i++){

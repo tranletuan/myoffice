@@ -30,10 +30,6 @@ public class FlowUtilImp implements FlowUtil {
 	private static final Logger logger = LoggerFactory
 			.getLogger(FlowUtilImp.class);
 
-	public FlowUtilImp() {
-		logger.info("FLOW UTIL HAS CONSTRUCTED");
-	}
-
 	@Override
 	public boolean deployProcess(String resourceName, String filePath) {
 		try {

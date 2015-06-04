@@ -17,10 +17,6 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserDaoImp.class);
 
-	public UserDaoImp(){
-		logger.info("USER DAO HAS CONSTRUCTED");
-	}
-	
 	@Override
 	@SuppressWarnings("unchecked")
 	public User findUserByName(String username) {

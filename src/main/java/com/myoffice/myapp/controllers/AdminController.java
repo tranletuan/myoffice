@@ -1,6 +1,5 @@
 package com.myoffice.myapp.controllers;
 
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,74 +23,59 @@ public class AdminController extends AbstractController {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(AdminController.class);
-	
+
 	@RequestMapping(value = "/user_list", method = RequestMethod.GET)
-	public ModelAndView userList(){
+	public ModelAndView userList() {
 		ModelAndView model = new ModelAndView("admin/user-list");
-		
+
 		List<User> userList = dataService.findAllUsers();
 		List<Role> roleList = dataService.findAllRoles();
 		List<Unit> unitList = dataService.findAllUnit();
-		
- 		model.addObject("userList", userList);
- 		model.addObject("roleList", roleList);
- 		model.addObject("unitList", unitList);
+
+		model.addObject("userList", userList);
+		model.addObject("roleList", roleList);
+		model.addObject("unitList", unitList);
 
 		return model;
 	}
-	
+
 	@RequestMapping(value = "/save_user", method = RequestMethod.POST)
 	public ModelAndView saveUser(
 			@RequestParam("userId") Integer userId,
 			@RequestParam("userName") String userName,
 			@RequestParam(value = "password", required = false) String password,
-			@ModelAttribute("unit") Unit unit,
+			@RequestParam("unitId") Integer unitId,
 			@RequestParam(value = "roles", required = false) Integer[] rolesId,
-			@RequestParam(value = "userEnabled", required = false) boolean enabled){
-		ModelAndView model = new ModelAndView("admin/user-list");
-		
-		Set<Role> roles = new HashSet<Role>(dataService.findAllRoles());
-		
-		/*if(userId > 0) {
+			@RequestParam(value = "enabled", required = false) boolean enabled) {
+		ModelAndView model = new ModelAndView("redirect:user_list");
+		User user = new User();
+
+		if (userId > 0) {
 			user = dataService.findUserById(userId);
 		}
+
+		//userName
+		user.setUsername(userName);
 		
-		if(password != ""){
+		//password
+		if (password != "") {
 			user.setPassword(password);
-		}*/
-		
-/*		user.setUsername(userName);
-		user.setUnit(unit);
+		}
+
+		//unit
+		user.setUnit(dataService.findUnitById(unitId));
+
+		//roles
+		if (rolesId != null) {
+			Set<Role> roles = new HashSet<Role>(
+					dataService.findRolesByArrId(rolesId));
+			user.setRoles(roles);
+		}
+
+		//enabled
 		user.setEnabled(enabled);
-		user.setRoles(roles);
-*/		
-		User user = new User();
-		user.setUsername("haovc");
-		user.setPassword("123");
-		user.setRoles(roles);
-		user.setUnit(dataService.findUnitById(2));
-		user.setEnabled(false);
-		
-		logger.info(userId.toString());
-		logger.info(userName);
-		logger.info(password);
-		logger.info(unit.toString());
-		logger.info(String.valueOf(enabled));
-		
 		dataService.saveUser(user);
-		
-		List<User> userList = dataService.findAllUsers();
-		List<Role> roleList = dataService.findAllRoles();
-		List<Unit> unitList = dataService.findAllUnit();
-		
- 		model.addObject("userList", userList);
- 		model.addObject("roleList", roleList);
- 		model.addObject("unitList", unitList);
-		
+
 		return model;
 	}
-	
-	
-	
-
 }
