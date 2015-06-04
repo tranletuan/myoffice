@@ -69,6 +69,11 @@ public class RoleDaoImp extends AbstractDao implements RoleDao {
 		Query query = (Query)getSession().createQuery(queryString);
 		return query.list();
 	}
+
+	@Override
+	public Role findRoleById(Integer roleId) {
+		return (Role)getSession().get(Role.class, roleId);
+	}
 	
 	
 

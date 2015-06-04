@@ -19,8 +19,11 @@ public class Role {
 	@Column(name = "role_name", unique = true, nullable = false)
 	private String roleName;
 	
-	@Column(name= "full_name", unique = true, nullable = false)
+	@Column(name= "full_name", unique = true, nullable = false, length = 100)
 	private String fullName;
+	
+	@Column(name= "sort_name", unique = true, nullable = false)
+	private String sortName;
 
 	public Role() {
 		
@@ -53,6 +56,14 @@ public class Role {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getSortName() {
+		return sortName;
+	}
+
+	public void setSortName(String sortName) {
+		this.sortName = sortName;
 	}
 
 }

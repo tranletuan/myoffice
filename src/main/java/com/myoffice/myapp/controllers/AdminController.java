@@ -54,28 +54,60 @@ public class AdminController extends AbstractController {
 			user = dataService.findUserById(userId);
 		}
 
-		//userName
+		// userName
 		user.setUsername(userName);
-		
-		//password
+
+		// password
 		if (password != "") {
 			user.setPassword(password);
 		}
 
-		//unit
+		// unit
 		user.setUnit(dataService.findUnitById(unitId));
 
-		//roles
+		// roles
 		if (rolesId != null) {
 			Set<Role> roles = new HashSet<Role>(
 					dataService.findRolesByArrId(rolesId));
 			user.setRoles(roles);
 		}
 
-		//enabled
+		// enabled
 		user.setEnabled(enabled);
 		dataService.saveUser(user);
 
 		return model;
 	}
+
+	@RequestMapping(value = "/role_list", method = RequestMethod.GET)
+	public ModelAndView roleList() {
+		ModelAndView model = new ModelAndView("admin/role-list");
+
+		List<Role> roleList = dataService.findAllRoles();
+
+		model.addObject("roleList", roleList);
+
+		return model;
+	}
+
+	@RequestMapping(value = "/save_role", method = RequestMethod.POST)
+	public ModelAndView saveRole(@RequestParam("roleId") Integer roleId,
+			@RequestParam("roleName") String roleName,
+			@RequestParam("fullName") String fullName,
+			@RequestParam("sortName") String sortName) {
+		ModelAndView model = new ModelAndView("redirect:role_list");
+		Role role = new Role();
+		if (roleId > 0) {
+			role = dataService.findRoleById(roleId);
+		}
+
+		role.setRoleName(roleName);
+		role.setFullName(fullName);
+		role.setSortName(sortName);
+
+		dataService.saveRole(role);
+
+		return model;
+	}
+
 }

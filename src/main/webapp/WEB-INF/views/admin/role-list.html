@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Quản lý tài khoản</title>
+
+	<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+	<link rel="stylesheet" 
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+
+	<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}" />
+	
+	<script type="text/javascript" th:src="@{/js/jquery.table-sort.js}" ></script>
+
+	<script type="text/javascript" th:src="@{/js/role-list.js}" ></script>
+
+</head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="fragment/menu :: menu"></div>
+		<div class="container">
+			<div>
+				<button id="btn-add" type="button" class="btn btn-info" data-toggle="modal" data-target=".form-role">Thêm</button>
+				<button id="btn-change" type="button" class="btn btn-warning" disabled="true" data-toggle="modal" data-target=".form-role">Sửa</button>	
+			</div>
+			<table class="table">
+				<colgroup>
+					<col class="col-xs-3 col-md-1" />
+					<col class="col-xs-12 col-md-10" />
+					<col class="col-xs-3 col-md-1" />
+				</colgroup>
+				<tbody>
+					<table class="table table-hover sort_table">
+						<tbody id="table-body">
+							<thead>
+								<th>ID</th>
+								<th>Tên quyền</th>
+								<th>Mô tả</th>
+								<th>Viết tắt</th>
+							</thead>
+							<tr th:each="role : ${roleList}" th:attr="id=${role.roleId}">
+								<td th:text="${role.roleId}" class="roleId"></td>
+								<td th:text="${role.roleName}" class="roleName"></td>
+								<td th:text="${role.fullName}" class="fullName"></td>
+								<td th:text="${role.sortName}" class="sortName"></td>
+							</tr> 
+						</tbody>
+					</table>
+				</tbody>
+			</table>
+
+			<div class="modal fade form-role" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_role}">
+
+							<div class="form-group hidden">
+								<label for="roleId" class="col-sm-5 control-label">ID</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="roleId" th:name="roleId" value=""/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="roleName" class="col-sm-5 control-label">Tên quyền</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="roleName" th:name="roleName" value="" required="true"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="fullName" class="col-sm-5 control-label">Mô tả</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="fullName" th:name="fullName" value="" required="true"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="sortName" class="col-sm-5 control-label">Viết tắt</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="sortName" th:name="sortName" value="" required="true"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-offset-5 col-sm-7">
+									<button type="submit" class="btn btn-primary">Lưu</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close" aria-hidden="true">Bỏ qua</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:replace="fragment/footer :: footer"></div>
+	</div>
+</body>
+</html>

@@ -162,5 +162,9 @@ public class DataService {
 		return roleDao.findRolesByArrId(rolesId);
 	}
 	
+	public Role findRoleById(Integer roleId){
+		return roleDao.findRoleById(roleId);
+	}
+	
 	
 }
