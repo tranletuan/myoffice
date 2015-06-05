@@ -24,6 +24,8 @@ public interface DocumentDao {
 	
 	List<DocumentType> findAllDocType();
 	
+	void saveDocType(DocumentType docType);
+	
 	//EmergencyLevel
 	List<EmergencyLevel> findAllEmergencyLevel();
 	

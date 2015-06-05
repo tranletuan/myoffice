@@ -81,6 +81,10 @@ public class DataService {
 		return docDao.findDocTypeById(typeId);
 	}
 	
+	public void saveDocType(DocumentType docType){
+		docDao.saveDocType(docType);
+	}
+	
 	//EMERGENCY LEVEL
 	public List<EmergencyLevel> findAllEmergencyLevel(){
 		return docDao.findAllEmergencyLevel();

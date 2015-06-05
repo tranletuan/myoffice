@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Unit;
@@ -92,7 +93,8 @@ public class AdminController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/save_role", method = RequestMethod.POST)
-	public ModelAndView saveRole(@RequestParam("roleId") Integer roleId,
+	public ModelAndView saveRole(
+			@RequestParam("roleId") Integer roleId,
 			@RequestParam("roleName") String roleName,
 			@RequestParam("fullName") String fullName,
 			@RequestParam("shortName") String shortName) {
@@ -137,6 +139,71 @@ public class AdminController extends AbstractController {
 		organ.setAddress(address);
 		
 		dataService.saveOrgan(organ);
+		return model;
+	}
+
+	@RequestMapping(value = "/unit_list", method = RequestMethod.GET)
+	public ModelAndView unitList(){
+		ModelAndView model = new ModelAndView("admin/unit-list");
+		List<Unit> unitList = dataService.findAllUnit();
+		List<Organ> organList = dataService.findAllOrgan();
+		
+		model.addObject("unitList", unitList);
+		model.addObject("organList", organList);
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/save_unit", method = RequestMethod.POST)
+	public ModelAndView saveUnit(
+			@RequestParam("unitId") Integer unitId,
+			@RequestParam("unitName") String unitName, 
+			@RequestParam("phoneNumber") String phoneNumber,
+			@RequestParam("email") String email, 
+			@RequestParam("organId") Integer organId,
+			@RequestParam("shortName") String shortName){
+		ModelAndView model = new ModelAndView("redirect:unit_list");
+		Unit unit = new Unit();
+		if(unitId > 0){
+			unit = dataService.findUnitById(unitId);
+		}
+		
+		unit.setUnitName(unitName);
+		unit.setPhoneNumber(phoneNumber);
+		unit.setEmail(email);
+		unit.setOrgan(dataService.findOrganById(organId));
+		unit.setShortName(shortName);
+		
+		dataService.saveUnit(unit);
+		return model;
+	}
+
+	@RequestMapping(value ="/doctype_list", method = RequestMethod.GET)
+	public ModelAndView docTypeList(){
+		ModelAndView model = new ModelAndView("admin/doctype-list");
+		List<DocumentType> docTypeList = dataService.findAllDocType();
+		model.addObject("docTypeList", docTypeList);
+		return model;
+	}
+	
+	@RequestMapping(value = "/save_doctype", method = RequestMethod.POST)
+	public ModelAndView saveDocType(
+			@RequestParam("typeId") Integer typeId,
+			@RequestParam("typeName") String typeName,
+			@RequestParam("shortName") String shortName,
+			@RequestParam(value = "description", required = false) String description){
+		ModelAndView model = new ModelAndView("redirect:doctype_list");
+		DocumentType docType = new DocumentType();
+		if(typeId > 0) {
+			docType = dataService.findDocTypeById(typeId);
+		}
+		
+		docType.setTypeName(typeName);
+		docType.setShortName(shortName);
+		docType.setDescription(description);
+	
+		dataService.saveDocType(docType);
+		
 		return model;
 	}
 }

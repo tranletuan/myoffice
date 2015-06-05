@@ -18,11 +18,11 @@ import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.utils.FlowUtilImp;
 
 @Repository
-public class DocumentDaoImp extends AbstractDao  implements DocumentDao {
+public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(DocumentDaoImp.class);
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Document findDocumentByName(String docName) {
@@ -60,16 +60,17 @@ public class DocumentDaoImp extends AbstractDao  implements DocumentDao {
 	@Override
 	public List<Document> findDocumentBy(DocumentType docType,
 			boolean completed, boolean incomming) {
-		Query query = (Query)getSession().createQuery("from Document where type_id=? and "
-				+ "completed=? and incomming=?");
+		Query query = (Query) getSession().createQuery(
+				"from Document where type_id=? and "
+						+ "completed=? and incomming=?");
 		query.setParameter(0, docType.getTypeId());
 		query.setParameter(1, completed);
 		query.setParameter(2, incomming);
-		
+
 		return query.list();
 	}
 
-	//DocumentType
+	// DocumentType
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentType> findAllDocType() {
@@ -82,21 +83,26 @@ public class DocumentDaoImp extends AbstractDao  implements DocumentDao {
 		return (DocumentType) getSession().get(DocumentType.class, typeId);
 	}
 
-	
-	//========EMERGENCY LEVEL
+	@Override
+	public void saveDocType(DocumentType docType) {
+		persist(docType);
+	}
+
+	// ========EMERGENCY LEVEL
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<EmergencyLevel> findAllEmergencyLevel() {
 		Criteria criteria = getSession().createCriteria(EmergencyLevel.class);
 		return criteria.list();
 	}
-	
+
 	@Override
 	public EmergencyLevel findEmergencyLevelById(Integer emergencyLevelId) {
-		return (EmergencyLevel)getSession().get(EmergencyLevel.class, emergencyLevelId);
+		return (EmergencyLevel) getSession().get(EmergencyLevel.class,
+				emergencyLevelId);
 	}
 
-	//=======PRIVACY LEVEL
+	// =======PRIVACY LEVEL
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PrivacyLevel> findAllPrivacyLevel() {
@@ -106,11 +112,8 @@ public class DocumentDaoImp extends AbstractDao  implements DocumentDao {
 
 	@Override
 	public PrivacyLevel findPrivacyLevelById(Integer privacyLevelId) {
-		return (PrivacyLevel)getSession().get(PrivacyLevel.class, privacyLevelId);
+		return (PrivacyLevel) getSession().get(PrivacyLevel.class,
+				privacyLevelId);
 	}
-
-	
-	
-	
 
 }
