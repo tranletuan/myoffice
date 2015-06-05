@@ -18,7 +18,7 @@ xmlns:th="http://www.thymeleaf.org">
 
 	<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}" />
 
-	<script type="text/javascript" th:src="@{/js/type-list.js}" ></script>
+	<script type="text/javascript" th:src="@{/js/doctype-list.js}" ></script>
 
 </head>
 <body>
@@ -48,7 +48,7 @@ xmlns:th="http://www.thymeleaf.org">
 								<td th:text="${type.typeId}" class="typeId"></td>
 								<td th:text="${type.typeName}" class="typeName"></td>
 								<td th:text="${type.shortName}" class="shortName"></td>
-								<td th:text="${type.description}" class="description"></td>
+								<td th:text="${type.description}" class="description col-sm-9"></td>
 							</tr> 
 						</tbody>
 					</table>
@@ -84,7 +84,7 @@ xmlns:th="http://www.thymeleaf.org">
 							<div class="form-group">
 								<label for="description" class="col-sm-3 control-label">Mô tả</label>
 								<div class="col-sm-9">
-									<textarea class="form-control" rows="3" id="description" th:name="description"></textarea>
+									<textarea class="form-control" rows="3" id="description" th:name="description" maxlength="350"></textarea>
 								</div>
 							</div>
 

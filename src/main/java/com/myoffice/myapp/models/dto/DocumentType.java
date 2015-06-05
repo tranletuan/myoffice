@@ -22,7 +22,7 @@ public class DocumentType {
 	@Column(name = "short_name", nullable = false, unique = true, length = 20)
 	private String shortName;
 	
-	@Column(name = "description")
+	@Column(name = "description", columnDefinition="varchar(400)")
 	private String description;
 	
 

@@ -201,7 +201,7 @@ public class AdminController extends AbstractController {
 		docType.setTypeName(typeName);
 		docType.setShortName(shortName);
 		docType.setDescription(description);
-	
+		
 		dataService.saveDocType(docType);
 		
 		return model;

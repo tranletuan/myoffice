@@ -29,7 +29,7 @@
  		$('#typeId').val(typeId);
  		$('#typeName').val(typeName);
  		$('#shortName').val(shortName);
- 		$('#description').val(shortName);
+ 		$('#description').val(description);
 
  	});
 
@@ -37,7 +37,7 @@
  		$('#typeId').val("-1");
  		$('#typeName').val("");
  		$('#shortName').val("");
- 		$('#description').val("");
+ 		$('#description').val(" ");
 
  	});
 
