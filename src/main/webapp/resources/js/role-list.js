@@ -6,7 +6,13 @@
  	var roleId = -1;
  	var roleName;
  	var fullName;
- 	var sortName;
+ 	var shortName;
+
+ 	/*$("table.short_table").short_table({
+        "action" : "init"
+    });*/
+
+    $("#table-body").remove();
 
  	$('.table tr').click(function() {
  		$('.table tr').attr('class', ' ');
@@ -15,7 +21,7 @@
  		roleId = $(this).find('.roleId').html();
  		roleName = $(this).find('.roleName').html();
  		fullName = $(this).find('.fullName').html();
- 		sortName = $(this).find('.sortName').html();
+ 		shortName = $(this).find('.shortName').html();
 
  		if(roleId > 0){
  			$("#btn-change").removeAttr('disabled');
@@ -27,24 +33,15 @@
  		$('#roleId').val(roleId);
  		$('#roleName').val(roleName);
  		$('#fullName').val(fullName);
- 		$('#sortName').val(sortName);
-
- 		console.log(roleId);
- 		console.log(roleName);
- 		console.log(fullName);
- 		console.log(sortName);
+ 		$('#shortName').val(shortName);
  	});
 
  	$('#btn-add').click(function(){
- 		$('#roleId').attr('value', '-1');
- 		$('#roleName').removeAttr('value');
- 		$('#fullName').removeAttr('value');
- 		$('#sortName').removeAttr('value');
+ 		$('#roleId').val("-1");
+ 		$('#roleName').val("");
+ 		$('#fullName').val("");
+ 		$('#shortName').val("");
  	});
 
- 	$("table.sort_table").sort_table({
-        "action" : "init"
-    });
-
-    $("#table-body").remove();
+ 	
  });

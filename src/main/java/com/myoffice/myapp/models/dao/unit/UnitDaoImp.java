@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.springframework.stereotype.Repository;
 
 import com.myoffice.myapp.models.dao.common.AbstractDao;
+import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.Unit;
 
 @Repository
@@ -49,6 +51,31 @@ public class UnitDaoImp extends AbstractDao implements UnitDao {
 
 		Query query = (Query) getSession().createQuery(queryString);
 		return query.list();
+	}
+
+	
+	//Organ
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Organ> findAllOrgan() {
+		Criteria criteria = getSession().createCriteria(Organ.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+
+	@Override
+	public Organ findOrganById(Integer organId) {
+		return (Organ)getSession().get(Organ.class, organId);
+	}
+
+	@Override
+	public void saveOrgan(Organ organ) {
+		persist(organ);
+	}
+
+	@Override
+	public void deleteOrgan(Organ organ) {
+		delete(organ);
 	}
 
 }

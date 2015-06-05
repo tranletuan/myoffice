@@ -15,6 +15,7 @@ import com.myoffice.myapp.models.dao.user.UserDao;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
+import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
@@ -136,6 +137,24 @@ public class DataService {
 	
 	public List<Unit> findUnitByArray(Integer[] arrId){
 		return unitDao.findUnitByArray(arrId);
+	}
+	
+	//Ogran
+	
+    public List<Organ> findAllOrgan(){
+    	return unitDao.findAllOrgan();
+    }
+	
+	public Organ findOrganById(Integer organId){
+		return unitDao.findOrganById(organId);
+	}
+	
+	public void saveOrgan(Organ organ){
+		unitDao.saveOrgan(organ);
+	}
+	
+	public void deleteOrgan(Organ organ){
+		unitDao.deleteOrgan(organ);
 	}
 	
 	//=====================

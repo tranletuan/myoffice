@@ -5,7 +5,7 @@ xmlns:th="http://www.thymeleaf.org">
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<title>Quản lý quyền hạn</title>
+	<title>Quản lý cơ quan</title>
 
 	<script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -18,7 +18,7 @@ xmlns:th="http://www.thymeleaf.org">
 
 	<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}" />
 
-	<script type="text/javascript" th:src="@{/js/role-list.js}" ></script>
+	<script type="text/javascript" th:src="@{/js/organ-list.js}" ></script>
 
 </head>
 <body>
@@ -26,8 +26,8 @@ xmlns:th="http://www.thymeleaf.org">
 		<div th:replace="fragment/menu :: menu"></div>
 		<div class="container">
 			<div>
-				<button id="btn-add" type="button" class="btn btn-info" data-toggle="modal" data-target=".form-role">Thêm</button>
-				<button id="btn-change" type="button" class="btn btn-warning" disabled="true" data-toggle="modal" data-target=".form-role">Sửa</button>	
+				<button id="btn-add" type="button" class="btn btn-info" data-toggle="modal" data-target=".form-organ">Thêm</button>
+				<button id="btn-change" type="button" class="btn btn-warning" disabled="true" data-toggle="modal" data-target=".form-organ">Sửa</button>	
 			</div>
 			<table class="table">
 				<colgroup>
@@ -40,56 +40,56 @@ xmlns:th="http://www.thymeleaf.org">
 						<tbody id="table-body">
 							<thead>
 								<th>ID</th>
-								<th>Tên quyền</th>
-								<th>Mô tả</th>
+								<th>Tên cơ quan</th>
+								<th>Địa chỉ</th>
 								<th>Viết tắt</th>
 							</thead>
-							<tr th:each="role : ${roleList}" th:attr="id=${role.roleId}">
-								<td th:text="${role.roleId}" class="roleId"></td>
-								<td th:text="${role.roleName}" class="roleName"></td>
-								<td th:text="${role.fullName}" class="fullName"></td>
-								<td th:text="${role.shortName}" class="shortName"></td>
+							<tr th:each="organ : ${organList}" th:attr="id=${organ.organId}">
+								<td th:text="${organ.organId}" class="organId"></td>
+								<td th:text="${organ.organName}" class="organName"></td>
+								<td th:text="${organ.address}" class="address"></td>
+								<td th:text="${organ.shortName}" class="shortName"></td>
 							</tr> 
 						</tbody>
 					</table>
 				</tbody>
 			</table>
 
-			<div class="modal fade form-role" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-sm">
+			<div class="modal fade form-organ" tabindex="-1" organ="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
-						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_role}">
+						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_organ}">
 
 							<div class="form-group hidden">
-								<label for="roleId" class="col-sm-5 control-label">ID</label>
-								<div class="col-sm-7">
-									<input type="text" class="form-control" id="roleId" th:name="roleId" value=""/>
+								<label for="organId" class="col-sm-3 control-label">ID</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="organId" th:name="organId" value=""/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="roleName" class="col-sm-5 control-label">Tên quyền</label>
-								<div class="col-sm-7">
-									<input type="text" class="form-control" id="roleName" th:name="roleName" required="true"/>
+								<label for="organName" class="col-sm-3 control-label">Tên cơ quan</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="organName" th:name="organName" required="true"/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="fullName" class="col-sm-5 control-label">Mô tả</label>
-								<div class="col-sm-7">
-									<input type="text" class="form-control" id="fullName" th:name="fullName" required="true"/>
+								<label for="address" class="col-sm-3 control-label">Địa chỉ</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="address" th:name="address" required="true"/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="shortName" class="col-sm-5 control-label">Viết tắt</label>
-								<div class="col-sm-7">
+								<label for="shortName" class="col-sm-3 control-label">Viết tắt</label>
+								<div class="col-sm-9">
 									<input type="text" class="form-control" id="shortName" th:name="shortName" required="true"/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<div class="col-sm-offset-5 col-sm-7">
+								<div class="col-sm-offset-3 col-sm-9">
 									<button type="submit" class="btn btn-primary">Lưu</button>
 									<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close" aria-hidden="true">Bỏ qua</button>
 								</div>

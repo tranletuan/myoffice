@@ -22,8 +22,8 @@ public class Role {
 	@Column(name= "full_name", unique = true, nullable = false, length = 100)
 	private String fullName;
 	
-	@Column(name= "sort_name", unique = true, nullable = false)
-	private String sortName;
+	@Column(name= "short_name", unique = true, nullable = false)
+	private String shortName;
 
 	public Role() {
 		
@@ -58,12 +58,12 @@ public class Role {
 		this.fullName = fullName;
 	}
 
-	public String getSortName() {
-		return sortName;
+	public String getShortName() {
+		return shortName;
 	}
 
-	public void setSortName(String sortName) {
-		this.sortName = sortName;
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
 	}
 
 }

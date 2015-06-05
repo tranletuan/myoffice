@@ -24,7 +24,7 @@
  	});
 
  	$('#btn-change').click(function(){
- 		$('#userId').attr('value', userId);
+ 		$('#userId').val(userId);
  		$('#userName').val(userName);
  		$('#enabled').attr('checked', enabled);
 
@@ -42,16 +42,16 @@
  	});
 
  	$('#btn-add').click(function(){
- 		$('#userId').attr('value', '-1');
+ 		$('#userId').val('-1');
  		$('#userName').val('');
  		$('#enabled').attr('checked', 'true');
  	
  		$('.change-required').attr('required', 'true');
  	});
 
- 	$("table.sort_table").sort_table({
+ 	/*$("table.sort_table").sort_table({
         "action" : "init"
     });
-
+*/
     $("#table-body").remove();
  });

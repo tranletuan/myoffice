@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
@@ -94,7 +95,7 @@ public class AdminController extends AbstractController {
 	public ModelAndView saveRole(@RequestParam("roleId") Integer roleId,
 			@RequestParam("roleName") String roleName,
 			@RequestParam("fullName") String fullName,
-			@RequestParam("sortName") String sortName) {
+			@RequestParam("shortName") String shortName) {
 		ModelAndView model = new ModelAndView("redirect:role_list");
 		Role role = new Role();
 		if (roleId > 0) {
@@ -103,11 +104,39 @@ public class AdminController extends AbstractController {
 
 		role.setRoleName(roleName);
 		role.setFullName(fullName);
-		role.setSortName(sortName);
+		role.setShortName(shortName);
 
 		dataService.saveRole(role);
 
 		return model;
 	}
 
+	@RequestMapping(value = "/organ_list", method = RequestMethod.GET)
+	public ModelAndView organList(){
+		ModelAndView model = new ModelAndView("admin/organ-list");
+		List<Organ> organList = dataService.findAllOrgan();
+		model.addObject("organList", organList);
+		return model;
+	}
+	
+	@RequestMapping(value = "/save_organ", method = RequestMethod.POST)
+	public ModelAndView saveOrgan(
+			@RequestParam("organId") Integer organId,
+			@RequestParam("organName") String organName,
+			@RequestParam("shortName") String shortName,
+			@RequestParam("address") String address){
+		ModelAndView model = new ModelAndView("redirect:organ_list");
+		Organ organ = new Organ();
+		
+		if(organId > 0) {
+			organ = dataService.findOrganById(organId);
+		}
+		
+		organ.setOrganName(organName);
+		organ.setShortName(shortName);
+		organ.setAddress(address);
+		
+		dataService.saveOrgan(organ);
+		return model;
+	}
 }
