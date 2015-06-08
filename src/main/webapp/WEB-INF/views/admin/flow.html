@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Quản lý luồng</title>
+
+	<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+	<link rel="stylesheet" 
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+
+	<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}" />
+
+</head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="fragment/menu :: menu"></div>
+		<div class="container">
+			<table class="table">
+				<colgroup>
+					<col class="col-xs-3 col-md-1" />
+					<col class="col-xs-12 col-md-10" />
+					<col class="col-xs-3 col-md-1" />
+				</colgroup>
+				<tbody>
+					<div class="panel panel-default flow-out">
+						<div class="panel-heading">
+							<h3 class="panel-title">Luồng văn bản đi</h3>
+						</div>
+						<div class="panel-body">
+							<button type="button" class="btn btn-success">Tải xuống <span class="glyphicon glyphicon-arrow-down"></span></button>
+							<button type="button" class="btn btn-danger" data-toggle="modal" data-target=".form-flow-out">Tải lên <span class="glyphicon glyphicon-arrow-up"></span></button>
+						</div>
+					</div>
+
+					<div class="panel panel-default flow-in">
+						<div class="panel-heading">
+							<h3 class="panel-title">Luồng văn bản đến</h3>
+						</div>
+						<div class="panel-body">
+							<button type="button" class="btn btn-success">Tải xuống <span class="glyphicon glyphicon-arrow-down"></span></button>
+							<button type="button" class="btn btn-danger" data-toggle="modal" data-target=".form-flow-in">Tải lên <span class="glyphicon glyphicon-arrow-up"></span></button>
+						</div>
+					</div>
+				</tbody>
+			</table>
+
+			<div class="modal fade form-flow-out" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel1" aria-hidden="true">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_flow_out}">
+							<div class="form-group">
+								<div class="col-sm-9">
+									<label for="file-flow-out">Tập tin tải lên</label>
+									<input type="file" id="file-flow-out">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-9">
+									<button type="submit" class="btn btn-primary">Lưu</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close" aria-hidden="true">Bỏ qua</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade form-flow-in" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel2" aria-hidden="true">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_flow_in}">
+							<div class="form-group">
+								<div class="col-sm-9">
+									<label for="file-flow-in">Tập tin tải lên</label>
+									<input type="file" id="file-flow-in">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-9">
+									<button type="submit" class="btn btn-primary">Lưu</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close" aria-hidden="true">Bỏ qua</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div th:replace="fragment/footer :: footer"></div>
+	</div>	
+</body>
+</html>

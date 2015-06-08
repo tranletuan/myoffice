@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.myoffice.myapp.models.dto.DocumentType;
+import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Organ;
+import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
@@ -203,6 +205,79 @@ public class AdminController extends AbstractController {
 		docType.setDescription(description);
 		
 		dataService.saveDocType(docType);
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/privacy_list", method = RequestMethod.GET)
+	public ModelAndView privacyList(){
+		ModelAndView model = new ModelAndView("admin/privacy-list");
+		List<PrivacyLevel> privacyList = dataService.findAllPrivacyLevel();
+		model.addObject("privacyList", privacyList);
+		return model;
+	}
+	
+	@RequestMapping(value = "/save_privacy", method = RequestMethod.POST)
+	public ModelAndView savePrivacy(
+			@RequestParam("privacyId") Integer privacyId,
+			@RequestParam("privacyName") String privacyName,
+			@RequestParam("description") String description){
+		ModelAndView model = new ModelAndView("redirect:privacy_list");
+		PrivacyLevel privacy = new PrivacyLevel();
+		if(privacyId > 0){
+			privacy = dataService.findPrivacyLevelById(privacyId);
+		}
+		
+		privacy.setPrivacyName(privacyName);
+		privacy.setDescription(description);
+		
+		dataService.savePrivacyLevel(privacy);
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/emergency_list", method = RequestMethod.GET)
+	public ModelAndView emergencyList(){
+		ModelAndView model = new ModelAndView("admin/emergency-list");
+		List<EmergencyLevel> emergencyList = dataService.findAllEmergencyLevel();
+		model.addObject("emergencyList", emergencyList);
+		return model;
+	}
+	
+	@RequestMapping(value = "/save_emergency", method = RequestMethod.POST)
+	public ModelAndView saveEmergency(
+			@RequestParam("emeId") Integer emeId,
+			@RequestParam("emeName") String emeName,
+			@RequestParam("description") String description){
+		ModelAndView model = new ModelAndView("redirect:emergency_list");
+		EmergencyLevel emergency = new EmergencyLevel();
+		if(emeId > 0){
+			emergency = dataService.findEmergencyLevelById(emeId);
+		}
+		
+		emergency.setEmeName(emeName);
+		emergency.setDescription(description);
+		
+		dataService.saveEmergency(emergency);
+		return model;
+	}
+	
+	@RequestMapping(value = "/flow", method = RequestMethod.GET)
+	public ModelAndView flowView(){
+		ModelAndView model = new ModelAndView("admin/flow");
+		return model;
+	}
+	
+	@RequestMapping(value ="/save_flow_out", method = RequestMethod.POST)
+	public ModelAndView saveFlowOut(){
+		ModelAndView model = new ModelAndView("redirect:flow");
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/save_flow_in", method = RequestMethod.POST)
+	public ModelAndView saveFlowIn(){
+		ModelAndView model = new ModelAndView("redirect:flow");
 		
 		return model;
 	}

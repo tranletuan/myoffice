@@ -19,7 +19,7 @@ public class PrivacyLevel {
 	@Column(name = "privacy_name", nullable = false, unique = true, length = 60)
 	private String privacyName;
 
-	@Column(name = "description")
+	@Column(name = "description", columnDefinition="varchar(400)")
 	private String description;
 
 	public PrivacyLevel() {

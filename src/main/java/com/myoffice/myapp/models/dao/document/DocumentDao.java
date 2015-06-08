@@ -31,11 +31,17 @@ public interface DocumentDao {
 	
 	EmergencyLevel findEmergencyLevelById(Integer emergencyLevelId);
 	
+	void saveEmergency(EmergencyLevel emergency);
+	
+	void deleteEmergency(EmergencyLevel emergency);
+	
 	//PrivacyLevel
 	List<PrivacyLevel> findAllPrivacyLevel();
 	
 	PrivacyLevel findPrivacyLevelById(Integer privacyLevelId);
 	
+	void savePrivacyLevel(PrivacyLevel privacy);
 	
+	void deletePrivacyLevel(PrivacyLevel privacy);
 
 }

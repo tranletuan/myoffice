@@ -102,6 +102,17 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 				emergencyLevelId);
 	}
 
+	@Override
+	public void saveEmergency(EmergencyLevel emergency) {
+		persist(emergency);
+		
+	}
+
+	@Override
+	public void deleteEmergency(EmergencyLevel emergency) {
+		delete(emergency);
+	}
+
 	// =======PRIVACY LEVEL
 	@SuppressWarnings("unchecked")
 	@Override
@@ -114,6 +125,16 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	public PrivacyLevel findPrivacyLevelById(Integer privacyLevelId) {
 		return (PrivacyLevel) getSession().get(PrivacyLevel.class,
 				privacyLevelId);
+	}
+
+	@Override
+	public void savePrivacyLevel(PrivacyLevel privacy) {
+		persist(privacy);
+	}
+
+	@Override
+	public void deletePrivacyLevel(PrivacyLevel privacy) {
+		delete(privacy);
 	}
 
 }
