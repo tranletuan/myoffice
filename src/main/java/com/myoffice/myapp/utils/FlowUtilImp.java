@@ -2,6 +2,7 @@ package com.myoffice.myapp.utils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.activiti.engine.ActivitiException;
@@ -31,30 +32,38 @@ public class FlowUtilImp implements FlowUtil {
 			.getLogger(FlowUtilImp.class);
 
 	@Override
-	public boolean deployProcess(String resourceName, String filePath) {
+	public String getProcessDefinitionId(String resourceName) {
 		try {
+			return repositoryService.createProcessDefinitionQuery()
+					.processDefinitionResourceName(resourceName)
+					.latestVersion().singleResult().getId();
+		} catch (Exception e) {
+			return " ";
+		}
+	}
+
+	@Override
+	public boolean deployProcess(String resourceName, String filePath) {
+		logger.info(filePath);
+		try {
+			
 			// Deploy process
 			repositoryService
 					.createDeployment()
 					.enableDuplicateFiltering()
 					.addInputStream(resourceName, new FileInputStream(filePath))
 					.deploy();
-
-			// Number of process definition
-			logger.info("Process Definition Id : "
-					+ repositoryService.createProcessDefinitionQuery()
-							.processDefinitionResourceName(resourceName)
-							.latestVersion().singleResult().getId());
-
+			
 			return true;
 		} catch (ActivitiException e) {
 			logger.error("WORKFLOW ERROR : " + e.getMessage());
 			return false;
-
 		} catch (FileNotFoundException e) {
+			logger.error("WORKFLOW ERROR : " + e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
+		
 
 	}
 

@@ -1,11 +1,14 @@
 package com.myoffice.myapp.models.service;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.myoffice.myapp.models.dao.document.DocumentDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
@@ -25,6 +28,19 @@ import com.myoffice.myapp.models.dto.User;
 @Service
 @Transactional
 public class DataService {
+
+	public void upLoadFile(String saveDirectory, MultipartFile file) throws IllegalStateException, IOException{
+
+		File dirFile = new File(saveDirectory);
+		if (!dirFile.exists()) {
+			dirFile.mkdirs();
+		}
+
+		String fileName = file.getOriginalFilename();
+		if (!"".equalsIgnoreCase(fileName)) {
+			file.transferTo(new File(saveDirectory + fileName));
+		}
+	}
 
 	@Autowired
 	private UserDao userDao;

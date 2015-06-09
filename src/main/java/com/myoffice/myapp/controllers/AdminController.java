@@ -1,9 +1,27 @@
 package com.myoffice.myapp.controllers;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -11,6 +29,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.myoffice.myapp.models.dto.DocumentType;
@@ -20,6 +40,7 @@ import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
+import com.myoffice.myapp.models.service.DataConfig;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -265,20 +286,27 @@ public class AdminController extends AbstractController {
 	@RequestMapping(value = "/flow", method = RequestMethod.GET)
 	public ModelAndView flowView(){
 		ModelAndView model = new ModelAndView("admin/flow");
+		model.addObject("flow_out", flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_OUT));
+		model.addObject("flow_in", flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_IN));
 		return model;
 	}
 	
-	@RequestMapping(value ="/save_flow_out", method = RequestMethod.POST)
-	public ModelAndView saveFlowOut(){
+	@RequestMapping(value = "/save_flow_out", method = RequestMethod.POST)
+	public ModelAndView saveFlowOut(@RequestParam("file") MultipartFile file)
+			throws IllegalStateException, IOException {
 		ModelAndView model = new ModelAndView("redirect:flow");
-		
+		dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file);
+		flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_OUT, DataConfig.DIR_FILE_FLOW + file.getOriginalFilename());
 		return model;
 	}
 	
 	@RequestMapping(value = "/save_flow_in", method = RequestMethod.POST)
-	public ModelAndView saveFlowIn(){
+	public ModelAndView saveFlowIn(@RequestParam("file") MultipartFile file)
+			throws IllegalStateException, IOException {
 		ModelAndView model = new ModelAndView("redirect:flow");
-		
+		dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file);
+		flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_IN, DataConfig.DIR_FILE_FLOW + file.getOriginalFilename());
 		return model;
 	}
+	
 }
