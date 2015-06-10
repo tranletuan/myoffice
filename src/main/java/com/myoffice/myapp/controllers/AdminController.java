@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -23,9 +24,11 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -298,17 +301,10 @@ public class AdminController extends AbstractController {
 			throws IllegalStateException, IOException {
 		ModelAndView model = new ModelAndView("redirect:flow");
 		if (!file.isEmpty()) {
-			dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file);
+			dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file, DataConfig.RSC_NAME_FLOW_OUT);
 			flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_OUT,
 					DataConfig.DIR_FILE_FLOW + DataConfig.RSC_NAME_FLOW_OUT);
 		}
-		return model;
-	}
-	
-	@RequestMapping(value = "/download_flow_out", method = RequestMethod.POST)
-	public ModelAndView downloadFLowOut(HttpServletResponse response) throws IOException{
-		ModelAndView model = new ModelAndView("redirect:flow");
-		dataService.downLoadFile(DataConfig.DIR_FILE_FLOW + DataConfig.RSC_NAME_FLOW_OUT, response);
 		return model;
 	}
 	
@@ -317,18 +313,21 @@ public class AdminController extends AbstractController {
 			throws IllegalStateException, IOException {
 		ModelAndView model = new ModelAndView("redirect:flow");
 		if (!file.isEmpty()) {
-			dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file);
+			dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file, DataConfig.RSC_NAME_FLOW_IN);
 			flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_IN,
 					DataConfig.DIR_FILE_FLOW + DataConfig.RSC_NAME_FLOW_IN);
 		}
 		return model;
 	}
 	
-	@RequestMapping (value = "download_flow_in", method = RequestMethod.POST)
-	public ModelAndView downloadFlowIn(HttpServletResponse response) throws IOException{
-		ModelAndView model = new ModelAndView("redirect:flow");
-		dataService.downLoadFile(DataConfig.DIR_FILE_FLOW + DataConfig.RSC_NAME_FLOW_IN, response);
-		return model;
+	@RequestMapping(value = "/download_flow_out", method = RequestMethod.GET)
+	public void getFile(HttpServletResponse response) throws IOException {
+		dataService.downLoadFile(DataConfig.DIR_SERVER_NAME_FLOW_OUT, DataConfig.RSC_NAME_FLOW_OUT, response);
+	}
+	
+	@RequestMapping (value = "/download_flow_in", method = RequestMethod.GET)
+	public void downloadFlowIn(HttpServletResponse response) throws IOException{
+		dataService.downLoadFile(DataConfig.DIR_SERVER_NAME_FLOW_IN, DataConfig.RSC_NAME_FLOW_IN, response);
 	}
 	
 	

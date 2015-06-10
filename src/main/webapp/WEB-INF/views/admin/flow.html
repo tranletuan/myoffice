@@ -36,9 +36,9 @@ xmlns:th="http://www.thymeleaf.org">
 						</div>
 						<div class="panel-body">
 							<h4>ID : <span th:text="${flow_out}"></span></h4>
-							<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/download_flow_out}">
-								<button type="button" class="btn btn-success">Tải xuống <span class="glyphicon glyphicon-arrow-down"></span></button>
-							</form>
+							
+							<a type="button" href="#" th:href="@{/admin/download_flow_out}" class="btn btn-success">Tải xuống <span class="glyphicon glyphicon-arrow-down"></span></a>
+	
 							<button type="button" class="btn btn-danger" data-toggle="modal" data-target=".form-flow-out">Tải lên <span class="glyphicon glyphicon-arrow-up"></span></button>
 						</div>
 					</div>
@@ -48,10 +48,8 @@ xmlns:th="http://www.thymeleaf.org">
 							<h3 class="panel-title">Luồng văn bản đến</h3>
 						</div>
 						<div class="panel-body">
-							<h4>ID : <span th:if="${flow_in}"></span></h4>
-							<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/download_flow_in}">
-								<button type="button" class="btn btn-success">Tải xuống <span class="glyphicon glyphicon-arrow-down"></span></button>
-							</form>
+							<h4>ID : <span th:text="${flow_in}"></span></h4>
+							<a type="button" href="#" th:href="@{/admin/download_flow_in}" class="btn btn-success">Tải xuống <span class="glyphicon glyphicon-arrow-down"></span></a>
 							<button type="button" class="btn btn-danger" data-toggle="modal" data-target=".form-flow-in">Tải lên <span class="glyphicon glyphicon-arrow-up"></span></button>
 						</div>
 					</div>

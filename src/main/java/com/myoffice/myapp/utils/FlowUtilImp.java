@@ -34,18 +34,19 @@ public class FlowUtilImp implements FlowUtil {
 	@Override
 	public String getProcessDefinitionId(String resourceName, String key) {
 		try {
-			return repositoryService.createProcessDefinitionQuery()
+			String rs = repositoryService.createProcessDefinitionQuery()
 					.processDefinitionKey(key)
 					.processDefinitionResourceName(resourceName)
 					.latestVersion().singleResult().getId();
+			return rs;
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			return " ";
 		}
 	}
 
 	@Override
 	public boolean deployProcess(String resourceName, String filePath) {
-		logger.info(filePath);
 		try {
 			
 			// Deploy process

@@ -35,23 +35,31 @@ import com.myoffice.myapp.models.dto.User;
 @Transactional
 public class DataService {
 
-	public void upLoadFile(String saveDirectory, MultipartFile file) throws IllegalStateException, IOException{
+	public void upLoadFile(String saveDirectory, MultipartFile file, String fileName) throws IllegalStateException, IOException{
 
 		File dirFile = new File(saveDirectory);
 		if (!dirFile.exists()) {
 			dirFile.mkdirs();
 		}
-
-		String fileName = file.getOriginalFilename();
+		
+		if (fileName == null) {
+			fileName = file.getOriginalFilename();
+		}
+		
 		if (!"".equalsIgnoreCase(fileName)) {
 			file.transferTo(new File(saveDirectory + fileName));
 		}
 	}
 	
-	public void downLoadFile(String filePath, HttpServletResponse response) throws IOException{
-		InputStream input = new FileInputStream(filePath);
-		IOUtils.copy(input, response.getOutputStream());
-		response.flushBuffer();
+	public void downLoadFile(String filePath, String fileName, HttpServletResponse response) throws IOException{
+		try {
+			InputStream is = new FileInputStream(filePath);
+			response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
+			IOUtils.copy(is, response.getOutputStream());
+			response.flushBuffer();
+		} catch (IOException e) {
+			e.getMessage();
+		}
 	}
 
 	@Autowired
