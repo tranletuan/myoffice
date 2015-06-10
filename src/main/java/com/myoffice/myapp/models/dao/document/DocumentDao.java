@@ -6,6 +6,7 @@ import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
+import com.myoffice.myapp.models.dto.Tenure;
 
 public interface DocumentDao {
 	
@@ -43,5 +44,14 @@ public interface DocumentDao {
 	void savePrivacyLevel(PrivacyLevel privacy);
 	
 	void deletePrivacyLevel(PrivacyLevel privacy);
+	
+	//Tenure
+	List<Tenure> findAllTenure();
+	
+	Tenure findTenureById(Integer tenureId);
+	
+	void saveTenure(Tenure tenure);
+	
+	void deleteTenure(Tenure tenure);
 
 }

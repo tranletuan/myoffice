@@ -2,8 +2,11 @@ package com.myoffice.myapp.models.dao.document;
 
 import java.util.List;
 
+import org.apache.ibatis.executor.ReuseExecutor;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.transform.ResultTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -15,6 +18,7 @@ import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
+import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.utils.FlowUtilImp;
 
 @Repository
@@ -43,6 +47,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@Override
 	public List<Document> findAllDocument() {
 		Criteria criteria = getSession().createCriteria(Document.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return (List<Document>) criteria.list();
 	}
 
@@ -75,6 +80,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@Override
 	public List<DocumentType> findAllDocType() {
 		Criteria criteria = getSession().createCriteria(DocumentType.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 
@@ -93,6 +99,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@Override
 	public List<EmergencyLevel> findAllEmergencyLevel() {
 		Criteria criteria = getSession().createCriteria(EmergencyLevel.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 
@@ -118,6 +125,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@Override
 	public List<PrivacyLevel> findAllPrivacyLevel() {
 		Criteria criteria = getSession().createCriteria(PrivacyLevel.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 
@@ -135,6 +143,30 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@Override
 	public void deletePrivacyLevel(PrivacyLevel privacy) {
 		delete(privacy);
+	}
+
+	//TENURE
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Tenure> findAllTenure() {
+		Criteria criteria = getSession().createCriteria(Tenure.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+
+	@Override
+	public Tenure findTenureById(Integer tenureId) {
+		return (Tenure)getSession().get(Tenure.class, tenureId);
+	}
+
+	@Override
+	public void saveTenure(Tenure tenure) {
+		persist(tenure);
+	}
+
+	@Override
+	public void deleteTenure(Tenure tenure) {
+		delete(tenure);
 	}
 
 }

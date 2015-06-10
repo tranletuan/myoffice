@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -43,6 +44,7 @@ import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
+import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataConfig;
@@ -54,6 +56,7 @@ public class AdminController extends AbstractController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(AdminController.class);
 
+	//USER
 	@RequestMapping(value = "/user_list", method = RequestMethod.GET)
 	public ModelAndView userList() {
 		ModelAndView model = new ModelAndView("admin/user-list");
@@ -109,6 +112,7 @@ public class AdminController extends AbstractController {
 		return model;
 	}
 
+	//ROLE
 	@RequestMapping(value = "/role_list", method = RequestMethod.GET)
 	public ModelAndView roleList() {
 		ModelAndView model = new ModelAndView("admin/role-list");
@@ -141,6 +145,7 @@ public class AdminController extends AbstractController {
 		return model;
 	}
 
+	//ORGAN
 	@RequestMapping(value = "/organ_list", method = RequestMethod.GET)
 	public ModelAndView organList(){
 		ModelAndView model = new ModelAndView("admin/organ-list");
@@ -170,6 +175,7 @@ public class AdminController extends AbstractController {
 		return model;
 	}
 
+	//UNIT
 	@RequestMapping(value = "/unit_list", method = RequestMethod.GET)
 	public ModelAndView unitList(){
 		ModelAndView model = new ModelAndView("admin/unit-list");
@@ -205,7 +211,8 @@ public class AdminController extends AbstractController {
 		dataService.saveUnit(unit);
 		return model;
 	}
-
+	
+	//DOCTYPE
 	@RequestMapping(value ="/doctype_list", method = RequestMethod.GET)
 	public ModelAndView docTypeList(){
 		ModelAndView model = new ModelAndView("admin/doctype-list");
@@ -235,6 +242,7 @@ public class AdminController extends AbstractController {
 		return model;
 	}
 	
+	//PRIVACY
 	@RequestMapping(value = "/privacy_list", method = RequestMethod.GET)
 	public ModelAndView privacyList(){
 		ModelAndView model = new ModelAndView("admin/privacy-list");
@@ -262,6 +270,7 @@ public class AdminController extends AbstractController {
 		return model;
 	}
 	
+	//EMERGENCY
 	@RequestMapping(value = "/emergency_list", method = RequestMethod.GET)
 	public ModelAndView emergencyList(){
 		ModelAndView model = new ModelAndView("admin/emergency-list");
@@ -288,6 +297,7 @@ public class AdminController extends AbstractController {
 		return model;
 	}
 	
+	//FLOW
 	@RequestMapping(value = "/flow", method = RequestMethod.GET)
 	public ModelAndView flowView(){
 		ModelAndView model = new ModelAndView("admin/flow");
@@ -330,5 +340,32 @@ public class AdminController extends AbstractController {
 		dataService.downLoadFile(DataConfig.DIR_SERVER_NAME_FLOW_IN, DataConfig.RSC_NAME_FLOW_IN, response);
 	}
 	
+	//TENURE
+	@RequestMapping(value = "/tenure_list", method = RequestMethod.GET)
+	public ModelAndView tenureList(){
+		ModelAndView model = new ModelAndView("admin/tenure-list");
+		List<Tenure> tenureList = dataService.findAllTenure();
+		model.addObject("tenureList", tenureList);
+		return model;
+	}
 	
+	@RequestMapping(value = "/save_tenure", method = RequestMethod.POST)
+	public ModelAndView saveTenure(
+			@RequestParam("tenureId") Integer tenureId,
+			@RequestParam("tenureName") String tenureName,
+			@RequestParam("timeStart") Date timeStart, 
+			@RequestParam("timeEnd") Date timeEnd){
+		ModelAndView model = new ModelAndView("redirect:tenure_list");
+		Tenure tenure = new Tenure();
+		if(tenureId > 0){
+			tenure = dataService.findTenureById(tenureId);
+		}
+		
+		tenure.setTenureName(tenureName);
+		tenure.setTimeStart(timeStart);
+		tenure.setTimeEnd(timeEnd);
+		
+		dataService.saveTenure(tenure);
+		return model;
+	}
 }

@@ -28,6 +28,7 @@ import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
+import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
 
@@ -153,6 +154,23 @@ public class DataService {
 	
 	public void deletePrivacyLevel(PrivacyLevel privacy){
 		docDao.deletePrivacyLevel(privacy);
+	}
+	
+	//TENURE
+	public List<Tenure> findAllTenure(){
+		return docDao.findAllTenure();
+	}
+		
+	public Tenure findTenureById(Integer tenureId){
+		return docDao.findTenureById(tenureId);
+	}
+		
+	public void saveTenure(Tenure tenure){
+		docDao.saveTenure(tenure);
+	}
+		
+	public void deleteTenure(Tenure tenure){
+		docDao.deleteTenure(tenure);
 	}
 	
 	//=====================
