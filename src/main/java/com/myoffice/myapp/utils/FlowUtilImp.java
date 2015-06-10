@@ -32,9 +32,10 @@ public class FlowUtilImp implements FlowUtil {
 			.getLogger(FlowUtilImp.class);
 
 	@Override
-	public String getProcessDefinitionId(String resourceName) {
+	public String getProcessDefinitionId(String resourceName, String key) {
 		try {
 			return repositoryService.createProcessDefinitionQuery()
+					.processDefinitionKey(key)
 					.processDefinitionResourceName(resourceName)
 					.latestVersion().singleResult().getId();
 		} catch (Exception e) {

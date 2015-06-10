@@ -36,7 +36,9 @@ xmlns:th="http://www.thymeleaf.org">
 						</div>
 						<div class="panel-body">
 							<h4>ID : <span th:text="${flow_out}"></span></h4>
-							<button type="button" class="btn btn-success">Tải xuống <span class="glyphicon glyphicon-arrow-down"></span></button>
+							<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/download_flow_out}">
+								<button type="button" class="btn btn-success">Tải xuống <span class="glyphicon glyphicon-arrow-down"></span></button>
+							</form>
 							<button type="button" class="btn btn-danger" data-toggle="modal" data-target=".form-flow-out">Tải lên <span class="glyphicon glyphicon-arrow-up"></span></button>
 						</div>
 					</div>
@@ -46,8 +48,10 @@ xmlns:th="http://www.thymeleaf.org">
 							<h3 class="panel-title">Luồng văn bản đến</h3>
 						</div>
 						<div class="panel-body">
-							<h4>ID : <span th:text="${flow_in}"></span></h4>
-							<button type="button" class="btn btn-success">Tải xuống <span class="glyphicon glyphicon-arrow-down"></span></button>
+							<h4>ID : <span th:if="${flow_in}"></span></h4>
+							<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/download_flow_in}">
+								<button type="button" class="btn btn-success">Tải xuống <span class="glyphicon glyphicon-arrow-down"></span></button>
+							</form>
 							<button type="button" class="btn btn-danger" data-toggle="modal" data-target=".form-flow-in">Tải lên <span class="glyphicon glyphicon-arrow-up"></span></button>
 						</div>
 					</div>
@@ -57,7 +61,7 @@ xmlns:th="http://www.thymeleaf.org">
 			<div class="modal fade form-flow-out" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel1" aria-hidden="true">
 				<div class="modal-dialog modal-sm">
 					<div class="modal-content">
-						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_flow_out} + '?' + ${_csrf.parameterName} + '=' + ${_csrf.token}" enctype="multipart/form-data">
+						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/upload_flow_out} + '?' + ${_csrf.parameterName} + '=' + ${_csrf.token}" enctype="multipart/form-data">
 							<div class="form-group">
 								<div class="col-sm-9">
 									<label for="file-flow-out">Tập tin tải lên</label>
@@ -79,7 +83,7 @@ xmlns:th="http://www.thymeleaf.org">
 			<div class="modal fade form-flow-in" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel2" aria-hidden="true">
 				<div class="modal-dialog modal-sm">
 					<div class="modal-content">
-						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_flow_in}">
+						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/upload_flow_in} + '?' + ${_csrf.parameterName} + '=' + ${_csrf.token}" enctype="multipart/form-data">
 							<div class="form-group">
 								<div class="col-sm-9">
 									<label for="file-flow-in">Tập tin tải lên</label>

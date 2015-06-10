@@ -17,7 +17,7 @@ public interface FlowUtil {
 	
 	Execution getCurrentExecution(String processInstanceId);
 	
-	String getProcessDefinitionId(String resourceName);
+	String getProcessDefinitionId(String resourceName, String key);
 	
 
 }

@@ -2,9 +2,15 @@ package com.myoffice.myapp.models.service;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +46,12 @@ public class DataService {
 		if (!"".equalsIgnoreCase(fileName)) {
 			file.transferTo(new File(saveDirectory + fileName));
 		}
+	}
+	
+	public void downLoadFile(String filePath, HttpServletResponse response) throws IOException{
+		InputStream input = new FileInputStream(filePath);
+		IOUtils.copy(input, response.getOutputStream());
+		response.flushBuffer();
 	}
 
 	@Autowired

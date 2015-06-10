@@ -13,6 +13,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -36,6 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Organ;
+import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Unit;
@@ -286,27 +288,48 @@ public class AdminController extends AbstractController {
 	@RequestMapping(value = "/flow", method = RequestMethod.GET)
 	public ModelAndView flowView(){
 		ModelAndView model = new ModelAndView("admin/flow");
-		model.addObject("flow_out", flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_OUT));
-		model.addObject("flow_in", flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_IN));
+		model.addObject("flow_out", flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_OUT, DataConfig.PROC_DEF_KEY_FLOW_OUT));
+		model.addObject("flow_in", flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_IN, DataConfig.PROC_DEF_KEY_FLOW_IN));
 		return model;
 	}
 	
-	@RequestMapping(value = "/save_flow_out", method = RequestMethod.POST)
-	public ModelAndView saveFlowOut(@RequestParam("file") MultipartFile file)
+	@RequestMapping(value = "/upload_flow_out", method = RequestMethod.POST)
+	public ModelAndView uploadFlowOut(@RequestParam("file") MultipartFile file)
 			throws IllegalStateException, IOException {
 		ModelAndView model = new ModelAndView("redirect:flow");
-		dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file);
-		flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_OUT, DataConfig.DIR_FILE_FLOW + file.getOriginalFilename());
+		if (!file.isEmpty()) {
+			dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file);
+			flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_OUT,
+					DataConfig.DIR_FILE_FLOW + DataConfig.RSC_NAME_FLOW_OUT);
+		}
 		return model;
 	}
 	
-	@RequestMapping(value = "/save_flow_in", method = RequestMethod.POST)
-	public ModelAndView saveFlowIn(@RequestParam("file") MultipartFile file)
-			throws IllegalStateException, IOException {
+	@RequestMapping(value = "/download_flow_out", method = RequestMethod.POST)
+	public ModelAndView downloadFLowOut(HttpServletResponse response) throws IOException{
 		ModelAndView model = new ModelAndView("redirect:flow");
-		dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file);
-		flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_IN, DataConfig.DIR_FILE_FLOW + file.getOriginalFilename());
+		dataService.downLoadFile(DataConfig.DIR_FILE_FLOW + DataConfig.RSC_NAME_FLOW_OUT, response);
 		return model;
 	}
+	
+	@RequestMapping(value = "/upload_flow_in", method = RequestMethod.POST)
+	public ModelAndView uploadFlowIn(@RequestParam("file") MultipartFile file)
+			throws IllegalStateException, IOException {
+		ModelAndView model = new ModelAndView("redirect:flow");
+		if (!file.isEmpty()) {
+			dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file);
+			flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_IN,
+					DataConfig.DIR_FILE_FLOW + DataConfig.RSC_NAME_FLOW_IN);
+		}
+		return model;
+	}
+	
+	@RequestMapping (value = "download_flow_in", method = RequestMethod.POST)
+	public ModelAndView downloadFlowIn(HttpServletResponse response) throws IOException{
+		ModelAndView model = new ModelAndView("redirect:flow");
+		dataService.downLoadFile(DataConfig.DIR_FILE_FLOW + DataConfig.RSC_NAME_FLOW_IN, response);
+		return model;
+	}
+	
 	
 }
