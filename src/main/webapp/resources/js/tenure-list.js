@@ -41,11 +41,14 @@
 
  });
 
- $(".form_datetime").datetimepicker({
-        format: "dd MM yyyy",
-        autoclose: true,
-        todayBtn: true,
-        pickerPosition: "bottom-left"
-    });
-
+ $('.form_date').datetimepicker({
+ 	format : 'dd-mm-yyyy',
+ 	weekStart: 1,
+ 	todayBtn:  1,
+ 	autoclose: 1,
+ 	todayHighlight: 1,
+ 	startView: 2,
+ 	minView: 2,
+ 	forceParse: 0
+ });
 });

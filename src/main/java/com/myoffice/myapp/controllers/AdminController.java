@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -37,6 +38,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
@@ -48,6 +51,7 @@ import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataConfig;
+import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -341,7 +345,7 @@ public class AdminController extends AbstractController {
 	}
 	
 	//TENURE
-	@RequestMapping(value = "/tenure_list", method = RequestMethod.GET)
+	@RequestMapping(value = "/tenure_list")
 	public ModelAndView tenureList(){
 		ModelAndView model = new ModelAndView("admin/tenure-list");
 		List<Tenure> tenureList = dataService.findAllTenure();
@@ -353,17 +357,46 @@ public class AdminController extends AbstractController {
 	public ModelAndView saveTenure(
 			@RequestParam("tenureId") Integer tenureId,
 			@RequestParam("tenureName") String tenureName,
-			@RequestParam("timeStart") Date timeStart, 
-			@RequestParam("timeEnd") Date timeEnd){
+			@RequestParam("timeStart") String timeStart, 
+			@RequestParam("timeEnd") String timeEnd, 
+			RedirectAttributes reAttr){
 		ModelAndView model = new ModelAndView("redirect:tenure_list");
+		
 		Tenure tenure = new Tenure();
 		if(tenureId > 0){
 			tenure = dataService.findTenureById(tenureId);
 		}
 		
+		Date dateStart;
+		Date dateEnd;
+		String dateFormat = "dd-MM-yyyy";
+		
+		try {
+			 dateStart = UtilMethod.toDate(timeStart, dateFormat);
+			 dateEnd = UtilMethod.toDate(timeEnd, dateFormat);
+			 
+			 logger.info(timeStart);
+			 logger.info(dateStart.toString());
+			 
+			 logger.info(timeEnd);
+			 logger.info(dateEnd.toString());
+			 
+			 if(dateStart.compareTo(dateEnd) > -1){
+				 reAttr.addFlashAttribute("error", true);
+				 reAttr.addFlashAttribute("errorMessage", "Thêm thất bại, ngày kết thúc phải lớn hơn ngày bắt đầu!");
+				 return model;
+			 }
+			 
+		} catch (ParseException e) {
+			reAttr.addFlashAttribute("error", true);
+			reAttr.addFlashAttribute("errorMessage", "Lỗi hệ thống");
+			e.printStackTrace();
+			return model;
+		}
+		
 		tenure.setTenureName(tenureName);
-		tenure.setTimeStart(timeStart);
-		tenure.setTimeEnd(timeEnd);
+		tenure.setTimeStart(dateStart);
+		tenure.setTimeEnd(dateEnd);
 		
 		dataService.saveTenure(tenure);
 		return model;

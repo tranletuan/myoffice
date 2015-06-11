@@ -23,12 +23,12 @@ public class Tenure {
 	@Column(name = "tenure_name", nullable = false, unique = true)
 	private String tenureName;
 	
-	@Column(name = "time_start", nullable = false)
 	@Temporal(TemporalType.DATE)
+	@Column(name = "time_start", columnDefinition="DATETIME", nullable = false)
 	private Date timeStart;
 	
-	@Column(name = "time_end", nullable = false)
 	@Temporal(TemporalType.DATE)
+	@Column(name = "time_end", columnDefinition="DATETIME", nullable = false)
 	private Date timeEnd;
 	
 	public Tenure() {
@@ -58,5 +58,10 @@ public class Tenure {
 		this.timeEnd = timeEnd;
 	}
 
+	public Integer getTenureId() {
+		return tenureId;
+	}
+
+	
 	
 }
