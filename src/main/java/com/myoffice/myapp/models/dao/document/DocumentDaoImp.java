@@ -19,7 +19,7 @@ import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
-import com.myoffice.myapp.utils.FlowUtilImp;
+import com.myoffice.myapp.utils.FlowUtil;
 
 @Repository
 public class DocumentDaoImp extends AbstractDao implements DocumentDao {

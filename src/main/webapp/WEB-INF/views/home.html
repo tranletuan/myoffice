@@ -20,7 +20,9 @@
 <body>
 	<div class="container-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
-		<div class="container"></div>
+		<div class="container">
+			<h3 th:text="${message}"></h3>
+		</div>
 		<div th:replace="fragment/footer :: footer"></div>
 	</div>
 </body>

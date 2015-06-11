@@ -37,7 +37,7 @@ public class Document {
 	private String docName;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "release_time")
+	@Column(name = "release_time", columnDefinition="DATETIME")
 	private Date releaseTime;
 
 	@Column(name = "epitome")

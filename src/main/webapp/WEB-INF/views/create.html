@@ -74,15 +74,6 @@ xmlns:th="http://www.thymeleaf.org">
 										
 										<tr>
 											<th scope="row">
-												<h4><span class="label label-primary">Cơ quan ban hành : </span></h4>
-											</th>
-											<td>
-												<h4><p th:text="${unit.unitName}" th:name="sendUnit"></p></h4>
-											</td>
-										</tr>
-										
-										<tr>
-											<th scope="row">
 												<h4><span class="label label-primary">Ngày ban hành : </span></h4>
 											</th>
 											<td>
@@ -172,6 +163,26 @@ xmlns:th="http://www.thymeleaf.org">
 													<input type="file" required="false" th:name="docPath"/>
 													<p class="help-block"></p>
 												</div>	
+											</td>
+										</tr>
+
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Cơ quan ban hành : </span></h4>
+											</th>
+											<td>
+												<h4><p th:text="${unit.unitName}" th:name="sendUnit"></p></h4>
+											</td>
+										</tr>
+
+										<tr>
+											<th scope="row">
+												<h4><span class="label label-primary">Nhiệm kỳ : </span></h4>
+											</th>
+											<td>
+												<select class="form-control" data-style="btn-primary" th:name="tenure">
+													<option th:each="tenure : ${tenureList}" th:value="${tenure.tenureId}" th:text="${tenure.tenureId}"></option>
+												</select>
 											</td>
 										</tr>
 
