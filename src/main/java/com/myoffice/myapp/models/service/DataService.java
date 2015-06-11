@@ -127,8 +127,8 @@ public class DataService {
 		return docDao.findAllEmergencyLevel();
 	}
 	
-	public EmergencyLevel findEmergencyLevelById(Integer emergencyLevelId){
-		return docDao.findEmergencyLevelById(emergencyLevelId);
+	public EmergencyLevel findEmergencyLevelById(Integer emeId){
+		return docDao.findEmergencyLevelById(emeId);
 	}
 	
 	public void saveEmergency(EmergencyLevel emergency){
@@ -144,8 +144,8 @@ public class DataService {
 		return docDao.findAllPrivacyLevel();
 	}
 	
-	public PrivacyLevel findPrivacyLevelById(Integer privacyLevelId){
-		return docDao.findPrivacyLevelById(privacyLevelId);
+	public PrivacyLevel findPrivacyLevelById(Integer privacyId){
+		return docDao.findPrivacyLevelById(privacyId);
 	}
 	
 	public void savePrivacyLevel(PrivacyLevel privacy){

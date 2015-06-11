@@ -5,7 +5,7 @@ xmlns:th="http://www.thymeleaf.org">
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<title>Chỉnh sửa</title>
+	<title>Tạo văn bản</title>
 
 	<script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -18,192 +18,144 @@ xmlns:th="http://www.thymeleaf.org">
 	<script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
-	<style type="text/css">
-		.table th, .table td { 
-			border-top: none !important; 
-		}
-	</style>
+	<!-- <link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}" /> -->
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datetimepicker.min.css}" />
+
+	<script type="text/javascript" th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+	
+	<script type="text/javascript" th:src="@{/js/create-new-doc.js}" ></script>
 
 </head>
 <body>
 <div class="container-fluid">
 	<div th:replace="fragment/menu :: menu"></div>
-	<div>
-		<table class="table">
-			<colgroup>
-				<col class="col-xs-3 col-md-1" />
-				<col class="col-xs-12 col-md-10" />
-				<col class="col-xs-3 col-md-1" />
-			</colgroup>
-			<tbody>
-				<tr>
-					<td></td>
-					<td>
-						<form th:action="@{/impl/create_new_doc}" method="post" autocomplete="off">
-							<div class="form-group">
-								<table class="table">
-									<colgroup>
-										<col class="col-xs-5 col-md-3" />
-										<col class="col-xs-10 col-md-8" />
-										<col class="col-xs-3 col-md-1" />
-									</colgroup>
-									<tbody>
-										<th>
-											<h3>Tạo văn bản</h3>
-										</th>
-										<th></th>
-										<th></th>
-										
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Tên văn bản : </span></h4>
-											</th>
-											<td>
-												<h4><input type="text" class="form-control" placeholder="Tên văn bản" required="false" th:name="docName"/></h4>
-											</td>
-										</tr>
-										
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Tiêu đề : </span></h4>
-											</th>
-											<td>
-												<h4><input type="text" class="form-control" placeholder="Tiêu đề" required="false" th:name="title"/></h4>
-											</td>
-										</tr>
-										
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Ngày ban hành : </span></h4>
-											</th>
-											<td>
-												<h4><input type="text" class="form-control" placeholder="Ngày ban hành" required="false" th:name="releaseTime"/></h4>
-											</td>
-										</tr>
-										
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Loại văn bản : </span></h4>
-											</th>
-											<td>
-												<select class="form-control" data-style="btn-primary" th:name="docType">
-													<option th:each="docType : ${typeList}" th:value="${docType}" th:text="${docType.typeName}"></option>
-												</select>
-											</td>
-										</tr>
+	<div class="container">
+		<form class="form-horizontal" th:action="@{/impl/create_new_doc}" method="post" autocomplete="off">
+			<!-- docName -->
+			<div class="form-group">
+				<label for="docName" class="col-sm-2 control-label">Tên văn bản</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="docName" th:name="docName" value="" required="true"/>
+				</div>
+			</div>
 
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Trích yếu : </span></h4>
-											</th>
-											<td>
-												<textarea class="form-control" rows="5" placeholder="Nội dung tóm tắt" required="false" th:name="epitome"></textarea>
-											</td>
-										</tr>
-										
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Số và ký hiệu : </span></h4>
-											</th>
-											
-											<td>
-												<h4><input type="text" class="form-control" placeholder="Số và ký hiệu" required="false" /></h4>
-											</td>
-										</tr>
-										
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Nơi nhận : </span></h4>
-											</th>
-											<td>
-												<select class="form-control" multiple="true" th:name="recipientUnits">
-													<option th:each="unit : ${unitList}" th:value="${unit.unitId}" th:text="${unit.unitName}"></option>
-												</select>
-											</td>
-										</tr>
+			<!-- title -->
+			<div class="form-group">
+				<label for="title" class="col-sm-2 control-label">Tiêu đề</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="title" th:name="title" value="" required="true"/>
+				</div>
+			</div>
 
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Người nhận : </span></h4>
-											</th>
-											<td>
-												<h4><input type="text" class="form-control" placeholder="Người nhận" /></h4>
-											</td>
-										</tr>
-										
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Mức độ mật : </span></h4>
-											</th>
-											<td>
-												<select class="form-control" data-style="btn-primary" th:name="privacyLevel">
-													<option th:each="privacyLv : ${privacyList}" th:value="${privacyLv}" th:text="${privacyLv.privacyName}"></option>
-												</select>
-											</td>
-										</tr>
+			<!-- releaseTime -->
+			<div class="form-group">
+				<label for="releaseTime" class="col-sm-2 control-label">Ngày ban hành</label>
+				<div class="input-group date form_date col-sm-10" style="padding-left:15px; padding-right:15px;" data-date="" data-date-format="dd MM yyyy" data-link-field="releaseTime" data-link-format="yyyy-mm-dd">
+					<input class="form-control" size="16" type="text" value="" readonly="true" th:name="releaseTime" required="true"/>
+					<!-- <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> -->
+					<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+				</div>
+				<input type="hidden" id="releaseTime" value="" required="true"/><br/>
+			</div>
 
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Mức độ khẩn : </span></h4>
-											</th>
-											<td>
-												<select class="form-control" data-style="btn-primary" th:name="emergencyLevel">
-													<option th:each="emeLv : ${emeList}" th:value="${emeLv}" th:text="${emeLv.emeName}"></option>
-												</select>
-											</td>
-										</tr>
+			<!-- epitome -->
+			<div class="form-group">
+				<label for="epitome" class="col-sm-2 control-label">Trích yếu</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="7" maxlength="450" placeholder="Nội dung tóm tắt" required="true" th:name="epitome"></textarea>
+				</div>
+			</div>
 
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Tập tin : </span></h4>
-											</th>	
+			<!-- typeId -->
+			<div class="form-group">
+				<label for="typeId" class="col-sm-2 control-label">Loại văn bản</label>
+				<div class="col-sm-10">
+					<select class="form-control" id="typeId"  th:name="typeId" required="true">
+						<option th:each="type : ${typeList}"
+								th:value="${type.typeId}"
+								th:text="${type.typeName}">
+						</option>
+					</select>
+				</div>
+			</div>
 
-											<td>
-												<div class="form-group" style="margin-top:10px;">
-													<input type="file" required="false" th:name="docPath"/>
-													<p class="help-block"></p>
-												</div>	
-											</td>
-										</tr>
+			<!-- privacyId -->
+			<div class="form-group">
+				<label for="privacyId" class="col-sm-2 control-label">Mức độ mật</label>
+				<div class="col-sm-10">
+					<select class="form-control" id="privacyId"  th:name="privacyId" required="true">
+						<option th:each="privacy : ${privacyList}"
+								th:value="${privacy.privacyId}"
+								th:text="${privacy.privacyName}">
+						</option>
+					</select>
+				</div>
+			</div>
 
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Cơ quan ban hành : </span></h4>
-											</th>
-											<td>
-												<h4><p th:text="${unit.unitName}" th:name="sendUnit"></p></h4>
-											</td>
-										</tr>
+			<!-- emeId -->
+			<div class="form-group">
+				<label for="emeId" class="col-sm-2 control-label">Mức độ khẩn</label>
+				<div class="col-sm-10">
+					<select class="form-control" id="emeId"  th:name="emeId" required="true">
+						<option th:each="eme : ${emeList}"
+								th:value="${eme.emeId}"
+								th:text="${eme.emeName}">
+						</option>
+					</select>
+				</div>
+			</div>
 
-										<tr>
-											<th scope="row">
-												<h4><span class="label label-primary">Nhiệm kỳ : </span></h4>
-											</th>
-											<td>
-												<select class="form-control" data-style="btn-primary" th:name="tenure">
-													<option th:each="tenure : ${tenureList}" th:value="${tenure.tenureId}" th:text="${tenure.tenureId}"></option>
-												</select>
-											</td>
-										</tr>
+			<!-- recipientUnits -->
+			<div class="form-group">
+				<label for="recipientUnits" class="col-sm-2 control-label">Đơn vị nhận</label>
+				<div class="col-sm-10">
+					<select class="form-control" id="recipientUnits"  th:name="recipientUnits" multiple="true" required="true">
+						<option th:each="unit : ${unitList}"
+								th:value="${unit.unitId}"
+								th:text="${unit.unitName}">
+						</option>
+					</select>
+				</div>
+			</div>
 
-										<tr>
-											<td>
-											</td>
-											<td>
-												<nav>
-													<button type="submit" class="btn btn-success">Tạo văn bản</button>
-												</nav>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</form>
-					</td>
-					<td></td>
-				</tr>
-			</tbody>
-		</table>
+			<!-- docPath -->
+			<div class="form-group">
+				<label for="docPath" class="col-sm-2 control-label">Tập tin tải lên</label>
+				<div class="col-sm-10" style="margin-top:10px;">
+					<input type="file" id="docPath" th:name="docPath" required="true"/>
+					<p class="help-block"></p>
+				</div>
+			</div>
+
+			<!-- tenureId -->
+			<div class="form-group">
+				<label for="tenureId" class="col-sm-2 control-label">Nhiệm kỳ</label>
+				<div class="col-sm-10">
+					<select class="form-control" id="tenureId"  th:name="tenureId" required="true">
+						<option th:each="tenure : ${tenureList}"
+								th:value="${tenure.tenureId}"
+								th:text="${tenure.tenureName}">
+						</option>
+					</select>
+				</div>
+			</div>
+
+			<!-- unitId -->
+			<div class="form-group">
+				<label for="unitId" class="col-sm-2 control-label">Đơn vị ban hành</label>
+				<div class="col-sm-10">
+					
+				</div>
+			</div>
+
+			<!-- submit -->
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-info">Tạo văn bản</button>
+				</div>
+			</div>
+		</form>
 	</div>
 	<div th:replace="fragment/footer :: footer"></div>
 </div>

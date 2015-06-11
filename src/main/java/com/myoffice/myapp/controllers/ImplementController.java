@@ -1,5 +1,6 @@
 package com.myoffice.myapp.controllers;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -21,11 +22,13 @@ import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
+import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataService;
 import com.myoffice.myapp.models.service.SecurityService;
 import com.myoffice.myapp.utils.FlowUtil;
+import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
 @RequestMapping(value = "/impl")
@@ -33,8 +36,6 @@ public class ImplementController extends AbstractController {
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(ImplementController.class);
-	
-	private static final String pdId = "processDefinitionId";
 
 	@RequestMapping(value = "/create_form", method = RequestMethod.GET)
 	public ModelAndView createNewDocForm(){
@@ -44,42 +45,44 @@ public class ImplementController extends AbstractController {
 		List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
 		List<PrivacyLevel> privacyList = dataService.findAllPrivacyLevel();
 		List<Unit>	unitList = dataService.findAllUnit();
-		User user = securityService.getCurrentUser();
+		List<Tenure> tenureList = dataService.findAllTenure(); 
 		
 		model.addObject("typeList", typeList);
 		model.addObject("emeList", emeList);
 		model.addObject("privacyList", privacyList);
 		model.addObject("unitList", unitList);
-		model.addObject("unit", user.getUnit());
+		model.addObject("tenureList", tenureList);
+		//model.addObject("unit", user.getUnit());
 		
 		return model;
 	}
 	
 	@RequestMapping(value = "/create_new_doc", method=RequestMethod.POST)
 	public ModelAndView submitNewDoc(
-			@RequestParam("title") String title,
 			@RequestParam("docName") String docName,
-			@RequestParam("releaseTime") Date releaseTime,
+			@RequestParam("title") String title,
+			@RequestParam("releaseTime") String releaseTime,
 			@RequestParam("epitome") String epitome,
+			@RequestParam("typeId") Integer typeId,
+			@RequestParam("unitId") Integer unitId,
+			@RequestParam("privacyId") Integer privacyId,
+			@RequestParam("emeId") Integer emeId,
+			@RequestParam("recipientUnits") Integer[] arrUnitId,
 			@RequestParam("docPath") String docPath,
-			@ModelAttribute("docType") DocumentType docType,
-			@ModelAttribute("sendUnit") Unit unit,
-			@ModelAttribute("privacyLevel") PrivacyLevel privacyLevel,
-			@ModelAttribute("emergencyLevel") EmergencyLevel emergencyLevel,
-			@RequestParam("recipientUnits") Integer[] arrUnitId){
+			@RequestParam("tenureId") String tenureId) throws ParseException{
 		ModelAndView model = new ModelAndView("implement");
 	
 		//Set data to save
 		Document doc = new Document();
-		doc.setTitle(title);
 		doc.setDocName(docName);
-		doc.setReleaseTime(releaseTime);
+		doc.setTitle(title);
+		doc.setReleaseTime(UtilMethod.toDate(releaseTime, "dd-MM-yyyy"));
 		doc.setEpitome(epitome);
 		doc.setDocPath(docPath);
-		doc.setDocType(docType);
-		doc.setEmergencyLevel(emergencyLevel);
-		doc.setPrivacyLevel(privacyLevel);
-		doc.setUnit(unit);
+		doc.setDocType(dataService.findDocTypeById(typeId));
+		doc.setEmergencyLevel(dataService.findEmergencyLevelById(emeId));
+		doc.setPrivacyLevel(dataService.findPrivacyLevelById(privacyId));
+		doc.setUnit(dataService.findUnitById(unitId));
 		
 		Set<Unit> recipientUnits = new HashSet<Unit>(dataService.findUnitByArray(arrUnitId));
 		doc.setRecipientUnits(recipientUnits);
