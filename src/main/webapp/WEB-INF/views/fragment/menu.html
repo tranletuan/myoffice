@@ -20,32 +20,30 @@
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
+				<ul class="nav navbar-nav">
 					<li><a href="#" th:href="@{/store/list}">Lưu trữ</a></li>
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown" role="button" aria-expanded="false">Xử
+					<li class="dropdown" sec:authorize="isAuthenticated()">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Xử
 							lý văn bản<span class="caret"></span>
-					</a>
+						</a>
+
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="#">Văn bản đến <span class="badge">4</span></a></li>
 							<li><a href="#">Văn bản đi <span class="badge">4</span></a></li>
 						</ul></li>
-					<li><a href="#" th:href="@{/impl/create_form}">Tạo văn bản</a></li>
+					<li><a href="#" th:href="@{/impl/create_form}" sec:authorize="isAuthenticated()">Tạo văn bản</a></li>
 					
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown" role="button" aria-expanded="false" sec:authorize="hasRole('ROLE_ADMIN')">Quản
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-expanded="false" sec:authorize="hasRole('ROLE_MANAGER')">Quản
 							lý<span class="caret"></span>
-					</a>
-						<ul class="dropdown-menu" role="menu">
-							
-							<li class="divider">Quyền hạn</li>
-							<li><a href="#" th:href="@{/admin/user_list}">Người dùng</a></li>
-							<li><a href="#" th:href="@{/admin/role_list}">Quyền hạn</a></li>
+						</a>
 
+						<ul class="dropdown-menu" role="menu">
 							<li class="divider">Cơ quan</li>
 							<li><a href="#" th:href="@{/admin/organ_list}">Cơ quan</a></li>
 							<li><a href="#" th:href="@{/admin/unit_list}">Đơn vị</a></li>
-							
+
 							<li class="divider">Văn bản</li>
 							<li><a href="#" th:href="@{/admin/doctype_list}">Loại văn bản</a></li>
 							<li><a href="#" th:href="@{/admin/privacy_list}">Mức độ mật</a></li>
@@ -56,7 +54,21 @@
 
 							<li class="divider">Nhiệm kỳ</li>
 							<li><a href="#" th:href="@{/admin/tenure_list}">Nhiệm kỳ</a></li>
-						</ul></li>
+						</ul>
+					</li>
+
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-expanded="false" sec:authorize="hasRole('ROLE_ADMIN')">Quản
+							trị<span class="caret"></span>
+						</a>
+						
+						<ul class="dropdown-menu" role="menu">
+							<li class="divider">Quyền hạn</li>
+							<li><a href="#" th:href="@{/admin/user_list}">Người dùng</a></li>
+							<li><a href="#" th:href="@{/admin/role_list}">Quyền hạn</a></li>
+						</ul>
+					</li>
 				</ul>
 
 				<form class="navbar-form navbar-left" role="search">

@@ -29,13 +29,11 @@ public class SecurityService implements UserDetailsService {
 	@Autowired
 	private UserDao userDao;
 
-	private com.myoffice.myapp.models.dto.User user;
-
 	@Override
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 
-		user = userDao.findUserByName(username);
+		com.myoffice.myapp.models.dto.User user = userDao.findUserByName(username);
 		List<GrantedAuthority> authorities = buildUserAuthority(user.getRoles());
 		return buildUserForAuthentication(user, authorities);
 	}
@@ -61,19 +59,16 @@ public class SecurityService implements UserDetailsService {
 	}
 
 	public com.myoffice.myapp.models.dto.User getCurrentUser() {
-
+		
+		com.myoffice.myapp.models.dto.User user = null;
 		// check if user is login
 		Authentication auth = SecurityContextHolder.getContext()
 				.getAuthentication();
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
+		if (auth != null) {
 			UserDetails userDetail = (UserDetails) auth.getPrincipal();
-			if(userDetail.getUsername() != user.getUserName()){
-				user = userDao.findUserByName(userDetail.getUsername());
-			}
-			
-			return user;
+			user = userDao.findUserByName(userDetail.getUsername());
 		}
 
-		return null;
+		return user;
 	}
 }
