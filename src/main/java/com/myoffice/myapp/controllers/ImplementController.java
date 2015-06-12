@@ -66,20 +66,21 @@ public class ImplementController extends AbstractController {
 	public ModelAndView submitNewDoc(
 			@RequestParam("docName") String docName,
 			@RequestParam("title") String title,
-			@RequestParam(value = "releaseTime", required = false) String releaseTime,
 			@RequestParam("epitome") String epitome,
 			@RequestParam("typeId") Integer typeId,
 			@RequestParam("privacyId") Integer privacyId,
 			@RequestParam("emeId") Integer emeId,
 			@RequestParam("recipientUnits") Integer[] arrUnitId,
 			@RequestParam("file") MultipartFile file,
-			@RequestParam("tenureId") Integer tenureId) throws ParseException, IllegalStateException, IOException{
+			@RequestParam("tenureId") Integer tenureId,
+			@RequestParam("numberSign") String numberSign) throws ParseException, IllegalStateException, IOException{
 		ModelAndView model = new ModelAndView("implement");
 
 		// Tenure
 		Tenure tenure = dataService.findTenureById(tenureId);
 		DocumentType docType = dataService.findDocTypeById(typeId);
 		
+		//Save file to server 
 		String dirServer = DataConfig.DIR_SERVER + tenure.getTenureName() + "/" + docType.getTypeName() + "/";
 		dataService.upLoadFile(dirServer, file, file.getOriginalFilename());
 		String docPath = dirServer + file.getOriginalFilename();
@@ -94,14 +95,10 @@ public class ImplementController extends AbstractController {
 		doc.setEmergencyLevel(dataService.findEmergencyLevelById(emeId));
 		doc.setPrivacyLevel(dataService.findPrivacyLevelById(privacyId));
 		doc.setUnit(securityService.getCurrentUser().getUnit());
+		doc.setNumberSign(numberSign);
 		
 		Set<Unit> recipientUnits = new HashSet<Unit>(dataService.findUnitByArray(arrUnitId));
 		doc.setRecipientUnits(recipientUnits);
-		
-		if(releaseTime != null){
-			doc.setReleaseTime(UtilMethod.toDate(releaseTime, "dd-MM-yyyy"));
-		}
-		
 		
 		//create new flow
 		/*Parameter processDefinitionIdParam = dataService.findParameterByName(pdId);

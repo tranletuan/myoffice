@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,13 +21,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.myoffice.myapp.controllers.ImplementController;
 import com.myoffice.myapp.models.dao.user.UserDao;
 import com.myoffice.myapp.models.dto.Role;
 
 @Service
 @Transactional(readOnly = true)
 public class SecurityService implements UserDetailsService {
-
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(SecurityService.class);
+	
 	@Autowired
 	private UserDao userDao;
 
@@ -62,13 +68,16 @@ public class SecurityService implements UserDetailsService {
 		
 		com.myoffice.myapp.models.dto.User user = null;
 		// check if user is login
-		Authentication auth = SecurityContextHolder.getContext()
-				.getAuthentication();
-		if (auth != null) {
-			UserDetails userDetail = (UserDetails) auth.getPrincipal();
-			user = userDao.findUserByName(userDetail.getUsername());
+		try {
+			Authentication auth = SecurityContextHolder.getContext()
+					.getAuthentication();
+			if (auth != null) {
+				UserDetails userDetail = (UserDetails) auth.getPrincipal();
+				user = userDao.findUserByName(userDetail.getUsername());
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 		return user;
 	}
 }

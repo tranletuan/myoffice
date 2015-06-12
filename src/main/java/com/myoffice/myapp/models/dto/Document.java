@@ -33,6 +33,9 @@ public class Document {
 	@Column(name = "title", nullable = false, length = 60)
 	private String title;
 	
+	@Column(name = "number_sign", nullable = false, length = 60)
+	private String numberSign;
+	
 	@Column(name = "document_name", nullable = false, length = 100)
 	private String docName;
 
@@ -40,7 +43,7 @@ public class Document {
 	@Column(name = "release_time", columnDefinition="DATETIME")
 	private Date releaseTime;
 
-	@Column(name = "epitome")
+	@Column(name = "epitome" , nullable = false, columnDefinition="varchar(500)")
 	private String epitome;
 
 	@Column(name = "document_path", nullable = false)
@@ -101,6 +104,14 @@ public class Document {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getNumberSign() {
+		return numberSign;
+	}
+
+	public void setNumberSign(String numberSign) {
+		this.numberSign = numberSign;
 	}
 
 	public Date getReleaseTime() {
