@@ -81,7 +81,6 @@ public class AdminController extends AbstractController {
 			@RequestParam("userId") Integer userId,
 			@RequestParam("userName") String userName,
 			@RequestParam(value = "password", required = false) String password,
-			@RequestParam("unitId") Integer unitId,
 			@RequestParam(value = "roles", required = false) Integer[] rolesId,
 			@RequestParam(value = "enabled", required = false) boolean enabled) {
 		ModelAndView model = new ModelAndView("redirect:user_list");
@@ -98,9 +97,6 @@ public class AdminController extends AbstractController {
 		if (password != "") {
 			user.setPassword(password);
 		}
-
-		// unit
-		user.setUnit(dataService.findUnitById(unitId));
 
 		// roles
 		if (rolesId != null) {

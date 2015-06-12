@@ -1,10 +1,16 @@
 package com.myoffice.myapp.models.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -25,13 +31,12 @@ public class DocumentType {
 	@Column(name = "description", columnDefinition="varchar(400)")
 	private String description;
 	
-
+	@OneToMany(mappedBy = "docType")
+	private Set<Number> numbers = new HashSet<Number>();
+	
 	public DocumentType() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	
 	public Integer getTypeId() {
 		return typeId;
 	}
@@ -62,4 +67,11 @@ public class DocumentType {
 		this.description = description;
 	}
 
+	public Set<Number> getNumbers() {
+		return numbers;
+	}
+
+	public void setNumbers(Set<Number> numbers) {
+		this.numbers = numbers;
+	}
 }

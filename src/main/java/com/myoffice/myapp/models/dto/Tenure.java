@@ -1,12 +1,17 @@
 package com.myoffice.myapp.models.dto;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,9 +36,16 @@ public class Tenure {
 	@Column(name = "time_end", columnDefinition="DATETIME", nullable = false)
 	private Date timeEnd;
 	
+	@OneToMany(mappedBy = "tenure")
+	private Set<Number> numbers = new HashSet<Number>(0);
+
 	public Tenure() {
 	}
 
+	public Integer getTenureId() {
+		return tenureId;
+	}
+	
 	public String getTenureName() {
 		return tenureName;
 	}
@@ -58,10 +70,11 @@ public class Tenure {
 		this.timeEnd = timeEnd;
 	}
 
-	public Integer getTenureId() {
-		return tenureId;
+	public Set<Number> getNumbers() {
+		return numbers;
 	}
 
-	
-	
+	public void setNumbers(Set<Number> numbers) {
+		this.numbers = numbers;
+	}	
 }

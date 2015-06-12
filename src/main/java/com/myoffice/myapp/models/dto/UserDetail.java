@@ -34,6 +34,10 @@ public class UserDetail {
 
 	@Column(name = "email", nullable = false, length = 60)
 	private String email;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "unit_id", nullable = false, updatable = true)
+	private Unit unit;
 
 	public Integer getDetailId() {
 		return detailId;
@@ -77,6 +81,14 @@ public class UserDetail {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
 	}
 
 }

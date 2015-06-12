@@ -57,7 +57,7 @@ public class ImplementController extends AbstractController {
 		model.addObject("privacyList", privacyList);
 		model.addObject("unitList", unitList);
 		model.addObject("tenureList", tenureList);
-		model.addObject("unit", user.getUnit());
+/*		model.addObject("unit", user.getUnit());*/
 		
 		return model;
 	}
@@ -94,7 +94,7 @@ public class ImplementController extends AbstractController {
 		doc.setDocType(docType);
 		doc.setEmergencyLevel(dataService.findEmergencyLevelById(emeId));
 		doc.setPrivacyLevel(dataService.findPrivacyLevelById(privacyId));
-		doc.setUnit(securityService.getCurrentUser().getUnit());
+	/*	doc.setUnit(securityService.getCurrentUser().getUnit());*/
 		doc.setNumberSign(numberSign);
 		
 		Set<Unit> recipientUnits = new HashSet<Unit>(dataService.findUnitByArray(arrUnitId));

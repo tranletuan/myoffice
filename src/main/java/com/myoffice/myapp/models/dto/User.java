@@ -50,10 +50,6 @@ public class User {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "detail_id", nullable = true, insertable = true, updatable = true)
 	private UserDetail userDetail;
-	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "unit_id", nullable = false, updatable = true)
-	private Unit unit;
 
 	public User() {
 
@@ -111,14 +107,6 @@ public class User {
 
 	public void setUserDetail(UserDetail userDetail) {
 		this.userDetail = userDetail;
-	}
-
-	public Unit getUnit() {
-		return unit;
-	}
-
-	public void setUnit(Unit unit) {
-		this.unit = unit;
 	}
 	
 	public String getRoleNames(){
