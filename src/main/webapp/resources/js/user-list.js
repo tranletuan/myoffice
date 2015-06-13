@@ -6,7 +6,8 @@
 
  	var userId = -1;
  	var userName;
- 	var unit;
+ 	var unitId;
+ 	var organId;
  	var enabled;
 
  	$('.table tr').click(function() {
@@ -15,7 +16,8 @@
 
  		userId = $(this).attr('id');
  		userName = $(this).find('.userName').html();
- 		unit = $(this).find('.unit').html();
+ 		unitId = $(this).find('.unit').attr('data');
+ 		organId = $(this).find('.organ').attr('data');
  		enabled = $(this).find('.enabled').html();
 
  		if(userId > 0){
@@ -28,16 +30,14 @@
  		$('#userName').val(userName);
  		$('#enabled').attr('checked', enabled);
 
-
- 		var unitList = $('#unit').find('option');
- 		for(var i = 0; i < unitList.length; i++){
-
- 			if(unitList[i].innerText == unit){
- 				unitList[i].setAttribute('selected', 'true');
- 				break;
- 			}
+ 		if(unitId > 0) {
+ 			$('#unit').val(unitId);
  		}
 
+ 		if(organId > 0){
+ 			$('#organ').val(organId);
+ 		}
+ 		
  		$('.change-required').removeAttr('required');
  	});
 
@@ -45,6 +45,8 @@
  		$('#userId').val('-1');
  		$('#userName').val('');
  		$('#enabled').attr('checked', 'true');
+ 		$('#unit').val(1);
+ 		$('#organ').val(1);
  	
  		$('.change-required').attr('required', 'true');
  	});

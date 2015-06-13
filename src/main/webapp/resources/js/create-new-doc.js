@@ -19,8 +19,24 @@
  		var type = $('#typeId option:selected').attr('class');
  		var organ = $('#organId').attr('class');
  		var unit = $('#unitId').attr('class');
+ 		var number;
+ 		
+ 		var tenureId = 1;
+ 		var typeId = 1;
 
- 		var numberSign = '-'+ type + '/' + organ + '-' + unit;
+ 		$.ajax({
+ 			type : "GET",
+ 			url : "number",
+ 			data : {
+ 				"tenureId" : tenureId,
+ 				"typeId" : typeId
+ 			},
+ 			success: function(response){
+               number = response;
+            }
+        });
+
+ 		var numberSign = number '-'+ type + '/' + organ + '-' + unit;
   		$('#numberSign').val(numberSign);
 
  	}

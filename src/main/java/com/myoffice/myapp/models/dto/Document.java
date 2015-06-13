@@ -68,6 +68,10 @@ public class Document {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "unit_id", nullable = false, insertable = true, updatable = true)
 	private Unit unit;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "organ_id", nullable = true, insertable = true, updatable = true)
+	private Organ organ;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "privacy_id")
@@ -220,5 +224,13 @@ public class Document {
 
 	public Integer getDocId() {
 		return docId;
+	}
+
+	public Organ getOrgan() {
+		return organ;
+	}
+
+	public void setOrgan(Organ organ) {
+		this.organ = organ;
 	}
 }

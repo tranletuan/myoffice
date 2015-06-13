@@ -15,6 +15,7 @@ import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentType;
+import com.myoffice.myapp.models.dto.Number;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
@@ -167,6 +168,47 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@Override
 	public void deleteTenure(Tenure tenure) {
 		delete(tenure);
+	}
+
+	@Override
+	public List<Number> findAllNumber() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Number> findNumberByTenureId(Integer tenureId) {
+		Query query = (Query) getSession().createQuery("from Number where tenure_id=?");
+		query.setParameter(0, tenureId);
+		return query.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Number> findNumberByDocTypeId(Integer typeId) {
+		Query query = (Query) getSession().createQuery("from Number where type_id=?");
+		query.setParameter(0, typeId);
+		return query.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Number findNumberById(Integer tenureId, Integer typeId) {
+		Query query = (Query) getSession().createQuery("from Number where tenure_id=? and type_id=?");
+		query.setParameter(0, tenureId);
+		query.setParameter(1, typeId);
+		List<Number> numbers = query.list();
+		if (numbers.size() > 0) {
+			return numbers.get(0);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public void saveNumber(Number number) {
+		persist(number);
 	}
 
 }

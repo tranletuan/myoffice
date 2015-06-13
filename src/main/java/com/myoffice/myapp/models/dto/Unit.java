@@ -35,9 +35,6 @@ public class Unit {
 	@Column(name = "is_internal")
 	private boolean internal = true;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "organ_id", nullable = true, insertable = true, updatable = true)
-	private Organ organ;
 
 	public Unit() {
 	}
@@ -84,13 +81,5 @@ public class Unit {
 
 	public Integer getUnitId() {
 		return unitId;
-	}
-
-	public Organ getOrgan() {
-		return organ;
-	}
-
-	public void setOrgan(Organ organ) {
-		this.organ = organ;
 	}
 }

@@ -3,7 +3,6 @@
  	var unitName;
  	var phoneNumber;
  	var email;
- 	var organId;
  	var shortName;
 
  	/*$("table.sort_table").sort_table({
@@ -20,7 +19,6 @@
  		unitName = $(this).find('.unitName').html();
  		phoneNumber = $(this).find('.phoneNumber').html();
  		email = $(this).find('.email').html();
- 		organId = $(this).find('.organId').attr('id');
  		shortName = $(this).find('.shortName').html();
 
  		if(unitId > 0){
@@ -34,7 +32,6 @@
  		$('#unitName').val(unitName);
  		$('#phoneNumber').val(phoneNumber);
  		$('#email').val(email);
- 		$('#organ').val(organId);
  		$('#shortName').val(shortName);
  	});
 

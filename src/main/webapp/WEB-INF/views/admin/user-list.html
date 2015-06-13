@@ -15,8 +15,6 @@ xmlns:th="http://www.thymeleaf.org">
 
 	<script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
-	<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}" />
 	
 	<script type="text/javascript" th:src="@{/js/user-list.js}" ></script>
 
@@ -43,13 +41,21 @@ xmlns:th="http://www.thymeleaf.org">
 								<th>ID</th>
 								<th>Tên tài khoản</th>
 								<th>Khả dụng</th>
+								<th>Đơn vị</th>
+								<th>Cơ quan</th>
 								<th>Quyền hạn</th>
-								
 							</thead>
 							<tr th:each="user : ${userList}" th:attr="id=${user.userId}">
 								<td th:text="${user.userId}"></td>
 								<td th:text="${user.userName}" class="userName"></td>
 								<td th:text="${user.enabled}" class="enabled"></td>
+
+								<td th:if="${user.unit}" th:text="${user.unit.unitName}" class="unit" th:attr="data=${user.unit.unitId}"></td>
+								<td th:unless="${user.unit}" class="unit" th:value="NULL"></td>
+
+								<td th:if="${user.organ}" th:text="${user.organ.organName}" class="organ" th:attr="data=${user.organ.organId}"></td>
+								<td th:unless="${user.organ}" class="organ" th:value="NULL"></td>
+								
 								<td th:text="${user.getRoleNames()}"></td>
 							</tr> 
 						</tbody>
@@ -83,17 +89,29 @@ xmlns:th="http://www.thymeleaf.org">
 								</div>
 							</div>
 	
-							<!-- <div class="form-group">
+							<div class="form-group">
 								<label for="input-user-unit" class="col-sm-2 control-label">Đơn vị</label>
 								<div class="col-sm-10">
-									<select class="form-control" id="unit"  th:name="unitId">
+									<select class="form-control" id="unit"  th:name="unitId" required="true">
 										<option th:each="unit : ${unitList}"
 												th:value="${unit.unitId}"
 												th:text="${unit.unitName}">
 										</option>
 									</select>
 								</div>
-							</div>	 -->
+							</div>	
+
+							<div class="form-group">
+								<label for="input-user-organ" class="col-sm-2 control-label">Cơ quan</label>
+								<div class="col-sm-10">
+									<select class="form-control" id="organ"  th:name="organId" required="true">
+										<option th:each="organ : ${organList}"
+												th:value="${organ.organId}"
+												th:text="${organ.organName}">
+										</option>
+									</select>
+								</div>
+							</div>	
 
 							<div class="form-group">
 								<label for="input-user-account" class="col-sm-2 control-label">Quyền hạn</label>

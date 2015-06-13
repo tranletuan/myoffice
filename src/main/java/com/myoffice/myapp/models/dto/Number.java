@@ -1,5 +1,7 @@
 package com.myoffice.myapp.models.dto;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,17 +14,20 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "number")
-public class Number {
+public class Number implements Serializable{
+
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "number_id", nullable = false, unique = true)
-	private Integer numberId;
-	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "tenure_id", nullable = false)
 	private Tenure tenure;
 	
+	@Id
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "type_id", nullable = false)
 	private DocumentType docType;
@@ -33,10 +38,6 @@ public class Number {
 	public Number() {
 	}
 	
-	public Integer getNumberId() {
-		return numberId;
-	}
-
 	public Tenure getTenure() {
 		return tenure;
 	}

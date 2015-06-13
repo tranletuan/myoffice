@@ -3,7 +3,6 @@ package com.myoffice.myapp.models.service;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -31,6 +30,7 @@ import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
+import com.myoffice.myapp.models.dto.Number;
 
 @Service
 @Transactional
@@ -171,6 +171,27 @@ public class DataService {
 		
 	public void deleteTenure(Tenure tenure){
 		docDao.deleteTenure(tenure);
+	}
+	
+	//NUMBER
+	public List<Number> findAllNumber(){
+		return docDao.findAllNumber();
+	}
+	
+	public List<Number> findNumberByTenureId(Integer tenureId){
+		return docDao.findNumberByTenureId(tenureId);
+	}
+	
+	public List<Number> findNumberByDocTypeId(Integer typeId){
+		return docDao.findNumberByDocTypeId(typeId);
+	}
+	
+	public Number findNumberById(Integer tenureId, Integer typeId){
+		return docDao.findNumberById(tenureId, typeId);
+	}
+	
+	public void saveNumber(Number number){
+		docDao.saveNumber(number);
 	}
 	
 	//=====================

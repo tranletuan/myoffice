@@ -68,11 +68,13 @@ public class AdminController extends AbstractController {
 		List<User> userList = dataService.findAllUsers();
 		List<Role> roleList = dataService.findAllRoles();
 		List<Unit> unitList = dataService.findAllUnit();
-
+		List<Organ> organList = dataService.findAllOrgan();
+		
 		model.addObject("userList", userList);
 		model.addObject("roleList", roleList);
 		model.addObject("unitList", unitList);
-
+		model.addObject("organList", organList);
+		
 		return model;
 	}
 
@@ -82,7 +84,9 @@ public class AdminController extends AbstractController {
 			@RequestParam("userName") String userName,
 			@RequestParam(value = "password", required = false) String password,
 			@RequestParam(value = "roles", required = false) Integer[] rolesId,
-			@RequestParam(value = "enabled", required = false) boolean enabled) {
+			@RequestParam(value = "enabled", required = false) boolean enabled,
+			@RequestParam(value = "organId", required = false) Integer organId,
+			@RequestParam(value = "unitId", required = false) Integer unitId) {
 		ModelAndView model = new ModelAndView("redirect:user_list");
 		User user = new User();
 
@@ -107,6 +111,15 @@ public class AdminController extends AbstractController {
 
 		// enabled
 		user.setEnabled(enabled);
+		
+		if(unitId > 0){
+			user.setUnit(dataService.findUnitById(unitId));
+		}
+		
+		if(organId > 0){
+			user.setOrgan(dataService.findOrganById(organId));
+		}
+		
 		dataService.saveUser(user);
 
 		return model;
@@ -180,11 +193,7 @@ public class AdminController extends AbstractController {
 	public ModelAndView unitList(){
 		ModelAndView model = new ModelAndView("admin/unit-list");
 		List<Unit> unitList = dataService.findAllUnit();
-		List<Organ> organList = dataService.findAllOrgan();
-		
 		model.addObject("unitList", unitList);
-		model.addObject("organList", organList);
-		
 		return model;
 	}
 	
@@ -193,8 +202,7 @@ public class AdminController extends AbstractController {
 			@RequestParam("unitId") Integer unitId,
 			@RequestParam("unitName") String unitName, 
 			@RequestParam("phoneNumber") String phoneNumber,
-			@RequestParam("email") String email, 
-			@RequestParam("organId") Integer organId,
+			@RequestParam("email") String email,
 			@RequestParam("shortName") String shortName){
 		ModelAndView model = new ModelAndView("redirect:unit_list");
 		Unit unit = new Unit();
@@ -205,7 +213,6 @@ public class AdminController extends AbstractController {
 		unit.setUnitName(unitName);
 		unit.setPhoneNumber(phoneNumber);
 		unit.setEmail(email);
-		unit.setOrgan(dataService.findOrganById(organId));
 		unit.setShortName(shortName);
 		
 		dataService.saveUnit(unit);

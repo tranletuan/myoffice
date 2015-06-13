@@ -5,6 +5,7 @@ import java.util.List;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
+import com.myoffice.myapp.models.dto.Number;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
 
@@ -53,5 +54,17 @@ public interface DocumentDao {
 	void saveTenure(Tenure tenure);
 	
 	void deleteTenure(Tenure tenure);
+	
+	//Number
+	List<Number> findAllNumber();
+	
+	List<Number> findNumberByTenureId(Integer tenureId);
+	
+	List<Number> findNumberByDocTypeId(Integer typeId);
+	
+	Number findNumberById(Integer tenureId, Integer typeId);
+	
+	void saveNumber(Number number);
+	
 
 }

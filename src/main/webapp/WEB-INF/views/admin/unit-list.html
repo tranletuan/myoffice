@@ -43,7 +43,6 @@ xmlns:th="http://www.thymeleaf.org">
 								<th>Tên đơn vị</th>
 								<th>Số điện thoại</th>
 								<th>Email</th>
-								<th>Cơ quan trực thuộc</th>
 								<th>Tên viết tắt</th>
 							</thead>
 							<tr th:each="unit : ${unitList}" th:attr="id=${unit.unitId}">
@@ -51,7 +50,6 @@ xmlns:th="http://www.thymeleaf.org">
 								<td th:text="${unit.unitName}" class="unitName"></td>
 								<td th:text="${unit.phoneNumber}" class="phoneNumber"></td>
 								<td th:text="${unit.email}" class="email"></td>
-								<td th:text="${unit.organ.organName}" class="organId" th:attr="id=${unit.organ.organId}"></td>
 								<td th:text="${unit.shortName}" class="shortName"></td>
 							</tr> 
 						</tbody>
@@ -72,7 +70,7 @@ xmlns:th="http://www.thymeleaf.org">
 							</div>
 
 							<div class="form-group">
-								<label for="unitName" class="col-sm-3 control-label">Tên cơ quan</label>
+								<label for="unitName" class="col-sm-3 control-label">Tên đơn vị</label>
 								<div class="col-sm-9">
 									<input type="text" class="form-control" id="unitName" th:name="unitName" required="true"/>
 								</div>
@@ -89,18 +87,6 @@ xmlns:th="http://www.thymeleaf.org">
 								<label for="phoneNumber" class="col-sm-3 control-label">Email</label>
 								<div class="col-sm-9">
 									<input type="email" class="form-control" id="email" th:name="email" required="true"/>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="phoneNumber" class="col-sm-3 control-label">Cơ quan trực thuộc</label>
-								<div class="col-sm-9">
-									<select class="form-control" th:name="organId" id="organ">
-										<option th:each="organ : ${organList}" 
-												th:value="${organ.organId}"
-												th:text="${organ.organName}">
-										</option>
-									</select>
 								</div>
 							</div>
 
