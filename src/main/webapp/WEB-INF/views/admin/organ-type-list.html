@@ -5,7 +5,7 @@ xmlns:th="http://www.thymeleaf.org">
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<title>Quản lý đơn vị</title>
+	<title>Quản lý cấp cơ quan</title>
 
 	<script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -16,7 +16,7 @@ xmlns:th="http://www.thymeleaf.org">
 	<script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
-	<script type="text/javascript" th:src="@{/js/unit-list.js}" ></script>
+	<script type="text/javascript" th:src="@{/js/organ-type-list.js}" ></script>
 
 </head>
 <body>
@@ -24,8 +24,8 @@ xmlns:th="http://www.thymeleaf.org">
 		<div th:replace="fragment/menu :: menu"></div>
 		<div class="container">
 			<div>
-				<button id="btn-add" type="button" class="btn btn-info" data-toggle="modal" data-target=".form-unit">Thêm</button>
-				<button id="btn-change" type="button" class="btn btn-warning" disabled="true" data-toggle="modal" data-target=".form-unit">Sửa</button>	
+				<button id="btn-add" type="button" class="btn btn-info" data-toggle="modal" data-target=".form-organType">Thêm</button>
+				<button id="btn-change" type="button" class="btn btn-warning" disabled="true" data-toggle="modal" data-target=".form-organType">Sửa</button>	
 			</div>
 			<table class="table">
 				<colgroup>
@@ -38,44 +38,35 @@ xmlns:th="http://www.thymeleaf.org">
 						<tbody id="table-body">
 							<thead>
 								<th>ID</th>
-								<th>Tên đơn vị</th>
-								<th>Địa chỉ</th>
-								<th>Tên viết tắt</th>
+								<th>Tên cấp cơ quan</th>
+								<th>Viết tắt</th>
 							</thead>
-							<tr th:each="unit : ${unitList}" th:attr="id=${unit.unitId}">
-								<td th:text="${unit.unitId}" class="unitId"></td>
-								<td th:text="${unit.unitName}" class="unitName"></td>
-								<td th:text="${unit.address}" class="address"></td>
-								<td th:text="${unit.shortName}" class="shortName"></td>
+							<tr th:each="organType : ${organTypeList}" th:attr="id=${organType.organTypeId}">
+								<td th:text="${organType.organTypeId}" class="organTypeId"></td>
+								<td th:text="${organType.organTypeName}" class="organTypeName"></td>
+								<td th:text="${organType.shortName}" class="shortName"></td>
 							</tr> 
 						</tbody>
 					</table>
 				</tbody>
 			</table>
 
-			<div class="modal fade form-unit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div class="modal fade form-organType" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
-						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_unit}">
+						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_organ_type}">
 
 							<div class="form-group hidden">
-								<label for="unitId" class="col-sm-3 control-label">ID</label>
+								<label for="organTypeId" class="col-sm-3 control-label">ID</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="unitId" th:name="unitId" value=""/>
+									<input type="text" class="form-control" id="organTypeId" th:name="organTypeId" value=""/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="unitName" class="col-sm-3 control-label">Tên đơn vị</label>
+								<label for="organTypeName" class="col-sm-3 control-label">Tên cơ quan</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="unitName" th:name="unitName" required="true"/>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="address" class="col-sm-3 control-label">Địa chỉ</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="address" th:name="address" required="true"/>
+									<input type="text" class="form-control" id="organTypeName" th:name="organTypeName" required="true"/>
 								</div>
 							</div>
 

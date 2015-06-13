@@ -6,7 +6,6 @@
 
  	var userId = -1;
  	var userName;
- 	var unitId;
  	var organId;
  	var enabled;
 
@@ -16,7 +15,6 @@
 
  		userId = $(this).attr('id');
  		userName = $(this).find('.userName').html();
- 		unitId = $(this).find('.unit').attr('data');
  		organId = $(this).find('.organ').attr('data');
  		enabled = $(this).find('.enabled').html();
 
@@ -30,10 +28,6 @@
  		$('#userName').val(userName);
  		$('#enabled').attr('checked', enabled);
 
- 		if(unitId > 0) {
- 			$('#unit').val(unitId);
- 		}
-
  		if(organId > 0){
  			$('#organ').val(organId);
  		}
@@ -45,7 +39,6 @@
  		$('#userId').val('-1');
  		$('#userName').val('');
  		$('#enabled').attr('checked', 'true');
- 		$('#unit').val(1);
  		$('#organ').val(1);
  	
  		$('.change-required').attr('required', 'true');

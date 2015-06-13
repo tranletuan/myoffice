@@ -58,17 +58,10 @@ public class Document {
 	@Column(name = "incomming")
 	private boolean incoming = false;
 
-	@Column(name = "description")
-	private String description;
-
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "type_id", nullable = false, insertable = true, updatable = true)
+	@JoinColumn(name = "doc_type_id", nullable = false, insertable = true, updatable = true)
 	private DocumentType docType;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "unit_id", nullable = false, insertable = true, updatable = true)
-	private Unit unit;
-	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "organ_id", nullable = true, insertable = true, updatable = true)
 	private Organ organ;
@@ -90,8 +83,6 @@ public class Document {
 	private Set<Unit> recipientUnits = new HashSet<Unit>(0);
 
 	public Document() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getDocName() {
@@ -166,28 +157,12 @@ public class Document {
 		this.incoming = incoming;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public DocumentType getDocType() {
 		return docType;
 	}
 
 	public void setDocType(DocumentType docType) {
 		this.docType = docType;
-	}
-
-	public Unit getUnit() {
-		return unit;
-	}
-
-	public void setUnit(Unit unit) {
-		this.unit = unit;
 	}
 
 	public PrivacyLevel getPrivacyLevel() {

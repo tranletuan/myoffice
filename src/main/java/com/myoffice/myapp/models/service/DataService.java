@@ -24,6 +24,7 @@ import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Organ;
+import com.myoffice.myapp.models.dto.OrganType;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
@@ -250,6 +251,19 @@ public class DataService {
 	
 	public void deleteOrgan(Organ organ){
 		unitDao.deleteOrgan(organ);
+	}
+	
+	//ORGAN TYPE
+	public List<OrganType> findAllOrganType(){
+		return unitDao.findAllOrganType();
+	}
+	
+	public OrganType findOrganTypeById(Integer organTypeId){
+		return unitDao.findOrganTypeById(organTypeId);
+	}
+	
+	public void saveOrganType(OrganType organType){
+		unitDao.saveOrganType(organType);
 	}
 	
 	//=====================

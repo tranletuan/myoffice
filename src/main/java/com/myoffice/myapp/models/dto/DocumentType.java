@@ -19,11 +19,11 @@ public class DocumentType {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "type_id", nullable = false, unique = true)
+	@Column(name = "doc_type_id", nullable = false, unique = true)
 	private Integer typeId;
 	
-	@Column(name = "type_name", nullable = false, unique = true)
-	private String typeName;
+	@Column(name = "doc_type_name", nullable = false, unique = true)
+	private String docTypeName;
 	
 	@Column(name = "short_name", nullable = false, unique = true, length = 20)
 	private String shortName;
@@ -41,15 +41,13 @@ public class DocumentType {
 		return typeId;
 	}
 
-	public String getTypeName() {
-		return typeName;
+	public String getDocTypeName() {
+		return docTypeName;
 	}
 
-
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
+	public void setDocTypeName(String docTypeName) {
+		this.docTypeName = docTypeName;
 	}
-
 
 	public String getShortName() {
 		return shortName;

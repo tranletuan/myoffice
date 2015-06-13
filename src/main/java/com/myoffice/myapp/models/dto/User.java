@@ -50,10 +50,6 @@ public class User {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "detail_id", nullable = true, insertable = true, updatable = true)
 	private UserDetail userDetail;
-
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "unit_id", updatable = true)
-	private Unit unit;
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "organ_id", updatable = true)
@@ -61,14 +57,6 @@ public class User {
 
 	public User() {
 
-	}
-
-	public Unit getUnit() {
-		return unit;
-	}
-
-	public void setUnit(Unit unit) {
-		this.unit = unit;
 	}
 	
 	public Integer getUserId() {
@@ -146,9 +134,5 @@ public class User {
 
 	public void setOrgan(Organ organ) {
 		this.organ = organ;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 }

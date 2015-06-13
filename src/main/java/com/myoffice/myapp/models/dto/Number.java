@@ -29,7 +29,7 @@ public class Number implements Serializable{
 	
 	@Id
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "type_id", nullable = false)
+	@JoinColumn(name = "doc_type_id", nullable = false)
 	private DocumentType docType;
 	
 	@JoinColumn(name = "value", nullable = false)

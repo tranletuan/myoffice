@@ -63,7 +63,7 @@ public class ImplementController extends AbstractController {
 		model.addObject("privacyList", privacyList);
 		model.addObject("unitList", unitList);
 		model.addObject("tenureList", tenureList);
-		model.addObject("unit", user.getUnit());
+		//model.addObject("unit", user.getUnit());
 		model.addObject("organ", user.getOrgan());
 		
 		return model;
@@ -103,7 +103,7 @@ public class ImplementController extends AbstractController {
 		DocumentType docType = dataService.findDocTypeById(typeId);
 		
 		//Save file to server 
-		String dirServer = DataConfig.DIR_SERVER + tenure.getTenureName() + "/" + docType.getTypeName() + "/";
+		String dirServer = DataConfig.DIR_SERVER + tenure.getTenureName() + "/" + docType.getDocTypeName() + "/";
 		dataService.upLoadFile(dirServer, file, file.getOriginalFilename());
 		String docPath = dirServer + file.getOriginalFilename();
 		

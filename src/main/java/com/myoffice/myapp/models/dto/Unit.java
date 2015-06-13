@@ -1,14 +1,10 @@
 package com.myoffice.myapp.models.dto;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -25,18 +21,16 @@ public class Unit {
 
 	@Column(name = "short_name", nullable = false, unique = true)
 	private String shortName;
-
-	@Column(name = "phone_number", length = 20)
-	private String phoneNumber;
-
-	@Column(name = "email", length = 60)
-	private String email;
-
-	@Column(name = "is_internal")
-	private boolean internal = true;
-
+	
+	@Column(name = "address")
+	private String address;
 
 	public Unit() {
+	}
+	
+
+	public Integer getUnitId() {
+		return unitId;
 	}
 
 	public String getUnitName() {
@@ -55,31 +49,11 @@ public class Unit {
 		this.shortName = shortName;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public boolean isInternal() {
-		return internal;
-	}
-
-	public void setInternal(boolean internal) {
-		this.internal = internal;
-	}
-
-	public Integer getUnitId() {
-		return unitId;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }

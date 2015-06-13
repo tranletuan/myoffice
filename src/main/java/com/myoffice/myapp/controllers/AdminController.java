@@ -44,6 +44,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Organ;
+import com.myoffice.myapp.models.dto.OrganType;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
@@ -113,7 +114,7 @@ public class AdminController extends AbstractController {
 		user.setEnabled(enabled);
 		
 		if(unitId > 0){
-			user.setUnit(dataService.findUnitById(unitId));
+		//	user.setUnit(dataService.findUnitById(unitId));
 		}
 		
 		if(organId > 0){
@@ -163,7 +164,12 @@ public class AdminController extends AbstractController {
 	public ModelAndView organList(){
 		ModelAndView model = new ModelAndView("admin/organ-list");
 		List<Organ> organList = dataService.findAllOrgan();
+		List<OrganType> organTypeList = dataService.findAllOrganType();
+		List<Unit> unitList = dataService.findAllUnit();
+		
 		model.addObject("organList", organList);
+		model.addObject("organTypeList", organTypeList);
+		model.addObject("unitList", unitList);
 		return model;
 	}
 	
@@ -172,7 +178,10 @@ public class AdminController extends AbstractController {
 			@RequestParam("organId") Integer organId,
 			@RequestParam("organName") String organName,
 			@RequestParam("shortName") String shortName,
-			@RequestParam("address") String address){
+			@RequestParam("email") String email,
+			@RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+			@RequestParam("unitId") Integer unitId,
+			@RequestParam("organTypeId") Integer organTypeId){
 		ModelAndView model = new ModelAndView("redirect:organ_list");
 		Organ organ = new Organ();
 		
@@ -182,9 +191,39 @@ public class AdminController extends AbstractController {
 		
 		organ.setOrganName(organName);
 		organ.setShortName(shortName);
-		organ.setAddress(address);
+		organ.setEmail(email);
+		organ.setPhoneNumber(phoneNumber);
+		organ.setOrganType(dataService.findOrganTypeById(organTypeId));
+		organ.setUnit(dataService.findUnitById(unitId));
 		
 		dataService.saveOrgan(organ);
+		return model;
+	}
+	
+	//ORGAN TYPE
+	@RequestMapping(value = "/organ_type_list", method = RequestMethod.GET)
+	public ModelAndView organTypeList(){
+		ModelAndView model = new ModelAndView("admin/organ-type-list");
+		List<OrganType> organTypeList = dataService.findAllOrganType();
+		model.addObject("organTypeList", organTypeList);
+		return model;
+	}
+	
+	@RequestMapping(value = "/save_organ_type", method = RequestMethod.POST)
+	public ModelAndView saveOrganType(
+			@RequestParam("organTypeId") Integer organTypeId,
+			@RequestParam("organTypeName") String organTypeName,
+			@RequestParam("shortName") String shortName){
+		ModelAndView model = new ModelAndView("redirect:organ_type_list");
+		OrganType organType = new OrganType();
+		if(organTypeId > 0){
+			organType = dataService.findOrganTypeById(organTypeId);
+		}
+		
+		organType.setOrganTypeName(organTypeName);
+		organType.setShortName(shortName);
+		
+		dataService.saveOrganType(organType);
 		return model;
 	}
 
@@ -200,9 +239,8 @@ public class AdminController extends AbstractController {
 	@RequestMapping(value = "/save_unit", method = RequestMethod.POST)
 	public ModelAndView saveUnit(
 			@RequestParam("unitId") Integer unitId,
-			@RequestParam("unitName") String unitName, 
-			@RequestParam("phoneNumber") String phoneNumber,
-			@RequestParam("email") String email,
+			@RequestParam("unitName") String unitName,
+			@RequestParam("address") String address,
 			@RequestParam("shortName") String shortName){
 		ModelAndView model = new ModelAndView("redirect:unit_list");
 		Unit unit = new Unit();
@@ -211,8 +249,7 @@ public class AdminController extends AbstractController {
 		}
 		
 		unit.setUnitName(unitName);
-		unit.setPhoneNumber(phoneNumber);
-		unit.setEmail(email);
+		unit.setAddress(address);
 		unit.setShortName(shortName);
 		
 		dataService.saveUnit(unit);
@@ -240,7 +277,7 @@ public class AdminController extends AbstractController {
 			docType = dataService.findDocTypeById(typeId);
 		}
 		
-		docType.setTypeName(typeName);
+		//docType.setTypeName(typeName);
 		docType.setShortName(shortName);
 		docType.setDescription(description);
 		

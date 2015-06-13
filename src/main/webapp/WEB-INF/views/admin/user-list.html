@@ -41,7 +41,6 @@ xmlns:th="http://www.thymeleaf.org">
 								<th>ID</th>
 								<th>Tên tài khoản</th>
 								<th>Khả dụng</th>
-								<th>Đơn vị</th>
 								<th>Cơ quan</th>
 								<th>Quyền hạn</th>
 							</thead>
@@ -50,10 +49,7 @@ xmlns:th="http://www.thymeleaf.org">
 								<td th:text="${user.userName}" class="userName"></td>
 								<td th:text="${user.enabled}" class="enabled"></td>
 
-								<td th:if="${user.unit}" th:text="${user.unit.unitName}" class="unit" th:attr="data=${user.unit.unitId}"></td>
-								<td th:unless="${user.unit}" class="unit" th:value="NULL"></td>
-
-								<td th:if="${user.organ}" th:text="${user.organ.organName}" class="organ" th:attr="data=${user.organ.organId}"></td>
+								<td th:if="${user.organ}" th:text="${user.organ.unit.unitName} + '-' + ${user.organ.organName}" class="organ" th:attr="data=${user.organ.organId}"></td>
 								<td th:unless="${user.organ}" class="organ" th:value="NULL"></td>
 								
 								<td th:text="${user.getRoleNames()}"></td>
@@ -88,18 +84,6 @@ xmlns:th="http://www.thymeleaf.org">
 									<input type="password" class="form-control change-required" id="password" placeholder="Mật khẩu" th:name="password" value="" />
 								</div>
 							</div>
-	
-							<div class="form-group">
-								<label for="input-user-unit" class="col-sm-2 control-label">Đơn vị</label>
-								<div class="col-sm-10">
-									<select class="form-control" id="unit"  th:name="unitId" required="true">
-										<option th:each="unit : ${unitList}"
-												th:value="${unit.unitId}"
-												th:text="${unit.unitName}">
-										</option>
-									</select>
-								</div>
-							</div>	
 
 							<div class="form-group">
 								<label for="input-user-organ" class="col-sm-2 control-label">Cơ quan</label>

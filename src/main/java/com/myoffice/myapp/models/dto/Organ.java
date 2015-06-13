@@ -1,10 +1,14 @@
 package com.myoffice.myapp.models.dto;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,11 +26,19 @@ public class Organ {
 	@Column(name = "short_name", nullable = false, unique = true, length = 60)
 	private String shortName;
 
-	@Column(name = "address", nullable = false)
-	private String address;
-
-	@Column(name = "description")
-	private String description;
+	@Column(name = "phone_number", length = 20)
+	private String phoneNumber;
+	
+	@Column(name = "email", length = 50)
+	private String email;
+	
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "unit_id", nullable = false)
+	private Unit unit;
+	
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "organ_type_id", nullable = false)
+	private OrganType organType;
 
 	public Organ() {
 		super();
@@ -35,10 +47,6 @@ public class Organ {
 
 	public Integer getOrganId() {
 		return organId;
-	}
-
-	public void setOrganId(Integer organId) {
-		this.organId = organId;
 	}
 
 	public String getOrganName() {
@@ -57,19 +65,36 @@ public class Organ {
 		this.shortName = shortName;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setEmail(String email) {
+		this.email = email;
 	}
+
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
+	}
+
+	public OrganType getOrganType() {
+		return organType;
+	}
+
+	public void setOrganType(OrganType organType) {
+		this.organType = organType;
+	}
+
 }

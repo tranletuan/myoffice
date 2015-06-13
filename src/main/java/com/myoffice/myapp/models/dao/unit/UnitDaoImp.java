@@ -2,6 +2,7 @@ package com.myoffice.myapp.models.dao.unit;
 
 import java.util.List;
 
+import org.dom4j.util.PerThreadSingleton;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dto.Organ;
+import com.myoffice.myapp.models.dto.OrganType;
 import com.myoffice.myapp.models.dto.Unit;
 
 @Repository
@@ -76,6 +78,25 @@ public class UnitDaoImp extends AbstractDao implements UnitDao {
 	@Override
 	public void deleteOrgan(Organ organ) {
 		delete(organ);
+	}
+
+	//ORGAN TYPE
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<OrganType> findAllOrganType() {
+		Criteria criteria = getSession().createCriteria(OrganType.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+
+	@Override
+	public OrganType findOrganTypeById(Integer organTypeId) {
+		return (OrganType) getSession().get(OrganType.class, organTypeId);
+	}
+
+	@Override
+	public void saveOrganType(OrganType organType) {
+		persist(organType);
 	}
 
 }

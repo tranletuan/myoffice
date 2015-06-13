@@ -5,7 +5,7 @@ xmlns:th="http://www.thymeleaf.org">
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<title>Quản lý đơn vị</title>
+	<title>Quản lý cơ quan</title>
 
 	<script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -15,8 +15,6 @@ xmlns:th="http://www.thymeleaf.org">
 
 	<script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
-	<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}" />
 
 	<script type="text/javascript" th:src="@{/js/organ-list.js}" ></script>
 
@@ -41,13 +39,19 @@ xmlns:th="http://www.thymeleaf.org">
 							<thead>
 								<th>ID</th>
 								<th>Tên cơ quan</th>
-								<th>Địa chỉ</th>
+								<th>Số điện thoại</th>
+								<th>Email</th>
+								<th>Đơn vị trực thuộc</th>
+								<th>Cấp cơ quan</th>
 								<th>Viết tắt</th>
 							</thead>
 							<tr th:each="organ : ${organList}" th:attr="id=${organ.organId}">
 								<td th:text="${organ.organId}" class="organId"></td>
 								<td th:text="${organ.organName}" class="organName"></td>
-								<td th:text="${organ.address}" class="address"></td>
+								<td th:text="${organ.phoneNumber}" class="phoneNumber"></td>
+								<td th:text="${organ.email}" class="email"></td>
+								<td th:text="${organ.unit.unitName}" class="unit" th:attr="data=${organ.unit.unitId}"></td>
+								<td th:text="${organ.organType.organTypeName}" class="organType" th:attr="data=${organ.organType.organTypeId}"></td>
 								<td th:text="${organ.shortName}" class="shortName"></td>
 							</tr> 
 						</tbody>
@@ -75,9 +79,40 @@ xmlns:th="http://www.thymeleaf.org">
 							</div>
 
 							<div class="form-group">
-								<label for="address" class="col-sm-3 control-label">Địa chỉ</label>
+								<label for="phoneNumber" class="col-sm-3 control-label">Số điện thoại</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="address" th:name="address" required="true"/>
+									<input type="text" class="form-control" id="phoneNumber" th:name="phoneNumber"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="email" class="col-sm-3 control-label">Email</label>
+								<div class="col-sm-9">
+									<input type="email" class="form-control" id="email" th:name="email" required="true"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="unit" class="col-sm-3 control-label">Đơn vị trực thuộc</label>
+								<div class="col-sm-9">
+									<select class="form-control" id="unit"  th:name="unitId" required="true">
+										<option th:each="unit : ${unitList}"
+												th:value="${unit.unitId}"
+												th:text="${unit.unitName}">
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="organType" class="col-sm-3 control-label">Cấp cơ quan</label>
+								<div class="col-sm-9">
+									<select class="form-control" id="organType"  th:name="organTypeId" required="true">
+										<option th:each="organType : ${organTypeList}"
+												th:value="${organType.organTypeId}"
+												th:text="${organType.organTypeName}">
+										</option>
+									</select>
 								</div>
 							</div>
 

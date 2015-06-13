@@ -1,7 +1,6 @@
  $(document).ready(function() {
- 	var unitId = -1;
- 	var unitName;
- 	var address;
+ 	var organTypeId = -1;
+ 	var organTypeName;
  	var shortName;
 
  	/*$("table.sort_table").sort_table({
@@ -14,28 +13,25 @@
  		$('.table tr').attr('class', ' ');
  		$(this).attr('class', 'active');
 
- 		unitId = $(this).find('.unitId').html();
- 		unitName = $(this).find('.unitName').html();
- 		address = $(this).find('.address').html();
+ 		organTypeId = $(this).find('.organTypeId').html();
+ 		organTypeName = $(this).find('.organTypeName').html();
  		shortName = $(this).find('.shortName').html();
 
- 		if(unitId > 0){
+ 		if(organTypeId > 0){
  			$("#btn-change").removeAttr('disabled');
  		}
  	});
 
 
  	$('#btn-change').click(function(){
- 		$('#unitId').val(unitId);
- 		$('#unitName').val(unitName);
- 		$('#address').val(address);
+ 		$('#organTypeId').val(organTypeId);
+ 		$('#organTypeName').val(organTypeName);
  		$('#shortName').val(shortName);
  	});
 
  	$('#btn-add').click(function(){
- 		$('#unitId').val("-1");
- 		$('#unitName').val("");
- 		$('#address').val("");
+ 		$('#organTypeId').val("-1");
+ 		$('#organTypeName').val("");
  		$('#shortName').val("");
  	});
 
