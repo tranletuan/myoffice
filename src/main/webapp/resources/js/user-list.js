@@ -40,6 +40,7 @@
  		$('#userName').val('');
  		$('#enabled').attr('checked', 'true');
  		$('#organ').val(1);
+ 		$('#password').val('');
  	
  		$('.change-required').attr('required', 'true');
  	});

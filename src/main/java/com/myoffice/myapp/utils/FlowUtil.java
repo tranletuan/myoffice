@@ -12,6 +12,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.Execution;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,13 +71,9 @@ public class FlowUtil {
 	public String startProcess(String processDefinitionId) {
 		try {
 			// Start process instance
-			runtimeService.startProcessInstanceById(processDefinitionId);
-			String processInstanceId = runtimeService
-					.createProcessInstanceQuery()
-					.processDefinitionId(processDefinitionId).singleResult()
-					.getId();
-			logger.info("Process Instances Id: " + processInstanceId);
-			return processInstanceId;
+			ProcessInstance procInst = runtimeService.startProcessInstanceById(processDefinitionId);
+			logger.info("Process Instances Id: " + procInst.getId());
+			return procInst.getId();
 
 		} catch (ActivitiException e) {
 			logger.error("WORKFLOW ERROR : " + e.getMessage());
@@ -113,6 +110,15 @@ public class FlowUtil {
 		}
 	}
 
+	public void deleteProcessInstanceById(String processInstanceId, String deleteReason){
+		try{
+			runtimeService.deleteProcessInstance(processInstanceId, deleteReason);
+			
+		}catch (ActivitiException e){
+			logger.error(e.getMessage());
+		}
+	}
+	
 	public RuntimeService getRuntimeService() {
 		return runtimeService;
 	}

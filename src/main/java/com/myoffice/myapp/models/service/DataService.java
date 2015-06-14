@@ -90,6 +90,10 @@ public class DataService {
 	@Autowired
 	private DocumentDao docDao;
 	
+	public Document findDocumentById(Integer docId){
+		return docDao.findDocumentById(docId);
+	}
+	
 	public Document findDocumentByName(String docName){
 		return docDao.findDocumentByName(docName);
 	}
@@ -175,25 +179,10 @@ public class DataService {
 	}
 	
 	//NUMBER
-	public List<Number> findAllNumber(){
-		return docDao.findAllNumber();
+	public Integer findMaxNumber(Integer tenureId, Integer docTypeId){
+		return docDao.findMaxNumber(tenureId, docTypeId);
 	}
 	
-	public List<Number> findNumberByTenureId(Integer tenureId){
-		return docDao.findNumberByTenureId(tenureId);
-	}
-	
-	public List<Number> findNumberByDocTypeId(Integer docTypeId){
-		return docDao.findNumberByDocTypeId(docTypeId);
-	}
-	
-	public Number findNumberById(Integer tenureId, Integer docTypeId){
-		return docDao.findNumberById(tenureId, docTypeId);
-	}
-	
-	public void saveNumber(Number number){
-		docDao.saveNumber(number);
-	}
 	
 	//=====================
 	@Autowired

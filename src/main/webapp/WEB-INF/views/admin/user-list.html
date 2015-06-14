@@ -72,21 +72,21 @@ xmlns:th="http://www.thymeleaf.org">
 							</div>
 
 							<div class="form-group">
-								<label for="input-user-name" class="col-sm-2 control-label">Tên tài khoản</label>
+								<label for="userName" class="col-sm-2 control-label">Tên tài khoản</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control" id="userName" placeholder="Tên tài khoản" th:name="userName" required="true"/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="input-user-name" class="col-sm-2 control-label">Mật khẩu</label>
+								<label for="password" class="col-sm-2 control-label">Mật khẩu</label>
 								<div class="col-sm-10">
 									<input type="password" class="form-control change-required" id="password" placeholder="Mật khẩu" th:name="password" value="" />
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="input-user-organ" class="col-sm-2 control-label">Cơ quan</label>
+								<label for="organ" class="col-sm-2 control-label">Cơ quan</label>
 								<div class="col-sm-10">
 									<select class="form-control" id="organ"  th:name="organId" required="true">
 										<option th:each="organ : ${organList}"
@@ -98,7 +98,7 @@ xmlns:th="http://www.thymeleaf.org">
 							</div>	
 
 							<div class="form-group">
-								<label for="input-user-account" class="col-sm-2 control-label">Quyền hạn</label>
+								<label for="select-roles" class="col-sm-2 control-label">Quyền hạn</label>
 								<div class="col-sm-10">
 									<select class="form-control change-required" th:name="roles" multiple="true" id="select-roles">
 										<option th:each="role : ${roleList}"
@@ -110,7 +110,7 @@ xmlns:th="http://www.thymeleaf.org">
 							</div>
 
 							<div class="form-group">
-								<label for="input-user-account" class="col-sm-2 control-label">Khả dụng</label>
+								<label for="enabled" class="col-sm-2 control-label">Khả dụng</label>
 								<div class="col-sm-10">
 									<div class="checkbox">
 										<label>

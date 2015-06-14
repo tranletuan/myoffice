@@ -13,4 +13,15 @@ public class UtilMethod {
 	    Date rsDate = df.parse(dateString);
 	    return rsDate;
 	}
+	
+	// Check String is Number
+	public static Integer parseNumDoc(String number) {
+		Integer integer = -1;
+		try {
+			integer = Integer.parseInt(number);
+		} catch (NumberFormatException nfe) {
+
+		}
+		return integer;
+	}
 }

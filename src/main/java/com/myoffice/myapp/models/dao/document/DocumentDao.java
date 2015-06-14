@@ -11,6 +11,8 @@ import com.myoffice.myapp.models.dto.Tenure;
 
 public interface DocumentDao {
 	
+	Document findDocumentById(Integer docId);
+	
 	Document findDocumentByName(String name);
 	
 	List<Document> findAllDocument();
@@ -56,15 +58,5 @@ public interface DocumentDao {
 	void deleteTenure(Tenure tenure);
 	
 	//Number
-	List<Number> findAllNumber();
-	
-	List<Number> findNumberByTenureId(Integer tenureId);
-	
-	List<Number> findNumberByDocTypeId(Integer typeId);
-	
-	Number findNumberById(Integer tenureId, Integer typeId);
-	
-	void saveNumber(Number number);
-	
-
+	Integer findMaxNumber(Integer tenureId, Integer docTypeId);
 }

@@ -28,6 +28,12 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	private static final Logger logger = LoggerFactory
 			.getLogger(DocumentDaoImp.class);
 
+	
+	@Override
+	public Document findDocumentById(Integer docId) {
+		return (Document) getSession().get(Document.class, docId);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Document findDocumentByName(String docName) {
@@ -169,46 +175,21 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	public void deleteTenure(Tenure tenure) {
 		delete(tenure);
 	}
-
-	@Override
-	public List<Number> findAllNumber() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Number> findNumberByTenureId(Integer tenureId) {
-		Query query = (Query) getSession().createQuery("from Number where tenure_id=?");
-		query.setParameter(0, tenureId);
-		return query.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Number> findNumberByDocTypeId(Integer docTypeId) {
-		Query query = (Query) getSession().createQuery("from Number where doc_type_id=?");
-		query.setParameter(0, docTypeId);
-		return query.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Number findNumberById(Integer tenureId, Integer docTypeId) {
-		Query query = (Query) getSession().createQuery("from Number where tenure_id=? and doc_type_id=?");
+	public Integer findMaxNumber(Integer tenureId, Integer docTypeId) {
+		Query query = (Query)getSession().createQuery("SELECT number from Document where tenure_id=? and doc_type_id=? ORDER BY number DESC");
 		query.setParameter(0, tenureId);
 		query.setParameter(1, docTypeId);
-		List<Number> numbers = query.list();
-		if (numbers.size() > 0) {
-			return numbers.get(0);
+		query.setMaxResults(1);
+		List<Integer> numbers = query.list();
+		if (query.list().size() > 0) {
+			return numbers.get(0) + 1;
 		}
 		
-		return null;
+		return 1;
 	}
-
-	@Override
-	public void saveNumber(Number number) {
-		persist(number);
-	}
-
 }

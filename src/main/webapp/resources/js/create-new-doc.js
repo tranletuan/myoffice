@@ -30,6 +30,7 @@
  				"docTypeId" : docTypeId
  			},
  			success: function(response){
+ 				$('#number').val(response);
                	var numberSign = response + '-' + docType + '/' + organ + '-';
   				$('#numberSign').val(numberSign);
             }

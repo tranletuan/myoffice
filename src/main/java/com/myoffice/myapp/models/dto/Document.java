@@ -36,6 +36,9 @@ public class Document {
 	@Column(name = "number_sign", nullable = false, length = 60)
 	private String numberSign;
 	
+	@Column(name = "number", nullable = false)
+	private Integer number;
+	
 	@Column(name = "document_name", nullable = false, length = 100)
 	private String docName;
 
@@ -67,7 +70,7 @@ public class Document {
 	private Tenure tenure;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "organ_id", nullable = true, insertable = true, updatable = true)
+	@JoinColumn(name = "organ_id", nullable = false, insertable = true, updatable = true)
 	private Organ organ;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -167,6 +170,14 @@ public class Document {
 
 	public PrivacyLevel getPrivacyLevel() {
 		return privacyLevel;
+	}
+
+	public Integer getNumber() {
+		return number;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
 	}
 
 	public void setPrivacyLevel(PrivacyLevel privacyLevel) {

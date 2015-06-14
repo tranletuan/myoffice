@@ -69,7 +69,7 @@
 								aria-expanded="true">
 								<div class="list-group list-menu-doc">
 										<a th:each="docType : ${typeList}" href="#"
-											th:href="@{'/store/in/' + ${docType.typeId}}"
+											th:href="@{'/store/in/' + ${docType.docTypeId}}"
 											class="list-group-item"> 
 											
 											<span th:text="${docType.docTypeName}"></span> 
@@ -90,7 +90,7 @@
 								aria-expanded="true">
 								<div class="list-group list-menu-doc">
 									<a th:each="docType : ${typeList}" href="#"
-											th:href="@{'/store/out/' + ${docType.typeId}}"
+											th:href="@{'/store/out/' + ${docType.docTypeId}}"
 											class="list-group-item"> 
 											
 											<span th:text="${docType.docTypeName}"></span> 
