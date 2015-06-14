@@ -29,6 +29,8 @@ public interface UnitDao {
 	
 	void deleteOrgan(Organ organ);
 	
+	List<Organ> findOrganByArray(Integer[] arrId);
+	
 	//organType
 	List<OrganType> findAllOrganType();
 	

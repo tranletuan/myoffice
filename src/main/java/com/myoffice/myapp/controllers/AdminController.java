@@ -86,8 +86,7 @@ public class AdminController extends AbstractController {
 			@RequestParam(value = "password", required = false) String password,
 			@RequestParam(value = "roles", required = false) Integer[] rolesId,
 			@RequestParam(value = "enabled", required = false) boolean enabled,
-			@RequestParam(value = "organId", required = false) Integer organId,
-			@RequestParam(value = "unitId", required = false) Integer unitId) {
+			@RequestParam(value = "organId", required = false) Integer organId) {
 		ModelAndView model = new ModelAndView("redirect:user_list");
 		User user = new User();
 
@@ -113,16 +112,11 @@ public class AdminController extends AbstractController {
 		// enabled
 		user.setEnabled(enabled);
 		
-		if(unitId > 0){
-		//	user.setUnit(dataService.findUnitById(unitId));
-		}
-		
 		if(organId > 0){
 			user.setOrgan(dataService.findOrganById(organId));
 		}
 		
 		dataService.saveUser(user);
-
 		return model;
 	}
 
@@ -267,17 +261,17 @@ public class AdminController extends AbstractController {
 	
 	@RequestMapping(value = "/save_doctype", method = RequestMethod.POST)
 	public ModelAndView saveDocType(
-			@RequestParam("typeId") Integer typeId,
-			@RequestParam("typeName") String typeName,
+			@RequestParam("docTypeId") Integer docTypeId,
+			@RequestParam("docTypeName") String docTypeName,
 			@RequestParam("shortName") String shortName,
 			@RequestParam(value = "description", required = false) String description){
 		ModelAndView model = new ModelAndView("redirect:doctype_list");
 		DocumentType docType = new DocumentType();
-		if(typeId > 0) {
-			docType = dataService.findDocTypeById(typeId);
+		if(docTypeId > 0) {
+			docType = dataService.findDocTypeById(docTypeId);
 		}
 		
-		//docType.setTypeName(typeName);
+		docType.setDocTypeName(docTypeName);
 		docType.setShortName(shortName);
 		docType.setDescription(description);
 		

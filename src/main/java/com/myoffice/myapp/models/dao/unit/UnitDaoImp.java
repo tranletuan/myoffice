@@ -80,6 +80,21 @@ public class UnitDaoImp extends AbstractDao implements UnitDao {
 		delete(organ);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Organ> findOrganByArray(Integer[] arrId) {
+		String queryString = "from Organ where ";
+		for (int i = 0; i < arrId.length; i++) {
+			queryString += "organ_id=" + arrId[i];
+			if (i >= 0 && i < arrId.length - 1) {
+				queryString += " or ";
+			}
+		}
+
+		Query query = (Query) getSession().createQuery(queryString);
+		return query.list();
+	}
+
 	//ORGAN TYPE
 	@SuppressWarnings("unchecked")
 	@Override

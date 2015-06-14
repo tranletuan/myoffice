@@ -49,7 +49,7 @@ xmlns:th="http://www.thymeleaf.org">
 								<td th:text="${user.userName}" class="userName"></td>
 								<td th:text="${user.enabled}" class="enabled"></td>
 
-								<td th:if="${user.organ}" th:text="${user.organ.unit.unitName} + '-' + ${user.organ.organName}" class="organ" th:attr="data=${user.organ.organId}"></td>
+								<td th:if="${user.organ}" th:text="${user.organ.unit.unitName} + ' - ' + ${user.organ.organName}" class="organ" th:attr="data=${user.organ.organId}"></td>
 								<td th:unless="${user.organ}" class="organ" th:value="NULL"></td>
 								
 								<td th:text="${user.getRoleNames()}"></td>
@@ -91,7 +91,7 @@ xmlns:th="http://www.thymeleaf.org">
 									<select class="form-control" id="organ"  th:name="organId" required="true">
 										<option th:each="organ : ${organList}"
 												th:value="${organ.organId}"
-												th:text="${organ.organName}">
+												th:text="${organ.unit.unitName} + ' - ' + ${organ.organName}">
 										</option>
 									</select>
 								</div>

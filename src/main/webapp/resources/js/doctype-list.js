@@ -1,6 +1,6 @@
  $(document).ready(function() {
- 	var typeId = -1;
- 	var typeName;
+ 	var docTypeId = -1;
+ 	var docTypeName;
  	var shortName;
  	var description;
 
@@ -14,28 +14,28 @@
  		$('.table tr').attr('class', ' ');
  		$(this).attr('class', 'active');
 
- 		typeId = $(this).find('.typeId').html();
- 		typeName = $(this).find('.typeName').html();
+ 		docTypeId = $(this).find('.docTypeId').html();
+ 		docTypeName = $(this).find('.docTypeName').html();
  		shortName = $(this).find('.shortName').html();
  		description = $(this).find(".description").html();
 
- 		if(typeId > 0){
+ 		if(docTypeId > 0){
  			$("#btn-change").removeAttr('disabled');
  		}
  	});
 
 
  	$('#btn-change').click(function(){
- 		$('#typeId').val(typeId);
- 		$('#typeName').val(typeName);
+ 		$('#docTypeId').val(docTypeId);
+ 		$('#docTypeName').val(docTypeName);
  		$('#shortName').val(shortName);
  		$('#description').val(description);
 
  	});
 
  	$('#btn-add').click(function(){
- 		$('#typeId').val("-1");
- 		$('#typeName').val("");
+ 		$('#docTypeId').val("-1");
+ 		$('#docTypeName').val("");
  		$('#shortName').val("");
  		$('#description').val(" ");
 

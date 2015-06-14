@@ -44,11 +44,11 @@ xmlns:th="http://www.thymeleaf.org">
 								<th>Tên viết tắt</th>
 								<th>Mô tả</th>
 							</thead>
-							<tr th:each="type : ${docTypeList}" th:attr="id=${type.typeId}">
-								<td th:text="${type.typeId}" class="typeId"></td>
-								<td th:text="${type.typeName}" class="typeName"></td>
+							<tr th:each="type : ${docTypeList}" th:attr="id=${type.docTypeId}">
+								<td th:text="${type.docTypeId}" class="docTypeId"></td>
+								<td th:text="${type.docTypeName}" class="docTypeName"></td>
 								<td th:text="${type.shortName}" class="shortName"></td>
-								<td th:text="${type.description}" class="description col-sm-9"></td>
+								<td th:text="${type.description}" class="description col-sm-8"></td>
 							</tr> 
 						</tbody>
 					</table>
@@ -61,16 +61,16 @@ xmlns:th="http://www.thymeleaf.org">
 						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_doctype}">
 
 							<div class="form-group hidden">
-								<label for="typeId" class="col-sm-3 control-label">ID</label>
+								<label for="docTypeId" class="col-sm-3 control-label">ID</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="typeId" th:name="typeId" value=""/>
+									<input type="text" class="form-control" id="docTypeId" th:name="docTypeId" value=""/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="typeName" class="col-sm-3 control-label">Tên loại</label>
+								<label for="docTypeName" class="col-sm-3 control-label">Tên loại</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="typeName" th:name="typeName" required="true"/>
+									<input type="text" class="form-control" id="docTypeName" th:name="docTypeName" required="true"/>
 								</div>
 							</div>
 

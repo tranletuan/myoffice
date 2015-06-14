@@ -61,6 +61,10 @@ public class Document {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "doc_type_id", nullable = false, insertable = true, updatable = true)
 	private DocumentType docType;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "tenure_id", nullable = false)
+	private Tenure tenure;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "organ_id", nullable = true, insertable = true, updatable = true)
@@ -75,12 +79,8 @@ public class Document {
 	private EmergencyLevel emergencyLevel;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "document_receivers", joinColumns = @JoinColumn(name = "document_id"), inverseJoinColumns = @JoinColumn(name = "receiver_id"))
-	private Set<Receiver> receivers = new HashSet<Receiver>(0);
-
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "document_recipient_units", joinColumns = @JoinColumn(name = "document_id"), inverseJoinColumns = @JoinColumn(name = "unit_id"))
-	private Set<Unit> recipientUnits = new HashSet<Unit>(0);
+	@JoinTable(name = "document_recipient_organ", joinColumns = @JoinColumn(name = "document_id"), inverseJoinColumns = @JoinColumn(name = "organ_id"))
+	private Set<Organ> recipients = new HashSet<Organ>(0);
 
 	public Document() {
 	}
@@ -181,20 +181,12 @@ public class Document {
 		this.emergencyLevel = emergencyLevel;
 	}
 
-	public Set<Receiver> getReceivers() {
-		return receivers;
+	public Set<Organ> getRecipients() {
+		return recipients;
 	}
 
-	public void setReceivers(Set<Receiver> receivers) {
-		this.receivers = receivers;
-	}
-
-	public Set<Unit> getRecipientUnits() {
-		return recipientUnits;
-	}
-
-	public void setRecipientUnits(Set<Unit> recipientUnits) {
-		this.recipientUnits = recipientUnits;
+	public void setRecipients(Set<Organ> recipients) {
+		this.recipients = recipients;
 	}
 
 	public Integer getDocId() {
@@ -207,5 +199,13 @@ public class Document {
 
 	public void setOrgan(Organ organ) {
 		this.organ = organ;
+	}
+
+	public Tenure getTenure() {
+		return tenure;
+	}
+
+	public void setTenure(Tenure tenure) {
+		this.tenure = tenure;
 	}
 }

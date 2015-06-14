@@ -69,13 +69,13 @@ xmlns:th="http://www.thymeleaf.org">
 
 			<!-- typeId -->
 			<div class="form-group">
-				<label for="typeId" class="col-sm-2 control-label">Loại văn bản</label>
+				<label for="docType" class="col-sm-2 control-label">Loại văn bản</label>
 				<div class="col-sm-10">
-					<select class="form-control" id="typeId"  th:name="typeId" required="true">
-						<option th:each="type : ${typeList}"
-								th:value="${type.typeId}"
-								th:text="${type.typeName}"
-								th:attr="class=${type.shortName}">
+					<select class="form-control" id="docType"  th:name="docTypeId" required="true">
+						<option th:each="docType : ${docTypeList}"
+								th:value="${docType.docTypeId}"
+								th:text="${docType.docTypeName}"
+								th:attr="class=${docType.shortName}">
 						</option>
 					</select>
 				</div>
@@ -107,14 +107,14 @@ xmlns:th="http://www.thymeleaf.org">
 				</div>
 			</div>
 
-			<!-- recipientUnits -->
+			<!-- recipient -->
 			<div class="form-group">
-				<label for="recipientUnits" class="col-sm-2 control-label">Đơn vị nhận</label>
+				<label for="recipient" class="col-sm-2 control-label">Đơn vị nhận</label>
 				<div class="col-sm-10">
-					<select class="form-control" id="recipientUnits"  th:name="recipientUnits" multiple="true" required="true">
-						<option th:each="unit : ${unitList}"
-								th:value="${unit.unitId}"
-								th:text="${unit.unitName}">
+					<select class="form-control" id="recipient"  th:name="recipient" multiple="true" required="true">
+						<option th:each="organ : ${organList}"
+								th:value="${organ.organId}"
+								th:text="${organ.unit.unitName} + ' - ' + ${organ.organName}">
 						</option>
 					</select>
 				</div>
@@ -131,9 +131,9 @@ xmlns:th="http://www.thymeleaf.org">
 
 			<!-- tenureId -->
 			<div class="form-group">
-				<label for="tenureId" class="col-sm-2 control-label">Nhiệm kỳ</label>
+				<label for="tenure" class="col-sm-2 control-label">Nhiệm kỳ</label>
 				<div class="col-sm-10">
-					<select class="form-control" id="tenureId"  th:name="tenureId" required="true">
+					<select class="form-control" id="tenure"  th:name="tenureId" required="true">
 						<option th:each="tenure : ${tenureList}"
 								th:value="${tenure.tenureId}"
 								th:text="${tenure.tenureName}">
@@ -142,19 +142,12 @@ xmlns:th="http://www.thymeleaf.org">
 				</div>
 			</div>
 
-			<!-- unitId -->
-			<div class="form-group">
-				<label for="unitId" class="col-sm-2 control-label">Đơn vị ban hành</label>
-				<div class="col-sm-10" style="margin-top : 7px;">
-					<p th:text="${unit.unitName}" id="unitId" th:attr="class=${unit.shortName}"></p>
-				</div>
-			</div>
 
 			<!-- organ -->
 			<div class="form-group">
-				<label for="organId" class="col-sm-2 control-label">Cơ quan ban hành</label>
+				<label for="organ" class="col-sm-2 control-label">Cơ quan ban hành</label>
 				<div class="col-sm-10" style="margin-top : 7px;">
-					<p th:text="${organ.organName}" id="organId" th:attr="class=${organ.shortName}"></p>
+					<p th:text="${organ.organName}" id="organ" th:attr="class=${organ.organType.shortName}"></p>
 				</div>
 			</div>
 

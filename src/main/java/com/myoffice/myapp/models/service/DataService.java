@@ -183,12 +183,12 @@ public class DataService {
 		return docDao.findNumberByTenureId(tenureId);
 	}
 	
-	public List<Number> findNumberByDocTypeId(Integer typeId){
-		return docDao.findNumberByDocTypeId(typeId);
+	public List<Number> findNumberByDocTypeId(Integer docTypeId){
+		return docDao.findNumberByDocTypeId(docTypeId);
 	}
 	
-	public Number findNumberById(Integer tenureId, Integer typeId){
-		return docDao.findNumberById(tenureId, typeId);
+	public Number findNumberById(Integer tenureId, Integer docTypeId){
+		return docDao.findNumberById(tenureId, docTypeId);
 	}
 	
 	public void saveNumber(Number number){
@@ -251,6 +251,10 @@ public class DataService {
 	
 	public void deleteOrgan(Organ organ){
 		unitDao.deleteOrgan(organ);
+	}
+	
+	public List<Organ> findOrganByArray(Integer[] arrId){
+		return unitDao.findOrganByArray(arrId);
 	}
 	
 	//ORGAN TYPE

@@ -69,7 +69,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		Query query = (Query) getSession().createQuery(
 				"from Document where type_id=? and "
 						+ "completed=? and incomming=?");
-		query.setParameter(0, docType.getTypeId());
+		query.setParameter(0, docType.getDocTypeId());
 		query.setParameter(1, completed);
 		query.setParameter(2, incomming);
 
@@ -186,18 +186,18 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Number> findNumberByDocTypeId(Integer typeId) {
-		Query query = (Query) getSession().createQuery("from Number where type_id=?");
-		query.setParameter(0, typeId);
+	public List<Number> findNumberByDocTypeId(Integer docTypeId) {
+		Query query = (Query) getSession().createQuery("from Number where doc_type_id=?");
+		query.setParameter(0, docTypeId);
 		return query.list();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Number findNumberById(Integer tenureId, Integer typeId) {
-		Query query = (Query) getSession().createQuery("from Number where tenure_id=? and type_id=?");
+	public Number findNumberById(Integer tenureId, Integer docTypeId) {
+		Query query = (Query) getSession().createQuery("from Number where tenure_id=? and doc_type_id=?");
 		query.setParameter(0, tenureId);
-		query.setParameter(1, typeId);
+		query.setParameter(1, docTypeId);
 		List<Number> numbers = query.list();
 		if (numbers.size() > 0) {
 			return numbers.get(0);

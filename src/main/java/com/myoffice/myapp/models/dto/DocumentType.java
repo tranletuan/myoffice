@@ -20,7 +20,7 @@ public class DocumentType {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "doc_type_id", nullable = false, unique = true)
-	private Integer typeId;
+	private Integer docTypeId;
 	
 	@Column(name = "doc_type_name", nullable = false, unique = true)
 	private String docTypeName;
@@ -37,8 +37,8 @@ public class DocumentType {
 	public DocumentType() {
 	}
 
-	public Integer getTypeId() {
-		return typeId;
+	public Integer getDocTypeId() {
+		return docTypeId;
 	}
 
 	public String getDocTypeName() {
