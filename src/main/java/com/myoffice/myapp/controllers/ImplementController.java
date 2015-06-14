@@ -29,7 +29,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
-import com.myoffice.myapp.models.dto.Number;
 import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
@@ -85,7 +84,7 @@ public class ImplementController extends AbstractController {
 		return dataService.findMaxNumber(tenureId, docTypeId);
 	}
 	
-	@RequestMapping(value = "/create_new_doc", method=RequestMethod.POST)
+	@RequestMapping(value = "/save_doc", method=RequestMethod.POST)
 	public ModelAndView submitNewDoc(
 			@RequestParam("docName") String docName,
 			@RequestParam("title") String title,
@@ -94,8 +93,9 @@ public class ImplementController extends AbstractController {
 			@RequestParam("privacyId") Integer privacyId,
 			@RequestParam("emeId") Integer emeId,
 			@RequestParam("tenureId") Integer tenureId,
-			@RequestParam("numberSign") String numberSign,
 			@RequestParam("number") String number,
+			@RequestParam("numberSign") String numberSign,
+			@RequestParam("sign") String sign,
 			@RequestParam("file") MultipartFile file,
 			@RequestParam("recipient") Integer[] arrOrganId,
 			RedirectAttributes reAttr) throws ParseException, IllegalStateException, IOException{
@@ -123,20 +123,23 @@ public class ImplementController extends AbstractController {
 		doc.setPrivacyLevel(dataService.findPrivacyLevelById(privacyId));
 		doc.setEmergencyLevel(dataService.findEmergencyLevelById(emeId));
 		doc.setTenure(tenure);
-		doc.setNumberSign(numberSign);
 		doc.setDocPath(docPath);
 		doc.setOrgan(organ);
+		doc.setNumberSign(number + numberSign + sign);
 		
 		List<Organ> recipients = dataService.findOrganByArray(arrOrganId);
 		if(recipients != null){
 			doc.setRecipients(new HashSet<Organ>(recipients));
 		}
 		
-		//Number
+		//Number and Sign
 		Integer num = UtilMethod.parseNumDoc(number);
-		if(num > 0){
+		if (num > 0) {
 			doc.setNumber(num);
+		} else {
+			doc.setNumber(dataService.findMaxNumber(tenureId, docTypeId) - 1);
 		}
+		
 		
 		//create new flow
 		try{

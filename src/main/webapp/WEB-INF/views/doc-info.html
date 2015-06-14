@@ -44,233 +44,88 @@ xmlns:th="http://www.thymeleaf.org">
 <body>
 	<div class="container-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
-		<table class="table">
-		<colgroup>
-			<!-- <col class="col-xs-3 col-md-1" />
-			<col class="col-xs-12 col-md-10" />
-			<col class="col-xs-3 col-md-1" /> -->
-		</colgroup>
-		<tbody>
-		<!-- Container -->
-			<tr>
-				<td></td>
-				<td>
-					<!-- View info-->
-					<div class="panel panel-default" id="doc-info">
-						<div class="panel-heading">
-							
-								<button type="button" class="btn btn-warning">Nhận quyền</button>
-								<button type="button" class="btn btn-info" onclick="toggleDocForm();">Sửa đổi</button>
-								<button type="button" class="btn btn-success">Hoàn thành</button>
-								<button type="button" class="btn btn-danger navbar-right">Trả quyền</button>
-							
-						</div>
-						<div class="panel-body">
-							<table class="table" id="table-info">
-								<colgroup>
-									<col class="col-xs-5 col-md-3" />
-									<col class="col-xs-10 col-md-8" />
-									<col class="col-xs-3 col-md-1" />
-								</colgroup>
-								<tbody>
-									<th>
-										<h3>Thông Tin Văn Bản</h3>
-									</th>
-									<th></th>
-									<tr>
-										<th scope="row">
-											<h4><span class="label label-primary">Tiêu đề : </span></h4>
-										</th>
-										<td>
-											<h4>Thông tư số 01/2011/TT-BNV</h4>
-										</td>
-									</tr>
+		<div class="container">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					
+					<button type="button" class="btn btn-warning">Nhận quyền</button>
+					<button type="button" class="btn btn-info" onclick="toggleDocForm();">Sửa đổi</button>
+					<button type="button" class="btn btn-success">Hoàn thành</button>
+					<button type="button" class="btn btn-danger navbar-right">Trả quyền</button>
+					
+				</div>
+				<table class="table" id="table-info">
+					<colgroup>
+						<col class="col-xs-5 col-md-3">
+						<col class="col-xs-10 col-md-8">
+						<col class="col-xs-3 col-md-1">
+					</colgroup>
+					<tbody>
+						<tr><th><h3>Thông Tin Văn Bản</h3></th><td></td></tr>
+						<!-- ID -->
+						<tr class="hidden">
+							<th scope="row"><h4><span class="label label-primary">ID : </span></h4></th>
+							<td><h4 th:text="${doc.docId}" id="docId"></h4></td>
+						</tr>
 
-									<tr>
-										<th scope="row">
-											<h4><span class="label label-primary">Trích yếu : </span></h4>
-										</th>
-										<td>
-											<p class="list-group-item-text p-doc">Ngày 30/12/2010:
-												Telegraph tiếp tục đưa tin "Bên trong hang động khổng lồ rừng
-												nhiệt đới". Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà
-												cao 40 tầng, thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo
-												bài viết là bức hình của nhiếp ảnh gia Carsten Peter chụp bên
-												trong Sơn Đoòng trên tạp chí National Geographic.
-											</p>
-										</td>
-									</tr>
+						<!-- docName -->
+						<tr>
+							<th scope="row"><h4><span class="label label-primary">Tên văn bản : </span></h4></th>
+							<td><h4 th:text="${doc.docName}" id="docName"></h4></td>
+						</tr>
 
-									<tr>
-										<th scope="row">
-											<h4><span class="label label-primary">Ngày ban hành : </span></h4>
-										</th>
-										<td>
-											<h4>14/05/1992</h4>
-										</td>
-									</tr>
+						<!-- title -->
+						<tr>
+							<th scope="row"><h4><span class="label label-primary">Tiêu đề : </span></h4></th>
+							<td><h4 th:text="${doc.title}" id="title"></h4></td>
+						</tr>
 
-									<tr>
-										<th scope="row">
-											<h4><span class="label label-primary">Đơn vị ban hành : </span></h4>
-										</th>
-										<td>
-											<h4>VPĐ ĐH CNTT</h4>
-										</td>
-									</tr>
+						<!-- epitome -->
+						<tr>
+							<th scope="row"><h4><span class="label label-primary">Trích yếu : </span></h4></th>
+							<td><h4 th:text="${doc.epitome}" id="epitome"></h4></td>
+						</tr>
 
-									<tr>
-										<th scope="row">
-											<h4><span class="label label-primary">Mức độ mật : </span></h4>
-										</th>
-										<td>
-											<h4 id="conf-data">Mức độ 1</h4>
-										</td>
-									</tr>
+						<!-- docType -->
+						<tr>
+							<th scope="row"><h4><span class="label label-primary">Loại văn bản : </span></h4></th>
+							<td><h4 th:text="${doc.docType.docTypeName}" id="docType"></h4></td>
+						</tr>
 
-									<tr>
-										<th scope="row">
-											<h4><span class="label label-primary">Mức độ khẩn : </span></h4>
-										</th>
-										<td>
-											<h4 id="eme-data">Mức độ 1</h4>
-										</td>
-									</tr>
+						<!-- privacyLevel -->
+						<tr>
+							<th scope="row"><h4><span class="label label-primary">Mức độ mật : </span></h4></th>
+							<td><h4 th:text="${doc.privacyLevel.privacyName}" id="privacyLevel"></h4></td>
+						</tr>
 
-									<tr>
-										<th scope="row">
-											<h4><span class="label label-primary">Tập tin : </span></h4>
-										</th>
-										<td>
-											<div>
-												<h4>D:/Khoa_Luan_Tot_Nghiep.docx</h4>
-												<button type="button" class="btn btn-primary">Tải xuống <span class="glyphicon glyphicon-download"></span></button>
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
+						<!-- emergencyLevel -->
+						<tr>
+							<th scope="row"><h4><span class="label label-primary">Mức độ khẩn : </span></h4></th>
+							<td><h4 th:text="${doc.emergencyLevel.emeName}" id="emergencyLevel"></h4></td>
+						</tr>
 
-					<!-- Change info-->
-					<div class="panel panel-default" id="doc-form">
-						<div class="panel-heading"></div>
-						<div class="panel-body">
-							<form method="post">
-								<div class="form-group">
-									<table class="table" id="table-change">
-										<colgroup>
-											<col class="col-xs-5 col-md-3" />
-											<col class="col-xs-10 col-md-8" />
-											<col class="col-xs-3 col-md-1" />
-										</colgroup>
-										<tbody>
-											<th>
-												<h3>Thông Tin Văn Bản</h3>
-											</th>
-											<th></th>
-											<th></th>
-											<tr>
-												<th scope="row">
-													<h4><span class="label label-primary">Tiêu đề : </span></h4>
-												</th>
-												<td>
-													<h4><input type="text" class="form-control" value="Thông tư số 01/2011/TT-BNV"/></h4>
-												</td>
-											</tr>
+						<!-- tenure -->
+						<tr>
+							<th scope="row"><h4><span class="label label-primary">Nhiệm kỳ : </span></h4></th>
+							<td><h4 th:text="${doc.tenure.tenureName}" id="tenure"></h4></td>
+						</tr>
 
-											<tr>
-												<th scope="row">
-													<h4><span class="label label-primary">Trích yếu : </span></h4>
-												</th>
-												<td>
-													<textarea class="form-control" rows="5">Ngày 30/12/2010: Telegraph tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới". Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng, thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn Đoòng trên tạp chí National Geographic.
-													</textarea>
-												</td>
-											</tr>
+						<!-- numberSign -->
+						<tr>
+							<th scope="row"><h4><span class="label label-primary">Số và ký hiệu : </span></h4></th>
+							<td><h4 th:text="${doc.numberSign}" id="numberSign"></h4></td>
+						</tr>
 
-											<tr>
-												<th scope="row">
-													<h4><span class="label label-primary">Ngày ban hành : </span></h4>
-												</th>
-												<td>
-													<h4><input type="text" class="form-control" value="14/05/1992"/></h4>
-												</td>
-											</tr>
-
-											<tr>
-												<th scope="row">
-													<h4><span class="label label-primary">Đơn vị ban hành : </span></h4>
-												</th>
-												<td>
-													<h4><input type="text" class="form-control" value="VPĐ ĐH CNTT"/></h4>
-												</td>
-											</tr>
-
-											<tr>
-												<th scope="row">
-													<h4><span class="label label-primary">Mức độ mật : </span></h4>
-												</th>
-												<td>
-													<select class="form-control" data-style="btn-primary">
-														<option>Mức độ 1</option>
-														<option>Mức độ 2</option>
-														<option>Mức độ 3</option>
-													</select>
-												</td>
-											</tr>
-
-											<tr>
-												<th scope="row">
-													<h4><span class="label label-primary">Mức độ khẩn : </span></h4>
-												</th>
-												<td>
-													<select class="form-control" data-style="btn-primary" data-target="#eme-data">
-														<option>Mức độ 1</option>
-														<option>Mức độ 2</option>
-														<option>Mức độ 3</option>
-													</select>
-												</td>
-											</tr>
-
-											<tr>
-												<th scope="row">
-													<h4><span class="label label-primary">Tập tin : </span></h4>
-												</th>	
-
-												<td>
-													<div class="form-group" style="margin-top:10px;">
-														<input type="file"/>
-														<p class="help-block"></p>
-													</div>	
-												</td>
-											</tr>
-
-											<tr>
-												<td>
-												</td>
-												<td>
-													<nav>
-														<button type="submit" class="btn btn-success">Cập nhật</button>
-														<button type="button" class="btn btn-warning" onclick="toggleDocForm();">Bỏ qua</button>
-													</nav>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</form>
-						</div>
-					</div>
-
-				</td>
-				<td></td>
-			</tr>
-		<!-- Container -->
-		</tbody>
-	</table>
-<div th:replace="fragment/footer :: footer"></div>
-</div>
+						<!-- docPath -->
+						<tr>
+							<th scope="row"><h4><span class="label label-primary">Tập tin : </span></h4></th>
+							<td><button type="button" class="btn btn-primary">Tải xuống <span class="glyphicon glyphicon-download"></span></button></td>
+						</tr>
+					</tbody>			
+				</table>
+			</div>			
+		</div>	
+		<div th:replace="fragment/footer :: footer"></div>
+	</div>
 </body>
 </html>

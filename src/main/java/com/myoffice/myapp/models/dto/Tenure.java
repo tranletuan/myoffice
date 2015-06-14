@@ -36,9 +36,6 @@ public class Tenure {
 	@Column(name = "time_end", columnDefinition="DATETIME", nullable = false)
 	private Date timeEnd;
 	
-	@OneToMany(mappedBy = "tenure")
-	private Set<Number> numbers = new HashSet<Number>(0);
-
 	public Tenure() {
 	}
 
@@ -68,13 +65,5 @@ public class Tenure {
 
 	public void setTimeEnd(Date timeEnd) {
 		this.timeEnd = timeEnd;
-	}
-
-	public Set<Number> getNumbers() {
-		return numbers;
-	}
-
-	public void setNumbers(Set<Number> numbers) {
-		this.numbers = numbers;
 	}	
 }

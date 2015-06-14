@@ -31,9 +31,6 @@ public class DocumentType {
 	@Column(name = "description", columnDefinition="varchar(400)")
 	private String description;
 	
-	@OneToMany(mappedBy = "docType")
-	private Set<Number> numbers = new HashSet<Number>();
-	
 	public DocumentType() {
 	}
 
@@ -63,13 +60,5 @@ public class DocumentType {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Set<Number> getNumbers() {
-		return numbers;
-	}
-
-	public void setNumbers(Set<Number> numbers) {
-		this.numbers = numbers;
 	}
 }

@@ -22,6 +22,8 @@
  		var tenureId = $('#tenure option:selected').val();
  		var docTypeId = $('#docType').val();
 
+ 		$(this).button('loading');
+
  		$.ajax({
  			type : "GET",
  			url : "number",
@@ -31,8 +33,9 @@
  			},
  			success: function(response){
  				$('#number').val(response);
-               	var numberSign = response + '-' + docType + '/' + organ + '-';
+               	var numberSign =  '-' + docType + '/' + organ + '-';
   				$('#numberSign').val(numberSign);
+  				$(this).button('reset');
             }
         });
 
