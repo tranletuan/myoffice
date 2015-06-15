@@ -3,6 +3,7 @@ package com.myoffice.myapp.controllers;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +39,7 @@ import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataConfig;
 import com.myoffice.myapp.models.service.DataService;
 import com.myoffice.myapp.models.service.SecurityService;
+import com.myoffice.myapp.support.NoteDoctypeInt;
 import com.myoffice.myapp.utils.FlowUtil;
 import com.myoffice.myapp.utils.UtilMethod;
 
@@ -186,14 +188,14 @@ public class ImplementController extends AbstractController {
 			@PathVariable("type") String type,
 			@RequestParam(value = "docTypeId", required = false) Integer docTypeId){
 		ModelAndView model =  new ModelAndView("waiting-list");
-		//docType
-		List<DocumentType> docTypeList = dataService.findAllDocType();
-		model.addObject("docTypeList", docTypeList);
-		boolean incomming = type.equals("in") ? true : false;
+		boolean incoming = type.equals("in") ? true : false;
 		
-		List<Document> docList = dataService.findWaitingDocByType(incomming, docTypeId);
+		List<NoteDoctypeInt> docTypeIntList = dataService.findWaitingMenu(incoming);
+		List<Document> docList = dataService.findWaitingDocByType(incoming, false, docTypeId);
+		model.addObject("docTypeIntList", docTypeIntList);
 		model.addObject("docList", docList);
-
+		model.addObject("type", type);
+	
 		return model;
 	}
 }

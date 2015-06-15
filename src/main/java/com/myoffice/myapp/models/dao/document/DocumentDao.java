@@ -1,5 +1,6 @@
 package com.myoffice.myapp.models.dao.document;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.myoffice.myapp.models.dto.Document;
@@ -7,10 +8,13 @@ import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
+import com.myoffice.myapp.support.NoteDoctypeInt;
 
 public interface DocumentDao {
 	
-	List<Document> findWaitingDocByType(boolean incomming, Integer docTypeId);
+	Integer countDocument(boolean incoming, boolean completed, Integer docTypeId);
+	
+	List<Document> findWaitingDocByType(boolean incoming, boolean completed, Integer docTypeId);
 	
 	Document findDocumentById(Integer docId);
 	
@@ -30,6 +34,9 @@ public interface DocumentDao {
 	List<DocumentType> findAllDocType();
 	
 	void saveDocType(DocumentType docType);
+	
+	List<NoteDoctypeInt> findWaitingMenu(boolean incoming);
+
 	
 	//EmergencyLevel
 	List<EmergencyLevel> findAllEmergencyLevel();

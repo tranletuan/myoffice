@@ -1,9 +1,13 @@
 package com.myoffice.myapp.models.dao.document;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.activiti.engine.impl.HistoryServiceImpl;
 import org.apache.ibatis.executor.ReuseExecutor;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.transform.ResultTransformer;
@@ -19,6 +23,7 @@ import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
+import com.myoffice.myapp.support.NoteDoctypeInt;
 import com.myoffice.myapp.utils.FlowUtil;
 
 @Repository
@@ -28,35 +33,50 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			.getLogger(DocumentDaoImp.class);
 
 	
+	@Override
+	public Integer countDocument(boolean incoming, boolean completed,
+			Integer docTypeId) {
+		try {
+			if (docTypeId == null || docTypeId <= 0) {
+				Query query = (Query) getSession()
+						.createQuery(
+								"Select count(*) from Document where incoming=? and completed=?");
+				query.setParameter(0, incoming);
+				query.setParameter(1, completed);
+				return Integer.parseInt(query.uniqueResult().toString());
+			} else {
+				Query query = (Query) getSession()
+						.createQuery(
+								"Select count(*) from Document where doc_type_id=? and incoming=? and completed=?");
+				query.setParameter(0, docTypeId);
+				query.setParameter(1, incoming);
+				query.setParameter(2, completed);
+				return Integer.parseInt(query.uniqueResult().toString());
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return 0;
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findWaitingDocByType(boolean incoming, Integer docTypeId) {
-		logger.info(String.valueOf(incoming));
-		logger.info(String.valueOf(docTypeId));
-		int incomingValue = incoming ? 1 : 0;
-		try{
-			
-		if(docTypeId > 0 && docTypeId != null){
-			logger.info("NOT NULL TYPE");
-			Query query = (Query) getSession().createQuery("from Document where doc_type_id=? and incomming=? and completed='0'");
+	public List<Document> findWaitingDocByType(boolean incoming, boolean completed, Integer docTypeId) {
+		if (docTypeId == null || docTypeId <= 0) {
+			Query query = (Query) getSession().createQuery(
+					"from Document where incoming=? and completed=?");
+			query.setParameter(0, incoming);
+			query.setParameter(1, completed);
+			return query.list();
+		} else {
+			Query query = (Query) getSession()
+					.createQuery(
+							"from Document where doc_type_id=? and incoming=? and completed=?");
 			query.setParameter(0, docTypeId);
-			query.setParameter(1, incomingValue);
+			query.setParameter(1, incoming);
+			query.setParameter(2, completed);
 			return query.list();
 		}
-		else{
-			logger.info("NULL TYPE");
-			Query query = (Query) getSession().createQuery("from Document where incoming=? and completed=?");
-			query.setParameter(0, incomingValue);
-			query.setParameter(1, 0);
-			return query.list();
-		}
-		}
-		catch(Exception e){
-			logger.error(e.getMessage());
-			return null;
-		}
-	
-		
 	}
 
 	@Override
@@ -129,6 +149,25 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@Override
 	public void saveDocType(DocumentType docType) {
 		persist(docType);
+	}
+
+	
+	@Override
+	public List<NoteDoctypeInt> findWaitingMenu(boolean incoming) {
+		List<NoteDoctypeInt> map = new ArrayList<NoteDoctypeInt>();
+		List<DocumentType> listDocType = findAllDocType();
+		
+		for(int i = 0; i < listDocType.size(); i++){
+			DocumentType docType = listDocType.get(i);
+			Query query = (Query)getSession().createQuery("Select count(*) from Document where doc_type_id=? and incoming=? and completed=?");
+			query.setParameter(0, docType.getDocTypeId());
+			query.setParameter(1, incoming);
+			query.setParameter(2, false);
+			
+			map.add(new NoteDoctypeInt(docType, Integer.parseInt(query.uniqueResult().toString())));
+		}
+		
+		return map;
 	}
 
 	// ========EMERGENCY LEVEL

@@ -51,20 +51,20 @@
 				<tr>
 					<th scope="row">
 						<div class="list-group">
-							<a href="#" class="list-group-item" th:each="doc : ${docTypeList}" th:text="${doc.docTypeName}"></a>
+							<a href="#" class="list-group-item" th:each="typeInt : ${docTypeIntList}" th:href="@{/impl/waiting_list_} + ${type} + '?docTypeId=' + ${typeInt.docType.docTypeId}"><span th:text="${typeInt.docType.docTypeName}"/><span class="badge" th:text="${typeInt.value}"/></a>
 						</div>
 					</th>
 					<td>
 						<div class="list-group doc-group" th:each="doc : ${docList}">
-							<a href="#" class="list-group-item list-group-item-success doc" th:href="@{/impl/doc_info/} + ${doc.docId}">
+							<a href="#" class="list-group-item list-group-item-success doc" th:href="@{/impl/doc_info} + '?docId=' + ${doc.docId}">
 								<h4 class="list-group-item-heading" th:text="${doc.docName}"></h4>
 								<p class="list-group-item-text p-doc" th:text="${doc.epitome}">
 								</p>
 							</a>
  
-						</div>
+						</div> 
 
-						<nav>
+						<nav th:if="${docList.size() > 8}">
 							<ul class="pager">
 								<li class="previous disabled"><a href="#"><span
 										aria-hidden="true">&larr;</span> Cũ</a></li>

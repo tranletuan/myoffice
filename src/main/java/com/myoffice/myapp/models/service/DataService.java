@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,6 +33,7 @@ import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
+import com.myoffice.myapp.support.NoteDoctypeInt;
 
 @Service
 @Transactional
@@ -89,8 +92,12 @@ public class DataService {
 	@Autowired
 	private DocumentDao docDao;
 	
-	public List<Document> findWaitingDocByType(boolean incomming, Integer docTypeId){
-		return docDao.findWaitingDocByType(incomming, docTypeId);
+	public Integer countDocument(boolean incoming, boolean completed, Integer docTypeId){
+		return docDao.countDocument(incoming, completed, docTypeId);
+	}
+	
+	public List<Document> findWaitingDocByType(boolean incoming, boolean completed, Integer docTypeId){
+		return docDao.findWaitingDocByType(incoming, completed, docTypeId);
 	}
 	
 	public Document findDocumentById(Integer docId){
@@ -128,6 +135,10 @@ public class DataService {
 	
 	public void saveDocType(DocumentType docType){
 		docDao.saveDocType(docType);
+	}
+	
+	public List<NoteDoctypeInt> findWaitingMenu(boolean incoming){
+		return docDao.findWaitingMenu(incoming);
 	}
 	
 	//EMERGENCY LEVEL
