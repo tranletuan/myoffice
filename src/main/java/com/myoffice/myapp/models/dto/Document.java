@@ -58,7 +58,7 @@ public class Document {
 	@Column(name = "completed")
 	private boolean completed = false;
 
-	@Column(name = "incomming")
+	@Column(name = "incoming")
 	private boolean incoming = false;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -10,6 +10,8 @@ import com.myoffice.myapp.models.dto.Tenure;
 
 public interface DocumentDao {
 	
+	List<Document> findWaitingDocByType(boolean incomming, Integer docTypeId);
+	
 	Document findDocumentById(Integer docId);
 	
 	Document findDocumentByName(String name);

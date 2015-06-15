@@ -28,8 +28,8 @@
 						</a>
 
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Văn bản đến <span class="badge">4</span></a></li>
-							<li><a href="#">Văn bản đi <span class="badge">4</span></a></li>
+							<li><a href="#" th:href="@{/impl/waiting_list_in}">Văn bản đến <span class="badge" th:text="${waitingInCount}"></span></a></li>
+							<li><a href="#" th:href="@{/impl/waiting_list_out}">Văn bản đi <span class="badge" th:text="${waitingOutCount}"></span></a></li>
 						</ul></li>
 					<li><a href="#" th:href="@{/impl/create_form}" sec:authorize="isAuthenticated()">Tạo văn bản</a></li>
 					

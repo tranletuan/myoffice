@@ -89,6 +89,10 @@ public class DataService {
 	@Autowired
 	private DocumentDao docDao;
 	
+	public List<Document> findWaitingDocByType(boolean incomming, Integer docTypeId){
+		return docDao.findWaitingDocByType(incomming, docTypeId);
+	}
+	
 	public Document findDocumentById(Integer docId){
 		return docDao.findDocumentById(docId);
 	}

@@ -169,7 +169,7 @@ public class ImplementController extends AbstractController {
 		return model;
 	}
 	
-	@RequestMapping(value = {"/doc_info"}, method = RequestMethod.GET)
+	@RequestMapping(value = "/doc_info", method = RequestMethod.GET)
 	public ModelAndView documentInfo(@RequestParam(value = "docId", required = false) Integer docId){
 		ModelAndView model = new ModelAndView("doc-info");
 		Document doc = new Document();
@@ -178,6 +178,22 @@ public class ImplementController extends AbstractController {
 			model.addObject("doc", doc);
 		}
 		
+		return model;
+	}
+	
+	@RequestMapping(value = "/waiting_list_{type}", method = RequestMethod.GET)
+	public ModelAndView waitingDocumentList(
+			@PathVariable("type") String type,
+			@RequestParam(value = "docTypeId", required = false) Integer docTypeId){
+		ModelAndView model =  new ModelAndView("waiting-list");
+		//docType
+		List<DocumentType> docTypeList = dataService.findAllDocType();
+		model.addObject("docTypeList", docTypeList);
+		boolean incomming = type.equals("in") ? true : false;
+		
+		List<Document> docList = dataService.findWaitingDocByType(incomming, docTypeId);
+		model.addObject("docList", docList);
+
 		return model;
 	}
 }

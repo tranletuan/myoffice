@@ -28,6 +28,37 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			.getLogger(DocumentDaoImp.class);
 
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Document> findWaitingDocByType(boolean incoming, Integer docTypeId) {
+		logger.info(String.valueOf(incoming));
+		logger.info(String.valueOf(docTypeId));
+		int incomingValue = incoming ? 1 : 0;
+		try{
+			
+		if(docTypeId > 0 && docTypeId != null){
+			logger.info("NOT NULL TYPE");
+			Query query = (Query) getSession().createQuery("from Document where doc_type_id=? and incomming=? and completed='0'");
+			query.setParameter(0, docTypeId);
+			query.setParameter(1, incomingValue);
+			return query.list();
+		}
+		else{
+			logger.info("NULL TYPE");
+			Query query = (Query) getSession().createQuery("from Document where incoming=? and completed=?");
+			query.setParameter(0, incomingValue);
+			query.setParameter(1, 0);
+			return query.list();
+		}
+		}
+		catch(Exception e){
+			logger.error(e.getMessage());
+			return null;
+		}
+	
+		
+	}
+
 	@Override
 	public Document findDocumentById(Integer docId) {
 		return (Document) getSession().get(Document.class, docId);
