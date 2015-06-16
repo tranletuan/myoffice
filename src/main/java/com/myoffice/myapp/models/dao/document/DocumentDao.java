@@ -66,5 +66,5 @@ public interface DocumentDao {
 	void deleteTenure(Tenure tenure);
 	
 	//Number
-	Integer findMaxNumber(Integer tenureId, Integer docTypeId);
+	Integer findMaxNumber(Integer tenureId, Integer docTypeId, Integer organId);
 }

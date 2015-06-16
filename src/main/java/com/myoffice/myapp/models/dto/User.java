@@ -113,6 +113,14 @@ public class User {
 		this.userDetail = userDetail;
 	}
 	
+	public Organ getOrgan() {
+		return organ;
+	}
+
+	public void setOrgan(Organ organ) {
+		this.organ = organ;
+	}
+	
 	public String getRoleNames(){
 		String rs = "";
 		int size = roles.size();
@@ -128,11 +136,14 @@ public class User {
 		return rs;
 	}
 
-	public Organ getOrgan() {
-		return organ;
+	public boolean checkRoleByShortName(String roleName){
+		for(Role role : roles){
+			if(role.getShortName().equals(roleName)){
+				return true;
+			}
+		}
+		
+		return false;
 	}
-
-	public void setOrgan(Organ organ) {
-		this.organ = organ;
-	}
+	
 }

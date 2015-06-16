@@ -339,8 +339,8 @@ public class AdminController extends AbstractController {
 	@RequestMapping(value = "/flow", method = RequestMethod.GET)
 	public ModelAndView flowView(){
 		ModelAndView model = new ModelAndView("admin/flow");
-		model.addObject("flow_out", flowUtil.getProcessDefinitionId(DataConfig.DEPLOY_RSC_FLOW_OUT, DataConfig.PROC_DEF_KEY_FLOW_OUT));
-		model.addObject("flow_in", flowUtil.getProcessDefinitionId(DataConfig.DEPLOY_RSC_FLOW_IN, DataConfig.PROC_DEF_KEY_FLOW_IN));
+		model.addObject("flow_out", flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_OUT, DataConfig.PROC_DEF_KEY_FLOW_OUT));
+		model.addObject("flow_in", flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_IN, DataConfig.PROC_DEF_KEY_FLOW_IN));
 		return model;
 	}
 	
@@ -349,9 +349,9 @@ public class AdminController extends AbstractController {
 			throws IllegalStateException, IOException {
 		ModelAndView model = new ModelAndView("redirect:flow");
 		if (!file.isEmpty()) {
-			dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file, DataConfig.RSC_NAME_FLOW_OUT, "xml");
-			flowUtil.deployProcess(DataConfig.DEPLOY_RSC_FLOW_OUT,
-					DataConfig.DIR_FILE_FLOW + DataConfig.DEPLOY_RSC_FLOW_OUT);
+			dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file, DataConfig.RSC_NAME_FLOW_OUT);
+			flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_OUT,
+					DataConfig.DIR_FILE_FLOW + DataConfig.RSC_NAME_FLOW_OUT);
 		}
 		return model;
 	}
@@ -361,21 +361,21 @@ public class AdminController extends AbstractController {
 			throws IllegalStateException, IOException {
 		ModelAndView model = new ModelAndView("redirect:flow");
 		if (!file.isEmpty()) {
-			dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file, DataConfig.RSC_NAME_FLOW_IN, "xml");
-			flowUtil.deployProcess(DataConfig.DEPLOY_RSC_FLOW_IN,
-					DataConfig.DIR_FILE_FLOW + DataConfig.DEPLOY_RSC_FLOW_IN);
+			dataService.upLoadFile(DataConfig.DIR_FILE_FLOW, file, DataConfig.RSC_NAME_FLOW_IN);
+			flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_IN,
+					DataConfig.DIR_FILE_FLOW + DataConfig.RSC_NAME_FLOW_IN);
 		}
 		return model;
 	}
 	
 	@RequestMapping(value = "/download_flow_out", method = RequestMethod.GET)
 	public void getFile(HttpServletResponse response) throws IOException {
-		dataService.downLoadFile(DataConfig.DIR_SERVER_NAME_FLOW_OUT, DataConfig.RSC_NAME_FLOW_OUT, "xml", response);
+		dataService.downLoadFile(DataConfig.DIR_SERVER_NAME_FLOW_OUT, response);
 	}
 	
 	@RequestMapping (value = "/download_flow_in", method = RequestMethod.GET)
 	public void downloadFlowIn(HttpServletResponse response) throws IOException{
-		dataService.downLoadFile(DataConfig.DIR_SERVER_NAME_FLOW_IN, DataConfig.RSC_NAME_FLOW_IN, "xml", response);
+		dataService.downLoadFile(DataConfig.DIR_SERVER_NAME_FLOW_IN, response);
 	}
 	
 	//TENURE

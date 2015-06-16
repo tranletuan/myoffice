@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
@@ -45,32 +47,32 @@ public class DataService {
 	private static final Logger logger = LoggerFactory
 			.getLogger(DataService.class);
 	
-	public void upLoadFile(String saveDirectory, MultipartFile file, String fileName, String fileType) throws IllegalStateException, IOException{
+	public void upLoadFile(String saveDirectory, MultipartFile file, String fileName) throws IllegalStateException, IOException{
+		try {
+			File dirFile = new File(saveDirectory);
+			if (!dirFile.exists()) {
+				dirFile.mkdirs();
+			}
 
-		File dirFile = new File(saveDirectory);
-		if (!dirFile.exists()) {
-			dirFile.mkdirs();
+			if (fileName == null) {
+				fileName = file.getOriginalFilename();
+			}
+
+			if (!"".equalsIgnoreCase(fileName)) {
+				file.transferTo(new File(saveDirectory + File.separator
+						+ fileName));
+			}
+		} catch (IOException e) {
+			logger.error(e.getMessage());
 		}
-		
-		if (fileName == null) {
-			fileName = file.getOriginalFilename();
-		}
-		else {
-			fileName = fileName + "." + fileType;
-		}
-		
-		if (!"".equalsIgnoreCase(fileName)) {
-			file.transferTo(new File(saveDirectory + fileName));
-		}
-		
-		logger.info(fileName);
+	
 	}
 	
-	public void downLoadFile(String filePath, String fileName, String fileType, HttpServletResponse response){
+	public void downLoadFile(String filePath, HttpServletResponse response){
 		try {
-			if(fileType == null || fileType == "") fileType = "txt";
+			File f = new File(filePath);
 			InputStream is = new FileInputStream(filePath);
-			response.addHeader("Content-Disposition", "attachment; filename=" + fileName + "." + fileType);
+			response.addHeader("Content-Disposition", "attachment; filename=" + f.getName());
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
 			
@@ -206,8 +208,8 @@ public class DataService {
 	}
 	
 	//NUMBER
-	public Integer findMaxNumber(Integer tenureId, Integer docTypeId){
-		return docDao.findMaxNumber(tenureId, docTypeId);
+	public Integer findMaxNumber(Integer tenureId, Integer docTypeId, Integer organId){
+		return docDao.findMaxNumber(tenureId, docTypeId, organId);
 	}
 	
 	

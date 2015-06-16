@@ -89,6 +89,7 @@ public class FlowUtil {
 	public Task getCurrentTask(String processInstanceId) {
 
 		try {
+			logger.info(processInstanceId);
 			Task task = taskService.createTaskQuery()
 					.processInstanceId(processInstanceId).singleResult();
 

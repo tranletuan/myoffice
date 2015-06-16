@@ -38,13 +38,14 @@ xmlns:th="http://www.thymeleaf.org">
 		<div th:replace="fragment/menu :: menu"></div>
 		<div class="container">
 			<div class="panel panel-default">
-				<div class="panel-heading">
+				<div class="panel-heading" th:if="${access}">
 					
-					<button type="button" class="btn btn-warning">Nhận quyền</button>
-					<button type="button" class="btn btn-info" onclick="toggleDocForm();">Sửa đổi</button>
-					<button type="button" class="btn btn-success">Hoàn thành</button>
-					<button type="button" class="btn btn-danger navbar-right">Trả quyền</button>
-					
+					<button type="button" class="btn btn-warning" th:if="${claim}">Nhận quyền</button>
+					<div th:unless="${claim}">
+						<button type="button" class="btn btn-info" onclick="toggleDocForm();">Sửa đổi</button>
+						<button type="button" class="btn btn-success">Hoàn thành</button>
+						<button type="button" class="btn btn-danger navbar-right">Trả quyền</button>
+					</div>
 				</div>
 				<table class="table" id="table-info">
 					<colgroup>
@@ -117,8 +118,14 @@ xmlns:th="http://www.thymeleaf.org">
 						<!-- docPath -->
 						<tr>
 							<th scope="row"><h4><span class="label label-primary">Tập tin : </span></h4></th>
-							<td><a href="#" th:href="@{/impl/download_document/} + ${doc.docId}" class="btn btn-primary">Tải xuống <span class="glyphicon glyphicon-download"></span></a></td>
+							<td><a th:if="${doc.docPath}" href="#" th:href="@{/impl/download_document/} + ${doc.docId}" class="btn btn-primary">Tải xuống <span class="glyphicon glyphicon-download"></span></a></td>
 							<p class="hidden" th:text="${doc.docPath}" id="docPath"></p>
+						</tr>
+
+						<!-- assignee -->
+						<tr th:if="${assignee}">
+							<th scope="row"><h4><span class="label label-primary">Người nhận quyền : </span></h4></th>
+							<td><h4 th:text="${assignee}" id="assignee"></h4></td>
 						</tr>
 					</tbody>			
 				</table>
