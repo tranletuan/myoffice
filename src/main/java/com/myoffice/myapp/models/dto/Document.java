@@ -33,7 +33,7 @@ public class Document {
 	@Column(name = "title", nullable = false, length = 60)
 	private String title;
 	
-	@Column(name = "number_sign", nullable = false, length = 60)
+	@Column(name = "number_sign", nullable = false, length = 60, unique = true)
 	private String numberSign;
 	
 	@Column(name = "number", nullable = false)
@@ -49,7 +49,7 @@ public class Document {
 	@Column(name = "epitome" , nullable = false, columnDefinition="varchar(500)")
 	private String epitome;
 
-	@Column(name = "document_path", nullable = false)
+	@Column(name = "document_path", unique = true)
 	private String docPath;
 
 	@Column(name = "processId", nullable = false, length = 60)

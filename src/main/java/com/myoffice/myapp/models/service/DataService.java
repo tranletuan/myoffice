@@ -12,11 +12,14 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.myoffice.myapp.controllers.ImplementController;
 import com.myoffice.myapp.models.dao.document.DocumentDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
 import com.myoffice.myapp.models.dao.role.RoleDao;
@@ -39,7 +42,10 @@ import com.myoffice.myapp.support.NoteDoctypeInt;
 @Transactional
 public class DataService {
 
-	public void upLoadFile(String saveDirectory, MultipartFile file, String fileName) throws IllegalStateException, IOException{
+	private static final Logger logger = LoggerFactory
+			.getLogger(DataService.class);
+	
+	public void upLoadFile(String saveDirectory, MultipartFile file, String fileName, String fileType) throws IllegalStateException, IOException{
 
 		File dirFile = new File(saveDirectory);
 		if (!dirFile.exists()) {
@@ -49,18 +55,25 @@ public class DataService {
 		if (fileName == null) {
 			fileName = file.getOriginalFilename();
 		}
+		else {
+			fileName = fileName + "." + fileType;
+		}
 		
 		if (!"".equalsIgnoreCase(fileName)) {
 			file.transferTo(new File(saveDirectory + fileName));
 		}
+		
+		logger.info(fileName);
 	}
 	
-	public void downLoadFile(String filePath, String fileName, HttpServletResponse response) throws IOException{
+	public void downLoadFile(String filePath, String fileName, String fileType, HttpServletResponse response){
 		try {
+			if(fileType == null || fileType == "") fileType = "txt";
 			InputStream is = new FileInputStream(filePath);
-			response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
+			response.addHeader("Content-Disposition", "attachment; filename=" + fileName + "." + fileType);
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
+			
 		} catch (IOException e) {
 			e.getMessage();
 		}

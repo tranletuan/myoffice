@@ -19,8 +19,8 @@ public class TestController extends AbstractController {
 	public ModelAndView test1(){
 		ModelAndView model = new ModelAndView("home");
 		
-		flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_OUT, "D:/process.bpmn20.xml");
-		flowUtil.startProcess(flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_OUT, DataConfig.PROC_DEF_KEY_FLOW_OUT));
+		//flowUtil.deployProcess(DataConfig.RSC_NAME_FLOW_OUT, "D:/process.bpmn20.xml");
+		//flowUtil.startProcess(flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_OUT, DataConfig.PROC_DEF_KEY_FLOW_OUT));
 		
 		model.addObject("message", "HELLO");
 		

@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +108,7 @@ public class ImplementController extends AbstractController {
 		Tenure tenure = dataService.findTenureById(tenureId);
 		DocumentType docType = dataService.findDocTypeById(docTypeId);
 		Organ organ = securityService.getCurrentUser().getOrgan();
+		numberSign = number + numberSign + sign;
 		
 		if(organ == null){
 			model.setViewName("error");
@@ -114,7 +117,8 @@ public class ImplementController extends AbstractController {
 		
 		//Save file to server 
 		String dirServer = DataConfig.DIR_SERVER + tenure.getTenureName() + "/" + docType.getDocTypeName() + "/";
-		String docPath = dirServer + file.getOriginalFilename();
+		String fileName = numberSign + "-" + docName;
+		String docPath = dirServer + fileName;
 		
 		//Set data to save
 		Document doc = new Document();
@@ -127,7 +131,7 @@ public class ImplementController extends AbstractController {
 		doc.setTenure(tenure);
 		doc.setDocPath(docPath);
 		doc.setOrgan(organ);
-		doc.setNumberSign(number + numberSign + sign);
+		doc.setNumberSign(numberSign);
 		
 		List<Organ> recipients = dataService.findOrganByArray(arrOrganId);
 		if(recipients != null){
@@ -145,20 +149,28 @@ public class ImplementController extends AbstractController {
 		
 		//create new flow
 		try{
-			String procDefId = flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_OUT, DataConfig.PROC_DEF_KEY_FLOW_OUT);
+			String procDefId = flowUtil.getProcessDefinitionId(DataConfig.DEPLOY_RSC_FLOW_OUT, DataConfig.PROC_DEF_KEY_FLOW_OUT);
 			String procInsId = flowUtil.startProcess(procDefId);
-
+			
+			if(procDefId == " " ||  procInsId == null){
+				model.setViewName("error");
+				model.addObject("errorMessage","Luồng văn bản chưa được tạo, vui lòng liên hệ admin");
+				return model;
+			}
+			
 			doc.setProcessInstanceId(procInsId);
 			try {
 				dataService.saveDocument(doc);
-				dataService.upLoadFile(dirServer, file, file.getOriginalFilename());
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 				if (procInsId != null) {
 					flowUtil.deleteProcessInstanceById(procInsId,"can not create new out document");
 				}
+				model.setViewName("error");
+				model.addObject("errorMessage", e.getMessage());
 			}
-
+			
+			dataService.upLoadFile(dirServer, file, fileName, "docx");
 			reAttr.addFlashAttribute("doc", doc);
 			
 		}catch(Exception e){
@@ -183,6 +195,14 @@ public class ImplementController extends AbstractController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/download_document/{docId}", method = RequestMethod.GET)
+	public void downLoadDocument(HttpServletResponse response,
+			@PathVariable("docId") Integer docId)throws IOException {
+		Document doc = dataService.findDocumentById(docId);
+		dataService.downLoadFile(doc.getDocPath(), doc.getNumberSign() + "-"
+				+ doc.getDocName(), "docx", response);
+	}
+	
 	@RequestMapping(value = "/waiting_list_{type}", method = RequestMethod.GET)
 	public ModelAndView waitingDocumentList(
 			@PathVariable("type") String type,
@@ -198,4 +218,6 @@ public class ImplementController extends AbstractController {
 	
 		return model;
 	}
+	
+	
 }

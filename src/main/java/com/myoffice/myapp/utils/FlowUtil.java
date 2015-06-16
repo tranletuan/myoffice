@@ -2,6 +2,7 @@ package com.myoffice.myapp.utils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -45,14 +46,15 @@ public class FlowUtil {
 		}
 	}
 
-	public boolean deployProcess(String resourceName, String filePath) {
+	public boolean deployProcess(String resourceName, String filePath) throws IOException {
+		InputStream inputStream = null;
 		try {
-			
+			inputStream = new FileInputStream(filePath); 
 			// Deploy process
 			repositoryService
 					.createDeployment()
 					.enableDuplicateFiltering()
-					.addInputStream(resourceName, new FileInputStream(filePath))
+					.addInputStream(resourceName, inputStream)
 					.deploy();
 			
 			return true;
@@ -63,6 +65,9 @@ public class FlowUtil {
 			logger.error("WORKFLOW ERROR : " + e.getMessage());
 			e.printStackTrace();
 			return false;
+		}
+		finally{
+			inputStream.close();
 		}
 		
 
