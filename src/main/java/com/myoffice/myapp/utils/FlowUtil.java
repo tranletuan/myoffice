@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -29,6 +30,9 @@ public class FlowUtil {
 
 	@Autowired
 	private RepositoryService repositoryService;
+	
+	@Autowired
+	private HistoryService historyService;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(FlowUtil.class);
@@ -89,7 +93,7 @@ public class FlowUtil {
 	public Task getCurrentTask(String processInstanceId) {
 
 		try {
-			logger.info(processInstanceId);
+
 			Task task = taskService.createTaskQuery()
 					.processInstanceId(processInstanceId).singleResult();
 
@@ -122,6 +126,19 @@ public class FlowUtil {
 			
 		}catch (ActivitiException e){
 			logger.error(e.getMessage());
+		}
+	}
+	
+	public boolean isEnded(String processInstanceId) {
+		try {
+			boolean rs = historyService.createHistoricProcessInstanceQuery()
+					.processInstanceId(processInstanceId)
+					.singleResult()
+					.getEndTime() == null ? false : true;
+			return rs;
+		} catch (ActivitiException e) {
+			logger.info(e.getMessage());
+			return false;
 		}
 	}
 	

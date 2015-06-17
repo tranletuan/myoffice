@@ -60,6 +60,9 @@ public class Document {
 
 	@Column(name = "incoming")
 	private boolean incoming = false;
+	
+	@Column(name = "comment", columnDefinition="varchar(1500)")
+	private String comment;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "doc_type_id", nullable = false, insertable = true, updatable = true)
@@ -218,5 +221,13 @@ public class Document {
 
 	public void setTenure(Tenure tenure) {
 		this.tenure = tenure;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

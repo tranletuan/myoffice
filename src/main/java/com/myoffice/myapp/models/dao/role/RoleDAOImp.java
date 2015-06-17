@@ -17,6 +17,19 @@ public class RoleDaoImp extends AbstractDao implements RoleDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(RoleDaoImp.class);
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Role findRoleByShortName(String shortName) {
+		Query query = (Query)getSession().createQuery("from Role where short_name=?");
+		query.setParameter(0, shortName);
+		List<Role> roles = query.list();
+		if(roles.size() > 0){
+			return roles.get(0);
+		}
+		
+		return null;
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Role findRoleByName(String roleName) {

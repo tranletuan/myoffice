@@ -17,5 +17,7 @@ public interface RoleDao {
 	List<Role> findRolesByArrId(Integer[] rolesId);
 	
 	Role findRoleById(Integer roleId);
+	
+	Role findRoleByShortName(String shortName);
 
 }

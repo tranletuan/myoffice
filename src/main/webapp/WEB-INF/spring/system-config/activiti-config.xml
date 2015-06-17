@@ -20,5 +20,8 @@
 		factory-method="getTaskService" />
 	<bean id="repositoryService" factory-bean="processEngine"
 		factory-method="getRepositoryService" /> 
+	<bean id="historyService" factory-bean="processEngine"
+		factory-method="getHistoryService"/>	
+	
 </beans>
  

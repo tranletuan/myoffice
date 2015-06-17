@@ -32,19 +32,20 @@ xmlns:th="http://www.thymeleaf.org">
 	<div th:replace="fragment/menu :: menu"></div>
 	<div class="container">
 		<form class="form-horizontal" th:action="@{/impl/save_doc}  + '?' + ${_csrf.parameterName} + '=' + ${_csrf.token}" method="post" autocomplete="off" enctype="multipart/form-data">
-			<!-- docName -->
-			<div class="form-group">
-				<label for="docName" class="col-sm-2 control-label">Tên văn bản</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="docName" th:name="docName" value="" required="true"/>
-				</div>
-			</div>
 
 			<!-- title -->
 			<div class="form-group">
 				<label for="title" class="col-sm-2 control-label">Tiêu đề</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="title" th:name="title" value="" required="true"/>
+				</div>
+			</div>
+			
+			<!-- docName -->
+			<div class="form-group">
+				<label for="docName" class="col-sm-2 control-label">Tên văn bản</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="docName" th:name="docName" value="" required="true"/>
 				</div>
 			</div>
 

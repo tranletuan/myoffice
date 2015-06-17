@@ -37,96 +37,108 @@ xmlns:th="http://www.thymeleaf.org">
 	<div class="container-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
 		<div class="container">
-			<div class="panel panel-default">
-				<div class="panel-heading" th:if="${access}">
-					
+			<div class="panel panel-default" th:if="${access}">
+			 	<div class="panel-body">
 					<a type="button" href="#" class="btn btn-warning" th:if="${claim}" th:href="@{/impl/claim_imp_doc?docId=} + ${doc.docId}">Nhận quyền</a>
 					<div th:unless="${claim}">
 						<button type="button" class="btn btn-info" onclick="toggleDocForm();">Sửa đổi</button>
-						<button type="button" class="btn btn-success">Hoàn thành</button>
-						<button type="button" class="btn btn-success" th:if="${check}">Yêu cầu kiểm tra lại</button>
-						<a type="button" href="#" class="btn btn-danger navbar-right" th:href="@{/impl/unclaim_imp_doc?docId=} + ${doc.docId}">Trả quyền</a>
+						<a type="button" class="btn btn-success" href="#" th:href="@{/impl/complete_0?docId=} + ${doc.docId}">Hoàn thành</a>
+						<a type="button" class="btn btn-success" th:if="${check}" href="#" th:href="@{/impl/complete_1?docId=} + ${doc.docId}">Yêu cầu kiểm tra lại</a>
+						<a type="button" href="#" class="btn btn-danger navbar-right" style="margin-right:5px;" th:href="@{/impl/unclaim_imp_doc?docId=} + ${doc.docId}">Trả quyền</a>
 					</div>
 				</div>
-				<table class="table" id="table-info">
+			</div>
+
+			<div class="panel panel-info">
+				<div class="panel-heading"><h3>Thông Tin Văn Bản</h3></div>
+				<div class="panel-body">
+					<h4 th:if="${taskRole}"><span class="label label-warning">Quyền chỉnh sửa :</span><span th:text="${taskRole}"></span></h4>
+					<h4 th:if="${taskDescription}"><span class="label label-warning">Mô tả :</span> <span th:text="${taskDescription}"></span></h4>
+				</div>
+				
+				<table class="table table-bordered" id="table-info">
 					<colgroup>
 						<col class="col-xs-5 col-md-3"/>
 						<col class="col-xs-10 col-md-8"/>
 						<col class="col-xs-3 col-md-1"/>
 					</colgroup>
 					<tbody>
-						<tr><th><h3>Thông Tin Văn Bản</h3></th><td></td></tr>
 						<!-- ID -->
 						<tr class="hidden">
-							<th scope="row"><h4><span class="label label-primary">ID : </span></h4></th>
+							<th scope="row"><h4><span>ID : </span></h4></th>
 							<td><h4 th:text="${doc.docId}" id="docId"></h4></td>
-						</tr>
-
-						<!-- docName -->
-						<tr>
-							<th scope="row"><h4><span class="label label-primary">Tên văn bản : </span></h4></th>
-							<td><h4 th:text="${doc.docName}" id="docName"></h4></td>
 						</tr>
 
 						<!-- title -->
 						<tr>
-							<th scope="row"><h4><span class="label label-primary">Tiêu đề : </span></h4></th>
+							<th scope="row"><h4><span>Tiêu đề : </span></h4></th>
 							<td><h4 th:text="${doc.title}" id="title"></h4></td>
+						</tr>
+
+						<!-- docName -->
+						<tr>
+							<th scope="row"><h4><span>Tên văn bản : </span></h4></th>
+							<td><h4 th:text="${doc.docName}" id="docName"></h4></td>
 						</tr>
 
 						<!-- epitome -->
 						<tr>
-							<th scope="row"><h4><span class="label label-primary">Trích yếu : </span></h4></th>
-							<td><h4 th:text="${doc.epitome}" id="epitome"></h4></td>
+							<th scope="row"><h4><span>Trích yếu : </span></h4></th>
+							<td><h5 th:text="${doc.epitome}" id="epitome"></h5></td>
 						</tr>
 
 						<!-- docType -->
 						<tr>
-							<th scope="row"><h4><span class="label label-primary">Loại văn bản : </span></h4></th>
+							<th scope="row"><h4><span>Loại văn bản : </span></h4></th>
 							<td><h4 th:text="${doc.docType.docTypeName}" id="docType"></h4></td>
-						</tr>
-
-						<!-- privacyLevel -->
-						<tr>
-							<th scope="row"><h4><span class="label label-primary">Mức độ mật : </span></h4></th>
-							<td><h4 th:text="${doc.privacyLevel.privacyName}" id="privacyLevel"></h4></td>
-						</tr>
-
-						<!-- emergencyLevel -->
-						<tr>
-							<th scope="row"><h4><span class="label label-primary">Mức độ khẩn : </span></h4></th>
-							<td><h4 th:text="${doc.emergencyLevel.emeName}" id="emergencyLevel"></h4></td>
 						</tr>
 
 						<!-- tenure -->
 						<tr>
-							<th scope="row"><h4><span class="label label-primary">Nhiệm kỳ : </span></h4></th>
+							<th scope="row"><h4><span>Nhiệm kỳ : </span></h4></th>
 							<td><h4 th:text="${doc.tenure.tenureName}" id="tenure"></h4></td>
 						</tr>
 
 						<!-- numberSign -->
 						<tr>
-							<th scope="row"><h4><span class="label label-primary">Số và ký hiệu : </span></h4></th>
+							<th scope="row"><h4><span>Số và ký hiệu : </span></h4></th>
 							<td><h4 th:text="${doc.numberSign}" id="numberSign"></h4></td>
 						</tr>
 
 						<!-- releaseTime -->
 						<tr>
-							<th scope="row"><h4><span class="label label-primary">Ngày ban hành : </span></h4></th>
+							<th scope="row"><h4><span>Ngày ban hành : </span></h4></th>
 							<td><h4 th:text="${doc.releaseTime}" id="releaseTime"></h4></td>
+						</tr>
+
+						<!-- privacyLevel -->
+						<tr>
+							<th scope="row"><h4><span>Mức độ mật : </span></h4></th>
+							<td><h4 th:text="${doc.privacyLevel.privacyName}" id="privacyLevel"></h4></td>
+						</tr>
+
+						<!-- emergencyLevel -->
+						<tr>
+							<th scope="row"><h4><span>Mức độ khẩn : </span></h4></th>
+							<td><h4 th:text="${doc.emergencyLevel.emeName}" id="emergencyLevel"></h4></td>
 						</tr>
 
 						<!-- docPath -->
 						<tr>
-							<th scope="row"><h4><span class="label label-primary">Tập tin : </span></h4></th>
+							<th scope="row"><h4><span>Tập tin : </span></h4></th>
 							<td><a th:if="${doc.docPath}" href="#" th:href="@{/impl/download_document/} + ${doc.docId}" class="btn btn-primary">Tải xuống <span class="glyphicon glyphicon-download"></span></a></td>
 							<p class="hidden" th:text="${doc.docPath}" id="docPath"></p>
 						</tr>
 
 						<!-- assignee -->
 						<tr th:if="${assignee}">
-							<th scope="row"><h4><span class="label label-primary">Người nhận quyền : </span></h4></th>
+							<th scope="row"><h4><span>Người nhận quyền : </span></h4></th>
 							<td><h4 th:text="${assignee}" id="assignee"></h4></td>
+						</tr>
+
+						<tr th:if="${doc.comment}">
+							<th scope="row"><h4><span>Góp ý sửa đổi : </span></h4></th>
+							<td><h5 th:text="${doc.comment}" id="comment"></h5></td>
 						</tr>
 					</tbody>			
 				</table>

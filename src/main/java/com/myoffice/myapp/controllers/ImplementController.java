@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -196,33 +198,50 @@ public class ImplementController extends AbstractController {
 	public ModelAndView documentInfo(@RequestParam(value = "docId", required = false) Integer docId){
 		ModelAndView model = new ModelAndView("doc-info");
 		Document doc = new Document();
-	
-		if(docId != null && docId > 0){
+
+		if (docId != null && docId > 0) {
 			doc = dataService.findDocumentById(docId);
-			model.addObject("doc", doc);
-			
-			Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
-			User user = securityService.getCurrentUser();
-			
-			if(curTask == null) return model;
-			
-			String[] taskName = curTask.getName().split(" ");
-			if(user.checkRoleByShortName(taskName[0])){
-				model.addObject("access", true);
-				if(curTask.getAssignee() == null){
-					model.addObject("claim", true);
+
+			if (flowUtil.isEnded(doc.getProcessInstanceId())) {
+				if (doc.getReleaseTime() == null || !doc.isCompleted()) {
+					doc.setCompleted(true);
+					doc.setReleaseTime(new Date());
+					dataService.saveDocument(doc);
 				}
-				else if(curTask.getAssignee().equals(user.getUserName())){
-					if(taskName[taskName.length - 1].equals("check")){
-						model.addObject("check", true);
+
+				model.addObject("taskDescription",
+						"Văn bản đã được xử lý hoàn tất");
+			} else {
+				Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
+				if (curTask == null)
+					return model;
+
+				User user = securityService.getCurrentUser();
+
+				String[] taskName = curTask.getName().split(" ");
+				model.addObject("taskDescription", curTask.getDescription());
+				model.addObject("taskRole",
+						dataService.findRoleByShortName(taskName[0])
+								.getFullName());
+
+				if (user.checkRoleByShortName(taskName[0])) {
+
+					model.addObject("access", true);
+					if (curTask.getAssignee() == null) {
+						model.addObject("claim", true);
+					} else if (curTask.getAssignee().equals(user.getUserName())) {
+						if (taskName[taskName.length - 1].equals("check")) {
+							model.addObject("check", true);
+						}
+					} else {
+						model.addObject("access", false);
 					}
-				} else {
-					model.addObject("access", false);
 				}
+
+				model.addObject("assignee", curTask.getAssignee());
 			}
 			
-			model.addObject("assignee",curTask.getAssignee());
-			
+			model.addObject("doc", doc);
 		}
 		
 		return model;
@@ -284,18 +303,45 @@ public class ImplementController extends AbstractController {
 		return model;
 	}
 
-	public ModelAndView completedTask(@RequestParam("docId") Integer docId){
+	@RequestMapping(value = "/complete_{checkNum}")
+	public ModelAndView completedTask(
+			@RequestParam("docId") Integer docId,
+			@PathVariable("checkNum") Integer checkNum){
 		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
 		Document doc = new Document();
-		model.addObject("doc", doc);
 		
 		if(docId != null && docId > 0){
 			doc = dataService.findDocumentById(docId);
 			model.addObject("doc", doc);
 			
-		
-		}
+			Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
+			User user = securityService.getCurrentUser();
 			
+			if(curTask == null) return model;
+			
+			String[] taskName = curTask.getName().split(" ");
+			if(user.checkRoleByShortName(taskName[0]) && 
+					curTask.getAssignee().equals(user.getUserName())){
+				if(!taskName[taskName.length - 1].equals("check")){
+					flowUtil.getTaskService().complete(curTask.getId());
+				}
+				else {
+					Map<String, Object> variables = new HashMap<String, Object>();
+					variables.put("check", checkNum);
+					String taskId = curTask.getId();
+					flowUtil.getTaskService().complete(taskId, variables);
+				}
+			}
+			
+			if(flowUtil.isEnded(doc.getProcessInstanceId())){
+				doc.setCompleted(true);
+				doc.setReleaseTime(new Date());
+				dataService.saveDocument(doc);
+				//send mail
+			}
+		}
+	
 		return model;
 	}
+
 }

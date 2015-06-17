@@ -18,6 +18,5 @@ public class AbstractController {
 	
 	@Autowired
 	protected SecurityService securityService;
-	
-	
+
 }

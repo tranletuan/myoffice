@@ -316,5 +316,9 @@ public class DataService {
 		return roleDao.findRoleById(roleId);
 	}
 	
+	public Role findRoleByShortName(String shortName){
+		return roleDao.findRoleByShortName(shortName);
+	}
+	
 	
 }
