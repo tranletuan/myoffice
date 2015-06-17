@@ -28,10 +28,19 @@
 						</a>
 
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="#" th:href="@{/impl/waiting_list_in}">Văn bản đến</a></li>
-							<li><a href="#" th:href="@{/impl/waiting_list_out}">Văn bản đi</a></li>
-						</ul></li>
-					<li><a href="#" th:href="@{/impl/create_form}" sec:authorize="hasRole('ROLE_INPUTER')">Tạo văn bản</a></li>
+							<li><a href="#" th:href="@{/flow/waiting_list_in}">Văn bản đến</a></li>
+							<li><a href="#" th:href="@{/flow/waiting_list_out}">Văn bản đi</a></li>
+						</ul>
+					</li>
+
+					<li class="dropdown" sec:authorize="hasRole('ROLE_INPUTER')">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tạo văn bản<span class="caret"></span></a>
+
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#" th:href="@{/flow/create_doc_out}">Tạo văn bản đi</a></li>
+							<li><a href="#" th:href="@{/flow/create_doc_in}">Nhận văn bản đến</a></li>
+						</ul>
+					</li>
 					
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle"

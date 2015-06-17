@@ -246,20 +246,24 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 	
 	
-
 	@SuppressWarnings("unchecked")
 	@Override
-	public Integer findMaxNumber(Integer tenureId, Integer docTypeId, Integer organId) {
-		Query query = (Query)getSession().createQuery("SELECT number from Document where tenure_id=? and doc_type_id=? and organ_id=? ORDER BY number DESC");
+	public Integer findMaxNumber(Integer tenureId, Integer docTypeId,
+			Integer organId, boolean incoming) {
+		Query query = (Query) getSession()
+				.createQuery(
+						"SELECT number from Document where tenure_id=? and doc_type_id=? and "
+						+ "organ_id=? and incoming=? ORDER BY number DESC");
 		query.setParameter(0, tenureId);
 		query.setParameter(1, docTypeId);
 		query.setParameter(2, organId);
+		query.setParameter(3, incoming);
 		query.setMaxResults(1);
 		List<Integer> numbers = query.list();
 		if (query.list().size() > 0) {
 			return numbers.get(0) + 1;
 		}
-		
+
 		return 1;
 	}
 }

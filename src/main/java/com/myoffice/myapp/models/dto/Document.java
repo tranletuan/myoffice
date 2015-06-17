@@ -63,9 +63,12 @@ public class Document {
 	
 	@Column(name = "comment", columnDefinition="varchar(1500)")
 	private String comment;
+	
+	@Column(name = "note")
+	private String note;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "doc_type_id", nullable = false, insertable = true, updatable = true)
+	@JoinColumn(name = "doc_type_id", nullable = false)
 	private DocumentType docType;
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -73,7 +76,7 @@ public class Document {
 	private Tenure tenure;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "organ_id", nullable = false, insertable = true, updatable = true)
+	@JoinColumn(name = "organ_id")
 	private Organ organ;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -229,5 +232,13 @@ public class Document {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 }

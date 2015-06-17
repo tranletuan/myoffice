@@ -1,11 +1,18 @@
  $(document).ready(function() {
 
- 	$('#doc-form').toggle();
-	
-	function toggleDocForm(){
- 		$('#doc-info').toggle();
- 		$('#doc-form').toggle();
- 	}
+ 	$('#btnChange').click(function(){
+ 		var docId;
+ 		var title;
+ 		var docName;
+ 		var epitome;
+ 		var docType;
+ 		var tenure;
+ 		var numberSign;
+ 		var privacyLevel;
+ 		var emergencyLevel;
+ 		var docPath;
+ 		var comment;
+ 	});
 
  	$('#btnDownload').click(function (){
 

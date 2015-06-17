@@ -21,12 +21,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.myoffice.myapp.controllers.ImplementController;
+import com.myoffice.myapp.controllers.FlowController;
+import com.myoffice.myapp.models.dao.candidate.CandidateDao;
 import com.myoffice.myapp.models.dao.document.DocumentDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
 import com.myoffice.myapp.models.dao.role.RoleDao;
 import com.myoffice.myapp.models.dao.unit.UnitDao;
 import com.myoffice.myapp.models.dao.user.UserDao;
+import com.myoffice.myapp.models.dto.Candidate;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
@@ -208,8 +210,8 @@ public class DataService {
 	}
 	
 	//NUMBER
-	public Integer findMaxNumber(Integer tenureId, Integer docTypeId, Integer organId){
-		return docDao.findMaxNumber(tenureId, docTypeId, organId);
+	public Integer findMaxNumber(Integer tenureId, Integer docTypeId, Integer organId, boolean incoming){
+		return docDao.findMaxNumber(tenureId, docTypeId, organId, incoming);
 	}
 	
 	
@@ -320,5 +322,28 @@ public class DataService {
 		return roleDao.findRoleByShortName(shortName);
 	}
 	
+	//=====================
+	@Autowired
+	private CandidateDao candidateDao;
+
+	public List<Candidate> findAllCandidate(){
+		return candidateDao.findAllCandidate();
+	}
+	
+	public List<Candidate> findCandidatesBy(boolean completed){
+		return candidateDao.findCandidatesBy(completed);
+	}
+	
+	public Candidate findCandidateById(Integer candidateId){
+		return candidateDao.findCandidateById(candidateId);
+	}
+	
+	public void saveCandidate(Candidate candidate){
+		candidateDao.saveCandidate(candidate);
+	}
+	
+	public void deleteCandidate(Candidate candidate){
+		candidateDao.deleteCandidate(candidate);
+	}
 	
 }

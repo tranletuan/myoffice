@@ -39,12 +39,12 @@ xmlns:th="http://www.thymeleaf.org">
 		<div class="container">
 			<div class="panel panel-default" th:if="${access}">
 			 	<div class="panel-body">
-					<a type="button" href="#" class="btn btn-warning" th:if="${claim}" th:href="@{/impl/claim_imp_doc?docId=} + ${doc.docId}">Nhận quyền</a>
+					<a type="button" href="#" class="btn btn-warning" th:if="${claim}" th:href="@{/flow/claim_imp_doc?docId=} + ${doc.docId}">Nhận quyền</a>
 					<div th:unless="${claim}">
-						<button type="button" class="btn btn-info" onclick="toggleDocForm();">Sửa đổi</button>
-						<a type="button" class="btn btn-success" href="#" th:href="@{/impl/complete_0?docId=} + ${doc.docId}">Hoàn thành</a>
-						<a type="button" class="btn btn-success" th:if="${check}" href="#" th:href="@{/impl/complete_1?docId=} + ${doc.docId}">Yêu cầu kiểm tra lại</a>
-						<a type="button" href="#" class="btn btn-danger navbar-right" style="margin-right:5px;" th:href="@{/impl/unclaim_imp_doc?docId=} + ${doc.docId}">Trả quyền</a>
+						<button type="button" id="btnChange" class="btn btn-info" data-toggle="modal" data-target="#doc-form">Sửa đổi</button>
+						<a type="button" class="btn btn-success" href="#" th:href="@{/flow/complete_0?docId=} + ${doc.docId}">Hoàn thành</a>
+						<a type="button" class="btn btn-success" th:if="${check}" href="#" th:href="@{/flow/complete_1?docId=} + ${doc.docId}">Yêu cầu kiểm tra lại</a>
+						<a type="button" href="#" class="btn btn-danger navbar-right" style="margin-right:5px;" th:href="@{/flow/unclaim_imp_doc?docId=} + ${doc.docId}">Trả quyền</a>
 					</div>
 				</div>
 			</div>
@@ -52,8 +52,8 @@ xmlns:th="http://www.thymeleaf.org">
 			<div class="panel panel-info">
 				<div class="panel-heading"><h3>Thông Tin Văn Bản</h3></div>
 				<div class="panel-body">
-					<h4 th:if="${taskRole}"><span class="label label-warning">Quyền chỉnh sửa :</span><span th:text="${taskRole}"></span></h4>
-					<h4 th:if="${taskDescription}"><span class="label label-warning">Mô tả :</span> <span th:text="${taskDescription}"></span></h4>
+					<h4 th:if="${taskRole}"><span class="label label-warning">Quyền chỉnh sửa: </span> <span th:text="${taskRole}"></span></h4>
+					<h4 th:if="${taskDescription}"><span class="label label-warning">Mô tả: </span> <span th:text="${taskDescription}"></span></h4>
 				</div>
 				
 				<table class="table table-bordered" id="table-info">
@@ -66,68 +66,68 @@ xmlns:th="http://www.thymeleaf.org">
 						<!-- ID -->
 						<tr class="hidden">
 							<th scope="row"><h4><span>ID : </span></h4></th>
-							<td><h4 th:text="${doc.docId}" id="docId"></h4></td>
+							<td><h4 th:text="${doc.docId}" class="docId"></h4></td>
 						</tr>
 
 						<!-- title -->
 						<tr>
 							<th scope="row"><h4><span>Tiêu đề : </span></h4></th>
-							<td><h4 th:text="${doc.title}" id="title"></h4></td>
+							<td><h4 th:text="${doc.title}" class="title"></h4></td>
 						</tr>
 
 						<!-- docName -->
 						<tr>
 							<th scope="row"><h4><span>Tên văn bản : </span></h4></th>
-							<td><h4 th:text="${doc.docName}" id="docName"></h4></td>
+							<td><h4 th:text="${doc.docName}" class="docName"></h4></td>
 						</tr>
 
 						<!-- epitome -->
 						<tr>
 							<th scope="row"><h4><span>Trích yếu : </span></h4></th>
-							<td><h5 th:text="${doc.epitome}" id="epitome"></h5></td>
+							<td><h5 th:text="${doc.epitome}" class="epitome"></h5></td>
 						</tr>
 
 						<!-- docType -->
 						<tr>
 							<th scope="row"><h4><span>Loại văn bản : </span></h4></th>
-							<td><h4 th:text="${doc.docType.docTypeName}" id="docType"></h4></td>
+							<td><h4 th:text="${doc.docType.docTypeName}" class="docType" th:attr="data=${doc.docType.docTypeId}"></h4></td>
 						</tr>
 
 						<!-- tenure -->
 						<tr>
 							<th scope="row"><h4><span>Nhiệm kỳ : </span></h4></th>
-							<td><h4 th:text="${doc.tenure.tenureName}" id="tenure"></h4></td>
+							<td><h4 th:text="${doc.tenure.tenureName}" class="tenure" th:attr="data=${doc.tenure.tenureId}"></h4></td>
 						</tr>
 
 						<!-- numberSign -->
 						<tr>
 							<th scope="row"><h4><span>Số và ký hiệu : </span></h4></th>
-							<td><h4 th:text="${doc.numberSign}" id="numberSign"></h4></td>
+							<td><h4 th:text="${doc.numberSign}" class="numberSign"></h4></td>
 						</tr>
 
 						<!-- releaseTime -->
 						<tr>
 							<th scope="row"><h4><span>Ngày ban hành : </span></h4></th>
-							<td><h4 th:text="${doc.releaseTime}" id="releaseTime"></h4></td>
+							<td><h4 th:text="${doc.releaseTime}" class="releaseTime"></h4></td>
 						</tr>
 
 						<!-- privacyLevel -->
 						<tr>
 							<th scope="row"><h4><span>Mức độ mật : </span></h4></th>
-							<td><h4 th:text="${doc.privacyLevel.privacyName}" id="privacyLevel"></h4></td>
+							<td><h4 th:text="${doc.privacyLevel.privacyName}" class="privacyLevel" th:attr="data=${doc.privacyLevel.privacyId}"></h4></td>
 						</tr>
 
 						<!-- emergencyLevel -->
 						<tr>
 							<th scope="row"><h4><span>Mức độ khẩn : </span></h4></th>
-							<td><h4 th:text="${doc.emergencyLevel.emeName}" id="emergencyLevel"></h4></td>
+							<td><h4 th:text="${doc.emergencyLevel.emeName}" class="emergencyLevel" th:attr="data=${doc.emergencyLevel.emeId}"></h4></td>
 						</tr>
 
 						<!-- docPath -->
 						<tr>
 							<th scope="row"><h4><span>Tập tin : </span></h4></th>
-							<td><a th:if="${doc.docPath}" href="#" th:href="@{/impl/download_document/} + ${doc.docId}" class="btn btn-primary">Tải xuống <span class="glyphicon glyphicon-download"></span></a></td>
-							<p class="hidden" th:text="${doc.docPath}" id="docPath"></p>
+							<td><a th:if="${doc.docPath}" href="#" th:href="@{/flow/download_document/} + ${doc.docId}" class="btn btn-primary">Tải xuống <span class="glyphicon glyphicon-download"></span></a></td>
+							<p class="hidden" th:text="${doc.docPath}" class="docPath"></p>
 						</tr>
 
 						<!-- assignee -->
@@ -138,13 +138,158 @@ xmlns:th="http://www.thymeleaf.org">
 
 						<tr th:if="${doc.comment}">
 							<th scope="row"><h4><span>Góp ý sửa đổi : </span></h4></th>
-							<td><h5 th:text="${doc.comment}" id="comment"></h5></td>
+							<td><h5 th:text="${doc.comment}" class="comment"></h5></td>
 						</tr>
 					</tbody>			
 				</table>
 			</div>			
 		</div>	
 		<div th:replace="fragment/footer :: footer"></div>
+	</div>
+
+	<div class="modal fade" id="doc-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Thông tin văn bản</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" th:action="@{/flow/save_doc_out}  + '?' + ${_csrf.parameterName} + '=' + ${_csrf.token}" method="post" autocomplete="off" enctype="multipart/form-data">
+
+						<!-- title -->
+						<div class="form-group">
+							<label for="title" class="col-sm-2 control-label">Tiêu đề</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="title" th:name="title" value="" required="true"/>
+							</div>
+						</div>
+						
+						<!-- docName -->
+						<div class="form-group">
+							<label for="docName" class="col-sm-2 control-label">Tên văn bản</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="docName" th:name="docName" value="" required="true"/>
+							</div>
+						</div>
+
+										<!-- releaseTime -->
+							<!-- 			<div class="form-group">
+											<label for="releaseTime" class="col-sm-2 control-label">Ngày ban hành</label>
+											<div class="input-group date form_date col-sm-10" style="padding-left:15px; padding-right:15px;" data-date="" data-date-format="dd MM yyyy" data-link-field="releaseTime" data-link-format="yyyy-mm-dd">
+												<input class="form-control" size="16" type="text" value="" readonly="true" th:name="releaseTime" required="true"/>
+												<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+											</div>
+											<input type="hidden" id="releaseTime" value="" required="true"/><br/>
+										</div>
+							 -->
+						<!-- epitome -->
+						<div class="form-group">
+							<label for="epitome" class="col-sm-2 control-label">Trích yếu</label>
+							<div class="col-sm-10">
+								<textarea class="form-control" rows="7" maxlength="450" placeholder="Nội dung tóm tắt" required="true" th:name="epitome"></textarea>
+							</div>
+						</div>
+
+						<!-- typeId -->
+						<div class="form-group">
+							<label for="docType" class="col-sm-2 control-label">Loại văn bản</label>
+							<div class="col-sm-10">
+								<select class="form-control" id="docType"  th:name="docTypeId" required="true">
+									<option th:each="docType : ${docTypeList}"
+											th:value="${docType.docTypeId}"
+											th:text="${docType.docTypeName}"
+											th:attr="class=${docType.shortName}">
+									</option>
+								</select>
+							</div>
+						</div>
+
+						<!-- tenureId -->
+						<div class="form-group">
+							<label for="tenure" class="col-sm-2 control-label">Nhiệm kỳ</label>
+							<div class="col-sm-10">
+								<select class="form-control" id="tenure"  th:name="tenureId" required="true">
+									<option th:each="tenure : ${tenureList}"
+											th:value="${tenure.tenureId}"
+											th:text="${tenure.tenureName}">
+									</option>
+								</select>
+							</div>
+						</div>
+
+						<!-- numberSign -->
+						<div class="form-group">
+							<label for="number" class="col-sm-2 control-label">Số và ký hiệu</label>
+							<div class="col-sm-10">
+								<div class="form-inline">
+									<input type="text" class="form-control" id="number" th:name="number" required="true"/>
+									<input type="text" class="form-control" id="numberSign" th:name="numberSign" value="" required="true"/>
+									<input type="text" class="form-control" id="sign" th:name="sign" value="" required="true" placeholder="Tham mưu"/>
+									<button type="button" id="btnAutoGeneratedNumber" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">Tự động</button>
+								</div>
+							</div>
+						</div>
+
+						<!-- organ -->
+						<div class="form-group">
+							<label for="organ" class="col-sm-2 control-label">Đơn vị ban hành</label>
+							<div class="col-sm-10" style="margin-top : 7px;">
+								<p th:text="${organ.organName}" id="organ" th:attr="class=${organ.organType.shortName}"></p>
+								<p th:text="${organ.organId}" id="organId" class="hidden"></p>
+							</div>
+						</div>
+
+						<!-- file -->
+						<div class="form-group">
+							<label for="file" class="col-sm-2 control-label">Tập tin tải lên</label>
+							<div class="col-sm-10" style="margin-top:10px;">
+								<input type="file" id="file" th:name="file" required="true"/>
+								<p class="help-block"></p>
+							</div>
+						</div>
+
+						<!-- privacyId -->
+						<div class="form-group">
+							<label for="privacyId" class="col-sm-2 control-label">Mức độ mật</label>
+							<div class="col-sm-10">
+								<select class="form-control" id="privacyId"  th:name="privacyId" required="true">
+									<option th:each="privacy : ${privacyList}"
+											th:value="${privacy.privacyId}"
+											th:text="${privacy.privacyName}">
+									</option>
+								</select>
+							</div>
+						</div>
+
+						<!-- emeId -->
+						<div class="form-group">
+							<label for="emeId" class="col-sm-2 control-label">Mức độ khẩn</label>
+							<div class="col-sm-10">
+								<select class="form-control" id="emeId"  th:name="emeId" required="true">
+									<option th:each="eme : ${emeList}"
+											th:value="${eme.emeId}"
+											th:text="${eme.emeName}">
+									</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="comment" class="col-sm-2 control-label">Góp ý sửa đổi</label>
+							<div class="col-sm-10">
+								<textarea class="form-control" rows="8" maxlength="1000" placeholder="Góp ý sửa đổi" th:name="comment" id="comment"></textarea>
+							</div>
+						</div>
+
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">Lưu</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

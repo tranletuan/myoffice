@@ -136,10 +136,13 @@ public class User {
 		return rs;
 	}
 
-	public boolean checkRoleByShortName(String roleName){
-		for(Role role : roles){
-			if(role.getShortName().equals(roleName)){
-				return true;
+	public boolean checkRoleByShortName(String rolesName){
+		String[] rolesCheck = rolesName.split(",");
+		for (String roleName : rolesCheck) {
+			for (Role role : roles) {
+				if (role.getShortName().equals(roleName)) {
+					return true;
+				}
 			}
 		}
 		
