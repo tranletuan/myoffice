@@ -196,12 +196,15 @@ public class ImplementController extends AbstractController {
 	public ModelAndView documentInfo(@RequestParam(value = "docId", required = false) Integer docId){
 		ModelAndView model = new ModelAndView("doc-info");
 		Document doc = new Document();
-		
+	
 		if(docId != null && docId > 0){
 			doc = dataService.findDocumentById(docId);
+			model.addObject("doc", doc);
 			
 			Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
 			User user = securityService.getCurrentUser();
+			
+			if(curTask == null) return model;
 			
 			String[] taskName = curTask.getName().split(" ");
 			if(user.checkRoleByShortName(taskName[0])){
@@ -210,15 +213,16 @@ public class ImplementController extends AbstractController {
 					model.addObject("claim", true);
 				}
 				else if(curTask.getAssignee().equals(user.getUserName())){
-					model.addObject("claim", false);
+					if(taskName[taskName.length - 1].equals("check")){
+						model.addObject("check", true);
+					}
+				} else {
+					model.addObject("access", false);
 				}
-			}
-			else {
-				model.addObject("access", false);
 			}
 			
 			model.addObject("assignee",curTask.getAssignee());
-			model.addObject("doc", doc);
+			
 		}
 		
 		return model;
@@ -257,11 +261,41 @@ public class ImplementController extends AbstractController {
 
 		String[] taskName = curTask.getName().split(" ");
 		if (user.checkRoleByShortName(taskName[0])) {
-			
+			flowUtil.getTaskService().claim(curTask.getId(), user.getUserName());
 		} 
-		else {
+		
+		return model;
+	}
+	
+	@RequestMapping(value ="/unclaim_imp_doc", method = RequestMethod.GET)
+	public ModelAndView unclaimTask(@RequestParam("docId") Integer docId){
+		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
+		Document doc = dataService.findDocumentById(docId);
+		Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
+		User user = securityService.getCurrentUser();
+	
+		String[] taskName = curTask.getName().split(" ");
+		if (user.checkRoleByShortName(taskName[0])) {
+			if(curTask.getAssignee().equals(user.getUserName())){
+				flowUtil.getTaskService().unclaim(curTask.getId());
+			}
+		} 
+		
+		return model;
+	}
 
+	public ModelAndView completedTask(@RequestParam("docId") Integer docId){
+		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
+		Document doc = new Document();
+		model.addObject("doc", doc);
+		
+		if(docId != null && docId > 0){
+			doc = dataService.findDocumentById(docId);
+			model.addObject("doc", doc);
+			
+		
 		}
+			
 		return model;
 	}
 }

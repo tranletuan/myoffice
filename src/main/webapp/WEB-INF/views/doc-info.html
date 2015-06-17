@@ -40,11 +40,12 @@ xmlns:th="http://www.thymeleaf.org">
 			<div class="panel panel-default">
 				<div class="panel-heading" th:if="${access}">
 					
-					<button type="button" class="btn btn-warning" th:if="${claim}">Nhận quyền</button>
+					<a type="button" href="#" class="btn btn-warning" th:if="${claim}" th:href="@{/impl/claim_imp_doc?docId=} + ${doc.docId}">Nhận quyền</a>
 					<div th:unless="${claim}">
 						<button type="button" class="btn btn-info" onclick="toggleDocForm();">Sửa đổi</button>
 						<button type="button" class="btn btn-success">Hoàn thành</button>
-						<button type="button" class="btn btn-danger navbar-right">Trả quyền</button>
+						<button type="button" class="btn btn-success" th:if="${check}">Yêu cầu kiểm tra lại</button>
+						<a type="button" href="#" class="btn btn-danger navbar-right" th:href="@{/impl/unclaim_imp_doc?docId=} + ${doc.docId}">Trả quyền</a>
 					</div>
 				</div>
 				<table class="table" id="table-info">

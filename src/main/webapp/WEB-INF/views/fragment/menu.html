@@ -31,7 +31,7 @@
 							<li><a href="#" th:href="@{/impl/waiting_list_in}">Văn bản đến</a></li>
 							<li><a href="#" th:href="@{/impl/waiting_list_out}">Văn bản đi</a></li>
 						</ul></li>
-					<li><a href="#" th:href="@{/impl/create_form}" sec:authorize="isAuthenticated()">Tạo văn bản</a></li>
+					<li><a href="#" th:href="@{/impl/create_form}" sec:authorize="hasRole('ROLE_INPUTER')">Tạo văn bản</a></li>
 					
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle"
