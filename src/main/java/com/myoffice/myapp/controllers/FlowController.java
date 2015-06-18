@@ -95,6 +95,7 @@ public class FlowController extends AbstractController {
 	
 	@RequestMapping(value = "/save_doc_out", method=RequestMethod.POST)
 	public ModelAndView submitNewDocOut(
+			@RequestParam(value = "docId", required = false) Integer docId,
 			@RequestParam("docName") String docName,
 			@RequestParam("title") String title,
 			@RequestParam("epitome") String epitome,
@@ -105,11 +106,10 @@ public class FlowController extends AbstractController {
 			@RequestParam("number") String number,
 			@RequestParam("numberSign") String numberSign,
 			@RequestParam("sign") String sign,
-			@RequestParam("file") MultipartFile file,
+			@RequestParam(value = "file", required = false) MultipartFile file,
 			@RequestParam(value = "comment", required = false) String comment,
 			RedirectAttributes reAttr) throws ParseException, IllegalStateException, IOException{
 		ModelAndView model = new ModelAndView("redirect:doc_info");
-
 		Tenure tenure = dataService.findTenureById(tenureId);
 		DocumentType docType = dataService.findDocTypeById(docTypeId);
 		Organ organ = securityService.getCurrentUser().getOrgan();
@@ -120,15 +120,12 @@ public class FlowController extends AbstractController {
 			model.addObject("errorMessage", "Tài khoản chưa xác định thuộc đơn vị nào chưa thể tạo văn bản mới!");
 		}
 		
-		//Save file to server 
-		String dirServer = DataConfig.DIR_SERVER + tenure.getTenureName() + File.separator + docType.getDocTypeName() + File.separator;
-		String fileName = number + "-" + docType.getShortName() + "-" + organ.getOrganType().getShortName() + "-" + docName;
-		String[] parts = file.getOriginalFilename().split("\\.");
-		fileName += "." + parts[parts.length - 1];
-		String docPath = dirServer + fileName;
-		
 		//Set data to save
 		Document doc = new Document();
+		if(docId != null && docId > 0){
+			doc = dataService.findDocumentById(docId);
+		}
+		
 		doc.setDocName(docName);
 		doc.setTitle(title);
 		doc.setEpitome(epitome);
@@ -136,11 +133,17 @@ public class FlowController extends AbstractController {
 		doc.setPrivacyLevel(dataService.findPrivacyLevelById(privacyId));
 		doc.setEmergencyLevel(dataService.findEmergencyLevelById(emeId));
 		doc.setTenure(tenure);
-		doc.setDocPath(docPath);
 		doc.setOrgan(organ);
 		doc.setNumberSign(numberSign);
 		if(comment != null) doc.setComment(comment);
 		
+		String dirServer = DataConfig.DIR_SERVER + tenure.getTenureName() + File.separator + docType.getDocTypeName() + File.separator;
+		String fileName = number + "-" + docType.getShortName() + "-" + organ.getOrganType().getShortName() + "-" + docName;
+		String[] parts = file.getOriginalFilename().split("\\.");
+		fileName += "." + parts[parts.length - 1];
+		String docPath = dirServer + fileName;
+		doc.setDocPath(docPath);
+	
 		//Number and Sign
 		Integer num = UtilMethod.parseNumDoc(number);
 		if (num > 0) {
@@ -149,40 +152,53 @@ public class FlowController extends AbstractController {
 			doc.setNumber(dataService.findMaxNumber(tenureId, docTypeId, organ.getOrganId(), false) - 1);
 		}
 		
-		
 		//create new flow
-		try{
-			String procDefId = flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_OUT, DataConfig.PROC_DEF_KEY_FLOW_OUT);
-			String procInsId = flowUtil.startProcess(procDefId);
-			
-			if(procDefId == " " ||  procInsId == null){
-				model.setViewName("error");
-				model.addObject("errorMessage","Luồng văn bản chưa được tạo, vui lòng liên hệ admin");
-				return model;
-			}
-			
-			doc.setProcessInstanceId(procInsId);
+		if (docId == null) {
 			try {
-				dataService.saveDocument(doc);
-				Task task = flowUtil.getCurrentTask(doc.getProcessInstanceId());
-				flowUtil.getTaskService().complete(task.getId());
+				String procDefId = flowUtil.getProcessDefinitionId(
+						DataConfig.RSC_NAME_FLOW_OUT,
+						DataConfig.PROC_DEF_KEY_FLOW_OUT);
+				String procInsId = flowUtil.startProcess(procDefId);
+
+				if (procDefId == " " || procInsId == null) {
+					model.setViewName("error");
+					model.addObject("errorMessage",
+							"Luồng văn bản chưa được tạo, vui lòng liên hệ admin");
+					return model;
+				}
+
+				doc.setProcessInstanceId(procInsId);
+				try {
+					dataService.saveDocument(doc);
+					Task task = flowUtil.getCurrentTask(doc
+							.getProcessInstanceId());
+					flowUtil.getTaskService().complete(task.getId());
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					if (procInsId != null) {
+						flowUtil.deleteProcessInstanceById(procInsId,
+								"can not create new out document");
+					}
+					model.setViewName("error");
+					model.addObject("errorMessage", e.getMessage());
+				}
+
 			} catch (Exception e) {
 				logger.error(e.getMessage());
-				if (procInsId != null) {
-					flowUtil.deleteProcessInstanceById(procInsId,"can not create new out document");
-				}
+
 				model.setViewName("error");
-				model.addObject("errorMessage", e.getMessage());
+				model.addObject("errorMessage", "Lỗi!Không thể tạo văn bản");
 			}
-			
-		}catch(Exception e){
-			logger.error(e.getMessage());
-			
-			model.setViewName("error");
-			model.addObject("errorMessage", "Lỗi!Không thể tạo văn bản");
+		}
+		else {
+			dataService.saveDocument(doc);
+			model.setViewName("redirect:doc_info?docId=" + docId);
 		}
 		
-		dataService.upLoadFile(dirServer, file, fileName);
+		if(file != null){
+			dataService.upLoadFile(dirServer, file, fileName);
+		}
+		
 		reAttr.addFlashAttribute("doc", doc);
 		
 		return model;
@@ -195,7 +211,17 @@ public class FlowController extends AbstractController {
 
 		if (docId != null && docId > 0) {
 			doc = dataService.findDocumentById(docId);
-
+			
+			List<DocumentType> docTypeList = dataService.findAllDocType();
+			List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
+			List<PrivacyLevel> privacyList = dataService.findAllPrivacyLevel();
+			List<Tenure> tenureList = dataService.findAllTenure(); 
+		
+			model.addObject("docTypeList", docTypeList);
+			model.addObject("emeList", emeList);
+			model.addObject("privacyList", privacyList);
+			model.addObject("tenureList", tenureList);
+			
 			if (flowUtil.isEnded(doc.getProcessInstanceId())) {
 				if (doc.getReleaseTime() == null || !doc.isCompleted()) {
 					doc.setCompleted(true);

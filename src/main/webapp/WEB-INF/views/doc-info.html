@@ -52,8 +52,8 @@ xmlns:th="http://www.thymeleaf.org">
 			<div class="panel panel-info">
 				<div class="panel-heading"><h3>Thông Tin Văn Bản</h3></div>
 				<div class="panel-body">
-					<h4 th:if="${taskRole}"><span class="label label-warning">Quyền chỉnh sửa: </span> <span th:text="${taskRole}"></span></h4>
-					<h4 th:if="${taskDescription}"><span class="label label-warning">Mô tả: </span> <span th:text="${taskDescription}"></span></h4>
+					<h4 th:if="${taskRole}"><span class="label label-warning">Quyền chỉnh sửa</span>:<span th:text="${taskRole}"></span></h4>
+					<h4 th:if="${taskDescription}"><span class="label label-warning">Mô tả</span>:<span th:text="${taskDescription}"></span></h4>
 				</div>
 				
 				<table class="table table-bordered" id="table-info">
@@ -102,6 +102,7 @@ xmlns:th="http://www.thymeleaf.org">
 						<!-- numberSign -->
 						<tr>
 							<th scope="row"><h4><span>Số và ký hiệu : </span></h4></th>
+							<td class="hidden"><h4 class="number" th:text="${doc.number}"></h4></td>
 							<td><h4 th:text="${doc.numberSign}" class="numberSign"></h4></td>
 						</tr>
 
@@ -127,7 +128,7 @@ xmlns:th="http://www.thymeleaf.org">
 						<tr>
 							<th scope="row"><h4><span>Tập tin : </span></h4></th>
 							<td><a th:if="${doc.docPath}" href="#" th:href="@{/flow/download_document/} + ${doc.docId}" class="btn btn-primary">Tải xuống <span class="glyphicon glyphicon-download"></span></a></td>
-							<p class="hidden" th:text="${doc.docPath}" class="docPath"></p>
+							<p th:text="${doc.docPath}" class="docPath hidden"></p>
 						</tr>
 
 						<!-- assignee -->
@@ -138,7 +139,7 @@ xmlns:th="http://www.thymeleaf.org">
 
 						<tr th:if="${doc.comment}">
 							<th scope="row"><h4><span>Góp ý sửa đổi : </span></h4></th>
-							<td><h5 th:text="${doc.comment}" class="comment"></h5></td>
+							<td><textarea class="form-control comment" rows="8" maxlength="1500" th:text="${doc.comment}" disabled="true"></textarea></td>
 						</tr>
 					</tbody>			
 				</table>
@@ -155,6 +156,13 @@ xmlns:th="http://www.thymeleaf.org">
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" th:action="@{/flow/save_doc_out}  + '?' + ${_csrf.parameterName} + '=' + ${_csrf.token}" method="post" autocomplete="off" enctype="multipart/form-data">
+						<!-- title -->
+						<div class="hidden">
+							<label for="title" class="col-sm-2 control-label">Tiêu đề</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="docId" th:name="docId" value="" required="true"/>
+							</div>
+						</div>
 
 						<!-- title -->
 						<div class="form-group">
@@ -187,7 +195,7 @@ xmlns:th="http://www.thymeleaf.org">
 						<div class="form-group">
 							<label for="epitome" class="col-sm-2 control-label">Trích yếu</label>
 							<div class="col-sm-10">
-								<textarea class="form-control" rows="7" maxlength="450" placeholder="Nội dung tóm tắt" required="true" th:name="epitome"></textarea>
+								<textarea class="form-control" rows="7" maxlength="450" id="epitome" placeholder="Nội dung tóm tắt" required="true" th:name="epitome"></textarea>
 							</div>
 						</div>
 
@@ -235,8 +243,8 @@ xmlns:th="http://www.thymeleaf.org">
 						<div class="form-group">
 							<label for="organ" class="col-sm-2 control-label">Đơn vị ban hành</label>
 							<div class="col-sm-10" style="margin-top : 7px;">
-								<p th:text="${organ.organName}" id="organ" th:attr="class=${organ.organType.shortName}"></p>
-								<p th:text="${organ.organId}" id="organId" class="hidden"></p>
+								<p th:text="${doc.organ.organName}" id="organ" th:attr="class=${doc.organ.organType.shortName}"></p>
+								<p th:text="${doc.organ.organId}" id="organId" class="hidden"></p>
 							</div>
 						</div>
 
@@ -244,7 +252,7 @@ xmlns:th="http://www.thymeleaf.org">
 						<div class="form-group">
 							<label for="file" class="col-sm-2 control-label">Tập tin tải lên</label>
 							<div class="col-sm-10" style="margin-top:10px;">
-								<input type="file" id="file" th:name="file" required="true"/>
+								<input type="file" id="file" th:name="file"/>
 								<p class="help-block"></p>
 							</div>
 						</div>

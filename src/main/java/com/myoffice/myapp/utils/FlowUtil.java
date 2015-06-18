@@ -123,6 +123,7 @@ public class FlowUtil {
 	public void deleteProcessInstanceById(String processInstanceId, String deleteReason){
 		try{
 			runtimeService.deleteProcessInstance(processInstanceId, deleteReason);
+			logger.info("DELETE PROCESS ID : " + processInstanceId);
 			
 		}catch (ActivitiException e){
 			logger.error(e.getMessage());
