@@ -1,5 +1,6 @@
 package com.myoffice.myapp.models.dto;
 
+import java.lang.annotation.Documented;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -16,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -36,7 +38,7 @@ public class Document {
 	@Column(name = "number_sign", length = 60, unique = true)
 	private String numberSign;
 	
-	@Column(name = "number")
+	@Column(name = "number", unique = true)
 	private Integer number;
 	
 	@Column(name = "document_name", length = 100)
@@ -87,9 +89,8 @@ public class Document {
 	@JoinColumn(name = "emergency_id")
 	private EmergencyLevel emergencyLevel;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "document_recipient_organ", joinColumns = @JoinColumn(name = "document_id"), inverseJoinColumns = @JoinColumn(name = "organ_id"))
-	private Set<Organ> recipients = new HashSet<Organ>(0);
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "document")
+	private Set<DocumentRecipient> recipients = new HashSet<DocumentRecipient>(0);
 
 	public Document() {
 	}
@@ -218,11 +219,11 @@ public class Document {
 		this.emergencyLevel = emergencyLevel;
 	}
 
-	public Set<Organ> getRecipients() {
+	public Set<DocumentRecipient> getRecipients() {
 		return recipients;
 	}
 
-	public void setRecipients(Set<Organ> recipients) {
+	public void setRecipients(Set<DocumentRecipient> recipients) {
 		this.recipients = recipients;
 	}
 
