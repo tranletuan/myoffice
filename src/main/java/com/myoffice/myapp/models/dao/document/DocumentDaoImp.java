@@ -266,4 +266,14 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 
 		return 1;
 	}
+
+	@Override
+	public boolean isDocumentExist(Integer organId, String docPath) {
+		Query query = (Query)getSession().createQuery("select count(*) from Document where organ_id=? and document_path=?");
+		query.setParameter(0, organId);
+		query.setParameter(1, docPath);
+		int rs = Integer.parseInt(query.uniqueResult().toString());
+		if(rs > 0) return true;
+		return false;
+	}
 }

@@ -67,4 +67,7 @@ public interface DocumentDao {
 	
 	//Number
 	Integer findMaxNumber(Integer tenureId, Integer docTypeId, Integer organId, boolean incoming);
+	
+	boolean isDocumentExist(Integer organId, String docPath);
+	
 }

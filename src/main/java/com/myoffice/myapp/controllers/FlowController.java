@@ -3,6 +3,7 @@ package com.myoffice.myapp.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.engine.impl.cmd.FindActiveActivityIdsCmd;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -211,16 +213,26 @@ public class FlowController extends AbstractController {
 
 		if (docId != null && docId > 0) {
 			doc = dataService.findDocumentById(docId);
+			User user = securityService.getCurrentUser();
 			
 			List<DocumentType> docTypeList = dataService.findAllDocType();
 			List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
 			List<PrivacyLevel> privacyList = dataService.findAllPrivacyLevel();
 			List<Tenure> tenureList = dataService.findAllTenure(); 
+			List<Organ> organList = dataService.findAllOrgan();
 		
+			for(Organ o : organList){
+				if(o.getOrganId() == user.getOrgan().getOrganId()){
+					organList.remove(o);
+					break;
+				}
+			}
+			
 			model.addObject("docTypeList", docTypeList);
 			model.addObject("emeList", emeList);
 			model.addObject("privacyList", privacyList);
 			model.addObject("tenureList", tenureList);
+			model.addObject("organList", organList);
 			
 			if (flowUtil.isEnded(doc.getProcessInstanceId())) {
 				if (doc.getReleaseTime() == null || !doc.isCompleted()) {
@@ -236,7 +248,7 @@ public class FlowController extends AbstractController {
 				if (curTask == null)
 					return model;
 
-				User user = securityService.getCurrentUser();
+				
 
 				String[] taskName = curTask.getName().split(" ");
 				model.addObject("taskDescription", curTask.getDescription());
@@ -357,13 +369,67 @@ public class FlowController extends AbstractController {
 				doc.setCompleted(true);
 				doc.setReleaseTime(new Date());
 				dataService.saveDocument(doc);
-				//send mail
 			}
 		}
 	
 		return model;
 	}
 
+	@RequestMapping(value = "/send", method = RequestMethod.POST)
+	public ModelAndView sendDoc(
+			@RequestParam("docId") Integer docId,
+			@RequestParam("recipients") Integer[] recipients,
+			RedirectAttributes reAttr){
+		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
+		Document doc = dataService.findDocumentById(docId);
+		List<Organ> organList = dataService.findOrganByArray(recipients);
+		doc.getRecipients().addAll(new HashSet<Organ>(organList));
+		dataService.saveDocument(doc);
+		List<Organ> errorOrgan = new ArrayList<Organ>();
+		
+		for(Organ o : organList){
+			if (!dataService.isDocumentExist(o.getOrganId(), doc.getDocPath())) {
+				Document d = new Document(doc.getTitle(), doc.getDocName(),
+						doc.getEpitome(), doc.getDocName(), false, true,
+						doc.getDocType(), doc.getTenure(), o,
+						doc.getPrivacyLevel(), doc.getEmergencyLevel());
+
+				String procDefId = null;
+				String procInsId = null;
+				try {
+					procDefId = flowUtil.getProcessDefinitionId(
+							DataConfig.RSC_NAME_FLOW_IN,
+							DataConfig.PROC_DEF_KEY_FLOW_IN);
+					procInsId = flowUtil.startProcess(procDefId);
+
+					if (procInsId == null || procDefId == " ") {
+						model.setViewName("error");
+						model.addObject("errorMessage",
+								"Luồng văn bản đi chưa được khởi tạo, vui lòng liên hệ quản trị viên");
+						return model;
+					}
+
+					d.setProcessInstanceId(procInsId);
+					dataService.saveDocument(d);
+				} catch (Exception e) {
+					if (procInsId != null) {
+						flowUtil.deleteProcessInstanceById(
+								procInsId,
+								"can't send document for organ id: " + o.getOrganId());
+					}
+					
+					organList.add(o);
+				}
+			}
+		}
+		
+		if(errorOrgan.size() > 0){
+			reAttr.addAttribute("errorOrgan", errorOrgan);
+		}
+	
+		return model;
+	}
+	
 	@RequestMapping(value = "/create_doc_in", method = RequestMethod.GET)
 	public ModelAndView createNewDocIn(){
 		ModelAndView model = new ModelAndView("create-doc-in");

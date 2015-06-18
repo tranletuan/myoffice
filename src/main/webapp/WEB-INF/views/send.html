@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Gửi văn bản</title>
+
+	<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+	<!-- <link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}" /> -->
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datetimepicker.min.css}" />
+
+	<script type="text/javascript" th:src="@{/js/create-doc-in.js}" ></script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="fragment/menu :: menu"></div>
+		<div class="container">
+			
+		</div>
+		<div th:replace="fragment/footer :: footer"></div>
+	</div>
+</body>
+</html>

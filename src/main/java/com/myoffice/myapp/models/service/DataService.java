@@ -214,6 +214,9 @@ public class DataService {
 		return docDao.findMaxNumber(tenureId, docTypeId, organId, incoming);
 	}
 	
+	public boolean isDocumentExist(Integer organId, String docPath){
+		return docDao.isDocumentExist(organId, docPath);
+	}
 	
 	//=====================
 	@Autowired

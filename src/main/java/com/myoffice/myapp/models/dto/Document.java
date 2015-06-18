@@ -30,26 +30,26 @@ public class Document {
 	@Column(name = "document_id", nullable = false, unique = true)
 	private Integer docId;
 
-	@Column(name = "title", nullable = false, length = 60)
+	@Column(name = "title", length = 60)
 	private String title;
 	
-	@Column(name = "number_sign", nullable = false, length = 60, unique = true)
+	@Column(name = "number_sign", length = 60, unique = true)
 	private String numberSign;
 	
-	@Column(name = "number", nullable = false)
+	@Column(name = "number")
 	private Integer number;
 	
-	@Column(name = "document_name", nullable = false, length = 100)
+	@Column(name = "document_name", length = 100)
 	private String docName;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "release_time", columnDefinition="DATETIME")
 	private Date releaseTime;
 
-	@Column(name = "epitome" , nullable = false, columnDefinition="varchar(500)")
+	@Column(name = "epitome" , nullable = false, columnDefinition="varchar(1000)")
 	private String epitome;
 
-	@Column(name = "document_path", unique = true)
+	@Column(name = "document_path")
 	private String docPath;
 
 	@Column(name = "processId", nullable = false, length = 60)
@@ -93,6 +93,26 @@ public class Document {
 
 	public Document() {
 	}
+	
+	public Document(String title, String docName, String epitome,
+			String docPath, boolean completed, boolean incoming,
+			DocumentType docType, Tenure tenure, Organ organ,
+			PrivacyLevel privacyLevel, EmergencyLevel emergencyLevel) {
+		super();
+		this.title = title;
+		this.docName = docName;
+		this.epitome = epitome;
+		this.docPath = docPath;
+		this.completed = completed;
+		this.incoming = incoming;
+		this.docType = docType;
+		this.tenure = tenure;
+		this.organ = organ;
+		this.privacyLevel = privacyLevel;
+		this.emergencyLevel = emergencyLevel;
+	}
+
+
 
 	public String getDocName() {
 		return docName;

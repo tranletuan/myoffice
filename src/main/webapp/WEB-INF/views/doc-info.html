@@ -37,6 +37,16 @@ xmlns:th="http://www.thymeleaf.org">
 	<div class="container-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
 		<div class="container">
+			<div class="panel panel-default"  th:if="${errorOrgan}" sec:authorize="hasRole('ROLE_OUTPUTER')">
+			 	<div class="panel-body" th:if="${doc.completed}">
+			 		<div class="panel-heading"><h4>Các đơn vị chưa nhận được</h4></div>
+			 		<ul class="list-group">
+						<li class="list-group-item" th:each="org : ${errorOrgan}" th:text="${org.organName}"></li>
+						
+					</ul>
+			 	</div>
+			 </div>
+
 			<div class="panel panel-default" th:if="${access}">
 			 	<div class="panel-body">
 					<a type="button" href="#" class="btn btn-warning" th:if="${claim}" th:href="@{/flow/claim_imp_doc?docId=} + ${doc.docId}">Nhận quyền</a>
@@ -48,6 +58,12 @@ xmlns:th="http://www.thymeleaf.org">
 					</div>
 				</div>
 			</div>
+
+			<div class="panel panel-default" th:if="${doc.completed}" sec:authorize="hasRole('ROLE_OUTPUTER')">
+			 	<div class="panel-body">
+			 		<button type="button" id="btnSend" class="btn btn-info" data-toggle="modal" data-target="#send-form">Gửi</button>
+			 	</div>
+			 </div>
 
 			<div class="panel panel-info">
 				<div class="panel-heading"><h3>Thông Tin Văn Bản</h3></div>
@@ -158,7 +174,7 @@ xmlns:th="http://www.thymeleaf.org">
 					<form class="form-horizontal" th:action="@{/flow/save_doc_out}  + '?' + ${_csrf.parameterName} + '=' + ${_csrf.token}" method="post" autocomplete="off" enctype="multipart/form-data">
 						<!-- title -->
 						<div class="hidden">
-							<label for="title" class="col-sm-2 control-label">Tiêu đề</label>
+							<label for="title" class="col-sm-2 control-label">ID</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="docId" th:name="docId" value="" required="true"/>
 							</div>
@@ -299,5 +315,44 @@ xmlns:th="http://www.thymeleaf.org">
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="send-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabe"  sec:authorize="hasRole('ROLE_OUTPUTER')">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Gửi văn bản</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" th:action="@{/flow/send} + '?' + ${_csrf.parameterName} + '=' + ${_csrf.token}" method="post" autocomplete="off" enctype="multipart/form-data">
+						<div class="hidden">
+							<div class="col-sm-10">
+								<input type="text" class="form-control" th:name="docId" th:value="${doc.docId}" required="true"/>
+							</div>
+						</div>
+
+						<!-- recipients -->
+						<div class="form-group">
+							<label for="recipients" class="col-sm-2 control-label">Đơn vị nhận</label>
+							<div class="col-sm-10">
+								<select class="form-control" id="recipients" multiple="true" th:name="recipients" required="true">
+									<option th:each="organ : ${organList}"
+											th:value="${organ.organId}"
+											th:text="${organ.organName}"
+											th:attr="class=${organ.shortName}">
+									</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">Gửi</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </body>
 </html>
