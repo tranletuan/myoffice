@@ -11,6 +11,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.Execution;
@@ -47,6 +48,8 @@ public class FlowUtil {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return " ";
+			
+			
 		}
 	}
 
@@ -98,6 +101,7 @@ public class FlowUtil {
 					.processInstanceId(processInstanceId).singleResult();
 
 			logger.info("Current Task : " + task.toString());
+			
 			return task;
 		} catch (ActivitiException e) {
 			logger.error("TASK ERROR : " + e.getMessage());
@@ -140,6 +144,24 @@ public class FlowUtil {
 		} catch (ActivitiException e) {
 			logger.info(e.getMessage());
 			return false;
+		}
+	}
+	
+	public HistoricTaskInstance getPreviousCompletedTask(String processInstanceId) {
+		try{
+			List<HistoricTaskInstance> preTasks = historyService.createHistoricTaskInstanceQuery()
+					.orderByHistoricTaskInstanceEndTime()
+					.desc()
+					.processInstanceId(processInstanceId)
+					.finished()
+					.list();
+			
+			logger.info("Pre Task : " + preTasks.get(0).getName());
+			return preTasks.get(0);
+		}
+		catch(ActivitiException e){
+			logger.error(e.getMessage());
+			return null;
 		}
 	}
 	

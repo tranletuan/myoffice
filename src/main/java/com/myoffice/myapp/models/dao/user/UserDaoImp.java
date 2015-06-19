@@ -1,21 +1,39 @@
 package com.myoffice.myapp.models.dao.user;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.myoffice.myapp.models.dao.common.AbstractDao;
+import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.User;
 
 @Repository
 public class UserDaoImp extends AbstractDao implements UserDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserDaoImp.class);
+
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName) {
+		
+		Criteria criteria = getSession().createCriteria(User.class);
+		criteria.createAlias("roles", "r");
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.add(Restrictions.and(Restrictions.in("r.shortName", arrRoleShortName)));
+	
+		return criteria.list();
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")

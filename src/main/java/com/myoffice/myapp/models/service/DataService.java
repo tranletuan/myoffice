@@ -85,6 +85,10 @@ public class DataService {
 
 	@Autowired
 	private UserDao userDao;
+	
+	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName){
+		return userDao.findUserByArrRoleShortName(organId, arrRoleShortName);
+	}
 
 	public User findUserByName(String username) {
 		return userDao.findUserByName(username);
@@ -325,6 +329,9 @@ public class DataService {
 		return roleDao.findRoleByShortName(shortName);
 	}
 	
+	public List<Role> findRolesByArrShortName(String [] arrShortName){
+		return roleDao.findRolesByArrShortName(arrShortName);
+	}
 	//=====================
 	@Autowired
 	private CandidateDao candidateDao;

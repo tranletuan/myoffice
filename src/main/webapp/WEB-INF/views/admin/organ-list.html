@@ -41,7 +41,7 @@ xmlns:th="http://www.thymeleaf.org">
 								<th>Tên cơ quan</th>
 								<th>Số điện thoại</th>
 								<th>Email</th>
-								<th>Đơn vị trực thuộc</th>
+								<th>Đơn vị chủ quản</th>
 								<th>Cấp cơ quan</th>
 								<th>Viết tắt</th>
 							</thead>
@@ -93,7 +93,7 @@ xmlns:th="http://www.thymeleaf.org">
 							</div>
 
 							<div class="form-group">
-								<label for="unit" class="col-sm-3 control-label">Đơn vị trực thuộc</label>
+								<label for="unit" class="col-sm-3 control-label">Đơn vị chủ quản</label>
 								<div class="col-sm-9">
 									<select class="form-control" id="unit"  th:name="unitId" required="true">
 										<option th:each="unit : ${unitList}"

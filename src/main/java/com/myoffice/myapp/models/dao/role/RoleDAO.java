@@ -20,4 +20,5 @@ public interface RoleDao {
 	
 	Role findRoleByShortName(String shortName);
 
+	List<Role> findRolesByArrShortName(String [] arrShortName);
 }

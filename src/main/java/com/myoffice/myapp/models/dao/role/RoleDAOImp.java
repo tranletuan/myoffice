@@ -87,6 +87,23 @@ public class RoleDaoImp extends AbstractDao implements RoleDao {
 	public Role findRoleById(Integer roleId) {
 		return (Role)getSession().get(Role.class, roleId);
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Role> findRolesByArrShortName(String[] arrShortName) {
+		String hql = "from Role where ";
+		int i = 0;
+		for(String shortName : arrShortName){
+			hql += "short_name=" + shortName;
+			if(i >= 0 && i < arrShortName.length - 1){
+				hql += " or ";
+			}
+			i++;
+		}
+		
+		Query query = (Query)getSession().createQuery(hql);
+		return query.list();
+	}
 	
 	
 

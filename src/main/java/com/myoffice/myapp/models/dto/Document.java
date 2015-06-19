@@ -51,8 +51,11 @@ public class Document {
 	@Column(name = "epitome" , nullable = false, columnDefinition="varchar(1000)")
 	private String epitome;
 
-	@Column(name = "document_path")
+	@Column(name = "document_path", unique = true, nullable = false)
 	private String docPath;
+	
+	@Column(name = "file_name", unique = true, nullable = false)
+	private String fileName;
 
 	@Column(name = "processId", nullable = false, length = 60)
 	private String processInstanceId;
@@ -65,10 +68,10 @@ public class Document {
 	
 	@Column(name = "comment", columnDefinition="varchar(1500)")
 	private String comment;
-	
-	@Column(name = "note")
-	private String note;
 
+	@Column(name = "version", nullable = false)
+	private Integer version = 1;
+	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "doc_type_id", nullable = false)
 	private DocumentType docType;
@@ -94,26 +97,6 @@ public class Document {
 
 	public Document() {
 	}
-	
-	public Document(String title, String docName, String epitome,
-			String docPath, boolean completed, boolean incoming,
-			DocumentType docType, Tenure tenure, Organ organ,
-			PrivacyLevel privacyLevel, EmergencyLevel emergencyLevel) {
-		super();
-		this.title = title;
-		this.docName = docName;
-		this.epitome = epitome;
-		this.docPath = docPath;
-		this.completed = completed;
-		this.incoming = incoming;
-		this.docType = docType;
-		this.tenure = tenure;
-		this.organ = organ;
-		this.privacyLevel = privacyLevel;
-		this.emergencyLevel = emergencyLevel;
-	}
-
-
 
 	public String getDocName() {
 		return docName;
@@ -254,12 +237,20 @@ public class Document {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-	public String getNote() {
-		return note;
+	
+	public Integer getVersion() {
+		return version;
 	}
 
-	public void setNote(String note) {
-		this.note = note;
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }

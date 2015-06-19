@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.cmd.FindActiveActivityIdsCmd;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
+import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
@@ -208,7 +210,8 @@ public class FlowController extends AbstractController {
 	
 	@RequestMapping(value = "/doc_info", method = RequestMethod.GET)
 	public ModelAndView documentInfo(@RequestParam(value = "docId", required = false) Integer docId){
-		ModelAndView model = new ModelAndView("doc-info");
+		ModelAndView model = new ModelAndView("redirect:store/list");
+		if(docId == null || docId < 0) return model;
 		Document doc = new Document();
 
 		if (docId != null && docId > 0) {
@@ -219,20 +222,11 @@ public class FlowController extends AbstractController {
 			List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
 			List<PrivacyLevel> privacyList = dataService.findAllPrivacyLevel();
 			List<Tenure> tenureList = dataService.findAllTenure(); 
-			List<Organ> organList = dataService.findAllOrgan();
-		
-			for(Organ o : organList){
-				if(o.getOrganId() == user.getOrgan().getOrganId()){
-					organList.remove(o);
-					break;
-				}
-			}
 			
 			model.addObject("docTypeList", docTypeList);
 			model.addObject("emeList", emeList);
 			model.addObject("privacyList", privacyList);
 			model.addObject("tenureList", tenureList);
-			model.addObject("organList", organList);
 			
 			if (flowUtil.isEnded(doc.getProcessInstanceId())) {
 				if (doc.getReleaseTime() == null || !doc.isCompleted()) {
@@ -240,42 +234,46 @@ public class FlowController extends AbstractController {
 					doc.setReleaseTime(new Date());
 					dataService.saveDocument(doc);
 				}
-
+				
+				List<Organ> organList = dataService.findAllOrgan();
+				for (Organ o : organList) {
+					if (o.getOrganId() == user.getOrgan().getOrganId()) {
+						organList.remove(o);
+						break;
+					}
+				}
+				model.addObject("organList", organList);
 				model.addObject("taskDescription",
 						"Văn bản đã được xử lý hoàn tất");
 			} else {
 				Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
-				if (curTask == null)
-					return model;
-
+				HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(doc.getProcessInstanceId());
+				if (curTask == null || preTask == null) return model;
 				
-
-				String[] taskName = curTask.getName().split(" ");
-				model.addObject("taskDescription", curTask.getDescription());
-				model.addObject("taskRole",
-						dataService.findRoleByShortName(taskName[0])
-								.getFullName());
-
-				if (user.checkRoleByShortName(taskName[0])) {
-
-					model.addObject("access", true);
-					if (curTask.getAssignee() == null) {
-						model.addObject("claim", true);
-					} else if (curTask.getAssignee().equals(user.getUserName())) {
-						if (taskName[taskName.length - 1].equals("check")) {
-							model.addObject("check", true);
-						}
-					} else {
-						model.addObject("access", false);
+				//Khi hoàn thành task trước và chưa ủy quyền
+				
+				if(curTask.getAssignee() == null){
+					if(user.getUserName().equals(preTask.getAssignee())){
+						String []taskName = curTask.getName().split(" ");
+						String []roles = taskName[0].split(",");
+						List<User> userList = dataService.findUserByArrRoleShortName(user.getOrgan().getOrganId(), roles);
+						model.addObject("isCandidate", true);
+						model.addObject("userList", userList);
+					}
+				} else {
+					if(user.getUserName().equals(curTask.getAssignee())){
+						model.addObject("isAccess", true);
 					}
 				}
-
-				model.addObject("assignee", curTask.getAssignee());
+	
+				
+				
 			}
 			
 			model.addObject("doc", doc);
 		}
 		
+		model.setViewName("doc-info");
 		return model;
 	}
 	
