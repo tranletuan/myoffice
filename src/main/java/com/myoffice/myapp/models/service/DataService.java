@@ -30,6 +30,7 @@ import com.myoffice.myapp.models.dao.unit.UnitDao;
 import com.myoffice.myapp.models.dao.user.UserDao;
 import com.myoffice.myapp.models.dto.Candidate;
 import com.myoffice.myapp.models.dto.Document;
+import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Organ;
@@ -220,6 +221,23 @@ public class DataService {
 	
 	public boolean isDocumentExist(Integer organId, String docPath){
 		return docDao.isDocumentExist(organId, docPath);
+	}
+	
+	//FILE
+	public Integer findNewestDocFile(Integer docId){
+		return docDao.findNewestDocFile(docId);
+	}
+	
+	public void saveDocFile(DocumentFile docFile){
+		docDao.saveDocFile(docFile);
+	}
+	
+	public List<DocumentFile> findAllFile(Integer docId){
+		return docDao.findAllFile(docId);
+	}
+	
+	public DocumentFile findDocFileById(Integer docFileId){
+		return docDao.findDocFileById(docFileId);
 	}
 	
 	//=====================

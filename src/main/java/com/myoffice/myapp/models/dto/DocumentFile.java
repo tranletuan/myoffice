@@ -1,10 +1,14 @@
 package com.myoffice.myapp.models.dto;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -25,6 +29,9 @@ public class DocumentFile {
 	@Column(name = "version", nullable = false)
 	private Integer version = 1;
 
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "document_id", nullable = false)
+	private Document document;
 	
 	public DocumentFile() {
 		super();
@@ -56,6 +63,14 @@ public class DocumentFile {
 
 	public Integer getFileId() {
 		return fileId;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
 	}
 	
 	

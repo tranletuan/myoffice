@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.myoffice.myapp.models.dto.Document;
+import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
@@ -70,4 +71,13 @@ public interface DocumentDao {
 	
 	boolean isDocumentExist(Integer organId, String docPath);
 	
+	//File
+	Integer findNewestDocFile(Integer docId);
+	
+	void saveDocFile(DocumentFile docFile);
+	
+	List<DocumentFile> findAllFile(Integer docId);
+	
+	DocumentFile findDocFileById(Integer docFileId);
+
 }

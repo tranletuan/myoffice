@@ -86,6 +86,9 @@ public class Document {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "document")
 	private Set<DocumentRecipient> recipients = new HashSet<DocumentRecipient>(0);
 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "document")
+	private Set<DocumentFile> files = new HashSet<DocumentFile>(0);
+	
 	public Document() {
 	}
 
@@ -219,6 +222,14 @@ public class Document {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Set<DocumentFile> getFiles() {
+		return files;
+	}
+
+	public void setFiles(Set<DocumentFile> files) {
+		this.files = files;
 	}
 	
 }

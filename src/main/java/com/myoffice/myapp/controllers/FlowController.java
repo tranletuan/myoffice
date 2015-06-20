@@ -38,6 +38,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mchange.v2.c3p0.FullQueryConnectionTester;
 import com.myoffice.myapp.models.dto.Document;
+import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Organ;
@@ -141,14 +142,6 @@ public class FlowController extends AbstractController {
 		doc.setNumberSign(numberSign);
 		if(comment != null) doc.setComment(comment);
 		
-		String dirServer = DataConfig.DIR_SERVER + tenure.getTenureName() + File.separator + docType.getDocTypeName() + File.separator;
-		String fileName = number + "-" + docType.getShortName() + "-" + organ.getOrganType().getShortName() + "-" + docName;
-		String[] parts = file.getOriginalFilename().split("\\.");
-		fileName += "." + parts[parts.length - 1];
-		String docPath = dirServer + fileName;
-		doc.setDocPath(docPath);
-	
-		//Number and Sign
 		Integer num = UtilMethod.parseNumDoc(number);
 		if (num > 0) {
 			doc.setNumber(num);
@@ -156,7 +149,7 @@ public class FlowController extends AbstractController {
 			doc.setNumber(dataService.findMaxNumber(tenureId, docTypeId, organ.getOrganId(), false) - 1);
 		}
 		
-		//create new flow
+		//SAVE DOC AND FLOW
 		if (docId == null) {
 			try {
 				String procDefId = flowUtil.getProcessDefinitionId(
@@ -173,9 +166,11 @@ public class FlowController extends AbstractController {
 
 				doc.setProcessInstanceId(procInsId);
 				try {
+					User curUser = securityService.getCurrentUser();
 					dataService.saveDocument(doc);
 					Task task = flowUtil.getCurrentTask(doc
 							.getProcessInstanceId());
+					flowUtil.getTaskService().setAssignee(task.getId(), curUser.getUserName());
 					flowUtil.getTaskService().complete(task.getId());
 				} catch (Exception e) {
 					logger.error(e.getMessage());
@@ -186,12 +181,9 @@ public class FlowController extends AbstractController {
 					model.setViewName("error");
 					model.addObject("errorMessage", e.getMessage());
 				}
-
+				
 			} catch (Exception e) {
 				logger.error(e.getMessage());
-
-				model.setViewName("error");
-				model.addObject("errorMessage", "Lỗi!Không thể tạo văn bản");
 			}
 		}
 		else {
@@ -199,19 +191,49 @@ public class FlowController extends AbstractController {
 			model.setViewName("redirect:doc_info?docId=" + docId);
 		}
 		
+		//SAVE FILE
 		if(file != null){
-			dataService.upLoadFile(dirServer, file, fileName);
+			try {
+				DocumentFile docFile = new DocumentFile();
+				
+				//File Path
+				String filePath = DataConfig.DIR_SERVER
+						+ tenure.getTenureName() + File.separator
+						+ docType.getDocTypeName() + File.separator;
+				//File Name
+				String fileName = number + "-" + docType.getShortName() + "-"
+						+ organ.getOrganType().getShortName() + "-" + docName;
+				
+				String[] parts = file.getOriginalFilename().split("\\.");
+				fileName += "." + parts[parts.length - 1];
+				docFile.setFilePath(filePath);
+
+				if (docId != null && docId > 0) {
+					Integer version = dataService.findNewestDocFile(docId) + 1;
+					fileName = "Ver" + version + "-" + fileName;
+					docFile.setFileName(fileName);
+					docFile.setDocument(doc);
+					docFile.setVersion(version);
+				} else {
+					fileName = "Ver1-" + fileName;
+					docFile.setFileName(fileName);
+					docFile.setDocument(doc);
+				}
+
+				dataService.saveDocFile(docFile);
+				dataService.upLoadFile(filePath, file, fileName);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
 		}
 		
 		reAttr.addFlashAttribute("doc", doc);
-		
 		return model;
 	}
 	
 	@RequestMapping(value = "/doc_info", method = RequestMethod.GET)
 	public ModelAndView documentInfo(@RequestParam(value = "docId", required = false) Integer docId){
 		ModelAndView model = new ModelAndView("redirect:store/list");
-		if(docId == null || docId < 0) return model;
 		Document doc = new Document();
 
 		if (docId != null && docId > 0) {
@@ -222,11 +244,13 @@ public class FlowController extends AbstractController {
 			List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
 			List<PrivacyLevel> privacyList = dataService.findAllPrivacyLevel();
 			List<Tenure> tenureList = dataService.findAllTenure(); 
+			List<DocumentFile> fileList = dataService.findAllFile(docId);
 			
 			model.addObject("docTypeList", docTypeList);
 			model.addObject("emeList", emeList);
 			model.addObject("privacyList", privacyList);
 			model.addObject("tenureList", tenureList);
+			model.addObject("fileList", fileList);
 			
 			if (flowUtil.isEnded(doc.getProcessInstanceId())) {
 				if (doc.getReleaseTime() == null || !doc.isCompleted()) {
@@ -304,11 +328,11 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/download_document/{docId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/download_document/{docFileId}", method = RequestMethod.GET)
 	public void downLoadDocument(HttpServletResponse response,
-			@PathVariable("docId") Integer docId)throws IOException {
-		Document doc = dataService.findDocumentById(docId);
-		dataService.downLoadFile(doc.getDocPath(), response);
+			@PathVariable("docFileId") Integer docFileId)throws IOException {
+		DocumentFile docFile = dataService.findDocFileById(docFileId);
+		dataService.downLoadFile(docFile.getFilePath() + docFile.getFileName(), response);
 	}
 	
 	@RequestMapping(value = "/waiting_list_{type}", method = RequestMethod.GET)
@@ -413,7 +437,7 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/create_doc_in", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/create_doc_in", method = RequestMethod.GET)
 	public ModelAndView createNewDocIn(){
 		ModelAndView model = new ModelAndView("create-doc-in");
 		
@@ -437,8 +461,8 @@ public class FlowController extends AbstractController {
 		
 		return model;
 	}
-	
-	@RequestMapping(value = "/save_doc_in", method = RequestMethod.POST)
+	*/
+	/*@RequestMapping(value = "/save_doc_in", method = RequestMethod.POST)
 	public ModelAndView submitNewDocIn(
 			@RequestParam("title") String title,
 			@RequestParam("docName") String docName,
@@ -530,7 +554,6 @@ public class FlowController extends AbstractController {
 		reAttr.addFlashAttribute("doc", doc);
 		
 		return model;
-	}
-
+	}*/
 
 }

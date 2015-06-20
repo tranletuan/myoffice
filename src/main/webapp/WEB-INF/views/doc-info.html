@@ -170,11 +170,20 @@ xmlns:th="http://www.thymeleaf.org">
 							<td><h4 th:text="${doc.emergencyLevel.emeName}" class="emergencyLevel" th:attr="data=${doc.emergencyLevel.emeId}"></h4></td>
 						</tr>
 
-						<!-- docPath -->
+						<!-- files -->
 						<tr>
 							<th scope="row"><h4><span>Tập tin : </span></h4></th>
-							<td><a th:if="${doc.docPath}" href="#" th:href="@{/flow/download_document/} + ${doc.docId}" class="btn btn-primary">Tải xuống <span class="glyphicon glyphicon-download"></span></a></td>
-							<p th:text="${doc.docPath}" class="docPath hidden"></p>
+							<td>
+								<!-- Single button -->
+								<div class="btn-group">
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										Tải xuống <span class="glyphicon glyphicon-download"></span>
+									</button>
+									<ul class="dropdown-menu">
+										<li><a href="#" th:each="f : ${fileList}" th:text="'Phiên bản : ' + ${f.version}" th:href="@{/flow/download_document/} + ${f.fileId}"></a></li>
+									</ul>
+								</div>
+							</td>
 						</tr>
 
 						<tr th:if="${doc.comment}">

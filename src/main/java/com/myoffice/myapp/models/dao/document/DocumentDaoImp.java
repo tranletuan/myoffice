@@ -10,6 +10,8 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.ResultTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
 import com.myoffice.myapp.models.dto.Document;
+import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Parameter;
@@ -275,5 +278,40 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		int rs = Integer.parseInt(query.uniqueResult().toString());
 		if(rs > 0) return true;
 		return false;
+	}
+
+	@Override
+	public Integer findNewestDocFile(Integer docId) {
+		Criteria criteria = getSession().createCriteria(DocumentFile.class);
+		criteria.createAlias("document", "d");
+		criteria.add(Restrictions.eq("d.docId", docId));
+		criteria.addOrder(Order.desc("version"));
+		criteria.setMaxResults(1);
+		DocumentFile file = (DocumentFile) criteria.uniqueResult();
+		if(file != null){
+			return file.getVersion(); 
+		}
+		
+		return 0;
+	}
+
+	@Override
+	public void saveDocFile(DocumentFile docFile) {
+		persist(docFile);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentFile> findAllFile(Integer docId) {
+		Criteria criteria = getSession().createCriteria(DocumentFile.class);
+		criteria.createAlias("document", "d");
+		criteria.add(Restrictions.eq("d.docId", docId));
+		criteria.addOrder(Order.desc("version"));
+		return criteria.list();
+	}
+
+	@Override
+	public DocumentFile findDocFileById(Integer docFileId) {
+		return (DocumentFile) getSession().get(DocumentFile.class, docFileId);
 	}
 }
