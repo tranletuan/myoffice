@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -91,18 +92,10 @@ public class RoleDaoImp extends AbstractDao implements RoleDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Role> findRolesByArrShortName(String[] arrShortName) {
-		String hql = "from Role where ";
-		int i = 0;
-		for(String shortName : arrShortName){
-			hql += "short_name=" + shortName;
-			if(i >= 0 && i < arrShortName.length - 1){
-				hql += " or ";
-			}
-			i++;
-		}
-		
-		Query query = (Query)getSession().createQuery(hql);
-		return query.list();
+		Criteria criteria = getSession().createCriteria(Role.class);
+		criteria.add(Restrictions.in("shortName", arrShortName));
+	
+		return criteria.list();
 	}
 	
 	

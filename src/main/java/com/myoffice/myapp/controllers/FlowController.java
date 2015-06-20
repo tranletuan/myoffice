@@ -249,31 +249,58 @@ public class FlowController extends AbstractController {
 				Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
 				HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(doc.getProcessInstanceId());
 				if (curTask == null || preTask == null) return model;
+				String []taskName = curTask.getName().split(" ");
+				String []roles = taskName[0].split(",");
+				
+				model.addObject("taskDescription", curTask.getDescription());
 				
 				//Khi hoàn thành task trước và chưa ủy quyền
-				
 				if(curTask.getAssignee() == null){
 					if(user.getUserName().equals(preTask.getAssignee())){
-						String []taskName = curTask.getName().split(" ");
-						String []roles = taskName[0].split(",");
+						List<Role> candidateRole = dataService.findRolesByArrShortName(roles);
 						List<User> userList = dataService.findUserByArrRoleShortName(user.getOrgan().getOrganId(), roles);
 						model.addObject("isCandidate", true);
 						model.addObject("userList", userList);
+						model.addObject("candidateRole", candidateRole);
 					}
 				} else {
+					User rUser = dataService.findUserByName(curTask.getAssignee());
+					model.addObject("userRole", rUser.getRoleNames());
+					model.addObject("assignee", rUser.getUserName());
+					
 					if(user.getUserName().equals(curTask.getAssignee())){
 						model.addObject("isAccess", true);
+						if(taskName[taskName.length - 1].equals("check")){
+							model.addObject("check", true);
+						}
 					}
 				}
-	
-				
-				
 			}
 			
 			model.addObject("doc", doc);
 		}
 		
 		model.setViewName("doc-info");
+		return model;
+	}
+	
+	@RequestMapping(value = "/candidate", method = RequestMethod.POST)
+	public ModelAndView candidateUser(
+			@RequestParam("docId") Integer docId,
+			@RequestParam("userId") Integer userId,
+			RedirectAttributes reAttr){
+		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
+		if(docId > 0 && userId > 0){
+			Document doc = dataService.findDocumentById(docId);
+			User user = dataService.findUserById(userId);
+			
+			Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
+			if(curTask == null) return model;
+			flowUtil.getTaskService().setAssignee(curTask.getId(), user.getUserName());
+			
+			reAttr.addFlashAttribute("userRole", user.getRoleNames());
+			reAttr.addFlashAttribute("assignee", user.getUserName());
+		}
 		return model;
 	}
 	
@@ -300,7 +327,7 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/claim_imp_doc", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/claim_imp_doc", method = RequestMethod.GET)
 	public ModelAndView claimFlowOutTask(@RequestParam("docId") Integer docId){
 		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
 
@@ -314,9 +341,9 @@ public class FlowController extends AbstractController {
 		} 
 		
 		return model;
-	}
+	}*/
 	
-	@RequestMapping(value ="/unclaim_imp_doc", method = RequestMethod.GET)
+	/*@RequestMapping(value ="/unclaim_imp_doc", method = RequestMethod.GET)
 	public ModelAndView unclaimFlowOutTask(@RequestParam("docId") Integer docId){
 		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
 		Document doc = dataService.findDocumentById(docId);
@@ -331,7 +358,7 @@ public class FlowController extends AbstractController {
 		} 
 		
 		return model;
-	}
+	}*/
 
 	@RequestMapping(value = "/complete_{checkNum}")
 	public ModelAndView completedFlowOutTask(
