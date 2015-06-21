@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,21 +30,24 @@ public class Candidate {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer candidateId;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name = "time_start", columnDefinition = "DATETIME", nullable = false)
 	private Date timeStart;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name = "time_end", columnDefinition = "DATETIME", nullable = false)
 	private Date timeEnd;
 
 	@Column(name = "content", columnDefinition="varchar(1500)", nullable = false)
 	private String content;
 	
-	@Column(name = "completed")
-	private boolean completed = false;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 	
-	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "document_id")
+	private Document reportDoc;
 	
 	public Candidate() {
 		super();
@@ -77,12 +81,20 @@ public class Candidate {
 		this.content = content;
 	}
 
-	public boolean isCompleted() {
-		return completed;
+	public User getUser() {
+		return user;
 	}
 
-	public void setCompleted(boolean completed) {
-		this.completed = completed;
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Document getReportDoc() {
+		return reportDoc;
+	}
+
+	public void setReportDoc(Document reportDoc) {
+		this.reportDoc = reportDoc;
 	}
 	
 	

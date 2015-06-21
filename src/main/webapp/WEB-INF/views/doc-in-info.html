@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Thông tin văn bản đến</title>
+
+	<script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}" ></script>
+
+	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
+	
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+	<script type="text/javascript" th:src="@{/js/doc-in-info.js}" ></script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="fragment/menu :: menu"></div>
+
+		<!-- Receive Document -->
+		<div class="panel panel-default" th:if="${docRec.number}" sec:authorize="hasRole('ROLE_INPUTER')">
+			<div class="panel-body">
+				<div>
+					<button type="button" id="btnReceive" class="btn btn-info" data-toggle="modal" data-target="#doc-receive-form">Tiếp nhận</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Candidate -->
+		<div class="panel panel-default" th:if="${isAssign}">
+			<div class="panel-body">
+				<div>
+					<button type="button" id="btnCandidate" class="btn btn-info" data-toggle="modal" data-target="#doc-assign-form">Phân công</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Report -->
+		<div class="panel panel-default" th:if="${isReport}">
+			<div class="panel-body">
+				<div>
+					<button type="button" id="btnReport" class="btn btn-info" data-toggle="modal" data-target="#doc-report-form">Báo cáo</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-info">
+			<div class="panel-heading"><h3>Thông Tin Văn Bản Đến</h3></div>
+			<div class="panel-body">
+				<h4 th:if="${assignee}"><span class="label label-warning">Người nhận quyền</span>:<span th:text="${assignee}"></span></h4>
+				<h4 th:if="${userRole}"><span class="label label-warning">Quyền hạn</span>:<span th:text="${userRole}"></span></h4>
+				<h4 th:if="${taskDescription}"><span class="label label-warning">Mô tả</span>:<span th:text="${taskDescription}"></span></h4>
+			</div>
+
+			<table class="table table-bordered" id="table-info">
+				<colgroup>
+				<col class="col-xs-5 col-md-3"/>
+				<col class="col-xs-10 col-md-8"/>
+				<col class="col-xs-3 col-md-1"/>
+			</colgroup>
+			<tbody>
+				<!-- ID -->
+				<tr class="hidden">
+					<th scope="row"><h4><span>ID : </span></h4></th>
+					<td><h4 th:text="${doc.docId}" class="docId"></h4></td>
+				</tr>
+
+				<!-- title -->
+				<tr>
+					<th scope="row"><h4><span>Tiêu đề : </span></h4></th>
+					<td><h4 th:text="${doc.title}" class="title"></h4></td>
+				</tr>
+
+				<!-- docName -->
+				<tr>
+					<th scope="row"><h4><span>Tên văn bản : </span></h4></th>
+					<td><h4 th:text="${doc.docName}" class="docName"></h4></td>
+				</tr>
+
+				<!-- epitome -->
+				<tr>
+					<th scope="row"><h4><span>Trích yếu : </span></h4></th>
+					<td><h5 th:text="${doc.epitome}" class="epitome"></h5></td>
+				</tr>
+
+				<!-- docType -->
+				<tr>
+					<th scope="row"><h4><span>Loại văn bản : </span></h4></th>
+					<td><h4 th:text="${doc.docType.docTypeName}" class="docType" th:attr="data=${doc.docType.docTypeId}"></h4></td>
+				</tr>
+
+				<!-- tenure -->
+				<tr>
+					<th scope="row"><h4><span>Nhiệm kỳ : </span></h4></th>
+					<td><h4 th:text="${doc.tenure.tenureName}" class="tenure" th:attr="data=${doc.tenure.tenureId}"></h4></td>
+				</tr>
+
+				<!-- organ -->
+				<tr>
+					<th scope="row"><h4><span>Cơ quan hành : </span></h4></th>
+					<td><h4 th:text="${doc.organ.organName}" class="organ"></h4></td>
+				</tr>
+
+				<!-- releaseTime -->
+				<tr>
+					<th scope="row"><h4><span>Ngày ban hành : </span></h4></th>
+					<td><h4 th:text="${doc.releaseTime}" class="releaseTime"></h4></td>
+				</tr>
+
+				<!-- receiveTime -->
+				<tr th:if="${docRec.receiveTime}">
+					<th scope="row"><h4><span>Ngày tiếp nhận : </span></h4></th>
+					<td><h4 th:text="${doc.receiveTime}" class="receiveTime"></h4></td>
+				</tr>
+
+				<!-- number -->
+				<tr th:if="${docRec.number}">
+					<th scope="row"><h4><span>Số : </span></h4></th>
+					<td><h4 th:text="${doc.number}" class="number"></h4></td>
+				</tr>
+
+				<!-- privacyLevel -->
+				<tr>
+					<th scope="row"><h4><span>Mức độ mật : </span></h4></th>
+					<td><h4 th:text="${doc.privacyLevel.privacyName}" class="privacyLevel" th:attr="data=${doc.privacyLevel.privacyId}"></h4></td>
+				</tr>
+
+				<!-- emergencyLevel -->
+				<tr>
+					<th scope="row"><h4><span>Mức độ khẩn : </span></h4></th>
+					<td><h4 th:text="${doc.emergencyLevel.emeName}" class="emergencyLevel" th:attr="data=${doc.emergencyLevel.emeId}"></h4></td>
+				</tr>
+
+				<!-- files -->
+				<tr>
+					<th scope="row"><h4><span>Tập tin : </span></h4></th>
+					<td>
+						<a href="#" type="btn btn-primary" th:href="@{/flow/download_document/ + ${file.fileId}}"></a>
+					</td>
+				</tr>
+			</tbody>			
+		</table>
+		</div>	
+		<div th:replace="fragment/footer :: footer"></div>
+	</div>
+</body>
+</html>

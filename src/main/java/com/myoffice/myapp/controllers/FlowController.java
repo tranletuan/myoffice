@@ -37,6 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mchange.v2.c3p0.FullQueryConnectionTester;
+import com.myoffice.myapp.models.dto.Candidate;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
@@ -211,7 +212,7 @@ public class FlowController extends AbstractController {
 				docFile.setFilePath(filePath);
 
 				if (docId != null && docId > 0) {
-					Integer version = dataService.findNewestDocFile(docId) + 1;
+					Integer version = dataService.findNewestDocFile(docId).getVersion() + 1;
 					fileName = "Ver" + version + "-" + fileName;
 					docFile.setFileName(fileName);
 					docFile.setDocument(doc);
@@ -337,22 +338,6 @@ public class FlowController extends AbstractController {
 		dataService.downLoadFile(docFile.getFilePath() + docFile.getFileName(), response);
 	}
 	
-	@RequestMapping(value = "/waiting_list_{type}", method = RequestMethod.GET)
-	public ModelAndView waitingDocumentList(
-			@PathVariable("type") String type,
-			@RequestParam(value = "docTypeId", required = false) Integer docTypeId){
-		ModelAndView model =  new ModelAndView("waiting-list");
-		boolean incoming = type.equals("in") ? true : false;
-		
-		List<NoteDoctypeInt> docTypeIntList = dataService.findWaitingMenu(incoming);
-		//List<Document> docList = dataService.findWaitingDocByType(incoming, false, docTypeId);
-		model.addObject("docTypeIntList", docTypeIntList);
-		//model.addObject("docList", docList);
-		model.addObject("type", type);
-	
-		return model;
-	}
-	
 	@RequestMapping(value = "/complete_{checkNum}")
 	public ModelAndView completedFlowOutTask(
 			@RequestParam("docId") Integer docId,
@@ -402,12 +387,21 @@ public class FlowController extends AbstractController {
 		Document doc = dataService.findDocumentById(docId);
 		List<Organ> organList = dataService.findOrganByArray(recipients);
 		
+		String procDefId = null;
+		String procInsId = null; 
 		for(Organ o : organList){
 			try{
 				DocumentRecipient docRec = new DocumentRecipient();
 				docRec.setDocument(doc);
 				docRec.setOrgan(o);
-				dataService.saveDocRecipient(docRec);
+				
+				procDefId = flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_IN, DataConfig.PROC_DEF_KEY_FLOW_IN);
+				procInsId = flowUtil.startProcess(procDefId);
+				
+				if(procDefId != " " && procInsId != null){
+					docRec.setProcessInstanceId(procInsId);
+					dataService.saveDocRecipient(docRec);
+				}
 			}
 			catch(Exception e) {
 				logger.error(e.getMessage());
@@ -416,6 +410,26 @@ public class FlowController extends AbstractController {
 		
 		dataService.saveDocument(doc);
 		reAttr.addFlashAttribute("sendMessage", true);
+		return model;
+	}
+	
+	@RequestMapping(value = "/doc_in_info", method = RequestMethod.GET)
+	public ModelAndView documentInInfo(
+			@RequestParam(value = "docId", required = false) Integer docId){
+		ModelAndView model = new ModelAndView("redirect:store/list");
+		
+		if(docId != null && docId > 0){
+			model.setViewName("doc-in-info");
+			User user = securityService.getCurrentUser();
+			DocumentRecipient docRec = dataService.findDocRecipient(docId, user.getOrgan().getOrganId());
+			Document doc = docRec.getDocument();
+			DocumentFile file = dataService.findDocFileById(doc.getDocId());
+			
+			model.addObject("docRec", docRec);
+			model.addObject("doc", doc);
+			model.addObject("file", file);
+		}
+		
 		return model;
 	}
 	

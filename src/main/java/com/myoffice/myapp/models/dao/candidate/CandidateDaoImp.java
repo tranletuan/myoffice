@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -23,19 +24,6 @@ public class CandidateDaoImp extends AbstractDao implements CandidateDao {
 		return criteria.list();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Candidate> findCandidatesBy(boolean completed) {
-		Query query = (Query)getSession().createQuery("from Candidate where completed=?");
-		query.setParameter(0, completed);
-		return query.list();
-	}
-
-	@Override
-	public Candidate findCandidateById(Integer candidateId) {
-		return (Candidate)getSession().get(Candidate.class, candidateId);
-	}
-
 	@Override
 	public void saveCandidate(Candidate candidate) {
 		persist(candidate);
@@ -46,4 +34,5 @@ public class CandidateDaoImp extends AbstractDao implements CandidateDao {
 		delete(candidate);
 	}
 
+	
 }

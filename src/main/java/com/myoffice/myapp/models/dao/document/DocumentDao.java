@@ -67,7 +67,7 @@ public interface DocumentDao {
 	boolean isDocumentExist(Integer organId, String docPath);
 	
 	//File
-	Integer findNewestDocFile(Integer docId);
+	DocumentFile findNewestDocFile(Integer docId);
 	
 	void saveDocFile(DocumentFile docFile);
 	
@@ -78,5 +78,5 @@ public interface DocumentDao {
 	//Document Recipient
 	void saveDocRecipient(DocumentRecipient docRec);
 
-
+	DocumentRecipient findDocRecipient(Integer docId, Integer organId);
 }

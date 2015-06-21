@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
+import com.myoffice.myapp.models.dto.Candidate;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
@@ -282,7 +283,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 
 	@Override
-	public Integer findNewestDocFile(Integer docId) {
+	public DocumentFile findNewestDocFile(Integer docId) {
 		Criteria criteria = getSession().createCriteria(DocumentFile.class);
 		criteria.createAlias("document", "d");
 		criteria.add(Restrictions.eq("d.docId", docId));
@@ -290,10 +291,10 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.setMaxResults(1);
 		DocumentFile file = (DocumentFile) criteria.uniqueResult();
 		if(file != null){
-			return file.getVersion(); 
+			return file;
 		}
 		
-		return 0;
+		return null;
 	}
 
 	@Override
@@ -320,5 +321,15 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@Override
 	public void saveDocRecipient(DocumentRecipient docRec) {
 		persist(docRec);
+	}
+
+	@Override
+	public DocumentRecipient findDocRecipient(Integer docId, Integer organId) {
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("document", "d");
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("d.docId", docId)).add(
+				Restrictions.and(Restrictions.eq("o.organId", organId)));
+		return (DocumentRecipient) criteria.uniqueResult(); 
 	}
 }

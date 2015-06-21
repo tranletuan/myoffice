@@ -230,7 +230,7 @@ public class DataService {
 	}
 	
 	//FILE
-	public Integer findNewestDocFile(Integer docId){
+	public DocumentFile findNewestDocFile(Integer docId){
 		return docDao.findNewestDocFile(docId);
 	}
 	
@@ -244,6 +244,10 @@ public class DataService {
 	
 	public DocumentFile findDocFileById(Integer docFileId){
 		return docDao.findDocFileById(docFileId);
+	}
+	
+	public DocumentRecipient findDocRecipient(Integer docId, Integer organId){
+		return docDao.findDocRecipient(docId, organId);
 	}
 	
 	//=====================
@@ -362,14 +366,6 @@ public class DataService {
 
 	public List<Candidate> findAllCandidate(){
 		return candidateDao.findAllCandidate();
-	}
-	
-	public List<Candidate> findCandidatesBy(boolean completed){
-		return candidateDao.findCandidatesBy(completed);
-	}
-	
-	public Candidate findCandidateById(Integer candidateId){
-		return candidateDao.findCandidateById(candidateId);
 	}
 	
 	public void saveCandidate(Candidate candidate){

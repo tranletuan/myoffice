@@ -30,7 +30,7 @@ public class DocumentRecipient implements Serializable{
 	private Document document;
 
 	@Id
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "organ_id", nullable = false)
 	private Organ organ;
 
@@ -44,9 +44,9 @@ public class DocumentRecipient implements Serializable{
 	@Column(name = "processId", nullable = false, unique = true)
 	private String processInstanceId;
 	
-	@Column(name = "candidate_name")
-	private String candidateName;
-
+	@Column(name = "completed")
+	private boolean completed = false;
+	
 	public DocumentRecipient() {
 		super();
 	}
@@ -89,6 +89,14 @@ public class DocumentRecipient implements Serializable{
 
 	public void setProcessInstanceId(String processInstanceId) {
 		this.processInstanceId = processInstanceId;
+	}
+
+	public boolean isCompleted() {
+		return completed;
+	}
+
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
 	}
 
 }

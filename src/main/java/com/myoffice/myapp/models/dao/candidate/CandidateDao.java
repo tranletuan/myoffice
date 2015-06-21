@@ -8,9 +8,7 @@ public interface CandidateDao {
 
 	List<Candidate> findAllCandidate();
 	
-	List<Candidate> findCandidatesBy(boolean completed);
 	
-	Candidate findCandidateById(Integer candidateId);
 	
 	void saveCandidate(Candidate candidate);
 	
