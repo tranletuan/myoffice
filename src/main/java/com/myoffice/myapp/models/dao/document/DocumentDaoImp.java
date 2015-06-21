@@ -21,6 +21,7 @@ import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentFile;
+import com.myoffice.myapp.models.dto.DocumentRecipient;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Parameter;
@@ -62,7 +63,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findWaitingDocByType(boolean incoming, boolean completed, Integer docTypeId) {
 		if (docTypeId == null || docTypeId <= 0) {
@@ -80,7 +81,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			query.setParameter(2, completed);
 			return query.list();
 		}
-	}
+	}*/
 
 	@Override
 	public Document findDocumentById(Integer docId) {
@@ -121,7 +122,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		delete(doc);
 	}
 
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findDocumentBy(DocumentType docType,
 			boolean completed, boolean incomming) {
@@ -133,7 +134,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		query.setParameter(2, incomming);
 
 		return query.list();
-	}
+	}*/
 
 	// DocumentType
 	@SuppressWarnings("unchecked")
@@ -307,11 +308,18 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.createAlias("document", "d");
 		criteria.add(Restrictions.eq("d.docId", docId));
 		criteria.addOrder(Order.desc("version"));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 
 	@Override
 	public DocumentFile findDocFileById(Integer docFileId) {
 		return (DocumentFile) getSession().get(DocumentFile.class, docFileId);
+	}
+
+	@Override
+	public void saveDocRecipient(DocumentRecipient docRec) {
+		// TODO Auto-generated method stub
+		
 	}
 }

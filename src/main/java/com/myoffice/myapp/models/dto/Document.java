@@ -38,8 +38,11 @@ public class Document {
 	@Column(name = "number_sign", length = 60, unique = true)
 	private String numberSign;
 	
-	@Column(name = "number", unique = true)
+	@Column(name = "number", nullable = false)
 	private Integer number;
+	
+	@Column(name = "departments", nullable = false)
+	private String departments;
 	
 	@Column(name = "document_name", length = 100)
 	private String docName;
@@ -62,6 +65,9 @@ public class Document {
 	
 	@Column(name = "comment", columnDefinition="varchar(1500)")
 	private String comment;
+	
+	@Column(name = "isSended")
+	private boolean isSended = false;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "doc_type_id", nullable = false)
@@ -230,6 +236,22 @@ public class Document {
 
 	public void setFiles(Set<DocumentFile> files) {
 		this.files = files;
+	}
+
+	public String getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(String departments) {
+		this.departments = departments;
+	}
+
+	public boolean isSended() {
+		return isSended;
+	}
+
+	public void setSended(boolean isSended) {
+		this.isSended = isSended;
 	}
 	
 }

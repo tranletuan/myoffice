@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentFile;
+import com.myoffice.myapp.models.dto.DocumentRecipient;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
@@ -14,9 +15,7 @@ import com.myoffice.myapp.support.NoteDoctypeInt;
 public interface DocumentDao {
 	
 	Integer countDocument(boolean incoming, boolean completed, Integer docTypeId);
-	
-	List<Document> findWaitingDocByType(boolean incoming, boolean completed, Integer docTypeId);
-	
+
 	Document findDocumentById(Integer docId);
 	
 	Document findDocumentByName(String name);
@@ -26,8 +25,6 @@ public interface DocumentDao {
 	void saveDocument(Document doc);
 	
 	void deleteDocument(Document doc);
-	
-	List<Document> findDocumentBy(DocumentType docType, boolean completed, boolean incomming);
 	
 	//DocumentType
 	DocumentType findDocTypeById(Integer typeId);
@@ -79,5 +76,10 @@ public interface DocumentDao {
 	List<DocumentFile> findAllFile(Integer docId);
 	
 	DocumentFile findDocFileById(Integer docFileId);
+	
+	//Document Recipient
+	void saveDocRecipient(DocumentRecipient docRec);
+	
+	List<Doc>
 
 }

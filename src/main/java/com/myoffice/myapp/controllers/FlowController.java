@@ -39,6 +39,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.mchange.v2.c3p0.FullQueryConnectionTester;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentFile;
+import com.myoffice.myapp.models.dto.DocumentRecipient;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Organ;
@@ -110,7 +111,7 @@ public class FlowController extends AbstractController {
 			@RequestParam("tenureId") Integer tenureId,
 			@RequestParam("number") String number,
 			@RequestParam("numberSign") String numberSign,
-			@RequestParam("sign") String sign,
+			@RequestParam("departments") String departments,
 			@RequestParam(value = "file", required = false) MultipartFile file,
 			@RequestParam(value = "comment", required = false) String comment,
 			RedirectAttributes reAttr) throws ParseException, IllegalStateException, IOException{
@@ -118,7 +119,7 @@ public class FlowController extends AbstractController {
 		Tenure tenure = dataService.findTenureById(tenureId);
 		DocumentType docType = dataService.findDocTypeById(docTypeId);
 		Organ organ = securityService.getCurrentUser().getOrgan();
-		numberSign = number + numberSign + sign;
+		numberSign = number + numberSign + departments;
 		
 		if(organ == null){
 			model.setViewName("error");
@@ -140,6 +141,7 @@ public class FlowController extends AbstractController {
 		doc.setTenure(tenure);
 		doc.setOrgan(organ);
 		doc.setNumberSign(numberSign);
+		doc.setDepartments(departments);
 		if(comment != null) doc.setComment(comment);
 		
 		Integer num = UtilMethod.parseNumDoc(number);
@@ -343,47 +345,14 @@ public class FlowController extends AbstractController {
 		boolean incoming = type.equals("in") ? true : false;
 		
 		List<NoteDoctypeInt> docTypeIntList = dataService.findWaitingMenu(incoming);
-		List<Document> docList = dataService.findWaitingDocByType(incoming, false, docTypeId);
+		//List<Document> docList = dataService.findWaitingDocByType(incoming, false, docTypeId);
 		model.addObject("docTypeIntList", docTypeIntList);
-		model.addObject("docList", docList);
+		//model.addObject("docList", docList);
 		model.addObject("type", type);
 	
 		return model;
 	}
 	
-	/*@RequestMapping(value = "/claim_imp_doc", method = RequestMethod.GET)
-	public ModelAndView claimFlowOutTask(@RequestParam("docId") Integer docId){
-		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
-
-		Document doc = dataService.findDocumentById(docId);
-		Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
-		User user = securityService.getCurrentUser();
-
-		String[] taskName = curTask.getName().split(" ");
-		if (user.checkRoleByShortName(taskName[0])) {
-			flowUtil.getTaskService().claim(curTask.getId(), user.getUserName());
-		} 
-		
-		return model;
-	}*/
-	
-	/*@RequestMapping(value ="/unclaim_imp_doc", method = RequestMethod.GET)
-	public ModelAndView unclaimFlowOutTask(@RequestParam("docId") Integer docId){
-		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
-		Document doc = dataService.findDocumentById(docId);
-		Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
-		User user = securityService.getCurrentUser();
-	
-		String[] taskName = curTask.getName().split(" ");
-		if (user.checkRoleByShortName(taskName[0])) {
-			if(curTask.getAssignee().equals(user.getUserName())){
-				flowUtil.getTaskService().unclaim(curTask.getId());
-			}
-		} 
-		
-		return model;
-	}*/
-
 	@RequestMapping(value = "/complete_{checkNum}")
 	public ModelAndView completedFlowOutTask(
 			@RequestParam("docId") Integer docId,
@@ -423,7 +392,7 @@ public class FlowController extends AbstractController {
 	
 		return model;
 	}
-
+	
 	@RequestMapping(value = "/send", method = RequestMethod.POST)
 	public ModelAndView sendDoc(
 			@RequestParam("docId") Integer docId,
@@ -433,9 +402,50 @@ public class FlowController extends AbstractController {
 		Document doc = dataService.findDocumentById(docId);
 		List<Organ> organList = dataService.findOrganByArray(recipients);
 		
-	
+		
+		for(Organ o : organList){
+			DocumentRecipient docRec = new DocumentRecipient();
+			docRec.setDocument(doc);
+			docRec.setOrgan(o);
+			//dataService.save
+		}
+		
+		
 		return model;
 	}
+	
+	/*@RequestMapping(value = "/claim_imp_doc", method = RequestMethod.GET)
+	public ModelAndView claimFlowOutTask(@RequestParam("docId") Integer docId){
+		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
+
+		Document doc = dataService.findDocumentById(docId);
+		Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
+		User user = securityService.getCurrentUser();
+
+		String[] taskName = curTask.getName().split(" ");
+		if (user.checkRoleByShortName(taskName[0])) {
+			flowUtil.getTaskService().claim(curTask.getId(), user.getUserName());
+		} 
+		
+		return model;
+	}*/
+	
+	/*@RequestMapping(value ="/unclaim_imp_doc", method = RequestMethod.GET)
+	public ModelAndView unclaimFlowOutTask(@RequestParam("docId") Integer docId){
+		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
+		Document doc = dataService.findDocumentById(docId);
+		Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
+		User user = securityService.getCurrentUser();
+	
+		String[] taskName = curTask.getName().split(" ");
+		if (user.checkRoleByShortName(taskName[0])) {
+			if(curTask.getAssignee().equals(user.getUserName())){
+				flowUtil.getTaskService().unclaim(curTask.getId());
+			}
+		} 
+		
+		return model;
+	}*/
 	
 	/*@RequestMapping(value = "/create_doc_in", method = RequestMethod.GET)
 	public ModelAndView createNewDocIn(){

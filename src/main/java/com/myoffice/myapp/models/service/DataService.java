@@ -118,9 +118,9 @@ public class DataService {
 		return docDao.countDocument(incoming, completed, docTypeId);
 	}
 	
-	public List<Document> findWaitingDocByType(boolean incoming, boolean completed, Integer docTypeId){
+	/*public List<Document> findWaitingDocByType(boolean incoming, boolean completed, Integer docTypeId){
 		return docDao.findWaitingDocByType(incoming, completed, docTypeId);
-	}
+	}*/
 	
 	public Document findDocumentById(Integer docId){
 		return docDao.findDocumentById(docId);
@@ -142,9 +142,9 @@ public class DataService {
 		docDao.deleteDocument(doc);
 	}
 	
-	public List<Document> findDocumentBy(DocumentType docType, boolean completed, boolean incomming){
+	/*public List<Document> findDocumentBy(DocumentType docType, boolean completed, boolean incomming){
 		return docDao.findDocumentBy(docType, completed, incomming);
-	}
+	}*/
 	
 	//DOCUMENT TYPE
 	public List<DocumentType> findAllDocType(){
