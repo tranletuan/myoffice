@@ -9,13 +9,9 @@ xmlns:th="http://www.thymeleaf.org">
 
 	<script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}" ></script>
 
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-
-	<!-- Latest compiled and minified JavaScript -->
-	<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
+	
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 
 	<script type="text/javascript" th:src="@{/js/doc-info.js}" ></script>
 
@@ -36,7 +32,7 @@ xmlns:th="http://www.thymeleaf.org">
 	<div class="container-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
 		<div class="container">
-			
+
 			<div class="panel panel-default" th:if="${isAccess}">
 			 	<div class="panel-body">
 					<div>
@@ -45,6 +41,12 @@ xmlns:th="http://www.thymeleaf.org">
 						<a type="button" class="btn btn-success" th:if="${check}" href="#" th:href="@{/flow/complete_1?docId=} + ${doc.docId}">Yêu cầu kiểm tra lại</a>
 					</div>
 				</div>
+			</div>
+
+			<div th:if="${sendMessage}" class="alert alert-success" role="alert">
+				<span class="glyphicon glyphicon-exclamation-sign"
+				aria-hidden="true"></span> <span class="sr-only">Thông báo:</span>
+				Gửi thành công
 			</div>
 
 			<div class="panel panel-default" th:if="${doc.completed}" sec:authorize="hasRole('ROLE_OUTPUTER')">

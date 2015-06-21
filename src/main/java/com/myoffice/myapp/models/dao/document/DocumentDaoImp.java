@@ -37,7 +37,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			.getLogger(DocumentDaoImp.class);
 
 	
-	@Override
+	/*@Override
 	public Integer countDocument(boolean incoming, boolean completed,
 			Integer docTypeId) {
 		try {
@@ -61,7 +61,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			logger.error(e.getMessage());
 			return 0;
 		}
-	}
+	}*/
 
 	/*@SuppressWarnings("unchecked")
 	@Override
@@ -319,7 +319,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 
 	@Override
 	public void saveDocRecipient(DocumentRecipient docRec) {
-		// TODO Auto-generated method stub
-		
+		persist(docRec);
 	}
 }

@@ -36,16 +36,14 @@ public class Candidate {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "time_end", columnDefinition = "DATETIME", nullable = false)
 	private Date timeEnd;
-	
-	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.EAGER)
-	@JoinTable(name = "candidate_user", joinColumns = @JoinColumn(name = "candidate_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-	private Set<User> candidateGroup = new HashSet<User>();
 
 	@Column(name = "content", columnDefinition="varchar(1500)", nullable = false)
 	private String content;
 	
 	@Column(name = "completed")
 	private boolean completed = false;
+	
+	
 	
 	public Candidate() {
 		super();
@@ -65,14 +63,6 @@ public class Candidate {
 
 	public void setTimeEnd(Date timeEnd) {
 		this.timeEnd = timeEnd;
-	}
-
-	public Set<User> getCandidateGroup() {
-		return candidateGroup;
-	}
-
-	public void setCandidateGroup(Set<User> candidateGroup) {
-		this.candidateGroup = candidateGroup;
 	}
 
 	public Integer getCandidateId() {

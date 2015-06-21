@@ -14,8 +14,6 @@ import com.myoffice.myapp.support.NoteDoctypeInt;
 
 public interface DocumentDao {
 	
-	Integer countDocument(boolean incoming, boolean completed, Integer docTypeId);
-
 	Document findDocumentById(Integer docId);
 	
 	Document findDocumentByName(String name);
@@ -79,7 +77,6 @@ public interface DocumentDao {
 	
 	//Document Recipient
 	void saveDocRecipient(DocumentRecipient docRec);
-	
-	List<Doc>
+
 
 }

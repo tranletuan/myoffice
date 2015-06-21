@@ -31,6 +31,7 @@ import com.myoffice.myapp.models.dao.user.UserDao;
 import com.myoffice.myapp.models.dto.Candidate;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentFile;
+import com.myoffice.myapp.models.dto.DocumentRecipient;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Organ;
@@ -114,10 +115,10 @@ public class DataService {
 	@Autowired
 	private DocumentDao docDao;
 	
-	public Integer countDocument(boolean incoming, boolean completed, Integer docTypeId){
+	/*public Integer countDocument(boolean incoming, boolean completed, Integer docTypeId){
 		return docDao.countDocument(incoming, completed, docTypeId);
 	}
-	
+	*/
 	/*public List<Document> findWaitingDocByType(boolean incoming, boolean completed, Integer docTypeId){
 		return docDao.findWaitingDocByType(incoming, completed, docTypeId);
 	}*/
@@ -221,6 +222,11 @@ public class DataService {
 	
 	public boolean isDocumentExist(Integer organId, String docPath){
 		return docDao.isDocumentExist(organId, docPath);
+	}
+	
+	//Document Recipient
+	public void saveDocRecipient(DocumentRecipient docRec){
+		docDao.saveDocRecipient(docRec);
 	}
 	
 	//FILE

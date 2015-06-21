@@ -1,5 +1,6 @@
 package com.myoffice.myapp.models.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -16,19 +17,21 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "document_recipient")
-public class DocumentRecipient {
+public class DocumentRecipient implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "doc_rec_id", nullable = false, unique = true)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer docRecId;
-
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "document_id")
+	@JoinColumn(name = "document_id", nullable = false)
 	private Document document;
 
+	@Id
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "organ_id")
+	@JoinColumn(name = "organ_id", nullable = false)
 	private Organ organ;
 
 	@Temporal(TemporalType.DATE)
@@ -37,6 +40,12 @@ public class DocumentRecipient {
 
 	@Column(name = "number")
 	private Integer number;
+	
+	@Column(name = "processId", nullable = false, unique = true)
+	private String processInstanceId;
+	
+	@Column(name = "candidate_name")
+	private String candidateName;
 
 	public DocumentRecipient() {
 		super();
@@ -74,8 +83,12 @@ public class DocumentRecipient {
 		this.number = number;
 	}
 
-	public Integer getDocRecId() {
-		return docRecId;
+	public String getProcessInstanceId() {
+		return processInstanceId;
+	}
+
+	public void setProcessInstanceId(String processInstanceId) {
+		this.processInstanceId = processInstanceId;
 	}
 
 }

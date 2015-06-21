@@ -402,15 +402,20 @@ public class FlowController extends AbstractController {
 		Document doc = dataService.findDocumentById(docId);
 		List<Organ> organList = dataService.findOrganByArray(recipients);
 		
-		
 		for(Organ o : organList){
-			DocumentRecipient docRec = new DocumentRecipient();
-			docRec.setDocument(doc);
-			docRec.setOrgan(o);
-			//dataService.save
+			try{
+				DocumentRecipient docRec = new DocumentRecipient();
+				docRec.setDocument(doc);
+				docRec.setOrgan(o);
+				dataService.saveDocRecipient(docRec);
+			}
+			catch(Exception e) {
+				logger.error(e.getMessage());
+			}
 		}
 		
-		
+		dataService.saveDocument(doc);
+		reAttr.addFlashAttribute("sendMessage", true);
 		return model;
 	}
 	
