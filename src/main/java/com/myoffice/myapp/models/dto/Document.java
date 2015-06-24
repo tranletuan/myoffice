@@ -41,7 +41,7 @@ public class Document {
 	@Column(name = "number", nullable = false)
 	private Integer number;
 	
-	@Column(name = "departments", nullable = false)
+	@Column(name = "departments", nullable = false, length = 60)
 	private String departments;
 	
 	@Column(name = "document_name", length = 100)
@@ -54,7 +54,7 @@ public class Document {
 	@Column(name = "epitome" , nullable = false, columnDefinition="varchar(1000)")
 	private String epitome;
 
-	@Column(name = "processId", nullable = false, length = 60)
+	@Column(name = "processId", nullable = false)
 	private String processInstanceId;
 	
 	@Column(name = "completed")

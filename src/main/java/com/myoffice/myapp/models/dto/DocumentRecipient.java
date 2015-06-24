@@ -3,6 +3,7 @@ package com.myoffice.myapp.models.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -46,6 +48,10 @@ public class DocumentRecipient implements Serializable{
 	
 	@Column(name = "completed")
 	private boolean completed = false;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "candidate_id")
+	private Candidate candidate;
 	
 	public DocumentRecipient() {
 		super();
@@ -97,6 +103,14 @@ public class DocumentRecipient implements Serializable{
 
 	public void setCompleted(boolean completed) {
 		this.completed = completed;
+	}
+
+	public Candidate getCandidate() {
+		return candidate;
+	}
+
+	public void setCandidate(Candidate candidate) {
+		this.candidate = candidate;
 	}
 
 }
