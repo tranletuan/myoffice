@@ -79,4 +79,6 @@ public interface DocumentDao {
 	void saveDocRecipient(DocumentRecipient docRec);
 
 	DocumentRecipient findDocRecipient(Integer docId, Integer organId);
+	
+	Integer findMaxDocRecNumber(Integer tenureId, Integer organId);
 }

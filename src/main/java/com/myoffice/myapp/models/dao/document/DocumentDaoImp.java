@@ -332,4 +332,14 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 				Restrictions.and(Restrictions.eq("o.organId", organId)));
 		return (DocumentRecipient) criteria.uniqueResult(); 
 	}
+
+	@Override
+	public Integer findMaxDocRecNumber(Integer tenureId, Integer organId) {
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("document", "d");
+		criteria.add(Restrictions.eq("d.tenure.tenureId", tenureId));
+		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
+		DocumentRecipient docRec = (DocumentRecipient)criteria.uniqueResult();
+		return docRec.getNumber();
+	}
 }
