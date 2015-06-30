@@ -66,7 +66,7 @@ public class Document {
 	@Column(name = "comment", columnDefinition="varchar(1500)")
 	private String comment;
 	
-	@Column(name = "isSended")
+	@Column(name = "is_sended")
 	private boolean isSended = false;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -14,6 +14,11 @@ xmlns:th="http://www.thymeleaf.org">
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 
 	<script type="text/javascript" th:src="@{/js/doc-in-info.js}" ></script>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datetimepicker.min.css}" />
+
+	<script type="text/javascript" th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+
 </head>
 <body>
 	<div class="container-fluid">
@@ -40,26 +45,20 @@ xmlns:th="http://www.thymeleaf.org">
 							</div>
 						</div>
 
-			 			<div class="form-group">
-			 				<label for="candidateRole" class="col-sm-2 control-label">Quyền xử lý</label>
-			 				<div class="col-sm-10">
-			 					<p id="candidateRole">
-			 						<span th:each="cr : ${candidateRole}" th:text="${cr.fullName}">,</span>
-			 					</p>
-			 				</div>
-			 			</div>
-
-			 			<div class="form-group">
-							<label for="candidateUser" class="col-sm-2 control-label">Chuyển tiếp đến</label>
+						<div class="form-group">
+							<label for="receiveTime" class="col-sm-2 control-label">Thời gian nhận</label>
 							<div class="col-sm-10">
-				 				<select class="form-control" th:name="userId" id="candidateUser" required="true">
-				 					<option th:each="u : ${userList}"
-				 							th:text="${u.userName}"
-				 							th:value="${u.userId}">
-				 					</option>
-				 				</select>
-			 				</div>
-			 			</div>
+								<div class="form-inline">
+									<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="receiveTime" data-link-format="yyyy-mm-dd">
+										<input class="form-control" size="16" type="text" value="" required="true" th:name="receiveTime" id="receiveTime"/>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+									</div>
+									<input type="hidden"  value="" /><br/>
+								</div>
+							</div>
+						</div>
+
 			 			<div class="form-group">
 				 			<div class="col-sm-offset-2 col-sm-10">
 				 				<button type="submit" class="btn btn-primary">Xác nhận</button>

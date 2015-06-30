@@ -157,7 +157,8 @@ public class FlowUtil {
 					.list();
 			
 			logger.info("Pre Task : " + preTasks.get(0).getName());
-			return preTasks.get(0);
+			if(preTasks.size() > 0) return preTasks.get(0); 
+			return null;
 		}
 		catch(ActivitiException e){
 			logger.error(e.getMessage());
