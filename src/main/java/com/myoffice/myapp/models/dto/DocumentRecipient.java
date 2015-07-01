@@ -32,7 +32,7 @@ public class DocumentRecipient implements Serializable{
 	private Document document;
 
 	@Id
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "organ_id", nullable = false)
 	private Organ organ;
 

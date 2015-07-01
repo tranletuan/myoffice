@@ -39,8 +39,8 @@ xmlns:th="http://www.thymeleaf.org">
 			 	<div class="panel-body">
 					<div>
 						<button type="button" id="btnChange" class="btn btn-info" data-toggle="modal" data-target="#doc-form">Sửa đổi</button>
-						<a type="button" class="btn btn-success" href="#" th:href="@{/flow/complete_0?docId=} + ${doc.docId}">Hoàn thành</a>
-						<a type="button" class="btn btn-success" th:if="${isCheck}" href="#" th:href="@{/flow/complete_1?docId=} + ${doc.docId}">Yêu cầu kiểm tra lại</a>
+						<a type="button" class="btn btn-success" href="#" th:href="@{/flow/complete/0/} + ${doc.docId} + '/' + ${doc.processInstanceId} + '/' + 'doc_info'">Hoàn thành</a>
+						<a type="button" class="btn btn-success" th:if="${isCheck}" href="#" th:href="@{/flow/complete/1/} + ${doc.docId} + '/' + ${doc.processInstanceId} + '/' + 'doc_info'">Yêu cầu kiểm tra lại</a>
 					</div>
 				</div>
 			</div>

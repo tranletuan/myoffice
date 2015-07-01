@@ -155,9 +155,10 @@ public class FlowUtil {
 					.processInstanceId(processInstanceId)
 					.finished()
 					.list();
-			
-			logger.info("Pre Task : " + preTasks.get(0).getName());
-			if(preTasks.size() > 0) return preTasks.get(0); 
+			if(preTasks.size() > 0) {
+				logger.info("Pre Task : " + preTasks.get(0).getName());
+				return preTasks.get(0); 
+			}
 			return null;
 		}
 		catch(ActivitiException e){

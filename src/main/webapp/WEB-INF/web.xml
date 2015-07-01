@@ -79,7 +79,7 @@
 	<!-- Error Page -->
 	<error-page>
 		<exception-type>java.lang.Throwable</exception-type>
-		<location>/</location>
+		<location>/store/list</location>
 	</error-page>
 	<error-page>
 		<error-code>500</error-code>

@@ -276,7 +276,7 @@ public class FlowController extends AbstractController {
 			} else {
 				Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
 				HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(doc.getProcessInstanceId());
-				if (curTask == null || preTask == null) return model;
+		
 				String []taskName = curTask.getName().split(" ");
 				String []roles = taskName[0].split(",");
 				
@@ -284,7 +284,7 @@ public class FlowController extends AbstractController {
 				
 				//Khi hoàn thành task trước và chưa ủy quyền
 				if(curTask.getAssignee() == null){
-					if(user.getUserName().equals(preTask.getAssignee())){
+					if(user.getUserName().equals(preTask.getAssignee())){	
 						List<Role> candidateRole = dataService.findRolesByArrShortName(roles);
 						List<User> userList = dataService.findUserByArrRoleShortName(user.getOrgan().getOrganId(), roles);
 						model.addObject("isForward", true);
@@ -312,6 +312,7 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
+	//==============COMMON==================
 	@RequestMapping(value = "/forward", method = RequestMethod.POST)
 	public ModelAndView forwardUser(
 			@RequestParam("docId") Integer docId,
@@ -339,40 +340,39 @@ public class FlowController extends AbstractController {
 		dataService.downLoadFile(docFile.getFilePath() + docFile.getFileName(), response);
 	}
 	
-	@RequestMapping(value = "/complete_{checkNum}")
-	public ModelAndView completedFlowDocOutTask(
-			@RequestParam("docId") Integer docId,
-			@PathVariable("checkNum") Integer checkNum){
-		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
-		Document doc = new Document();
+	@RequestMapping(value = "/complete/{checkNum}/{docId}/{procId}/{direct}")
+	public ModelAndView completedTask(
+			@PathVariable("checkNum") Integer checkNum,
+			@PathVariable("docId") Integer docId,
+			@PathVariable("procId") String procId,
+			@PathVariable("direct") String direct){
+		ModelAndView model = new ModelAndView("redirect:/flow/" + direct + "?docId=" + docId);
 		
 		if(docId != null && docId > 0){
-			doc = dataService.findDocumentById(docId);
-			model.addObject("doc", doc);
-			
-			Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
+			Task curTask = flowUtil.getCurrentTask(procId);
 			User user = securityService.getCurrentUser();
 			
 			if(curTask == null) return model;
 			
 			String[] taskName = curTask.getName().split(" ");
-			if(user.checkRoleByShortName(taskName[0]) && 
-					curTask.getAssignee().equals(user.getUserName())){
-				if(!taskName[taskName.length - 1].equals("check")){
-					flowUtil.getTaskService().complete(curTask.getId());
+			if (user.checkRoleByShortName(taskName[0]) && curTask.getAssignee().equals(user.getUserName())) {
+				
+				Map<String, Object> variables = new HashMap<String, Object>();
+				variables.put("check", checkNum);
+				String taskId = curTask.getId();
+				HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(procId);
+				flowUtil.getTaskService().complete(taskId, variables);
+				Task test = flowUtil.getCurrentTask(procId);
+				logger.info(test.getAssignee());
+				
+				// Chuyển quyền ngược lại task trước đó
+				if (checkNum == 1) {
+					logger.info(String.valueOf(checkNum));
+					Task nextTask = flowUtil.getCurrentTask(procId);
+					if (preTask != null) {
+						flowUtil.getTaskService().setAssignee(nextTask.getId(),preTask.getAssignee());
+					}
 				}
-				else {
-					Map<String, Object> variables = new HashMap<String, Object>();
-					variables.put("check", checkNum);
-					String taskId = curTask.getId();
-					flowUtil.getTaskService().complete(taskId, variables);
-				}
-			}
-			
-			if(flowUtil.isEnded(doc.getProcessInstanceId())){
-				doc.setCompleted(true);
-				doc.setReleaseTime(new Date());
-				dataService.saveDocument(doc);
 			}
 		}
 	
@@ -445,76 +445,80 @@ public class FlowController extends AbstractController {
 		DocumentFile file = dataService.findDocFileById(doc.getDocId());
 
 		Task curTask = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
-	
-		String[] taskName = curTask.getName().split(" ");
-		String[] roles = taskName[0].split(",");
-
+		HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(docRec.getProcessInstanceId());
+		
+		if (curTask == null) return model;
+		String []taskName = curTask.getName().split(" ");
+		String []roles = taskName[0].split(",");
+		
 		model.addObject("taskDescription", curTask.getDescription());
-
-		//Các bước thực hiện task
+		
+		//Khi hoàn thành task trước và chưa ủy quyền
 		if (curTask.getAssignee() == null) {
-			List<Role> candidateRole = dataService.findRolesByArrShortName(roles);
-			logger.info(roles[0]);
-			List<User> userList = dataService.findUserByArrRoleShortName(organ.getOrganId(), roles);
-			logger.info(String.valueOf(userList.size()));
-			model.addObject("userList", userList);
-			model.addObject("candidateRole", candidateRole);
-			model.addObject("isReceive", true);
-		} else {
-			User rUser = dataService.findUserByName(curTask.getAssignee());
-			model.addObject("userRole", rUser.getRoleNames());
-			model.addObject("assignee", rUser.getUserName());
-
-			if (curUser.getUserName().equals(curTask.getAssignee())) {
-				if (taskName[taskName.length - 1].equals("check")) {
-					model.addObject("isCheck", true);
-				} else {
-					model.addObject("isReport", true);
+			if (preTask != null) {
+				if (curUser.getUserName().equals(preTask.getAssignee())) {
+					List<Role> candidateRole = dataService
+							.findRolesByArrShortName(roles);
+					List<User> userList = dataService
+							.findUserByArrRoleShortName(organ.getOrganId(),
+									roles);
+					model.addObject("isForward", true);
+					model.addObject("userList", userList);
+					model.addObject("candidateRole", candidateRole);
 				}
+			} else {
+				int number = dataService.findMaxDocRecNumber(doc.getTenure().getTenureId(), organ.getOrganId());
+				model.addObject("number", number);
 			}
 		}
-
+		else {
+		}
+		
 		model.setViewName("doc-in-info");
 		model.addObject("docRec", docRec);
 		model.addObject("doc", doc);
 		model.addObject("file", file);
-
+		
 		return model;
 	}
 
 	@RequestMapping(value = "/receive_doc", method = RequestMethod.POST)
 	public ModelAndView receiveDoc(
 			@RequestParam("docId") Integer docId, 
-			@RequestParam("userId") Integer userId,
 			@RequestParam("number") String number,
+			@RequestParam("receiveTime") String receiveTime,
 			RedirectAttributes reAttr){
-		ModelAndView model = new ModelAndView("redirect:doc_in_info?docId=" + docId);
-		if(docId > 0 && userId > 0){
-			User curUser =  securityService.getCurrentUser();
-			User user = dataService.findUserById(userId);
-			Organ organ = curUser.getOrgan();
-			DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
-			Document doc =  docRec.getDocument();
-			
-			Task curTask = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
-			if(curTask == null) return model;
-			
-			flowUtil.getTaskService().setAssignee(curTask.getId(), user.getUserName());
-			
-			//number
-			int num = UtilMethod.parseNumDoc(number);
-			if(num <= 0){
-				num = dataService.findMaxDocRecNumber(doc.getTenure().getTenureId(), organ.getOrganId()) + 1;
-			}
-			
-			docRec.setNumber(num);
-			docRec.setReceiveTime(new Date());
-			dataService.saveDocRecipient(docRec);
-			
+		ModelAndView model = new ModelAndView("redirect:/store/list");
+		if(docId == null || docId < 0) return model;
+		
+		User curUser = securityService.getCurrentUser();
+		Organ organ = curUser.getOrgan();
+		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
+		Document doc = docRec.getDocument();
 
-			reAttr.addFlashAttribute("doc", doc);
+		Task curTask = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
+		if (curTask == null) return model;
+
+		// number
+		int num = UtilMethod.parseNumDoc(number);
+		if (num <= 0) {
+			num = dataService.findMaxDocRecNumber(doc.getTenure().getTenureId(), organ.getOrganId());
+		}
+
+		Date recTime = new Date();
+		try {
+			recTime = UtilMethod.toDate(receiveTime, "dd-mm-yyyy");
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 		
+		docRec.setNumber(num);
+		docRec.setReceiveTime(recTime);
+		dataService.saveDocRecipient(docRec);
+
+		reAttr.addFlashAttribute("doc", doc);
+	
+		model.setViewName("redirect:doc_in_info?docId=" + docId);
 		return model;
 	}
 	

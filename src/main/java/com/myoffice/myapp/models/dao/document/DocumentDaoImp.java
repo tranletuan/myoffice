@@ -337,9 +337,11 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	public Integer findMaxDocRecNumber(Integer tenureId, Integer organId) {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
 		criteria.createAlias("document", "d");
+		criteria.createAlias("organ", "o");
 		criteria.add(Restrictions.eq("d.tenure.tenureId", tenureId));
 		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
 		DocumentRecipient docRec = (DocumentRecipient)criteria.uniqueResult();
-		return docRec.getNumber();
+		if(docRec.getNumber() == null) return 1;
+		return (docRec.getNumber() + 1);
 	}
 }
