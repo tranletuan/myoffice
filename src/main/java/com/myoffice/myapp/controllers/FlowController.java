@@ -290,6 +290,18 @@ public class FlowController extends AbstractController {
 						model.addObject("isForward", true);
 						model.addObject("userList", userList);
 						model.addObject("candidateRole", candidateRole);
+						HistoricTaskInstance preCompletedTask = flowUtil.getPreviousCompletedTaskWithName(
+										doc.getProcessInstanceId(),
+										curTask.getName());
+						if(preCompletedTask != null){
+							User preUser = dataService.findUserByName(preCompletedTask.getAssignee());
+							model.addObject("preUser", preUser);
+							model.addObject("canChoose", true);
+						}
+					} else {
+						User rUser = dataService.findUserByName(preTask.getAssignee());
+						model.addObject("userRole", rUser.getRoleNames());
+						model.addObject("assignee", rUser.getUserName());
 					}
 				} else {
 					User rUser = dataService.findUserByName(curTask.getAssignee());
@@ -298,6 +310,7 @@ public class FlowController extends AbstractController {
 					
 					if(user.getUserName().equals(curTask.getAssignee())){
 						model.addObject("isAccess", true);
+						
 						if(taskName[taskName.length - 1].equals("check")){
 							model.addObject("isCheck", true);
 						}
@@ -313,23 +326,30 @@ public class FlowController extends AbstractController {
 	}
 	
 	//==============COMMON==================
-	@RequestMapping(value = "/forward", method = RequestMethod.POST)
+	@RequestMapping(value = "/forward/{direct}", method = RequestMethod.POST)
 	public ModelAndView forwardUser(
+			@PathVariable("direct") String direct,
 			@RequestParam("docId") Integer docId,
-			@RequestParam("userId") Integer userId,
-			RedirectAttributes reAttr){
-		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
-		if(docId > 0 && userId > 0){
-			Document doc = dataService.findDocumentById(docId);
-			User user = dataService.findUserById(userId);
-			
-			Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
-			if(curTask == null) return model;
-			flowUtil.getTaskService().setAssignee(curTask.getId(), user.getUserName());
-			
-			reAttr.addFlashAttribute("userRole", user.getRoleNames());
-			reAttr.addFlashAttribute("assignee", user.getUserName());
+			@RequestParam("procId") String procId,
+			@RequestParam(value = "userId", required = false) Integer userId){
+		ModelAndView model = new ModelAndView("redirect:/flow/" + direct + "?docId=" + docId);
+		if(procId == null) return model;
+		Task curTask = flowUtil.getCurrentTask(procId);
+		if(curTask == null) return model;
+		
+		if(userId != null){
+		User user = dataService.findUserById(userId);
+			String[] taskName = curTask.getName().split(" ");
+			if(user.checkRoleByShortName(taskName[0])){
+				flowUtil.getTaskService().setAssignee(curTask.getId(), user.getUserName());
+			}
+		} else {
+			HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTaskWithName(procId, curTask.getName());
+			if(preTask != null) {
+				flowUtil.getTaskService().setAssignee(curTask.getId(), preTask.getAssignee());
+			}
 		}
+		
 		return model;
 	}
 	
@@ -360,19 +380,8 @@ public class FlowController extends AbstractController {
 				Map<String, Object> variables = new HashMap<String, Object>();
 				variables.put("check", checkNum);
 				String taskId = curTask.getId();
-				HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(procId);
-				flowUtil.getTaskService().complete(taskId, variables);
-				Task test = flowUtil.getCurrentTask(procId);
-				logger.info(test.getAssignee());
-				
-				// Chuyển quyền ngược lại task trước đó
-				if (checkNum == 1) {
-					logger.info(String.valueOf(checkNum));
-					Task nextTask = flowUtil.getCurrentTask(procId);
-					if (preTask != null) {
-						flowUtil.getTaskService().setAssignee(nextTask.getId(),preTask.getAssignee());
-					}
-				}
+				flowUtil.getTaskService().complete(taskId, variables);		
+				curTask = flowUtil.getCurrentTask(procId);
 			}
 		}
 	

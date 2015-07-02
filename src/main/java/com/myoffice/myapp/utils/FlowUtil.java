@@ -167,6 +167,27 @@ public class FlowUtil {
 		}
 	}
 	
+	public HistoricTaskInstance getPreviousCompletedTaskWithName(String processInstanceId, String taskName){
+		try{
+			List<HistoricTaskInstance> preTasks = historyService.createHistoricTaskInstanceQuery()
+					.orderByHistoricTaskInstanceEndTime()
+					.desc()
+					.processInstanceId(processInstanceId)
+					.taskName(taskName)
+					.finished()
+					.list();
+			if(preTasks.size() > 0) {
+				logger.info("Pre Task : " + preTasks.get(0).getName());
+				return preTasks.get(0); 
+			}
+			return null;
+		}
+		catch(ActivitiException e){
+			logger.error(e.getMessage());
+			return null;
+		}
+	}
+	
 	public RuntimeService getRuntimeService() {
 		return runtimeService;
 	}
