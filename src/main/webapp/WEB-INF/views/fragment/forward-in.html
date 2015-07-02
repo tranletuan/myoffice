@@ -12,13 +12,13 @@
 				Chuyển người xử lý trước đó
 			</button>
 
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newUser">
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newUser" th:if="${canChoose}">
 				Lựa chọn người xử lý
 			</button>
 		</div>
 
 		<!-- Modal -->
-		<div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" th:if="${canChoose}">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -26,8 +26,8 @@
 						<h4 class="modal-title" id="myModalLabel">Chuyển quyền xử lý</h4>
 					</div>
 					<div class="modal-body">
-						<form class="form-horizontal" th:action="@{/flow/forward/doc_info/} + ${doc.docId} + '/' + ${doc.processInstanceId}" method="post" autocompleted="off">
-
+						<form class="form-horizontal" th:action="@{/flow/forward/doc_in_info/} + ${doc.docId} + '/' + ${doc.processInstanceId}" method="post" autocompleted="off">
+							
 							<div class="form-group">
 								<label for="candidateRole" class="col-sm-3 control-label">Quyền xử lý</label>
 								<div class="col-sm-9">
@@ -75,8 +75,8 @@
 						<h4 class="modal-title" id="myModalLabel">Chuyển quyền xử lý</h4>
 					</div>
 					<div class="modal-body">
-						<form class="form-horizontal" th:action="@{/flow/forward/doc_info/} + ${doc.docId} + '/' + ${doc.processInstanceId}" method="post" autocompleted="off">
-	
+						<form class="form-horizontal" th:action="@{/flow/forward/doc_in_info/} + ${doc.docId} + '/' + ${doc.processInstanceId}" method="post" autocompleted="off">
+							
 							<div class="form-group">
 								<label for="preUserName" class="col-sm-3 control-label">Người dùng</label>
 								<div class="col-sm-9">

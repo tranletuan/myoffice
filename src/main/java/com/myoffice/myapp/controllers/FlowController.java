@@ -241,8 +241,8 @@ public class FlowController extends AbstractController {
 
 		if (docId != null && docId > 0) {
 			doc = dataService.findDocumentById(docId);
-			User user = securityService.getCurrentUser();
-			if(doc.getOrgan().getOrganId() != user.getOrgan().getOrganId()) return model;
+			User curUser = securityService.getCurrentUser();
+			if(doc.getOrgan().getOrganId() != curUser.getOrgan().getOrganId()) return model;
 			
 			List<DocumentType> docTypeList = dataService.findAllDocType();
 			List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
@@ -265,7 +265,7 @@ public class FlowController extends AbstractController {
 				
 				List<Organ> organList = dataService.findAllOrgan();
 				for (Organ o : organList) {
-					if (o.getOrganId() == user.getOrgan().getOrganId()) {
+					if (o.getOrganId() == curUser.getOrgan().getOrganId()) {
 						organList.remove(o);
 						break;
 					}
@@ -284,9 +284,9 @@ public class FlowController extends AbstractController {
 				
 				//Khi hoàn thành task trước và chưa ủy quyền
 				if(curTask.getAssignee() == null){
-					if(user.getUserName().equals(preTask.getAssignee())){	
+					if(curUser.getUserName().equals(preTask.getAssignee())){	
 						List<Role> candidateRole = dataService.findRolesByArrShortName(roles);
-						List<User> userList = dataService.findUserByArrRoleShortName(user.getOrgan().getOrganId(), roles);
+						List<User> userList = dataService.findUserByArrRoleShortName(curUser.getOrgan().getOrganId(), roles);
 						model.addObject("isForward", true);
 						model.addObject("userList", userList);
 						model.addObject("candidateRole", candidateRole);
@@ -296,19 +296,18 @@ public class FlowController extends AbstractController {
 						if(preCompletedTask != null){
 							User preUser = dataService.findUserByName(preCompletedTask.getAssignee());
 							model.addObject("preUser", preUser);
-							model.addObject("canChoose", true);
+							model.addObject("canReturn", true);
 						}
 					} else {
 						User rUser = dataService.findUserByName(preTask.getAssignee());
 						model.addObject("userRole", rUser.getRoleNames());
 						model.addObject("assignee", rUser.getUserName());
 					}
-				} else {
-					User rUser = dataService.findUserByName(curTask.getAssignee());
-					model.addObject("userRole", rUser.getRoleNames());
-					model.addObject("assignee", rUser.getUserName());
+				} else { //task đã được giao quyền
+					model.addObject("userRole", curUser.getRoleNames());
+					model.addObject("assignee", curUser.getUserName());
 					
-					if(user.getUserName().equals(curTask.getAssignee())){
+					if(curUser.getUserName().equals(curTask.getAssignee())){
 						model.addObject("isAccess", true);
 						
 						if(taskName[taskName.length - 1].equals("check")){
@@ -326,14 +325,13 @@ public class FlowController extends AbstractController {
 	}
 	
 	//==============COMMON==================
-	@RequestMapping(value = "/forward/{direct}", method = RequestMethod.POST)
+	@RequestMapping(value = "/forward/{direct}/{docId}/{procId}", method = RequestMethod.POST)
 	public ModelAndView forwardUser(
 			@PathVariable("direct") String direct,
-			@RequestParam("docId") Integer docId,
-			@RequestParam("procId") String procId,
+			@PathVariable("docId") Integer docId,
+			@PathVariable("procId") String procId,
 			@RequestParam(value = "userId", required = false) Integer userId){
 		ModelAndView model = new ModelAndView("redirect:/flow/" + direct + "?docId=" + docId);
-		if(procId == null) return model;
 		Task curTask = flowUtil.getCurrentTask(procId);
 		if(curTask == null) return model;
 		
@@ -462,9 +460,11 @@ public class FlowController extends AbstractController {
 		
 		model.addObject("taskDescription", curTask.getDescription());
 		
-		//Khi hoàn thành task trước và chưa ủy quyền
+		//Khi hoàn thành task trước và chưa chuyển quyền
 		if (curTask.getAssignee() == null) {
+			//Đã tiếp nhận văn bản
 			if (preTask != null) {
+				//Người đăng nhập là người hoàn thành task trước
 				if (curUser.getUserName().equals(preTask.getAssignee())) {
 					List<Role> candidateRole = dataService
 							.findRolesByArrShortName(roles);
@@ -474,13 +474,44 @@ public class FlowController extends AbstractController {
 					model.addObject("isForward", true);
 					model.addObject("userList", userList);
 					model.addObject("candidateRole", candidateRole);
+					HistoricTaskInstance preCompletedTask = flowUtil.getPreviousCompletedTaskWithName(
+							docRec.getProcessInstanceId(), curTask.getName());
+					//Có thể chuyển quyền trực tiếp cho người hoàn thành trước đó
+					if(preCompletedTask != null){
+						User preUser = dataService.findUserByName(preCompletedTask.getAssignee());
+						model.addObject("canReturn", true);
+						model.addObject("preUser", preUser); 
+					}
+					
+					//Có thể phân công
+					if(taskName[taskName.length - 1].equals("check")){
+						model.addObject("canChoose", true);
+					}
+				} else { //người đăng nhập không phải là người hoàn thành task trước
+					User rUser = dataService.findUserByName(preTask.getAssignee());
+					model.addObject("userRole", rUser.getRoleNames());
+					model.addObject("assignee", rUser.getUserName());
 				}
-			} else {
+			} else { //Chưa tiếp nhận văn bản, tiến hành lấy số
 				int number = dataService.findMaxDocRecNumber(doc.getTenure().getTenureId(), organ.getOrganId());
 				model.addObject("number", number);
 			}
 		}
-		else {
+		else { //task đã được giao quyền
+			model.addObject("userRole", curUser.getRoleNames());
+			model.addObject("assignee", curUser.getUserName());
+			
+			if(curUser.getUserName().equals(curTask.getAssignee())){
+				model.addObject("isAccess", true);
+				
+				if(taskName[taskName.length - 1].equals("check")){
+					model.addObject("isCheck", true);
+				} 
+				
+				if(taskName[taskName.length - 1].equals("report")){
+					model.addObject("isReport", true);
+				} 
+			}
 		}
 		
 		model.setViewName("doc-in-info");
@@ -491,9 +522,9 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 
-	@RequestMapping(value = "/receive_doc", method = RequestMethod.POST)
+	@RequestMapping(value = "/receive_doc/{docId}", method = RequestMethod.POST)
 	public ModelAndView receiveDoc(
-			@RequestParam("docId") Integer docId, 
+			@PathVariable("docId") Integer docId, 
 			@RequestParam("number") String number,
 			@RequestParam("receiveTime") String receiveTime,
 			RedirectAttributes reAttr){
@@ -524,7 +555,9 @@ public class FlowController extends AbstractController {
 		docRec.setNumber(num);
 		docRec.setReceiveTime(recTime);
 		dataService.saveDocRecipient(docRec);
-
+		flowUtil.getTaskService().setAssignee(curTask.getId(), curUser.getUserName());
+		flowUtil.getTaskService().complete(curTask.getId());
+		
 		reAttr.addFlashAttribute("doc", doc);
 	
 		model.setViewName("redirect:doc_in_info?docId=" + docId);
