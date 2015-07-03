@@ -67,7 +67,8 @@ xmlns:th="http://www.thymeleaf.org">
 		</div>
 
 		<!-- Assign -->
-
+		<div th:replace="fragment/forward-in-assign :: assign"></div>
+		
 		<!-- Report -->
 		<div class="panel panel-default" th:if="${isReport}">
 			<div class="panel-body">

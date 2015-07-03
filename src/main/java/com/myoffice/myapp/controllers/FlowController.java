@@ -552,10 +552,9 @@ public class FlowController extends AbstractController {
 				model.addObject("isAccess", true);
 				
 				if(taskName[taskName.length - 1].equals("check")){
-					model.addObject("isCheck", true);
+					model.addObject("isAssign", true);
 				} 
-				
-				if(taskName[taskName.length - 1].equals("report")){
+				else if(taskName[taskName.length - 1].equals("report")){
 					model.addObject("isReport", true);
 				} 
 			}
