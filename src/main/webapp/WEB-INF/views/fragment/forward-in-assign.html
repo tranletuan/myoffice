@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div class="panel panel-default" th:if="${isAssign}" th:fragment="assign">
+		<div class="panel-heading"><h4>Phân công thực hiện</h4></div>
+		<div class="panel-body">
+			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#newUser">
+				Phân công
+			</button>
+
+			<a type="button" class="btn btn-success" href="#" th:href="@{/flow/save_doc_in/} + ${doc.docId} + '/' + ${doc.processInstanceId}">Hoàn thành, lưu trữ</a>
+		</div>
+
+		<div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">Phân công nhiệm vụ</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" th:action="@{/flow/assign/} + ${doc.docId} + '/' + ${doc.processInstanceId}" method="post" autocompleted="off">
+							<div class="form-group">
+								<label for="candidateRole" class="col-sm-3 control-label">Quyền hạn tiếp nhận</label>
+								<div class="col-sm-9">
+									<h4 id="candidateRole">
+										<span th:each="cr : ${candidateRole}" th:text="${cr.fullName}">,</span>
+									</h4>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="candidateUser" class="col-sm-3 control-label">Người nhận nhiệm vụ</label>
+								<div class="col-sm-9">
+									<select class="form-control" th:name="userId" id="candidateUser" required="true">
+										<option th:each="u : ${userList}"
+											th:text="${u.userName}"
+											th:value="${u.userId}">
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="timeStart" class="col-sm-2 control-label">Thời gian bắt đầu</label>
+								<div class="col-sm-10">
+									<div class="form-inline">
+										<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="timeStart" data-link-format="dd-mm-yyyy">
+											<input class="form-control" size="16" type="text" value="" required="true" th:name="timeStart" id="timeStart"/>
+											<!-- <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> -->
+											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+										</div>
+										<input type="hidden"  value="" class="hidden"/><br/>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="timeEnd" class="col-sm-2 control-label">Thời gian kết thúc</label>
+								<div class="col-sm-10">
+									<div class="form-inline">
+										<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="timeEnd" data-link-format="dd-mm-yyyy">
+											<input class="form-control" size="16" type="text" value="" required="true" th:name="timeEnd" id="timeEnd"/>
+											<!-- <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> -->
+											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+										</div>
+										<input type="hidden"  value="" class="hidden"/><br/>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="content" class="col-sm-3 control-label">Nội dung phân công</label>
+								<div class="col-sm-9">
+									<textarea class="form-control" rows="8" maxlength="1200" placeholder="Góp ý sửa đổi" th:name="content" id="content"></textarea>
+								</div>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
+								<button type="submit" class="btn btn-primary">Xác nhận</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

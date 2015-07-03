@@ -304,8 +304,9 @@ public class FlowController extends AbstractController {
 						model.addObject("assignee", rUser.getUserName());
 					}
 				} else { //task đã được giao quyền
-					model.addObject("userRole", curUser.getRoleNames());
-					model.addObject("assignee", curUser.getUserName());
+					User rUser = dataService.findUserByName(curTask.getAssignee());
+					model.addObject("userRole", rUser.getRoleNames());
+					model.addObject("assignee", rUser.getUserName());
 					
 					if(curUser.getUserName().equals(curTask.getAssignee())){
 						model.addObject("isAccess", true);
@@ -439,6 +440,61 @@ public class FlowController extends AbstractController {
 		return dataService.findMaxDocRecNumber(tenureId, organId);
 	}
 	
+	@RequestMapping(value = "/receive_doc/{docId}", method = RequestMethod.POST)
+	public ModelAndView receiveDoc(
+			@PathVariable("docId") Integer docId, 
+			@RequestParam("number") String number,
+			@RequestParam("receiveTime") String receiveTime,
+			RedirectAttributes reAttr){
+		ModelAndView model = new ModelAndView("redirect:/store/list");
+		if(docId == null || docId < 0) return model;
+		
+		User curUser = securityService.getCurrentUser();
+		Organ organ = curUser.getOrgan();
+		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
+		if(docRec.getNumber() != null) return model;
+		Document doc = docRec.getDocument();
+		
+		Task curTask = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
+		String[] taskName = curTask.getName().split(" ");
+		
+		try {
+			if (curUser.checkRoleByShortName(taskName[0])) {
+				flowUtil.getTaskService().setAssignee(curTask.getId(), curUser.getUserName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// number
+		int num = UtilMethod.parseNumDoc(number);
+		if (num <= 0) {
+			num = dataService.findMaxDocRecNumber(doc.getTenure().getTenureId(), organ.getOrganId());
+		}
+
+		Date recTime = new Date();
+		logger.info(recTime.toString());
+		logger.info(receiveTime);
+		try {
+			recTime = UtilMethod.toDate(receiveTime, "dd-MM-yyyy");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		logger.info(recTime.toString());
+		
+		docRec.setNumber(num);
+		docRec.setReceiveTime(recTime);
+		dataService.saveDocRecipient(docRec);
+		flowUtil.getTaskService().complete(curTask.getId());
+		
+		
+		reAttr.addFlashAttribute("doc", doc);
+	
+		model.setViewName("redirect:/flow/doc_in_info?docId=" + docId);
+		return model;
+	}
+	
 	@RequestMapping(value = "/doc_in_info", method = RequestMethod.GET)
 	public ModelAndView documentInInfo(
 			@RequestParam(value = "docId", required = false) Integer docId){
@@ -464,7 +520,7 @@ public class FlowController extends AbstractController {
 		if (curTask.getAssignee() == null) {
 			//Đã tiếp nhận văn bản
 			if (preTask != null) {
-				//Người đăng nhập là người hoàn thành task trước
+				//Người đăng nhập là người tiếp nhận văn bản
 				if (curUser.getUserName().equals(preTask.getAssignee())) {
 					List<Role> candidateRole = dataService
 							.findRolesByArrShortName(roles);
@@ -476,17 +532,7 @@ public class FlowController extends AbstractController {
 					model.addObject("candidateRole", candidateRole);
 					HistoricTaskInstance preCompletedTask = flowUtil.getPreviousCompletedTaskWithName(
 							docRec.getProcessInstanceId(), curTask.getName());
-					//Có thể chuyển quyền trực tiếp cho người hoàn thành trước đó
-					if(preCompletedTask != null){
-						User preUser = dataService.findUserByName(preCompletedTask.getAssignee());
-						model.addObject("canReturn", true);
-						model.addObject("preUser", preUser); 
-					}
 					
-					//Có thể phân công
-					if(taskName[taskName.length - 1].equals("check")){
-						model.addObject("canChoose", true);
-					}
 				} else { //người đăng nhập không phải là người hoàn thành task trước
 					User rUser = dataService.findUserByName(preTask.getAssignee());
 					model.addObject("userRole", rUser.getRoleNames());
@@ -498,8 +544,9 @@ public class FlowController extends AbstractController {
 			}
 		}
 		else { //task đã được giao quyền
-			model.addObject("userRole", curUser.getRoleNames());
-			model.addObject("assignee", curUser.getUserName());
+			User rUser = dataService.findUserByName(curTask.getAssignee());
+			model.addObject("userRole", rUser.getRoleNames());
+			model.addObject("assignee", rUser.getUserName());
 			
 			if(curUser.getUserName().equals(curTask.getAssignee())){
 				model.addObject("isAccess", true);
@@ -522,58 +569,20 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 
-	@RequestMapping(value = "/receive_doc/{docId}", method = RequestMethod.POST)
-	public ModelAndView receiveDoc(
-			@PathVariable("docId") Integer docId, 
-			@RequestParam("number") String number,
-			@RequestParam("receiveTime") String receiveTime,
-			RedirectAttributes reAttr){
-		ModelAndView model = new ModelAndView("redirect:/store/list");
-		if(docId == null || docId < 0) return model;
-		
-		User curUser = securityService.getCurrentUser();
-		Organ organ = curUser.getOrgan();
-		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
-		Document doc = docRec.getDocument();
-
-		Task curTask = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
-		if (curTask == null) return model;
-
-		// number
-		int num = UtilMethod.parseNumDoc(number);
-		if (num <= 0) {
-			num = dataService.findMaxDocRecNumber(doc.getTenure().getTenureId(), organ.getOrganId());
-		}
-
-		Date recTime = new Date();
-		try {
-			recTime = UtilMethod.toDate(receiveTime, "dd-mm-yyyy");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
-		docRec.setNumber(num);
-		docRec.setReceiveTime(recTime);
-		dataService.saveDocRecipient(docRec);
-		flowUtil.getTaskService().setAssignee(curTask.getId(), curUser.getUserName());
-		flowUtil.getTaskService().complete(curTask.getId());
-		
-		reAttr.addFlashAttribute("doc", doc);
-	
-		model.setViewName("redirect:doc_in_info?docId=" + docId);
-		return model;
-	}
-	
-	@RequestMapping(value = "/assign", method = RequestMethod.POST)
+	@RequestMapping(value = "/assign/{docId}/{procId}", method = RequestMethod.POST)
 	public ModelAndView assignTask(
-			@RequestParam("docId") Integer docId){
+			@PathVariable("docId") Integer docId,
+			@PathVariable("procId") String procId,
+			@RequestParam("userId") Integer userId,
+			@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime){
 		ModelAndView model = new ModelAndView("redirect:/store/list");
-		if(docId == null || docId < 0) return model;
+		if(docId < 0) return model;
 		
 		
 		
 		
-		model.setViewName("doc-in-info?docId=?" + docId);
+		model.setViewName("redirect:doc-in-info?docId=?" + docId);
 		return model;
 	}
 	

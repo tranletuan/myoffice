@@ -6,14 +6,14 @@
 </head>
 <body>
 	<div class="panel panel-default" th:if="${isForward}" th:fragment="forward_out">
-		<div class="panel-heading"><h4>Chuyển quyền xử lý tiếp theo</h4></div>
+		<div class="panel-heading"><h4>Chuyển tiếp văn bản/h4></div>
 		<div class="panel-body">
 			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#oldUser" th:if="${canReturn}">
 				Chuyển người xử lý trước đó
 			</button>
 
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newUser">
-				Lựa chọn người xử lý
+				Lựa chọn người chuyển tiếp
 			</button>
 		</div>
 
