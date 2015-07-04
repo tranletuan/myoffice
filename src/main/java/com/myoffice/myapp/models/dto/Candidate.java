@@ -40,11 +40,7 @@ public class Candidate {
 
 	@Column(name = "content", columnDefinition="varchar(1500)", nullable = false)
 	private String content;
-	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
-	
+
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "document_id")
 	private Document reportDoc;
@@ -79,14 +75,6 @@ public class Candidate {
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 	public Document getReportDoc() {

@@ -5,8 +5,8 @@
 <meta charset="UTF-9"></meta>
 </head>
 <body>
-	<div class="panel panel-default" th:if="${isForward}" th:fragment="forward_out">
-		<div class="panel-heading"><h4>Chuyển tiếp văn bản/h4></div>
+	<div class="panel panel-default" th:if="${isForward}" th:fragment="forward">
+		<div class="panel-heading"><h4>Chuyển tiếp văn bản</h4></div>
 		<div class="panel-body">
 			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#oldUser" th:if="${canReturn}">
 				Chuyển người xử lý trước đó
@@ -42,17 +42,10 @@
 								<div class="col-sm-9">
 									<select class="form-control" th:name="userId" id="candidateUser" required="true">
 										<option th:each="u : ${userList}"
-											th:text="${u.userName}"
+											th:text="${u.userName} + ' - ' + ${u.getRoleNames()}"
 											th:value="${u.userId}">
 										</option>
 									</select>
-								</div>
-							</div>
-
-							<div class="form-group" th:if="${taskDescription}">
-								<label for="newUserDes" class="col-sm-3 control-label">Mô tả</label>
-								<div class="col-sm-9">
-									<h4 th:text="${taskDescription}" id="newUserDes"></h4>
 								</div>
 							</div>
 
@@ -88,14 +81,6 @@
 								<label for="preUserRole" class="col-sm-3 control-label">Quyền hạn</label>
 								<div class="col-sm-9">
 									<h4 th:text="${preUser.getRoleNames()}" id="preUserRole"></h4>
-								</div>
-							</div>
-
-							
-							<div class="form-group" th:if="${taskDescription}">
-								<label for="oldUserDes" class="col-sm-3 control-label">Mô tả</label>
-								<div class="col-sm-9">
-									<h4 th:text="${taskDescription}" id="oldUserDes"></h4>
 								</div>
 							</div>
 

@@ -59,6 +59,7 @@ import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
 @RequestMapping(value = "/flow")
+@SessionAttributes(value = "docId")
 public class FlowController extends AbstractController {
 	
 	private static final Logger logger = LoggerFactory
@@ -114,8 +115,7 @@ public class FlowController extends AbstractController {
 			@RequestParam("numberSign") String numberSign,
 			@RequestParam("departments") String departments,
 			@RequestParam(value = "file", required = false) MultipartFile file,
-			@RequestParam(value = "comment", required = false) String comment,
-			RedirectAttributes reAttr) throws ParseException, IllegalStateException, IOException{
+			@RequestParam(value = "comment", required = false) String comment) throws ParseException, IllegalStateException, IOException{
 		ModelAndView model = new ModelAndView("redirect:doc_info");
 		Tenure tenure = dataService.findTenureById(tenureId);
 		DocumentType docType = dataService.findDocTypeById(docTypeId);
@@ -171,6 +171,7 @@ public class FlowController extends AbstractController {
 				try {
 					User curUser = securityService.getCurrentUser();
 					dataService.saveDocument(doc);
+					model.addObject("docId", doc.getDocId());
 					Task task = flowUtil.getCurrentTask(doc
 							.getProcessInstanceId());
 					flowUtil.getTaskService().setAssignee(task.getId(), curUser.getUserName());
@@ -191,7 +192,6 @@ public class FlowController extends AbstractController {
 		}
 		else {
 			dataService.saveDocument(doc);
-			model.setViewName("redirect:doc_info?docId=" + docId);
 		}
 		
 		//SAVE FILE
@@ -230,7 +230,7 @@ public class FlowController extends AbstractController {
 			}
 		}
 		
-		reAttr.addFlashAttribute("doc", doc);
+		model.setViewName("redirect:doc_info?docId=" + doc.getDocId());
 		return model;
 	}
 	
@@ -572,23 +572,44 @@ public class FlowController extends AbstractController {
 	public ModelAndView assignTask(
 			@PathVariable("docId") Integer docId,
 			@PathVariable("procId") String procId,
-			@RequestParam("userId") Integer userId,
-			@RequestParam("startTime") String startTime,
-			@RequestParam("endTime") String endTime){
+			@RequestParam("timeStart") String timeStart,
+			@RequestParam("timeEnd") String timeEnd,
+			@RequestParam("content") String content,
+			RedirectAttributes reAttr) throws ParseException{
 		ModelAndView model = new ModelAndView("redirect:/store/list");
 		if(docId < 0) return model;
+		Candidate candidate = new Candidate();
+		User curUser = securityService.getCurrentUser();
+		Organ organ = curUser.getOrgan();
+		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
 		
+		Date startDate = UtilMethod.toDate(timeStart, "dd-MM-yyyy");
+		Date endDate = UtilMethod.toDate(timeEnd, "dd-MM-yyyy");
 		
-		
+		if(startDate.after(endDate)){
+			reAttr.addFlashAttribute("error", true);
+			reAttr.addFlashAttribute("errorMessage", "Lỗi, ngày kết thúc phải lớn hơn ngày bắt đầu");
+		} else {
+			// Lưu phân công
+			candidate.setTimeStart(startDate);
+			candidate.setTimeEnd(endDate);
+			candidate.setContent(content);
+			docRec.setCandidate(candidate);
+			dataService.saveDocRecipient(docRec);
+
+			// Hoàn thành task
+			try {
+				Task curTask = flowUtil.getCurrentTask(docRec
+						.getProcessInstanceId());
+				Map<String, Object> variables = new HashMap<String, Object>();
+				variables.put("check", 1);
+				flowUtil.getTaskService().complete(curTask.getId(), variables);
+			} catch (Exception e) {
+				e.getStackTrace();
+			}
+		}
 		
 		model.setViewName("redirect:doc-in-info?docId=?" + docId);
-		return model;
-	}
-	
-	@RequestMapping(value = "/complete_doc_in", method = RequestMethod.POST)
-	public ModelAndView completeFlowDocInTask(){
-		ModelAndView model = new ModelAndView("redirect:/store/list");
-		
 		return model;
 	}
 	

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div class="panel panel-warning" th:if="${docRec.candidate}" th:fragment="candidate_info">
+			<div class="panel-heading"><h4>Thông Tin Nhiệm Vụ</h4></div>
+			<div class="panel-body">
+				<div>
+					<div class="form-group">
+						<label for="timeStart" class="col-sm-2 control-label">Ngày bắt đầu</label>
+						<div class="col-sm-10">
+							<h5 th:text="${docRec.candidate.timeStart}" id="timeStart"></h5>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="timeEnd" class="col-sm-2 control-label">Ngày hết hạn</label>
+						<div class="col-sm-10">
+							<h5 th:text="${docRec.candidate.timeEnd}" id="timeEnd"></h5>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="content" class="col-sm-2 control-label">Nội dung phân công</label>
+						<div class="col-sm-10">
+							<textarea class="form-control content" rows="8" maxlength="1500" th:text="${docRec.candidate.content}" disabled="true"></textarea>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="content" class="col-sm-2 control-label">Trạng thái</label>
+						<div class="col-sm-10">
+							<h5 th:if="${docRec.completed}">Đã hoàn thành</h5>
+							<h5 th:unless="${docRec.completed}">Chưa hoàn thành</h5>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="content" class="col-sm-2 control-label">Báo cáo đính kèm</label>
+						<div class="col-sm-10">
+							<a href="#" class="btn btn-primary">Đường dẫn</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+</html>

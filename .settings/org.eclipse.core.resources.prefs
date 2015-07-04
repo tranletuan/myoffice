@@ -2,3 +2,4 @@ eclipse.preferences.version=1
 encoding//src/main/java/com/myoffice/myapp/controllers/AdminController.java=UTF-8
 encoding//src/main/java/com/myoffice/myapp/controllers/FlowController.java=UTF-8
 encoding//src/main/java/com/myoffice/myapp/controllers/MainController.java=UTF-8
+encoding//src/main/webapp/WEB-INF/views/fragment/candidate-info.html=UTF-8

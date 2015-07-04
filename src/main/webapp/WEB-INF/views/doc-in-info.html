@@ -25,7 +25,7 @@ xmlns:th="http://www.thymeleaf.org">
 		<div th:replace="fragment/menu :: menu"></div>
 
 		<!-- Forward -->
-		<div th:replace="fragment/forward-in :: forward_in"></div>
+		<div th:replace="fragment/forward :: forward"></div>
 
 		<!-- Recive -->
 		<div class="panel panel-default" th:unless="${docRec.number}" sec:authorize="hasRole('ROLE_INPUTER')">
@@ -67,6 +67,10 @@ xmlns:th="http://www.thymeleaf.org">
 		</div>
 
 		<!-- Assign -->
+		<div th:if="${error}" class="alert alert-danger" role="alert">
+			<span class="glyphicon glyphicon-exclamation-sign"
+			aria-hidden="true"></span> <span class="sr-only">Thông báo:</span><p th:text="${errorMessage}"></p>
+		</div>
 		<div th:replace="fragment/forward-in-assign :: assign"></div>
 		
 		<!-- Report -->
@@ -77,6 +81,10 @@ xmlns:th="http://www.thymeleaf.org">
 				</div>
 			</div>
 		</div>
+
+		<!-- Candidate info -->
+		<div th:replace="fragment/candidate-info :: candidate_info"></div>
+
 
 		<div class="panel panel-info">
 			<div class="panel-heading"><h3>Thông Tin Văn Bản Đến</h3></div>
