@@ -41,6 +41,9 @@ public class Candidate {
 	@Column(name = "content", columnDefinition="varchar(1500)", nullable = false)
 	private String content;
 
+	@Column(name = "report", columnDefinition="varchar(1500)")
+	private String report;
+	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "document_id")
 	private Document reportDoc;
@@ -83,6 +86,14 @@ public class Candidate {
 
 	public void setReportDoc(Document reportDoc) {
 		this.reportDoc = reportDoc;
+	}
+
+	public String getReport() {
+		return report;
+	}
+
+	public void setReport(String report) {
+		this.report = report;
 	}
 	
 	

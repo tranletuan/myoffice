@@ -59,7 +59,7 @@ import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
 @RequestMapping(value = "/flow")
-@SessionAttributes(value = "docId")
+@SessionAttributes({"docId", "procId"})
 public class FlowController extends AbstractController {
 	
 	private static final Logger logger = LoggerFactory
@@ -86,6 +86,8 @@ public class FlowController extends AbstractController {
 		model.addObject("privacyList", privacyList);
 		model.addObject("tenureList", tenureList);
 		model.addObject("organ", organ);
+		model.addObject("docId", null);
+		model.addObject("procId", null);
 		
 		return model;
 	}
@@ -103,7 +105,7 @@ public class FlowController extends AbstractController {
 	
 	@RequestMapping(value = "/save_doc_out", method=RequestMethod.POST)
 	public ModelAndView submitNewDocOut(
-			@RequestParam(value = "docId", required = false) Integer docId,
+			@ModelAttribute("docId") Integer docId,
 			@RequestParam("docName") String docName,
 			@RequestParam("title") String title,
 			@RequestParam("epitome") String epitome,
@@ -230,12 +232,13 @@ public class FlowController extends AbstractController {
 			}
 		}
 		
-		model.setViewName("redirect:doc_info?docId=" + doc.getDocId());
+		model.setViewName("redirect:doc_info/" + doc.getDocId());
 		return model;
 	}
 	
-	@RequestMapping(value = "/doc_info", method = RequestMethod.GET)
-	public ModelAndView documentInfo(@RequestParam(value = "docId", required = false) Integer docId){
+	@RequestMapping(value = "/doc_info/{docId}")
+	public ModelAndView documentInfo(
+			@PathVariable("docId") Integer docId){
 		ModelAndView model = new ModelAndView("redirect:/store/list");
 		Document doc = new Document();
 
@@ -255,6 +258,8 @@ public class FlowController extends AbstractController {
 			model.addObject("privacyList", privacyList);
 			model.addObject("tenureList", tenureList);
 			model.addObject("fileList", fileList);
+			model.addObject("docId", docId);
+			model.addObject("procId", doc.getProcessInstanceId());
 			
 			if (flowUtil.isEnded(doc.getProcessInstanceId())) {
 				if (doc.getReleaseTime() == null || !doc.isCompleted()) {
@@ -319,33 +324,39 @@ public class FlowController extends AbstractController {
 			}
 			
 			model.addObject("doc", doc);
+			model.setViewName("doc-info");
 		}
-		
-		model.setViewName("doc-info");
+	
 		return model;
 	}
 	
 	//==============COMMON==================
-	@RequestMapping(value = "/forward/{direct}/{docId}/{procId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/forward/{direct}")
 	public ModelAndView forwardUser(
 			@PathVariable("direct") String direct,
-			@PathVariable("docId") Integer docId,
-			@PathVariable("procId") String procId,
+			@ModelAttribute("docId") Integer docId,
+			@ModelAttribute("procId") String procId,
 			@RequestParam(value = "userId", required = false) Integer userId){
-		ModelAndView model = new ModelAndView("redirect:/flow/" + direct + "?docId=" + docId);
-		Task curTask = flowUtil.getCurrentTask(procId);
-		if(curTask == null) return model;
+		ModelAndView model = new ModelAndView("redirect:/flow/" + direct + "/" + docId);
 		
-		if(userId != null){
-		User user = dataService.findUserById(userId);
-			String[] taskName = curTask.getName().split(" ");
-			if(user.checkRoleByShortName(taskName[0])){
-				flowUtil.getTaskService().setAssignee(curTask.getId(), user.getUserName());
-			}
-		} else {
-			HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTaskWithName(procId, curTask.getName());
-			if(preTask != null) {
-				flowUtil.getTaskService().setAssignee(curTask.getId(), preTask.getAssignee());
+		User curUser = securityService.getCurrentUser();
+		Task curTask = flowUtil.getCurrentTask(procId);
+		HistoricTaskInstance preCompletedTask = flowUtil.getPreviousCompletedTask(procId);
+		
+		if(curTask == null) return model;		
+		String[] taskName = curTask.getName().split(" ");
+		
+		if (preCompletedTask.getAssignee().equals(curUser.getUserName())) {
+			if (userId != null) {
+				User user = dataService.findUserById(userId);
+				if (user.checkRoleByShortName(taskName[0])) {
+					flowUtil.getTaskService().setAssignee(curTask.getId(), user.getUserName());
+				}
+			} else {
+				HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTaskWithName(procId, curTask.getName());
+				if (preTask != null) {
+					flowUtil.getTaskService().setAssignee(curTask.getId(), preTask.getAssignee());
+				}
 			}
 		}
 		
@@ -353,19 +364,20 @@ public class FlowController extends AbstractController {
 	}
 	
 	@RequestMapping(value = "/download_document/{docFileId}", method = RequestMethod.GET)
-	public void downLoadDocument(HttpServletResponse response,
+	public void downLoadDocument(
+			HttpServletResponse response,
 			@PathVariable("docFileId") Integer docFileId)throws IOException {
 		DocumentFile docFile = dataService.findDocFileById(docFileId);
 		dataService.downLoadFile(docFile.getFilePath() + docFile.getFileName(), response);
 	}
 	
-	@RequestMapping(value = "/complete/{checkNum}/{docId}/{procId}/{direct}")
+	@RequestMapping(value = "/complete/{checkNum}/{direct}")
 	public ModelAndView completedTask(
 			@PathVariable("checkNum") Integer checkNum,
-			@PathVariable("docId") Integer docId,
-			@PathVariable("procId") String procId,
+			@ModelAttribute("docId") Integer docId,
+			@ModelAttribute("procId") String procId,
 			@PathVariable("direct") String direct){
-		ModelAndView model = new ModelAndView("redirect:/flow/" + direct + "?docId=" + docId);
+		ModelAndView model = new ModelAndView("redirect:/flow/" + direct + "/" + docId);
 		
 		if(docId != null && docId > 0){
 			Task curTask = flowUtil.getCurrentTask(procId);
@@ -389,10 +401,10 @@ public class FlowController extends AbstractController {
 	
 	@RequestMapping(value = "/send", method = RequestMethod.POST)
 	public ModelAndView sendDoc(
-			@RequestParam("docId") Integer docId,
+			@ModelAttribute("docId") Integer docId,
 			@RequestParam("recipients") Integer[] recipients,
 			RedirectAttributes reAttr){
-		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
+		ModelAndView model = new ModelAndView("redirect:doc_info/" + docId);
 		Document doc = dataService.findDocumentById(docId);
 		List<Organ> organList = dataService.findOrganByArray(recipients);
 		
@@ -440,9 +452,9 @@ public class FlowController extends AbstractController {
 		return dataService.findMaxDocRecNumber(tenureId, organId);
 	}
 	
-	@RequestMapping(value = "/receive_doc/{docId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/receive_doc", method = RequestMethod.POST)
 	public ModelAndView receiveDoc(
-			@PathVariable("docId") Integer docId, 
+			@ModelAttribute("docId") Integer docId, 
 			@RequestParam("number") String number,
 			@RequestParam("receiveTime") String receiveTime,
 			RedirectAttributes reAttr){
@@ -457,6 +469,11 @@ public class FlowController extends AbstractController {
 		
 		Task curTask = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
 		String[] taskName = curTask.getName().split(" ");
+		
+		//Check user and role
+		if (!curUser.checkRoleByShortName(taskName[0]) || !curTask.getAssignee().equals(curUser.getUserName())){
+			return model;
+		}
 		
 		try {
 			if (curUser.checkRoleByShortName(taskName[0])) {
@@ -491,13 +508,13 @@ public class FlowController extends AbstractController {
 		
 		reAttr.addFlashAttribute("doc", doc);
 	
-		model.setViewName("redirect:/flow/doc_in_info?docId=" + docId);
+		model.setViewName("redirect:/flow/doc_in_info/" + docId);
 		return model;
 	}
 	
-	@RequestMapping(value = "/doc_in_info", method = RequestMethod.GET)
+	@RequestMapping(value = "/doc_in_info/{docId}", method = RequestMethod.GET)
 	public ModelAndView documentInInfo(
-			@RequestParam(value = "docId", required = false) Integer docId){
+			@PathVariable("docId") Integer docId){
 		ModelAndView model = new ModelAndView("redirect:/store/list");
 		if(docId == null || docId < 0) return model;
 		
@@ -564,14 +581,16 @@ public class FlowController extends AbstractController {
 		model.addObject("docRec", docRec);
 		model.addObject("doc", doc);
 		model.addObject("file", file);
+		model.addObject("docId", docId);
+		model.addObject("procId", docRec.getProcessInstanceId());
 		
 		return model;
 	}
 
-	@RequestMapping(value = "/assign/{docId}/{procId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/assign", method = RequestMethod.POST)
 	public ModelAndView assignTask(
-			@PathVariable("docId") Integer docId,
-			@PathVariable("procId") String procId,
+			@ModelAttribute("docId") Integer docId,
+			@ModelAttribute("procId") String procId,
 			@RequestParam("timeStart") String timeStart,
 			@RequestParam("timeEnd") String timeEnd,
 			@RequestParam("content") String content,
@@ -609,13 +628,13 @@ public class FlowController extends AbstractController {
 			}
 		}
 		
-		model.setViewName("redirect:doc-in-info?docId=?" + docId);
+		model.setViewName("redirect:doc-in-info/" + docId);
 		return model;
 	}
 	
 	/*@RequestMapping(value = "/claim_imp_doc", method = RequestMethod.GET)
 	public ModelAndView claimFlowOutTask(@RequestParam("docId") Integer docId){
-		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
+		ModelAndView model = new ModelAndView("redirect:doc_info/" + docId);
 
 		Document doc = dataService.findDocumentById(docId);
 		Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
@@ -631,7 +650,7 @@ public class FlowController extends AbstractController {
 	
 	/*@RequestMapping(value ="/unclaim_imp_doc", method = RequestMethod.GET)
 	public ModelAndView unclaimFlowOutTask(@RequestParam("docId") Integer docId){
-		ModelAndView model = new ModelAndView("redirect:doc_info?docId=" + docId);
+		ModelAndView model = new ModelAndView("redirect:doc_info/" + docId);
 		Document doc = dataService.findDocumentById(docId);
 		Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
 		User user = securityService.getCurrentUser();

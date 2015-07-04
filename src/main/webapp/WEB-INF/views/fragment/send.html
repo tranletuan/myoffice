@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<div th:fragment="send">
+	<div th:if="${success}" class="alert alert-success" role="alert">
+		<span class="glyphicon glyphicon-exclamation-sign"
+		aria-hidden="true"></span> <span class="sr-only">Thông báo:</span>
+		<span th:text="${successMessage}"></span>
+	</div>
+
+	<div th:if="${error}" class="alert alert-danger" role="alert">
+		<span class="glyphicon glyphicon-exclamation-sign"
+		aria-hidden="true"></span> <span class="sr-only">Thông báo:</span>
+		<span th:text="${errorMessage}"></span>
+	</div>
+
+	<div class="panel panel-default" th:if="${doc.completed}" sec:authorize="hasRole('ROLE_OUTPUTER')">
+		<div class="panel-body">
+			<button type="button" id="btnSend" class="btn btn-info" data-toggle="modal" data-target="#send-form">Gửi</button>
+		</div>
+	</div>
+
+	<div class="modal fade" id="send-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabe"  sec:authorize="hasRole('ROLE_OUTPUTER')">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Gửi văn bản</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" th:action="@{/flow/send}" method="post" autocomplete="off">
+
+						<!-- recipients -->
+						<div class="form-group">
+							<label for="recipients" class="col-sm-2 control-label">Đơn vị nhận</label>
+							<div class="col-sm-10">
+								<select class="form-control" id="recipients" multiple="true" th:name="recipients" required="true">
+									<option th:each="organ : ${organList}"
+											th:value="${organ.organId}"
+											th:text="${organ.organName}"
+											th:attr="class=${organ.shortName}">
+									</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">Gửi</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

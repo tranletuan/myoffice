@@ -26,7 +26,7 @@
 						<h4 class="modal-title" id="myModalLabel">Chuyển quyền xử lý</h4>
 					</div>
 					<div class="modal-body">
-						<form class="form-horizontal" th:action="@{/flow/forward/doc_info/} + ${doc.docId} + '/' + ${doc.processInstanceId}" method="post" autocompleted="off">
+						<form class="form-horizontal" th:action="@{/flow/forward/doc_info}" method="post" autocompleted="off">
 
 							<div class="form-group">
 								<label for="candidateRole" class="col-sm-3 control-label">Quyền xử lý</label>
@@ -68,7 +68,7 @@
 						<h4 class="modal-title" id="myModalLabel">Chuyển quyền xử lý</h4>
 					</div>
 					<div class="modal-body">
-						<form class="form-horizontal" th:action="@{/flow/forward/doc_info/} + ${doc.docId} + '/' + ${doc.processInstanceId}" method="post" autocompleted="off">
+						<form class="form-horizontal" th:action="@{/flow/forward/doc_info}" method="post" autocompleted="off">
 	
 							<div class="form-group">
 								<label for="preUserName" class="col-sm-3 control-label">Người dùng</label>

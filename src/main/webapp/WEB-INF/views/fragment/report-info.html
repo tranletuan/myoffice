@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div class="panel panel-warning" th:if="${docRec.candidate}" th:fragment="report_info">
+			<div class="panel-heading"><h4>Báo cáo nhiệm vụ</h4></div>
+			<div class="panel-body">
+				<div>				
+					<div class="form-group">
+						<label for="content" class="col-sm-2 control-label">Trạng thái</label>
+						<div class="col-sm-10">
+							<p th:if="${docRec.completed}">Đã hoàn thành</p>
+							<p th:unless="${docRec.completed}">Chưa hoàn thành</p>
+						</div>
+					</div>
+
+					<div class="form-group" th:if="${docRec.candidate.report}">
+						<label for="report" class="col-sm-2 control-label">Báo cáo sơ bộ</label>
+						<div class="col-sm-10">
+							<textarea class="form-control content" rows="6" id="report" maxlength="1500" th:text="${docRec.candidate.content}" disabled="true"></textarea>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="file" class="col-sm-2 control-label">Báo cáo đính kèm</label>
+						<div class="col-sm-10">
+							<a th:if="${docRec.candidate.reportDoc}" id="file" href="#" th:href="@{/flow/doc_info/} + ${docRec.candidate.reportDoc.docId}" class="btn btn-primary">Đường dẫn</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+</html>

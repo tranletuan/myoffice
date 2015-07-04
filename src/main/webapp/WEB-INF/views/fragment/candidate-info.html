@@ -11,36 +11,21 @@
 					<div class="form-group">
 						<label for="timeStart" class="col-sm-2 control-label">Ngày bắt đầu</label>
 						<div class="col-sm-10">
-							<h5 th:text="${docRec.candidate.timeStart}" id="timeStart"></h5>
+							<p th:text="${docRec.candidate.timeStart}" id="timeStart"></p>
 						</div>
 					</div>
 					
 					<div class="form-group">
 						<label for="timeEnd" class="col-sm-2 control-label">Ngày hết hạn</label>
 						<div class="col-sm-10">
-							<h5 th:text="${docRec.candidate.timeEnd}" id="timeEnd"></h5>
+							<p th:text="${docRec.candidate.timeEnd}" id="timeEnd"></p>
 						</div>
 					</div>
 					
 					<div class="form-group">
 						<label for="content" class="col-sm-2 control-label">Nội dung phân công</label>
 						<div class="col-sm-10">
-							<textarea class="form-control content" rows="8" maxlength="1500" th:text="${docRec.candidate.content}" disabled="true"></textarea>
-						</div>
-					</div>
-					
-					<div class="form-group">
-						<label for="content" class="col-sm-2 control-label">Trạng thái</label>
-						<div class="col-sm-10">
-							<h5 th:if="${docRec.completed}">Đã hoàn thành</h5>
-							<h5 th:unless="${docRec.completed}">Chưa hoàn thành</h5>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label for="content" class="col-sm-2 control-label">Báo cáo đính kèm</label>
-						<div class="col-sm-10">
-							<a href="#" class="btn btn-primary">Đường dẫn</a>
+							<textarea class="form-control content" rows="6" maxlength="1500" th:text="${docRec.candidate.content}" disabled="true"></textarea>
 						</div>
 					</div>
 				</div>

@@ -31,7 +31,7 @@ xmlns:th="http://www.thymeleaf.org">
 		<div class="panel panel-default" th:unless="${docRec.number}" sec:authorize="hasRole('ROLE_INPUTER')">
 			 	<div class="panel-heading"><h4>Tiếp nhận văn bản</h4></div>
 			 	<div class="panel-body">
-			 		<form class="form-horizontal" th:action="@{/flow/receive_doc/} + ${doc.docId}" method="post" autocompleted="off">
+			 		<form class="form-horizontal" th:action="@{/flow/receive_doc}" method="post" autocompleted="off">
 			 		
 						<div class="form-group">
 						<label for="number" class="col-sm-2 control-label">Số văn bản đến</label>
@@ -74,18 +74,13 @@ xmlns:th="http://www.thymeleaf.org">
 		<div th:replace="fragment/forward-in-assign :: assign"></div>
 		
 		<!-- Report -->
-		<div class="panel panel-default" th:if="${isReport}">
-			<div class="panel-body">
-				<div>
-					<button type="button" id="btnReport" class="btn btn-info" data-toggle="modal" data-target="#doc-report-form">Báo cáo</button>
-				</div>
-			</div>
-		</div>
+		
 
 		<!-- Candidate info -->
 		<div th:replace="fragment/candidate-info :: candidate_info"></div>
 
-
+		<!-- Report info -->
+		<div th:replace="fragment/report-info :: report_info"></div>
 		<div class="panel panel-info">
 			<div class="panel-heading"><h3>Thông Tin Văn Bản Đến</h3></div>
 			<div class="panel-body">
@@ -180,7 +175,7 @@ xmlns:th="http://www.thymeleaf.org">
 				<tr>
 					<th scope="row"><h4><span>Tập tin : </span></h4></th>
 					<td>
-						<a href="#" type="btn btn-primary" th:href="@{/flow/download_document/ + ${file.fileId}}"></a>
+						<a href="#" class="btn btn-primary" th:href="@{/flow/download_document/} + ${file.fileId}">Tải xuống <span class="glyphicon glyphicon-download"></span></a>
 					</td>
 				</tr>
 			</tbody>			
