@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div class="panel panel-default" th:if="${isReport}" th:fragment="report">
+		<div class="panel-heading"><h4>Báo cáo nhiệm vụ</h4></div>
+		<div class="panel-body">
+			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#tempReport">
+				Báo cáo sơ bộ
+			</button>
+
+			<a type="button" class="btn btn-warning" href="#" th:href="@{/flow/create_doc_out}">Tạo file báo cáo</a>
+				
+			<a type="button" class="btn btn-success" href="#" th:href="@{/flow/complete_assign/0/doc_in_info}">Hoàn thành</a>
+		</div>
+
+		<div class="modal fade" id="tempReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">Báo cáo sơ bộ</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" th:action="@{/flow/report}" method="post" autocompleted="off">
+							<div class="form-group">
+								<label for="report" class="col-sm-2 control-label">Nội dung báo cáo</label>
+								<div class="col-sm-10">
+									<textarea class="form-control" rows="10" maxlength="1200" placeholder="Nội dung" th:name="report" id="report"></textarea>
+								</div>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
+								<button type="submit" class="btn btn-primary">Lưu</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -330,7 +330,15 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
-	//==============COMMON==================
+	//==============COMMON===================
+	@RequestMapping(value = "/download_document/{docFileId}", method = RequestMethod.GET)
+	public void downLoadDocument(
+			HttpServletResponse response,
+			@PathVariable("docFileId") Integer docFileId)throws IOException {
+		DocumentFile docFile = dataService.findDocFileById(docFileId);
+		dataService.downLoadFile(docFile.getFilePath() + docFile.getFileName(), response);
+	}
+	
 	@RequestMapping(value = "/forward/{direct}")
 	public ModelAndView forwardUser(
 			@PathVariable("direct") String direct,
@@ -363,14 +371,6 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/download_document/{docFileId}", method = RequestMethod.GET)
-	public void downLoadDocument(
-			HttpServletResponse response,
-			@PathVariable("docFileId") Integer docFileId)throws IOException {
-		DocumentFile docFile = dataService.findDocFileById(docFileId);
-		dataService.downLoadFile(docFile.getFilePath() + docFile.getFileName(), response);
-	}
-	
 	@RequestMapping(value = "/complete/{checkNum}/{direct}")
 	public ModelAndView completedTask(
 			@PathVariable("checkNum") Integer checkNum,
@@ -396,6 +396,39 @@ public class FlowController extends AbstractController {
 			}
 		}
 	
+		return model;
+	}
+	
+	@RequestMapping(value = "/complete_assign/{checkNum}/{direct}")
+	public ModelAndView completedAndAssign(
+			@PathVariable("checkNum") Integer checkNum,
+			@ModelAttribute("docId") Integer docId,
+			@ModelAttribute("procId") String procId,
+			@PathVariable("direct") String direct){
+		ModelAndView model = new ModelAndView("redirect:/flow/" + direct + "/" + docId);
+		
+		if(docId != null && docId > 0){
+			Task curTask = flowUtil.getCurrentTask(procId);
+			User user = securityService.getCurrentUser();
+			HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTaskWithName(procId, curTask.getName());
+			
+			if(curTask == null) return model;
+			
+			String[] taskName = curTask.getName().split(" ");
+			if (user.checkRoleByShortName(taskName[0]) && curTask.getAssignee().equals(user.getUserName())) {
+				
+				Map<String, Object> variables = new HashMap<String, Object>();
+				variables.put("check", checkNum);
+				String taskId = curTask.getId();
+				flowUtil.getTaskService().complete(taskId, variables);		
+				curTask = flowUtil.getCurrentTask(procId);
+			}
+			
+			if (preTask != null) {
+				flowUtil.getTaskService().setAssignee(curTask.getId(), preTask.getAssignee());
+			}
+		}
+		
 		return model;
 	}
 	
@@ -442,7 +475,6 @@ public class FlowController extends AbstractController {
 	}
 	
 	//================DOC_IN==================
-	
 	@RequestMapping(value = "/number_in")
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.OK)
@@ -628,42 +660,28 @@ public class FlowController extends AbstractController {
 			}
 		}
 		
-		model.setViewName("redirect:doc-in-info/" + docId);
+		model.setViewName("redirect:/flow/doc_in_info/" + docId);
 		return model;
 	}
 	
-	/*@RequestMapping(value = "/claim_imp_doc", method = RequestMethod.GET)
-	public ModelAndView claimFlowOutTask(@RequestParam("docId") Integer docId){
-		ModelAndView model = new ModelAndView("redirect:doc_info/" + docId);
-
-		Document doc = dataService.findDocumentById(docId);
-		Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
-		User user = securityService.getCurrentUser();
-
-		String[] taskName = curTask.getName().split(" ");
-		if (user.checkRoleByShortName(taskName[0])) {
-			flowUtil.getTaskService().claim(curTask.getId(), user.getUserName());
-		} 
+	@RequestMapping(value = "/report", method = RequestMethod.POST)
+	public ModelAndView reportTask(
+			@ModelAttribute("docId") Integer docId,
+			@ModelAttribute("procId") String procId,
+			@RequestParam(value = "content", required = false) String content){
+		ModelAndView model = new ModelAndView("redirect:/store/list");
+		User curUser = securityService.getCurrentUser();
+		Organ organ = curUser.getOrgan();
+		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
+		Candidate candidate = docRec.getCandidate();
+		if(candidate == null) return model;
 		
-		return model;
-	}*/
-	
-	/*@RequestMapping(value ="/unclaim_imp_doc", method = RequestMethod.GET)
-	public ModelAndView unclaimFlowOutTask(@RequestParam("docId") Integer docId){
-		ModelAndView model = new ModelAndView("redirect:doc_info/" + docId);
-		Document doc = dataService.findDocumentById(docId);
-		Task curTask = flowUtil.getCurrentTask(doc.getProcessInstanceId());
-		User user = securityService.getCurrentUser();
-	
-		String[] taskName = curTask.getName().split(" ");
-		if (user.checkRoleByShortName(taskName[0])) {
-			if(curTask.getAssignee().equals(user.getUserName())){
-				flowUtil.getTaskService().unclaim(curTask.getId());
-			}
-		} 
+		candidate.setContent(content);
+		dataService.saveCandidate(candidate);
 		
+		model.setViewName("redirect:/flow/doc_in_info/" + docId);
 		return model;
-	}*/
+	}
 	
 	/*@RequestMapping(value = "/create_doc_in", method = RequestMethod.GET)
 	public ModelAndView createNewDocIn(){
