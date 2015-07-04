@@ -21,6 +21,8 @@ import javax.persistence.TemporalType;
 
 import org.joda.time.DateTime;
 
+import com.myoffice.myapp.utils.UtilMethod;
+
 @Entity
 @Table(name = "candidate")
 public class Candidate {
@@ -96,6 +98,13 @@ public class Candidate {
 		this.report = report;
 	}
 	
+	public String getTimeStartString(){
+		return UtilMethod.dateToString(timeStart, "dd-MM-yyyy");
+	}
+	
+	public String getTimeEndString(){
+		return UtilMethod.dateToString(timeEnd, "dd-MM-yyyy");
+	}
 	
 	
 }

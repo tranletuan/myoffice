@@ -392,7 +392,6 @@ public class FlowController extends AbstractController {
 				variables.put("check", checkNum);
 				String taskId = curTask.getId();
 				flowUtil.getTaskService().complete(taskId, variables);		
-				curTask = flowUtil.getCurrentTask(procId);
 			}
 		}
 	
@@ -410,7 +409,6 @@ public class FlowController extends AbstractController {
 		if(docId != null && docId > 0){
 			Task curTask = flowUtil.getCurrentTask(procId);
 			User user = securityService.getCurrentUser();
-			HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTaskWithName(procId, curTask.getName());
 			
 			if(curTask == null) return model;
 			
@@ -422,11 +420,14 @@ public class FlowController extends AbstractController {
 				String taskId = curTask.getId();
 				flowUtil.getTaskService().complete(taskId, variables);		
 				curTask = flowUtil.getCurrentTask(procId);
+				HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTaskWithName(procId, curTask.getName());
+				
+				if (preTask != null) {
+					flowUtil.getTaskService().setAssignee(curTask.getId(), preTask.getAssignee());
+				}
 			}
 			
-			if (preTask != null) {
-				flowUtil.getTaskService().setAssignee(curTask.getId(), preTask.getAssignee());
-			}
+			
 		}
 		
 		return model;
@@ -582,6 +583,12 @@ public class FlowController extends AbstractController {
 					HistoricTaskInstance preCompletedTask = flowUtil.getPreviousCompletedTaskWithName(
 							docRec.getProcessInstanceId(), curTask.getName());
 					
+					if(preCompletedTask != null){
+						User preUser = dataService.findUserByName(preCompletedTask.getAssignee());
+						model.addObject("canReturn", true);
+						model.addObject("preUser", preUser);
+					}
+					
 				} else { //người đăng nhập không phải là người hoàn thành task trước
 					User rUser = dataService.findUserByName(preTask.getAssignee());
 					model.addObject("userRole", rUser.getRoleNames());
@@ -649,7 +656,7 @@ public class FlowController extends AbstractController {
 			dataService.saveDocRecipient(docRec);
 
 			// Hoàn thành task
-			try {
+			/*try {
 				Task curTask = flowUtil.getCurrentTask(docRec
 						.getProcessInstanceId());
 				Map<String, Object> variables = new HashMap<String, Object>();
@@ -657,18 +664,18 @@ public class FlowController extends AbstractController {
 				flowUtil.getTaskService().complete(curTask.getId(), variables);
 			} catch (Exception e) {
 				e.getStackTrace();
-			}
+			}*/
 		}
 		
 		model.setViewName("redirect:/flow/doc_in_info/" + docId);
 		return model;
 	}
 	
-	@RequestMapping(value = "/report", method = RequestMethod.POST)
+	@RequestMapping(value = "/send-report", method = RequestMethod.POST)
 	public ModelAndView reportTask(
 			@ModelAttribute("docId") Integer docId,
 			@ModelAttribute("procId") String procId,
-			@RequestParam(value = "content", required = false) String content){
+			@RequestParam(value = "report", required = false) String report){
 		ModelAndView model = new ModelAndView("redirect:/store/list");
 		User curUser = securityService.getCurrentUser();
 		Organ organ = curUser.getOrgan();
@@ -676,10 +683,36 @@ public class FlowController extends AbstractController {
 		Candidate candidate = docRec.getCandidate();
 		if(candidate == null) return model;
 		
-		candidate.setContent(content);
+		candidate.setReport(report);
 		dataService.saveCandidate(candidate);
 		
 		model.setViewName("redirect:/flow/doc_in_info/" + docId);
+		return model;
+	}
+	
+	@RequestMapping(value = "/complete_save")
+	public ModelAndView saveDocIn(
+			@ModelAttribute("docId") Integer docId,
+			@ModelAttribute("procId") String procId,
+			RedirectAttributes reAttr){
+		ModelAndView model = new ModelAndView("redirect:doc_in_info/" + docId);
+		User user = securityService.getCurrentUser();
+		Task curTask = flowUtil.getCurrentTask(procId);
+		Organ organ = user.getOrgan();
+		
+		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
+		if(docRec.getCandidate().getReportDoc() == null){
+			reAttr.addFlashAttribute("error", true);
+			reAttr.addFlashAttribute("errorMessage", "Lỗi, chưa tạo file báo cáo");
+			return model;
+		}
+		
+		docRec.setCompleted(true);
+		dataService.saveDocRecipient(docRec);
+		flowUtil.getTaskService().complete(curTask.getId());
+		model.addObject("success", true);
+		model.addObject("successMessage", "Hoàn thành");
+		
 		return model;
 	}
 	

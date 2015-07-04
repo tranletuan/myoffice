@@ -9,17 +9,17 @@
 			<div class="panel-body">
 				<div>				
 					<div class="form-group">
-						<label for="content" class="col-sm-2 control-label">Trạng thái</label>
-						<div class="col-sm-10">
+						<label for="showComplete" class="col-sm-2 control-label">Trạng thái</label>
+						<div class="col-sm-10" id="showComplete">
 							<p th:if="${docRec.completed}">Đã hoàn thành</p>
 							<p th:unless="${docRec.completed}">Chưa hoàn thành</p>
 						</div>
 					</div>
 
 					<div class="form-group" th:if="${docRec.candidate.report}">
-						<label for="report" class="col-sm-2 control-label">Báo cáo sơ bộ</label>
+						<label for="showReport" class="col-sm-2 control-label">Báo cáo sơ bộ</label>
 						<div class="col-sm-10">
-							<textarea class="form-control content" rows="6" id="report" maxlength="1500" th:text="${docRec.candidate.content}" disabled="true"></textarea>
+							<textarea class="form-control report" rows="6" id="showReport" maxlength="1500" th:text="${docRec.candidate.report}" disabled="true"></textarea>
 						</div>
 					</div>
 

@@ -45,4 +45,19 @@
         });
  	}
 
+ 	$('#btnAssign').click(function(){
+ 		var strStart = $('#showTimeStart').html().split('-');
+ 		var strEnd = $('#showTimeEnd').html().split('-');
+ 		var content = $('#showContent').html();
+
+ 		$('.date-start').datetimepicker("setDate", new Date(strStart[2], strStart[1], strStart[0]));
+ 		$('.date-end').datetimepicker("setDate", new Date(strEnd[2], strEnd[1], strEnd[0]));
+ 		$('#content').html(content);
+ 	});
+
+ 	$('#btnTempReport').click(function(){
+ 		var report = $('#showReport').html();
+ 		$('#report').html(report);
+ 	});
+
  });

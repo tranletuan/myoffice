@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8"></meta>
+</head>
+<body>
+	<div class="panel panel-default" th:if="${isForward}" th:fragment="forward_in">
+		<div class="panel-heading"><h4>Chuyển tiếp văn bản</h4></div>
+		<div class="panel-body">
+			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#oldUser" th:if="${canReturn}">
+				Chuyển người xử lý trước đó
+			</button>
+
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newUser">
+				Lựa chọn người chuyển tiếp
+			</button>
+		</div>
+
+		<!-- Modal -->
+		<div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">Chuyển quyền xử lý</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" th:action="@{/flow/forward/doc_in_info}" method="post" autocompleted="off">
+
+							<div class="form-group">
+								<label for="candidateRole" class="col-sm-3 control-label">Quyền xử lý</label>
+								<div class="col-sm-9">
+									<h4 id="candidateRole">
+										<span th:each="cr : ${candidateRole}" th:text="${cr.fullName}">,</span>
+									</h4>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="candidateUser" class="col-sm-3 control-label">Người dùng</label>
+								<div class="col-sm-9">
+									<select class="form-control" th:name="userId" id="candidateUser" required="true">
+										<option th:each="u : ${userList}"
+											th:text="${u.userName} + ' - ' + ${u.getRoleNames()}"
+											th:value="${u.userId}">
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
+								<button type="submit" class="btn btn-primary">Chuyển</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div class="modal fade" id="oldUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" th:if="${canReturn}">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">Chuyển quyền xử lý</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" th:action="@{/flow/forward/doc_in_info}" method="post" autocompleted="off">
+	
+							<div class="form-group">
+								<label for="preUserName" class="col-sm-3 control-label">Người dùng</label>
+								<div class="col-sm-9">
+									<h4 th:text="${preUser.userName}" id="preUserName"></h4>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="preUserRole" class="col-sm-3 control-label">Quyền hạn</label>
+								<div class="col-sm-9">
+									<h4 th:text="${preUser.getRoleNames()}" id="preUserRole"></h4>
+								</div>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
+								<button type="submit" class="btn btn-primary">Chuyển</button>
+							</div>
+						</form>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div th:fragment="message">
+		<div th:if="${error}" class="alert alert-danger" role="alert">
+			<span class="glyphicon glyphicon-exclamation-sign"
+			aria-hidden="true"></span> <span class="sr-only">Thông báo:</span><p th:text="${errorMessage}"></p>
+		</div>
+
+		<div th:if="${success}" class="alert alert-success" role="alert">
+			<span class="glyphicon glyphicon-exclamation-sign"
+			aria-hidden="true"></span> <span class="sr-only">Thông báo:</span><p th:text="${successMessage}"></p>
+		</div>
+	</div>
+</body>
+</html>

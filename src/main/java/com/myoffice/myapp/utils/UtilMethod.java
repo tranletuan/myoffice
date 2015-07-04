@@ -18,6 +18,13 @@ public class UtilMethod {
 	    return rsDate;
 	}
 	
+	//Convert Date to String
+	public static String dateToString(Date date, String dateFormat) {
+		DateFormat df = new SimpleDateFormat(dateFormat);
+		String rsDate = df.format(date);
+		return rsDate;
+	}
+	
 	// Check String is Number
 	public static Integer parseNumDoc(String number) {
 		Integer integer = -1;
