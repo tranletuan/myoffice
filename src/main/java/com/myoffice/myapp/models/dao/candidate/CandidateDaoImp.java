@@ -24,6 +24,7 @@ public class CandidateDaoImp extends AbstractDao implements CandidateDao {
 		return criteria.list();
 	}
 
+	
 	@Override
 	public void saveCandidate(Candidate candidate) {
 		persist(candidate);
@@ -32,6 +33,12 @@ public class CandidateDaoImp extends AbstractDao implements CandidateDao {
 	@Override
 	public void deleteCandidate(Candidate candidate) {
 		delete(candidate);
+	}
+
+
+	@Override
+	public Candidate findCandidateById(Integer canId) {
+		return (Candidate) getSession().get(Candidate.class, canId);
 	}
 
 	

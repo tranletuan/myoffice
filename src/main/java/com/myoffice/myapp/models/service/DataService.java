@@ -380,4 +380,8 @@ public class DataService {
 		candidateDao.deleteCandidate(candidate);
 	}
 	
+	public Candidate findCandidateById(Integer canId){
+		return candidateDao.findCandidateById(canId);
+	}
+	
 }

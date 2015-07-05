@@ -99,8 +99,10 @@ public class FlowUtil {
 
 			Task task = taskService.createTaskQuery()
 					.processInstanceId(processInstanceId).singleResult();
-
-			logger.info("Current Task : " + task.toString());
+			
+			if(task != null){
+				logger.info("Current Task : " + task.toString());
+			}
 			
 			return task;
 		} catch (ActivitiException e) {
@@ -113,8 +115,7 @@ public class FlowUtil {
 		try {
 			Execution execution = runtimeService.createExecutionQuery()
 					.processInstanceId(processInstanceId).singleResult();
-			
-			
+		
 			logger.info("Current Execution : " + execution.toString());
 			return execution;
 			

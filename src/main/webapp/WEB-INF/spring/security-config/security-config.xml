@@ -13,7 +13,8 @@
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
 		<intercept-url pattern="/flow/**" access="isAuthenticated()"/>
 		<intercept-url pattern="/flow/send/**" access="hasRole('ROLE_OUTPUTER')"/>
-
+		<intercept-url pattern="/flow/status/**" access="hasRole('ROLE_MANAGER')"/>
+		
 		<form-login 
 			login-page="/signin" 
 			default-target-url="/store/list"

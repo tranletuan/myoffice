@@ -8,7 +8,7 @@ public interface CandidateDao {
 
 	List<Candidate> findAllCandidate();
 	
-	
+	Candidate findCandidateById(Integer canId);
 	
 	void saveCandidate(Candidate candidate);
 	

@@ -30,7 +30,7 @@ public class DocumentFile {
 	private Integer version = 1;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "document_id", nullable = false)
+	@JoinColumn(name = "document_id")
 	private Document document;
 	
 	public DocumentFile() {

@@ -68,6 +68,9 @@ public class Document {
 	
 	@Column(name = "is_sended")
 	private boolean isSended = false;
+	
+	@Column(name =" enabled")
+	private boolean enabled = true;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "doc_type_id", nullable = false)
@@ -253,5 +256,15 @@ public class Document {
 	public void setSended(boolean isSended) {
 		this.isSended = isSended;
 	}
-	
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+
+
 }

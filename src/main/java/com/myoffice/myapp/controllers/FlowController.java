@@ -59,19 +59,23 @@ import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
 @RequestMapping(value = "/flow")
-@SessionAttributes({"docId", "procId"})
+@SessionAttributes({"docId", "procId", "canId"})
 public class FlowController extends AbstractController {
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(FlowController.class);
 
 	//===============DOC_OUT=================
-	@RequestMapping(value = "/create_doc_out", method = RequestMethod.GET)
-	public ModelAndView createNewDocOut(){
+	//type 0 : tạo mới văn bản theo luồng văn bản đi
+	//type 1 : tạo văn bản báo cáo theo luồng đến
+	@RequestMapping(value = "/create_{type}", method = RequestMethod.GET)
+	public ModelAndView createNewDocOut(
+			@PathVariable("type") String type){
 		ModelAndView model = new ModelAndView("create-doc-out");
 		
 		User user = securityService.getCurrentUser();
 		Organ organ = user.getOrgan();
+		
 		if(organ == null){
 			model.setViewName("redirect:/store/list");
 		}
@@ -86,9 +90,12 @@ public class FlowController extends AbstractController {
 		model.addObject("privacyList", privacyList);
 		model.addObject("tenureList", tenureList);
 		model.addObject("organ", organ);
-		model.addObject("docId", null);
-		model.addObject("procId", null);
+		model.addObject("docId", 0);
+		model.addObject("procId", "");
 		
+		if(type.equals("doc_out")){
+			model.addObject("canId", 0);
+		}
 		return model;
 	}
 	
@@ -106,6 +113,7 @@ public class FlowController extends AbstractController {
 	@RequestMapping(value = "/save_doc_out", method=RequestMethod.POST)
 	public ModelAndView submitNewDocOut(
 			@ModelAttribute("docId") Integer docId,
+			@ModelAttribute("canId") Integer canId,
 			@RequestParam("docName") String docName,
 			@RequestParam("title") String title,
 			@RequestParam("epitome") String epitome,
@@ -154,8 +162,8 @@ public class FlowController extends AbstractController {
 			doc.setNumber(dataService.findMaxNumber(tenureId, docTypeId, organ.getOrganId(), false) - 1);
 		}
 		
-		//SAVE DOC AND FLOW
-		if (docId == null) {
+		//LƯU VĂN BẢN VÀ TẠO LUỒNG XỬ LÝ
+		if (docId == null || docId <= 0) {
 			try {
 				String procDefId = flowUtil.getProcessDefinitionId(
 						DataConfig.RSC_NAME_FLOW_OUT,
@@ -174,6 +182,14 @@ public class FlowController extends AbstractController {
 					User curUser = securityService.getCurrentUser();
 					dataService.saveDocument(doc);
 					model.addObject("docId", doc.getDocId());
+					
+					//Văn bản báo cáo luồng văn bản đến
+					Candidate candidate = dataService.findCandidateById(canId);
+					if(candidate != null){
+						candidate.setReportDoc(doc);
+						dataService.saveCandidate(candidate);
+					}
+					
 					Task task = flowUtil.getCurrentTask(doc
 							.getProcessInstanceId());
 					flowUtil.getTaskService().setAssignee(task.getId(), curUser.getUserName());
@@ -245,7 +261,8 @@ public class FlowController extends AbstractController {
 		if (docId != null && docId > 0) {
 			doc = dataService.findDocumentById(docId);
 			User curUser = securityService.getCurrentUser();
-			if(doc.getOrgan().getOrganId() != curUser.getOrgan().getOrganId()) return model;
+			if(doc.getOrgan().getOrganId() != curUser.getOrgan().getOrganId() 
+					|| (!doc.isEnabled() && !curUser.checkRoleByShortName("mng"))) return model;
 			
 			List<DocumentType> docTypeList = dataService.findAllDocType();
 			List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
@@ -307,6 +324,7 @@ public class FlowController extends AbstractController {
 						User rUser = dataService.findUserByName(preTask.getAssignee());
 						model.addObject("userRole", rUser.getRoleNames());
 						model.addObject("assignee", rUser.getUserName());
+						model.addObject("taskDescription", preTask.getDescription());
 					}
 				} else { //task đã được giao quyền
 					User rUser = dataService.findUserByName(curTask.getAssignee());
@@ -475,6 +493,30 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/status/{value}")
+	public ModelAndView changeStatusDoc(
+			@ModelAttribute("docId") Integer docId,
+			@ModelAttribute("procId") String procId,
+			@PathVariable("value") boolean value){
+		ModelAndView model = new ModelAndView("redirect:/store/list");
+		if(docId == null || docId < 0) return model;
+		Task curTask = flowUtil.getCurrentTask(procId);
+		Document doc = dataService.findDocumentById(docId);
+		doc.setEnabled(value);
+		dataService.saveDocument(doc);
+		
+		if(curTask != null) {
+			if (!value) {
+				flowUtil.getRuntimeService().suspendProcessInstanceById(procId);
+			} else {
+				flowUtil.getRuntimeService().activateProcessInstanceById(procId);
+			}
+		}
+		
+		model.setViewName("redirect:/flow/doc_info/" + docId);
+		return model;
+	}
+	
 	//================DOC_IN==================
 	@RequestMapping(value = "/number_in")
 	@ResponseBody
@@ -556,11 +598,12 @@ public class FlowController extends AbstractController {
 		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
 		Document doc = docRec.getDocument();
 		DocumentFile file = dataService.findDocFileById(doc.getDocId());
-
+		if(docRec.getCandidate() != null) model.addObject("canId", docRec.getCandidate().getCandidateId());
+		
 		Task curTask = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
 		HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(docRec.getProcessInstanceId());
 		
-		if (curTask == null) return model;
+		if (curTask == null || !doc.isEnabled()) return model;
 		String []taskName = curTask.getName().split(" ");
 		String []roles = taskName[0].split(",");
 		
@@ -570,6 +613,12 @@ public class FlowController extends AbstractController {
 		if (curTask.getAssignee() == null) {
 			//Đã tiếp nhận văn bản
 			if (preTask != null) {
+
+				User rUser = dataService.findUserByName(preTask.getAssignee());
+				model.addObject("userRole", rUser.getRoleNames());
+				model.addObject("assignee", rUser.getUserName());
+				model.addObject("taskDescription", preTask.getDescription());
+				
 				//Người đăng nhập là người tiếp nhận văn bản
 				if (curUser.getUserName().equals(preTask.getAssignee())) {
 					List<Role> candidateRole = dataService
@@ -588,12 +637,8 @@ public class FlowController extends AbstractController {
 						model.addObject("canReturn", true);
 						model.addObject("preUser", preUser);
 					}
-					
-				} else { //người đăng nhập không phải là người hoàn thành task trước
-					User rUser = dataService.findUserByName(preTask.getAssignee());
-					model.addObject("userRole", rUser.getRoleNames());
-					model.addObject("assignee", rUser.getUserName());
 				}
+				
 			} else { //Chưa tiếp nhận văn bản, tiến hành lấy số
 				int number = dataService.findMaxDocRecNumber(doc.getTenure().getTenureId(), organ.getOrganId());
 				model.addObject("number", number);
@@ -684,7 +729,7 @@ public class FlowController extends AbstractController {
 		if(candidate == null) return model;
 		
 		candidate.setReport(report);
-		dataService.saveCandidate(candidate);
+		dataService.saveDocRecipient(docRec);
 		
 		model.setViewName("redirect:/flow/doc_in_info/" + docId);
 		return model;
@@ -705,6 +750,13 @@ public class FlowController extends AbstractController {
 			reAttr.addFlashAttribute("error", true);
 			reAttr.addFlashAttribute("errorMessage", "Lỗi, chưa tạo file báo cáo");
 			return model;
+		} else {
+			String reportProcId = docRec.getCandidate().getReportDoc().getProcessInstanceId();
+			if(!flowUtil.isEnded(reportProcId)){
+				reAttr.addFlashAttribute("error", true);
+				reAttr.addFlashAttribute("errorMessage", "Lỗi, file báo cáo chưa hoàn thành");
+				return model;
+			}
 		}
 		
 		docRec.setCompleted(true);
