@@ -54,7 +54,7 @@ public class Document {
 	@Column(name = "epitome" , nullable = false, columnDefinition="varchar(1000)")
 	private String epitome;
 
-	@Column(name = "processId", nullable = false)
+	@Column(name = "processId")
 	private String processInstanceId;
 	
 	@Column(name = "completed")
@@ -67,7 +67,7 @@ public class Document {
 	private String comment;
 	
 	@Column(name = "is_sended")
-	private boolean isSended = false;
+	private boolean sended = false;
 	
 	@Column(name =" enabled")
 	private boolean enabled = true;
@@ -250,11 +250,11 @@ public class Document {
 	}
 
 	public boolean isSended() {
-		return isSended;
+		return sended;
 	}
 
-	public void setSended(boolean isSended) {
-		this.isSended = isSended;
+	public void setSended(boolean sended) {
+		this.sended = sended;
 	}
 
 	public boolean isEnabled() {

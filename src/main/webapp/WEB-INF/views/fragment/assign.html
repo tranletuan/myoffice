@@ -11,7 +11,7 @@
 				Nội dung chỉ đạo
 			</button>
 			
-			<a type="button" class="btn btn-warning" href="#" th:href="@{/flow/complete/1/doc_in_info}">Phân công</a>
+			<a type="button" class="btn btn-warning" href="#" th:href="@{/flow/complete/1/doc_in_info}" th:if="${docRec.candidate}">Phân công</a>
 
 			<a type="button" class="btn btn-success" href="#" th:href="@{/flow/complete_save}">Hoàn thành</a>
 		</div>

@@ -143,9 +143,13 @@ public class DataService {
 		docDao.deleteDocument(doc);
 	}
 	
-	/*public List<Document> findDocumentBy(DocumentType docType, boolean completed, boolean incomming){
-		return docDao.findDocumentBy(docType, completed, incomming);
-	}*/
+	public List<Document> findCompletedDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, int firstResult, int maxResult){
+		return docDao.findCompletedDocumentBy(organId, tenureId, docTypeId, firstResult, maxResult);
+	}
+	
+	public List<Document> findCompletedDocumentBy(Integer organId, int firstResult, int maxResult){
+		return docDao.findCompletedDocumentBy(organId, firstResult, maxResult);
+	}
 	
 	//DOCUMENT TYPE
 	public List<DocumentType> findAllDocType(){
@@ -215,6 +219,10 @@ public class DataService {
 		docDao.deleteTenure(tenure);
 	}
 	
+	public Tenure findLastTenure(){
+		return docDao.findLastTenure();
+	}
+	
 	//NUMBER
 	public Integer findMaxNumber(Integer tenureId, Integer docTypeId, Integer organId, boolean incoming){
 		return docDao.findMaxNumber(tenureId, docTypeId, organId, incoming);
@@ -235,6 +243,16 @@ public class DataService {
 	
 	public DocumentRecipient findDocRecipient(Integer docId, Integer organId){
 		return docDao.findDocRecipient(docId, organId);
+	}
+	
+	public List<DocumentRecipient> findCompletedDocRecipient(Integer organId,
+			Integer tenureId, Integer docTypeId, int firstResult, int maxResult){
+		return docDao.findCompletedDocRecipient(organId, tenureId, docTypeId, firstResult, maxResult);
+	}
+	
+	public List<DocumentRecipient> findCompletedDocRecipient(Integer organId,
+			int firstResult, int maxResult) {
+		return docDao.findCompletedDocRecipient(organId, firstResult, maxResult);
 	}
 	
 	//FILE

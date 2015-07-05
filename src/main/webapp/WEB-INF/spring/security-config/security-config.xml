@@ -9,7 +9,7 @@
 	<http auto-config="true" use-expressions="true">
 
 		<intercept-url pattern="/signin/**" access="permitAll" />
-		<intercept-url pattern="/store/**" access="permitAll" />
+		<intercept-url pattern="/store/**" access="isAuthenticated()" />
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
 		<intercept-url pattern="/flow/**" access="isAuthenticated()"/>
 		<intercept-url pattern="/flow/send/**" access="hasRole('ROLE_OUTPUTER')"/>
@@ -17,7 +17,7 @@
 		
 		<form-login 
 			login-page="/signin" 
-			default-target-url="/store/list"
+			default-target-url="/store/list/out/1"
 			always-use-default-target="false"
 			login-processing-url="/j_spring_security_check"
 			authentication-failure-url="/signin-error" 

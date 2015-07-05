@@ -24,6 +24,10 @@ public interface DocumentDao {
 	
 	void deleteDocument(Document doc);
 	
+	List<Document> findCompletedDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, int firstResult, int maxResult);
+	
+	List<Document> findCompletedDocumentBy(Integer organId, int firstResult, int maxResult);
+	
 	//DocumentType
 	DocumentType findDocTypeById(Integer typeId);
 	
@@ -57,6 +61,8 @@ public interface DocumentDao {
 	
 	Tenure findTenureById(Integer tenureId);
 	
+	Tenure findLastTenure();
+	
 	void saveTenure(Tenure tenure);
 	
 	void deleteTenure(Tenure tenure);
@@ -81,4 +87,9 @@ public interface DocumentDao {
 	DocumentRecipient findDocRecipient(Integer docId, Integer organId);
 	
 	Integer findMaxDocRecNumber(Integer tenureId, Integer organId);
+	
+	List<DocumentRecipient> findCompletedDocRecipient(Integer organId, Integer tenureId, Integer docTypeId, int firstResult, int maxResult);
+	
+	List<DocumentRecipient> findCompletedDocRecipient(Integer organId, int firstResult, int maxResult);
+
 }

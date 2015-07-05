@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import com.mchange.util.impl.CircularList;
 import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
 import com.myoffice.myapp.models.dto.Candidate;
@@ -36,53 +37,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(DocumentDaoImp.class);
-
-	
-	/*@Override
-	public Integer countDocument(boolean incoming, boolean completed,
-			Integer docTypeId) {
-		try {
-			if (docTypeId == null || docTypeId <= 0) {
-				Query query = (Query) getSession()
-						.createQuery(
-								"Select count(*) from Document where incoming=? and completed=?");
-				query.setParameter(0, incoming);
-				query.setParameter(1, completed);
-				return Integer.parseInt(query.uniqueResult().toString());
-			} else {
-				Query query = (Query) getSession()
-						.createQuery(
-								"Select count(*) from Document where doc_type_id=? and incoming=? and completed=?");
-				query.setParameter(0, docTypeId);
-				query.setParameter(1, incoming);
-				query.setParameter(2, completed);
-				return Integer.parseInt(query.uniqueResult().toString());
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return 0;
-		}
-	}*/
-
-	/*@SuppressWarnings("unchecked")
-	@Override
-	public List<Document> findWaitingDocByType(boolean incoming, boolean completed, Integer docTypeId) {
-		if (docTypeId == null || docTypeId <= 0) {
-			Query query = (Query) getSession().createQuery(
-					"from Document where incoming=? and completed=?");
-			query.setParameter(0, incoming);
-			query.setParameter(1, completed);
-			return query.list();
-		} else {
-			Query query = (Query) getSession()
-					.createQuery(
-							"from Document where doc_type_id=? and incoming=? and completed=?");
-			query.setParameter(0, docTypeId);
-			query.setParameter(1, incoming);
-			query.setParameter(2, completed);
-			return query.list();
-		}
-	}*/
 
 	@Override
 	public Document findDocumentById(Integer docId) {
@@ -122,22 +76,43 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	public void deleteDocument(Document doc) {
 		delete(doc);
 	}
-
-	/*@SuppressWarnings("unchecked")
+	
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findDocumentBy(DocumentType docType,
-			boolean completed, boolean incomming) {
-		Query query = (Query) getSession().createQuery(
-				"from Document where type_id=? and "
-						+ "completed=? and incomming=?");
-		query.setParameter(0, docType.getDocTypeId());
-		query.setParameter(1, completed);
-		query.setParameter(2, incomming);
+	public List<Document> findCompletedDocumentBy(Integer organId, Integer tenureId,
+			Integer docTypeId, int firstResult, int maxResult) {
+		Criteria criteria = getSession().createCriteria(Document.class);
+		criteria.createAlias("organ", "o");
+		criteria.createAlias("tenure", "t");
+		criteria.createAlias("docType", "dt");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.add(Restrictions.and(Restrictions.eq("t.tenureId", tenureId)));
+		criteria.add(Restrictions.and(Restrictions.eq("dt.docTypeId", docTypeId)));	
+		criteria.add(Restrictions.and(Restrictions.eq("completed", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("enabled", true)));
+		criteria.addOrder(Order.desc("docId"));
+		criteria.setFirstResult(firstResult);
+		criteria.setMaxResults(maxResult);
+		return criteria.list();
+	}
 
-		return query.list();
-	}*/
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Document> findCompletedDocumentBy(Integer organId, int firstResult, int maxResult) {
+		Criteria criteria = getSession().createCriteria(Document.class);
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.add(Restrictions.and(Restrictions.eq("completed", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("enabled", true)));
+		criteria.addOrder(Order.desc("docId"));
+		criteria.setFirstResult(firstResult);
+		criteria.setMaxResults(maxResult);
+		return criteria.list();
+	}
 
-	// DocumentType
+	//DocumentType
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentType> findAllDocType() {
@@ -231,6 +206,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@Override
 	public List<Tenure> findAllTenure() {
 		Criteria criteria = getSession().createCriteria(Tenure.class);
+		criteria.addOrder(Order.desc("tenureId"));
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
@@ -250,7 +226,15 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		delete(tenure);
 	}
 	
-	
+	@Override
+	public Tenure findLastTenure() {
+		Criteria criteria = getSession().createCriteria(Tenure.class);
+		criteria.addOrder(Order.desc("tenureId"));
+		criteria.setMaxResults(1);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return (Tenure) criteria.uniqueResult();
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Integer findMaxNumber(Integer tenureId, Integer docTypeId,
@@ -340,8 +324,47 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.createAlias("organ", "o");
 		criteria.add(Restrictions.eq("d.tenure.tenureId", tenureId));
 		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
+		criteria.addOrder(Order.desc("number"));
+		criteria.setMaxResults(1);
 		DocumentRecipient docRec = (DocumentRecipient)criteria.uniqueResult();
 		if(docRec.getNumber() == null) return 1;
 		return (docRec.getNumber() + 1);
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentRecipient> findCompletedDocRecipient(Integer organId,
+			Integer tenureId, Integer docTypeId, int firstResult, int maxResult) {
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("organ", "o");
+		criteria.createAlias("document", "d");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.add(Restrictions.and(Restrictions.eq("d.tenure.tenureId", tenureId)));
+		criteria.add(Restrictions.and(Restrictions.eq("d.docType.docTypeId", docTypeId)));
+		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("completed", true)));
+		criteria.addOrder(Order.desc("receiveTime"));
+		criteria.setFirstResult(firstResult);
+		criteria.setMaxResults(maxResult);
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentRecipient> findCompletedDocRecipient(Integer organId,
+			int firstResult, int maxResult) {
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("organ", "o");
+		criteria.createAlias("document", "d");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("completed", true)));
+		criteria.addOrder(Order.desc("receiveTime"));
+		criteria.setFirstResult(firstResult);
+		criteria.setMaxResults(maxResult);
+		return criteria.list();
+	}
+	
+	
+	
 }

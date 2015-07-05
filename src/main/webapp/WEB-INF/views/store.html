@@ -16,7 +16,7 @@
 <style type="text/css">
 
 .p-doc {
-    max-height: 55px;
+    max-height: 60px;
     overflow: auto;
 }
 
@@ -24,6 +24,7 @@
 	width: 100%;
 	height: 50px;
 	font-style: italic;
+	margin-bottom: 5px;
 }
 
 .list-menu-doc, .ul-doc {
@@ -40,6 +41,11 @@
 	margin-bottom: 10px;
 }
 
+.btn-tenure {
+	width: 100%;
+  	margin-bottom: 5px;
+}
+
 </style>
 </head>
 <body>
@@ -54,128 +60,68 @@
 			<tbody>
 				<tr>
 					<th scope="row">
-						<div id="doc-in">
-							<button type="button" class="btn btn-primary btn-doc"
-								data-toggle="collapse" data-target="#collapse-doc-in">
-								Văn bản đến <span class="badge">4</span>
-							</button>
+						<a type="button" class="btn btn-primary btn-doc" th:href="@{/store/list/out/1}">Văn bản đi</a>
+						
+						<div th:each="tenure : ${tenureList}">
+							<button type="button" class="btn btn-warning btn-tenure" data-toggle="collapse" th:attr="data-target='#tenureOut' + ${tenure.tenureId}">Nhiệm kỳ 4</button>
 
-							<div class="collapse in" id="collapse-doc-in"
+							<div class="collapse" th:attr="id='tenureOut' + ${tenure.tenureId}"
 								aria-expanded="true">
 								<div class="list-group list-menu-doc">
 										<a th:each="docType : ${typeList}" href="#"
-											th:href="@{'/store/in/' + ${docType.docTypeId}}"
+											th:href="@{'/store/list/out/' + ${tenure.tenureId} + '/' + ${docType.docTypeId} + '/1'}"
 											class="list-group-item"> 
 											
 											<span th:text="${docType.docTypeName}"></span> 
-											<span class="badge">14</span>
 										</a>
-
 								</div>
 							</div>
 						</div>
 
-						<div id="doc-out">
-							<button type="button" class="btn btn-primary  btn-doc"
-								data-toggle="collapse" data-target="#collapse-doc-out">
-								Văn bản đi <span class="badge">6</span>
-							</button>
+						<a type="button" class="btn btn-primary btn-doc" th:href="@{/store/list/in/1}">Văn bản đến</a>
 
-							<div class="collapse in" id="collapse-doc-out"
+						<div th:each="tenure : ${tenureList}">
+							<button type="button" class="btn btn-warning btn-tenure" data-toggle="collapse" th:attr="data-target='#tenureIn' + ${tenure.tenureId}">Nhiệm kỳ 4</button>
+
+							<div class="collapse" th:attr="id='tenureIn' + ${tenure.tenureId}"
 								aria-expanded="true">
 								<div class="list-group list-menu-doc">
 									<a th:each="docType : ${typeList}" href="#"
-											th:href="@{'/store/out/' + ${docType.docTypeId}}"
+											th:href="@{'/store/list/in/' + ${tenure.tenureId} + '/' + ${docType.docTypeId} + '/1'}"
 											class="list-group-item"> 
 											
 											<span th:text="${docType.docTypeName}"></span> 
-											<span class="badge">14</span>
 									</a>
 								</div>
 							</div>
 						</div>
 					</th>
 					<td>
-						<div class="list-group doc-group">
-							<a href="#" class="list-group-item doc">
-								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
-									Ẩn 5</h4>
-								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
-									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
-									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
-									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
-									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
-									Đoòng trên tạp chí National Geographic.</p>
-							</a> 
-							
-							<a href="#" class="list-group-item doc">
-								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
-									Ẩn 5</h4>
-								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
-									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
-									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
-									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
-									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
-									Đoòng trên tạp chí National Geographic.</p>
-							</a> 
-							
-							<a href="#" class="list-group-item doc">
-								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
-									Ẩn 5</h4>
-								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
-									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
-									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
-									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
-									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
-									Đoòng trên tạp chí National Geographic.</p>
-							</a> 
-							
-							<a href="#" class="list-group-item doc">
-								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
-									Ẩn 5</h4>
-								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
-									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
-									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
-									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
-									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
-									Đoòng trên tạp chí National Geographic.</p>
-							</a> 
-							
-							<a href="#" class="list-group-item doc">
-								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
-									Ẩn 5</h4>
-								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
-									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
-									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
-									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
-									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
-									Đoòng trên tạp chí National Geographic.</p>
-							</a> 
-							
-							<a href="#" class="list-group-item doc">
-								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
-									Ẩn 5</h4>
-								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
-									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
-									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
-									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
-									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
-									Đoòng trên tạp chí National Geographic.</p>
-							</a> 
-							
-							<a href="#" class="list-group-item doc">
-								<h4 class="list-group-item-heading">Kế hoạch Hành Trình Bí
-									Ẩn 5</h4>
-								<p class="list-group-item-text p-doc">Ngày 30/12/2010: Telegraph
-									tiếp tục đưa tin "Bên trong hang động khổng lồ rừng nhiệt đới".
-									Hang Sơn Đoòng lớn đến nỗi có thể chứa một tòa nhà cao 40 tầng,
-									thuộc Vườn quốc gia Phong Nha - Kẻ Bàng. Kèm theo bài viết là
-									bức hình của nhiếp ảnh gia Carsten Peter chụp bên trong Sơn
-									Đoòng trên tạp chí National Geographic.</p>
-							</a>
+						<div class="list-group doc-group" th:if="${out}">
+							<div th:each="doc : ${docList}" class="doc">
+								<a href="#" class="list-group-item list-group-item-success" th:if="${doc.sended}" th:href="@{/flow/doc_info/} + ${doc.docId}">
+									<h4 class="list-group-item-heading" th:text="${doc.numberSign} + ' - ' + ${doc.docName}"></h4>
+									<p class="list-group-item-text p-doc" th:text="${doc.epitome}"></p>
+								</a> 
+
+								<a href="#" class="list-group-item list-group-item-danger" th:unless="${doc.sended}" th:href="@{/flow/doc_info/} + ${doc.docId}">
+									<h4 class="list-group-item-heading" th:text="${doc.numberSign} + ' - ' + ${doc.docName}"></h4>
+									<p class="list-group-item-text p-doc" th:text="${doc.epitome}"></p>
+								</a> 
+
+							</div>
 						</div>
 
-						<nav>
+						<div class="list-group doc-group" th:if="${in}">
+							<div th:each="docRec : ${docList}" class="doc">
+								<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_info/} + ${docRec.document.docId}">
+									<h4 class="list-group-item-heading" th:text="${docRec.number} + ' - ' + ${docRec.receiveTime} + ' - ' + ${doc.docName}"></h4>
+									<p class="list-group-item-text p-doc" th:text="${docRec.document.epitome}"></p>
+								</a> 
+							</div>
+						</div>
+
+						<nav th:if="${docList.size() > 10}">
 							<ul class="pager">
 								<li class="previous disabled"><a href="#"><span
 										aria-hidden="true">&larr;</span> Cũ</a></li>
