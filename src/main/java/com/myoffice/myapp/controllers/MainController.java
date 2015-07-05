@@ -39,6 +39,7 @@ public class MainController extends AbstractController {
 	public ModelAndView defaultPage() {
 
 		ModelAndView model = new ModelAndView("home");
+		
 		return model;
 	}
 
@@ -78,4 +79,6 @@ public class MainController extends AbstractController {
 		model.addAttribute("errorMessage", errorMessage);
 		return "error";
 	}
+	
+	
 }

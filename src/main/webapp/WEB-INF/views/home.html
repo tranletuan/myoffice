@@ -13,13 +13,29 @@
 <script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
 
 <link rel="stylesheet" href="#" th:href="@{/css/bootstrap.min.css}" />
+
+<!-- calendar -->
+<link rel="stylesheet" href="#" th:href="@{/css/fullcalendar.min.css}" />
+
+<script type="text/javascript" th:src="@{/js/moment.min.js}" ></script>
+
+<script type="text/javascript" th:src="@{/js/fullcalendar.min.js}" ></script>
+
+<script type="text/javascript" th:src="@{/js/home.js}" ></script>
+
+<style type="text/css">
+	#calendar {
+		max-width: 80%;
+		margin: 0 auto;
+	}
+</style>
+
 </head>
 <body>
 	<div class="container-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
-		<div class="container">
-			<h3 th:text="${message}"></h3>
-		</div>
+		<div th:replace="fragment/message :: messsage"></div>
+		<div id="calendar"></div>
 		<div th:replace="fragment/footer :: footer"></div>
 	</div>
 </body>

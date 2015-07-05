@@ -17,7 +17,7 @@
 		
 		<form-login 
 			login-page="/signin" 
-			default-target-url="/store/list/out/1"
+			default-target-url="/home"
 			always-use-default-target="false"
 			login-processing-url="/j_spring_security_check"
 			authentication-failure-url="/signin-error" 

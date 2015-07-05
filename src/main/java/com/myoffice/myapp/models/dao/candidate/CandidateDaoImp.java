@@ -1,10 +1,13 @@
 package com.myoffice.myapp.models.dao.candidate;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Component;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dto.Candidate;
+import com.myoffice.myapp.utils.UtilMethod;
 
 @Repository
 public class CandidateDaoImp extends AbstractDao implements CandidateDao {
@@ -39,6 +43,35 @@ public class CandidateDaoImp extends AbstractDao implements CandidateDao {
 	@Override
 	public Candidate findCandidateById(Integer canId) {
 		return (Candidate) getSession().get(Candidate.class, canId);
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Candidate> findCandidateBy(int month, int year) {
+		Criteria criteria = getSession().createCriteria(Candidate.class);
+		Criterion rest1 = Restrictions.and(Restrictions.eq("MONTH(timeStart)", month), Restrictions.eq("YEAR(timeStart)", year));
+		Criterion rest2 = Restrictions.and(Restrictions.eq("MONTH(timeEnd)", month), Restrictions.eq("YEAR(timeEnd)", year));
+		criteria.add(Restrictions.or(rest1, rest2));
+		return criteria.list();
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Candidate> findCandidateBy(int startDay, int endDay, int month,
+			int year) throws ParseException {
+		String minDayStr = startDay + "-" + month + "-" + year;
+		String maxDayStr = endDay + "-" + month + "-" + year;
+		Date minDay = UtilMethod.toDate(minDayStr, "dd-MM-yyyy");
+		Date maxDay = UtilMethod.toDate(maxDayStr, "dd-MM-yyyy");
+		
+		Criteria criteria = getSession().createCriteria(Candidate.class);
+		Criterion rest1 = Restrictions.and(Restrictions.ge("timeStart", minDay), Restrictions.gt("timeStart", maxDay));
+		Criterion rest2 = Restrictions.and(Restrictions.ge("timeEnd", minDay), Restrictions.gt("timeEnd", maxDay));
+		criteria.add(Restrictions.or(rest1, rest2));
+		
+		return criteria.list();
 	}
 
 	
