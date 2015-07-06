@@ -1,6 +1,10 @@
 package com.myoffice.myapp.models.dao.document;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,6 +14,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.ResultTransformer;
@@ -29,8 +34,10 @@ import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
+import com.myoffice.myapp.support.CalendarDoc;
 import com.myoffice.myapp.support.NoteDoctypeInt;
 import com.myoffice.myapp.utils.FlowUtil;
+import com.myoffice.myapp.utils.UtilMethod;
 
 @Repository
 public class DocumentDaoImp extends AbstractDao implements DocumentDao {
@@ -81,7 +88,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findCompletedDocumentBy(Integer organId, Integer tenureId,
-			Integer docTypeId, int firstResult, int maxResult) {
+			Integer docTypeId, int completed, int firstResult, int maxResult, int enabled) {
 		Criteria criteria = getSession().createCriteria(Document.class);
 		criteria.createAlias("organ", "o");
 		criteria.createAlias("tenure", "t");
@@ -89,8 +96,14 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.add(Restrictions.eq("o.organId", organId));
 		criteria.add(Restrictions.and(Restrictions.eq("t.tenureId", tenureId)));
 		criteria.add(Restrictions.and(Restrictions.eq("dt.docTypeId", docTypeId)));	
-		criteria.add(Restrictions.and(Restrictions.eq("completed", true)));
-		criteria.add(Restrictions.and(Restrictions.eq("enabled", true)));
+		if(completed != -1) {
+			boolean value = completed == 1? true : false;
+			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
+		}
+		if(enabled != -1){
+			boolean value = enabled == 1? true : false;
+			criteria.add(Restrictions.and(Restrictions.eq("enabled", value)));
+		}
 		criteria.addOrder(Order.desc("docId"));
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResult);
@@ -100,12 +113,20 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findCompletedDocumentBy(Integer organId, int firstResult, int maxResult) {
+	public List<Document> findCompletedDocumentBy(Integer organId, int completed, int firstResult, int maxResult, int enabled) {
 		Criteria criteria = getSession().createCriteria(Document.class);
 		criteria.createAlias("organ", "o");
 		criteria.add(Restrictions.eq("o.organId", organId));
-		criteria.add(Restrictions.and(Restrictions.eq("completed", true)));
-		criteria.add(Restrictions.and(Restrictions.eq("enabled", true)));
+	
+		if(completed != -1) {
+			boolean value = completed == 1? true : false;
+			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
+		}
+		
+		if(enabled != -1){
+			boolean value = enabled == 1? true : false;
+			criteria.add(Restrictions.and(Restrictions.eq("enabled", value)));
+		}
 		criteria.addOrder(Order.desc("docId"));
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResult);
@@ -362,6 +383,89 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.addOrder(Order.desc("receiveTime"));
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResult);
+		return criteria.list();
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId,
+			int completed, int month, int year) {
+		
+		Calendar cal = new GregorianCalendar(year, month, 1);
+		String minDateStr = "1-" + month + "-" + year;
+		String maxDateStr = cal.getActualMaximum(Calendar.DAY_OF_MONTH) + "-" + month + "-" + year;
+		
+		Date minDay = new Date();
+		Date maxDay = new Date();
+		try{
+			minDay = UtilMethod.toDate(minDateStr, "dd-MM-yyyy");
+			maxDay = UtilMethod.toDate(maxDateStr, "dd-MM-yyyy");
+		}catch(Exception e){}
+		
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("candidate", "c");
+		criteria.createAlias("organ", "o");
+		Criterion rest1 = Restrictions.and(Restrictions.ge("c.timeStart", minDay), Restrictions.le("c.timeStart", maxDay));
+		Criterion rest2 = Restrictions.and(Restrictions.ge("c.timeEnd", minDay), Restrictions.le("c.timeEnd", maxDay));
+		criteria.add(Restrictions.or(rest1, rest2));
+		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
+		if(completed != -1) {
+			boolean value = completed == 1? true : false;
+			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
+		}
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId,
+			int completed, int startDay, int endDay, int month, int year) {
+		String minDateStr = startDay + "-" + month + "-" + year;
+		String maxDateStr = endDay + "-" + month + "-" + year;
+		
+		Date minDay = new Date();
+		Date maxDay = new Date();
+		try{
+			minDay = UtilMethod.toDate(minDateStr, "dd-MM-yyyy");
+			maxDay = UtilMethod.toDate(maxDateStr, "dd-MM-yyyy");
+		}catch(Exception e){}
+		
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("candidate", "c");
+		criteria.createAlias("organ", "o");
+		Criterion rest1 = Restrictions.and(Restrictions.ge("c.timeStart", minDay), Restrictions.le("c.timeStart", maxDay));
+		Criterion rest2 = Restrictions.and(Restrictions.ge("c.timeEnd", minDay), Restrictions.le("c.timeEnd", maxDay));
+		criteria.add(Restrictions.or(rest1, rest2));
+		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
+		if(completed != -1) {
+			boolean value = completed == 1? true : false;
+			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
+		}
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId,
+			int completed, Date start, Date end) {
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("candidate", "c");
+		criteria.createAlias("organ", "o");
+		Criterion rest1 = Restrictions.and(Restrictions.ge("c.timeStart", start), Restrictions.le("c.timeStart", end));
+		Criterion rest2 = Restrictions.and(Restrictions.ge("c.timeEnd", start), Restrictions.le("c.timeEnd", end));
+		criteria.add(Restrictions.or(rest1, rest2));
+		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
+		if(completed != -1) {
+			boolean value = completed == 1? true : false;
+			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
+		}
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		
 		return criteria.list();
 	}
 	

@@ -39,10 +39,11 @@ public class StoreController extends AbstractController {
 		model.addObject("tenureList", tenureList);
 		
 		User curUser = securityService.getCurrentUser();
+		int enabled = curUser.checkRoleByShortName("mng")? -1 : 1;
 		Organ organ = curUser.getOrgan();
 		
 		if(type.equals("out")){
-			List<Document> docList = dataService.findCompletedDocumentBy(organ.getOrganId(), firstNumber, 10);
+			List<Document> docList = dataService.findCompletedDocumentBy(organ.getOrganId(), 1, firstNumber, 10, enabled);
 			model.addObject("docList", docList);
 			model.addObject("out", true);
 		} else {
@@ -67,6 +68,7 @@ public class StoreController extends AbstractController {
 		model.addObject("tenureList", tenureList);
 		
 		User curUser = securityService.getCurrentUser();
+		int enabled = curUser.checkRoleByShortName("mng")? -1 : 1;
 		Organ organ = curUser.getOrgan();
 		
 		if(type.equals("in")){
@@ -76,7 +78,7 @@ public class StoreController extends AbstractController {
 			model.addObject("in", true);
 		} else if(type.equals("out")){
 			List<Document> docList = dataService.findCompletedDocumentBy(
-					organ.getOrganId(), tenureId, docTypeId, firstNumber, 10);
+					organ.getOrganId(), tenureId, docTypeId, 1, firstNumber, 10, enabled);
 			model.addObject("docList", docList);
 			model.addObject("out", true);
 		}

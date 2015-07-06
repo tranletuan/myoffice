@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
@@ -143,12 +145,14 @@ public class DataService {
 		docDao.deleteDocument(doc);
 	}
 	
-	public List<Document> findCompletedDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, int firstResult, int maxResult){
-		return docDao.findCompletedDocumentBy(organId, tenureId, docTypeId, firstResult, maxResult);
+	public List<Document> findCompletedDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, 
+			int completed, int firstResult, int maxResult, int enabled){
+		return docDao.findCompletedDocumentBy(organId, tenureId, docTypeId, completed, firstResult, maxResult, enabled);
 	}
 	
-	public List<Document> findCompletedDocumentBy(Integer organId, int firstResult, int maxResult){
-		return docDao.findCompletedDocumentBy(organId, firstResult, maxResult);
+	public List<Document> findCompletedDocumentBy(Integer organId, int completed, 
+			int firstResult, int maxResult, int enabled){
+		return docDao.findCompletedDocumentBy(organId, completed, firstResult, maxResult, enabled);
 	}
 	
 	//DOCUMENT TYPE
@@ -254,6 +258,22 @@ public class DataService {
 			int firstResult, int maxResult) {
 		return docDao.findCompletedDocRecipient(organId, firstResult, maxResult);
 	}
+	
+	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, Date start, Date end){
+		return docDao.findDocRecByCandidateDate(organId, completed, start, end);
+	}
+	
+	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, 
+			int month, int year){
+		return docDao.findDocRecByCandidateDate(organId, completed, month, year);
+	}
+
+	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, 
+			int startDay, int endDay, int month, int year){
+		return docDao.findDocRecByCandidateDate(organId, completed, startDay, endDay, month, year);
+	}
+	
+	
 	
 	//FILE
 	public DocumentFile findNewestDocFile(Integer docId){

@@ -1,5 +1,6 @@
 package com.myoffice.myapp.models.dto;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.myoffice.myapp.utils.UtilMethod;
 
@@ -53,8 +55,8 @@ public class Candidate {
 	public Candidate() {
 		super();
 	}
-
-	public Date getTimeStart() {
+	
+	public Date getTimeStart() {		
 		return timeStart;
 	}
 

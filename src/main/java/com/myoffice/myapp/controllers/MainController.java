@@ -1,5 +1,6 @@
 package com.myoffice.myapp.controllers;
 
+import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.myoffice.myapp.models.dto.Candidate;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.User;
@@ -36,10 +38,9 @@ public class MainController extends AbstractController {
 			.getLogger(MainController.class);
 	
 	@RequestMapping(value = { "/", "/home**" }, method = RequestMethod.GET)
-	public ModelAndView defaultPage() {
+	public ModelAndView defaultPage() throws ParseException {
 
 		ModelAndView model = new ModelAndView("home");
-		
 		return model;
 	}
 

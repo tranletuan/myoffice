@@ -343,6 +343,7 @@ public class FlowController extends AbstractController {
 			}
 			
 			model.addObject("doc", doc);
+			model.addObject("canId", 0);
 			model.setViewName("doc-info");
 		}
 	
@@ -706,17 +707,6 @@ public class FlowController extends AbstractController {
 			candidate.setContent(content);
 			docRec.setCandidate(candidate);
 			dataService.saveDocRecipient(docRec);
-
-			// Hoàn thành task
-			/*try {
-				Task curTask = flowUtil.getCurrentTask(docRec
-						.getProcessInstanceId());
-				Map<String, Object> variables = new HashMap<String, Object>();
-				variables.put("check", 1);
-				flowUtil.getTaskService().complete(curTask.getId(), variables);
-			} catch (Exception e) {
-				e.getStackTrace();
-			}*/
 		}
 		
 		model.setViewName("redirect:/flow/doc_in_info/" + docId);

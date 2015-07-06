@@ -35,7 +35,7 @@
 	<div class="container-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
 		<div th:replace="fragment/message :: messsage"></div>
-		<div id="calendar"></div>
+		<div id="calendar" th:attr="data=@{/calendar/update}"></div>
 		<div th:replace="fragment/footer :: footer"></div>
 	</div>
 </body>

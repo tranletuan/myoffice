@@ -1,5 +1,6 @@
 package com.myoffice.myapp.models.dao.document;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
+import com.myoffice.myapp.support.CalendarDoc;
 import com.myoffice.myapp.support.NoteDoctypeInt;
 
 public interface DocumentDao {
@@ -24,9 +26,12 @@ public interface DocumentDao {
 	
 	void deleteDocument(Document doc);
 	
-	List<Document> findCompletedDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, int firstResult, int maxResult);
+	List<Document> findCompletedDocumentBy(Integer organId, Integer tenureId, 
+			Integer docTypeId, int completed, 
+			int firstResult, int maxResult, int enabled);
 	
-	List<Document> findCompletedDocumentBy(Integer organId, int firstResult, int maxResult);
+	List<Document> findCompletedDocumentBy(Integer organId, int completed, 
+			int firstResult, int maxResult, int enabled);
 	
 	//DocumentType
 	DocumentType findDocTypeById(Integer typeId);
@@ -91,5 +96,10 @@ public interface DocumentDao {
 	List<DocumentRecipient> findCompletedDocRecipient(Integer organId, Integer tenureId, Integer docTypeId, int firstResult, int maxResult);
 	
 	List<DocumentRecipient> findCompletedDocRecipient(Integer organId, int firstResult, int maxResult);
+	
+	List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, Date start, Date end);
 
+	List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, int month, int year);
+
+	List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, int startDay, int endDay, int month, int year);
 }
