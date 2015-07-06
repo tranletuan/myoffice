@@ -16,8 +16,15 @@
 </head>
 <style type="text/css">
 .p-doc {
-	max-height: 55px;
-	overflow: auto;
+    max-height: 60px;
+    overflow: auto;
+}
+
+.btn-doc {
+	width: 100%;
+	height: 50px;
+	font-style: italic;
+	margin-bottom: 5px;
 }
 
 .list-menu-doc, .ul-doc {
@@ -33,46 +40,103 @@
 	margin-left: 10px;
 	margin-bottom: 10px;
 }
+
+.btn-tenure {
+	width: 100%;
+  	margin-bottom: 5px;
+}
 </style>
 
 <body>
 	<div class="container-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
-		<table class="table">
-			<colgroup>
-				<col class="col-xs-5 col-md-2" />
-				<col class="col-xs-13 col-md-10" />
-			</colgroup>
-			<tbody>
-				<tr>
-					<th scope="row">
-						<div class="list-group">
-							<a href="#" class="list-group-item" th:each="typeInt : ${docTypeIntList}" th:href="@{/flow/waiting_list_} + ${type} + '?docTypeId=' + ${typeInt.docType.docTypeId}"><span th:text="${typeInt.docType.docTypeName}"/><span class="badge" th:text="${typeInt.value}"/></a>
-						</div>
-					</th>
-					<td>
-						<div class="list-group doc-group" th:each="doc : ${docList}">
-							<a href="#" class="list-group-item list-group-item-success doc" th:href="@{/flow/doc_info} + '?docId=' + ${doc.docId}">
-								<h4 class="list-group-item-heading" th:text="${doc.docName}"></h4>
-								<p class="list-group-item-text p-doc" th:text="${doc.epitome}">
-								</p>
-							</a>
- 
-						</div> 
+		<div>
+			<table class="table">
+				<colgroup>
+					<col class="col-xs-3 col-md-2" />
+					<col class="col-xs-15 col-md-10" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<th scope="row">
+							<div th:if="${out}">
+			
+								<div th:each="tenure : ${tenureList}">
+									<button type="button" class="btn btn-warning btn-tenure" data-toggle="collapse" th:attr="data-target='#tenureOut' + ${tenure.tenureId}">Nhiệm kỳ 4</button>
 
-						<nav th:if="${docList.size() > 8}">
-							<ul class="pager">
-								<li class="previous disabled"><a href="#"><span
-										aria-hidden="true">&larr;</span> Cũ</a></li>
-								<li><span>1</span></li>
-								<li class="next"><a href="#">Mới <span
-										aria-hidden="true">&rarr;</span></a></li>
-							</ul>
-						</nav>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+									<div class="collapse" th:attr="id='tenureOut' + ${tenure.tenureId}"
+										aria-expanded="true">
+										<div class="list-group list-menu-doc">
+												<a th:each="docType : ${typeList}" href="#"
+													th:href="@{'/flow/wait_list/out/' + ${tenure.tenureId} + '/' + ${docType.docTypeId} + '/1'}"
+													class="list-group-item"> 
+													
+													<span th:text="${docType.docTypeName}"></span> 
+												</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div th:if="${in}">
+							
+								<div th:each="tenure : ${tenureList}">
+									<button type="button" class="btn btn-warning btn-tenure" data-toggle="collapse" th:attr="data-target='#tenureIn' + ${tenure.tenureId}">Nhiệm kỳ 4</button>
+
+									<div class="collapse" th:attr="id='tenureIn' + ${tenure.tenureId}"
+										aria-expanded="true">
+										<div class="list-group list-menu-doc">
+											<a th:each="docType : ${typeList}" href="#"
+													th:href="@{'/flow/wait_list/in/' + ${tenure.tenureId} + '/' + ${docType.docTypeId} + '/1'}"
+													class="list-group-item"> 
+													
+													<span th:text="${docType.docTypeName}"></span> 
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</th>
+						<td>
+							<div class="list-group doc-group" th:if="${out}">
+								<div th:each="doc : ${docList}" class="doc">
+									<a href="#" class="list-group-item list-group-item-warning" th:href="@{/flow/doc_info/} + ${doc.docId}">
+										<h4 class="list-group-item-heading" th:text="${doc.numberSign} + ' - ' + ${doc.docName}"></h4>
+										<p class="list-group-item-text p-doc" th:text="${doc.epitome}"></p>
+									</a>
+								</div>
+							</div>
+
+							<div class="list-group doc-group" th:if="${in}">
+								<div th:each="docRec : ${docList}" class="doc">
+									<a href="#" class="list-group-item list-group-item-warning" th:href="@{/flow/doc_in_info/} + ${docRec.document.docId}" th:if="${docRec.number}">
+										<h4 class="list-group-item-heading" th:text="${docRec.number} + ' - ' + ${docRec.receiveTime} + ' - ' + ${docRec.document.docName}"></h4>
+										<p class="list-group-item-text p-doc" th:text="${docRec.document.epitome}"></p>
+									</a> 
+								</div>
+
+								<div th:each="docRec : ${docList}" class="doc">
+									<a href="#" class="list-group-item list-group-item-danger" th:href="@{/flow/doc_in_info/} + ${docRec.document.docId}" th:unless="${docRec.number}">
+										<h4 class="list-group-item-heading" th:text="${'Chưa nhận - '} + ${docRec.document.docName}"></h4>
+										<p class="list-group-item-text p-doc" th:text="${docRec.document.epitome}"></p>
+									</a> 
+								</div>
+							</div>
+
+							<nav th:if="${docList.size() > 10}">
+								<ul class="pager">
+									<li class="previous disabled"><a href="#"><span
+											aria-hidden="true">&larr;</span> Cũ</a></li>
+									<li><span>1</span></li>
+									<li class="next"><a href="#">Mới <span
+											aria-hidden="true">&rarr;</span></a></li>
+								</ul>
+							</nav>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<div th:replace="fragment/footer :: footer"></div>
 	</div>
 </body>

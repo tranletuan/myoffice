@@ -26,11 +26,10 @@ public interface DocumentDao {
 	
 	void deleteDocument(Document doc);
 	
-	List<Document> findCompletedDocumentBy(Integer organId, Integer tenureId, 
-			Integer docTypeId, int completed, 
-			int firstResult, int maxResult, int enabled);
+	List<Document> findDocumentBy(Integer organId, Integer tenureId, 
+			Integer docTypeId, int completed, int firstResult, int maxResult, int enabled);
 	
-	List<Document> findCompletedDocumentBy(Integer organId, int completed, 
+	List<Document> findDocumentBy(Integer organId, int completed, 
 			int firstResult, int maxResult, int enabled);
 	
 	//DocumentType
@@ -93,13 +92,9 @@ public interface DocumentDao {
 	
 	Integer findMaxDocRecNumber(Integer tenureId, Integer organId);
 	
-	List<DocumentRecipient> findCompletedDocRecipient(Integer organId, Integer tenureId, Integer docTypeId, int firstResult, int maxResult);
+	List<DocumentRecipient> findDocRecipient(Integer organId, Integer tenureId, Integer docTypeId, int completed, int firstResult, int maxResult);
 	
-	List<DocumentRecipient> findCompletedDocRecipient(Integer organId, int firstResult, int maxResult);
+	List<DocumentRecipient> findDocRecipient(Integer organId, int completed, int firstResult, int maxResult);
 	
 	List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, Date start, Date end);
-
-	List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, int month, int year);
-
-	List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, int startDay, int endDay, int month, int year);
 }

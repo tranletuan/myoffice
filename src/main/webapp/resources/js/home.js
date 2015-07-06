@@ -13,8 +13,8 @@ $(document).ready(function() {
         	url: URL,
         	type: 'GET',
         	data: {
-        		custom_param1: 'something',
-        		custom_param2: 'somethingelse'
+        		start: ,
+        		end: 
         	},
         	error: function() {
         		alert('there was an error while fetching events!');

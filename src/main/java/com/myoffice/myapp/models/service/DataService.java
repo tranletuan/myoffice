@@ -145,14 +145,14 @@ public class DataService {
 		docDao.deleteDocument(doc);
 	}
 	
-	public List<Document> findCompletedDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, 
+	public List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, 
 			int completed, int firstResult, int maxResult, int enabled){
-		return docDao.findCompletedDocumentBy(organId, tenureId, docTypeId, completed, firstResult, maxResult, enabled);
+		return docDao.findDocumentBy(organId, tenureId, docTypeId, completed, firstResult, maxResult, enabled);
 	}
 	
-	public List<Document> findCompletedDocumentBy(Integer organId, int completed, 
+	public List<Document> findDocumentBy(Integer organId, int completed, 
 			int firstResult, int maxResult, int enabled){
-		return docDao.findCompletedDocumentBy(organId, completed, firstResult, maxResult, enabled);
+		return docDao.findDocumentBy(organId, completed, firstResult, maxResult, enabled);
 	}
 	
 	//DOCUMENT TYPE
@@ -249,31 +249,19 @@ public class DataService {
 		return docDao.findDocRecipient(docId, organId);
 	}
 	
-	public List<DocumentRecipient> findCompletedDocRecipient(Integer organId,
-			Integer tenureId, Integer docTypeId, int firstResult, int maxResult){
-		return docDao.findCompletedDocRecipient(organId, tenureId, docTypeId, firstResult, maxResult);
+	public List<DocumentRecipient> findDocRecipient(Integer organId,
+			Integer tenureId, Integer docTypeId, int completed, int firstResult, int maxResult){
+		return docDao.findDocRecipient(organId, tenureId, docTypeId, completed, firstResult, maxResult);
 	}
 	
-	public List<DocumentRecipient> findCompletedDocRecipient(Integer organId,
+	public List<DocumentRecipient> findDocRecipient(Integer organId, int completed,
 			int firstResult, int maxResult) {
-		return docDao.findCompletedDocRecipient(organId, firstResult, maxResult);
+		return docDao.findDocRecipient(organId, completed, firstResult, maxResult);
 	}
 	
 	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, Date start, Date end){
 		return docDao.findDocRecByCandidateDate(organId, completed, start, end);
 	}
-	
-	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, 
-			int month, int year){
-		return docDao.findDocRecByCandidateDate(organId, completed, month, year);
-	}
-
-	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, 
-			int startDay, int endDay, int month, int year){
-		return docDao.findDocRecByCandidateDate(organId, completed, startDay, endDay, month, year);
-	}
-	
-	
 	
 	//FILE
 	public DocumentFile findNewestDocFile(Integer docId){

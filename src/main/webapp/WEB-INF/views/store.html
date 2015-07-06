@@ -115,7 +115,7 @@
 						<div class="list-group doc-group" th:if="${in}">
 							<div th:each="docRec : ${docList}" class="doc">
 								<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_info/} + ${docRec.document.docId}">
-									<h4 class="list-group-item-heading" th:text="${docRec.number} + ' - ' + ${docRec.receiveTime} + ' - ' + ${doc.docName}"></h4>
+									<h4 class="list-group-item-heading" th:text="${docRec.number} + ' - ' + ${docRec.receiveTime} + ' - ' + ${docRec.document.docName}"></h4>
 									<p class="list-group-item-text p-doc" th:text="${docRec.document.epitome}"></p>
 								</a> 
 							</div>

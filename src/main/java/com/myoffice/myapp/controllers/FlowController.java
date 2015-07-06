@@ -519,7 +519,7 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
-	//================DOC_IN==================
+	//=============DOC_IN==================
 	@RequestMapping(value = "/number_in", method = RequestMethod.GET)
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.OK)
@@ -765,123 +765,66 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
-	/*@RequestMapping(value = "/create_doc_in", method = RequestMethod.GET)
-	public ModelAndView createNewDocIn(){
-		ModelAndView model = new ModelAndView("create-doc-in");
+	//=============WAITING DOC=============
+	@RequestMapping(value = "/wait_list/{type}")
+	public ModelAndView waitingPage(
+			@PathVariable("type") String type) {
+		ModelAndView model = new ModelAndView("waiting-list");
 		
-		User user = securityService.getCurrentUser();
-		Organ organ = user.getOrgan();
-		if(organ == null){
-			model.setViewName("redirect:/store/list/out/1");
-		}
-		
-		List<DocumentType> docTypeList = dataService.findAllDocType();
-		List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
-		List<PrivacyLevel> privacyList = dataService.findAllPrivacyLevel();
-		List<Tenure> tenureList = dataService.findAllTenure(); 
-		
-		
-		model.addObject("docTypeList", docTypeList);
-		model.addObject("emeList", emeList);
-		model.addObject("privacyList", privacyList);
+		List<DocumentType> typeList = dataService.findAllDocType();
+		List<Tenure> tenureList = dataService.findAllTenure();
+		model.addObject("typeList", typeList);
 		model.addObject("tenureList", tenureList);
-		model.addObject("organ", organ);
 		
+		User curUser = securityService.getCurrentUser();
+		Organ organ = curUser.getOrgan();
+		
+		if(type.equals("in")) {
+			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), 0, 1, 10);
+			model.addObject("docList", docList);
+			model.addObject("in", true);
+			
+		} else if(type.equals("out")){
+			int value = curUser.checkRoleByShortName("mng")? -1 : 1;
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), 0, 1, 10, value);
+			model.addObject("docList", docList);
+			model.addObject("out", true);
+		}
 		return model;
 	}
-	*/
-	/*@RequestMapping(value = "/save_doc_in", method = RequestMethod.POST)
-	public ModelAndView submitNewDocIn(
-			@RequestParam("title") String title,
-			@RequestParam("docName") String docName,
-			@RequestParam("epitome") String epitome,
-			@RequestParam("docTypeId") Integer docTypeId,
-			@RequestParam("note") String note,
-			@RequestParam("tenureId") Integer tenureId,
-			@RequestParam("number") String number,
-			@RequestParam("numberSign") String numberSign,
-			@RequestParam("sign") String sign,
-			@RequestParam("file") MultipartFile file,
-			@RequestParam("privacyId") Integer privacyId,
-			@RequestParam("emeId") Integer emeId,
-			RedirectAttributes reAttr) throws IllegalStateException, IOException{
-		ModelAndView model = new ModelAndView("doc_info");
+	
+	@RequestMapping(value = "/wait_list/{type}/{tenureId}/{docTypeId}/{firstNumber}")
+	public ModelAndView waitList(
+			@PathVariable("type") String type,
+			@PathVariable("tenureId") Integer tenureId,
+			@PathVariable("docTypeId") Integer docTypeId,
+			@PathVariable("firstNumber") Integer firstNumber){
+		ModelAndView model = new ModelAndView("waiting-list");
 		
-		Tenure tenure = dataService.findTenureById(tenureId);
-		DocumentType docType = dataService.findDocTypeById(docTypeId);
-		Organ organ = securityService.getCurrentUser().getOrgan();
-		numberSign = number + numberSign + sign;
+		List<DocumentType> typeList = dataService.findAllDocType();
+		List<Tenure> tenureList = dataService.findAllTenure();
+		model.addObject("typeList", typeList);
+		model.addObject("tenureList", tenureList);
 		
-		if(organ == null){
-			model.setViewName("error");
-			model.addObject("errorMessage", "Tài khoản chưa xác định thuộc đơn vị nào chưa thể tạo văn bản mới!");
+		User curUser = securityService.getCurrentUser();
+		Organ organ = curUser.getOrgan();
+		
+		//flow in
+		if (type.equals("in")) {
+			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), tenureId, docTypeId, 
+					0, firstNumber, firstNumber + 10);
+			model.addObject("docList", docList);
+			model.addObject("in", true);
+			
+		} else if (type.equals("out")) { //flow out
+			int value = curUser.checkRoleByShortName("mng")? -1 : 1;
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), tenureId, 
+						docTypeId, 0, firstNumber, firstNumber + 10, value);
+			model.addObject("docList", docList);
+			model.addObject("out", true);
 		}
-		
-		//Save file to server 
-		String dirServer = DataConfig.DIR_SERVER + tenure.getTenureName() + File.separator + docType.getDocTypeName() + File.separator;
-		String fileName = number + "-" + docType.getShortName() + "-" + organ.getOrganType().getShortName() + "-" + docName;
-		String[] parts = file.getOriginalFilename().split("\\.");
-		fileName += "." + parts[parts.length - 1];
-		String docPath = dirServer + fileName;
-		
-		//Set data to save
-		Document doc = new Document();
-		doc.setTitle(title);
-		doc.setDocName(docName);
-		doc.setEpitome(epitome);
-		doc.setDocType(docType);
-		doc.setTenure(tenure);
-		doc.setNumberSign(numberSign);
-		doc.setDocPath(docPath);
-		doc.setOrgan(organ);
-		doc.setPrivacyLevel(dataService.findPrivacyLevelById(privacyId));
-		doc.setEmergencyLevel(dataService.findEmergencyLevelById(emeId));
-		
-		//Number and Sign
-		Integer num = UtilMethod.parseNumDoc(number);
-		if (num > 0) {
-			doc.setNumber(num);
-		} else {
-			doc.setNumber(dataService.findMaxNumber(tenureId, docTypeId, organ.getOrganId(), true) - 1);
-		}
-		
-		
-		//create new flow
-		try{
-			String procDefId = flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_IN, DataConfig.PROC_DEF_KEY_FLOW_IN);
-			String procInsId = flowUtil.startProcess(procDefId);
-			
-			if(procDefId == " " ||  procInsId == null){
-				model.setViewName("error");
-				model.addObject("errorMessage","Luồng văn bản chưa được tạo, vui lòng liên hệ admin");
-				return model;
-			}
-			
-			doc.setProcessInstanceId(procInsId);
-			try {
-				dataService.saveDocument(doc);
-				Task task = flowUtil.getCurrentTask(doc.getProcessInstanceId());
-				flowUtil.getTaskService().complete(task.getId());
-			} catch (Exception e) {
-				logger.error(e.getMessage());
-				if (procInsId != null) {
-					flowUtil.deleteProcessInstanceById(procInsId,"can not create new out document");
-				}
-				model.setViewName("error");
-				model.addObject("errorMessage", e.getMessage());
-			}
-			
-		}catch(Exception e){
-			logger.error(e.getMessage());
-			
-			model.setViewName("error");
-			model.addObject("errorMessage", "Lỗi!Không thể tạo văn bản");
-		}
-		
-		dataService.upLoadFile(dirServer, file, fileName);
-		reAttr.addFlashAttribute("doc", doc);
-		
+
 		return model;
-	}*/
+	}
 
 }

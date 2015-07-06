@@ -87,7 +87,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findCompletedDocumentBy(Integer organId, Integer tenureId,
+	public List<Document> findDocumentBy(Integer organId, Integer tenureId,
 			Integer docTypeId, int completed, int firstResult, int maxResult, int enabled) {
 		Criteria criteria = getSession().createCriteria(Document.class);
 		criteria.createAlias("organ", "o");
@@ -113,7 +113,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findCompletedDocumentBy(Integer organId, int completed, int firstResult, int maxResult, int enabled) {
+	public List<Document> findDocumentBy(Integer organId, int completed, int firstResult, int maxResult, int enabled) {
 		Criteria criteria = getSession().createCriteria(Document.class);
 		criteria.createAlias("organ", "o");
 		criteria.add(Restrictions.eq("o.organId", organId));
@@ -354,8 +354,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DocumentRecipient> findCompletedDocRecipient(Integer organId,
-			Integer tenureId, Integer docTypeId, int firstResult, int maxResult) {
+	public List<DocumentRecipient> findDocRecipient(Integer organId,
+			Integer tenureId, Integer docTypeId, int completed, int firstResult, int maxResult) {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
 		criteria.createAlias("organ", "o");
 		criteria.createAlias("document", "d");
@@ -363,7 +363,12 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.add(Restrictions.and(Restrictions.eq("d.tenure.tenureId", tenureId)));
 		criteria.add(Restrictions.and(Restrictions.eq("d.docType.docTypeId", docTypeId)));
 		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
-		criteria.add(Restrictions.and(Restrictions.eq("completed", true)));
+		
+		if(completed != -1) {
+			boolean value = completed == 1? true : false;
+			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
+		}
+		
 		criteria.addOrder(Order.desc("receiveTime"));
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResult);
@@ -372,14 +377,19 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DocumentRecipient> findCompletedDocRecipient(Integer organId,
+	public List<DocumentRecipient> findDocRecipient(Integer organId, int completed, 
 			int firstResult, int maxResult) {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
 		criteria.createAlias("organ", "o");
 		criteria.createAlias("document", "d");
 		criteria.add(Restrictions.eq("o.organId", organId));
 		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
-		criteria.add(Restrictions.and(Restrictions.eq("completed", true)));
+		
+		if(completed != -1) {
+			boolean value = completed == 1? true : false;
+			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
+		}
+		
 		criteria.addOrder(Order.desc("receiveTime"));
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResult);
@@ -387,7 +397,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 
 	
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId,
 			int completed, int month, int year) {
@@ -447,7 +457,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		
 		return criteria.list();
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	@Override

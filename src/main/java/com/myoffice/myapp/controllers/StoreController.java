@@ -43,11 +43,11 @@ public class StoreController extends AbstractController {
 		Organ organ = curUser.getOrgan();
 		
 		if(type.equals("out")){
-			List<Document> docList = dataService.findCompletedDocumentBy(organ.getOrganId(), 1, firstNumber, 10, enabled);
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), 1, firstNumber, 10, enabled);
 			model.addObject("docList", docList);
 			model.addObject("out", true);
 		} else {
-			List<DocumentRecipient> docList = dataService.findCompletedDocRecipient(organ.getOrganId(), firstNumber, 10);
+			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), 1, firstNumber, 10);
 			model.addObject("docList", docList);
 			model.addObject("in", true);
 		}
@@ -72,12 +72,12 @@ public class StoreController extends AbstractController {
 		Organ organ = curUser.getOrgan();
 		
 		if(type.equals("in")){
-			List<DocumentRecipient> docList = dataService.findCompletedDocRecipient(
-					organ.getOrganId(), tenureId, docTypeId, firstNumber, 10);
+			List<DocumentRecipient> docList = dataService.findDocRecipient(
+					organ.getOrganId(), tenureId, docTypeId, 1, firstNumber, 10);
 			model.addObject("docList", docList);
 			model.addObject("in", true);
 		} else if(type.equals("out")){
-			List<Document> docList = dataService.findCompletedDocumentBy(
+			List<Document> docList = dataService.findDocumentBy(
 					organ.getOrganId(), tenureId, docTypeId, 1, firstNumber, 10, enabled);
 			model.addObject("docList", docList);
 			model.addObject("out", true);
