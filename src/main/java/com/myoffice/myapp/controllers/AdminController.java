@@ -43,6 +43,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
+import com.myoffice.myapp.models.dto.Level;
 import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.OrganType;
 import com.myoffice.myapp.models.dto.Parameter;
@@ -124,11 +125,8 @@ public class AdminController extends AbstractController {
 	@RequestMapping(value = "/role_list", method = RequestMethod.GET)
 	public ModelAndView roleList() {
 		ModelAndView model = new ModelAndView("admin/role-list");
-
 		List<Role> roleList = dataService.findAllRoles();
-
 		model.addObject("roleList", roleList);
-
 		return model;
 	}
 
@@ -153,6 +151,42 @@ public class AdminController extends AbstractController {
 		return model;
 	}
 
+	//LEVEL
+	@RequestMapping(value = "/level_list", method = RequestMethod.GET)
+	public ModelAndView levelList(){
+		ModelAndView model = new ModelAndView("admin/level-list");
+		List<Level> levelList = dataService.findAllLevel();
+		model.addObject("levelList", levelList);
+		return model;
+	}
+	
+	@RequestMapping(value = "/save_level", method = RequestMethod.POST)
+	public ModelAndView saveLevel(
+			@RequestParam("levelId") Integer levelId,
+			@RequestParam("levelName") String levelName, 
+			@RequestParam("shortName") String shortName,
+			@RequestParam("value") String value, RedirectAttributes reAttr){
+		ModelAndView model = new ModelAndView("redirect:level_list");
+		Level level = new Level();
+		if(levelId != null && levelId > 0) {
+			level = dataService.findLevelById(levelId);
+		}
+	
+		int val = UtilMethod.parseNumDoc(value);
+		if(val == 0){
+			reAttr.addFlashAttribute("error", true);
+			reAttr.addFlashAttribute("errorMessage", "Giá trị cấp bậc phải là giá trị số và lớn hơn hoặc bằng 0");
+			return model;
+		} else {
+			level.setLevelName(levelName);
+			level.setShortName(shortName);
+			level.setValue(val);
+			dataService.saveLevel(level);
+		}
+		
+		return model;
+	}
+	//=====================================================
 	//ORGAN
 	@RequestMapping(value = "/organ_list", method = RequestMethod.GET)
 	public ModelAndView organList(){
@@ -250,6 +284,7 @@ public class AdminController extends AbstractController {
 		return model;
 	}
 	
+	//======================================================
 	//DOCTYPE
 	@RequestMapping(value ="/doctype_list", method = RequestMethod.GET)
 	public ModelAndView docTypeList(){
@@ -335,6 +370,58 @@ public class AdminController extends AbstractController {
 		return model;
 	}
 	
+	//TENURE
+	@RequestMapping(value = "/tenure_list")
+	public ModelAndView tenureList() {
+		ModelAndView model = new ModelAndView("admin/tenure-list");
+		List<Tenure> tenureList = dataService.findAllTenure();
+		model.addObject("tenureList", tenureList);
+		return model;
+	}
+
+	@RequestMapping(value = "/save_tenure", method = RequestMethod.POST)
+	public ModelAndView saveTenure(
+			@RequestParam("tenureId") Integer tenureId,
+			@RequestParam("tenureName") String tenureName, 
+			@RequestParam("timeStart") String timeStart,
+			@RequestParam("timeEnd") String timeEnd, RedirectAttributes reAttr) {
+		ModelAndView model = new ModelAndView("redirect:tenure_list");
+
+		Tenure tenure = new Tenure();
+		if (tenureId > 0) {
+			tenure = dataService.findTenureById(tenureId);
+		}
+
+		Date dateStart;
+		Date dateEnd;
+		String dateFormat = "dd-MM-yyyy";
+
+		try {
+			dateStart = UtilMethod.toDate(timeStart, dateFormat);
+			dateEnd = UtilMethod.toDate(timeEnd, dateFormat);
+
+			if (dateStart.compareTo(dateEnd) > -1) {
+				reAttr.addFlashAttribute("error", true);
+				reAttr.addFlashAttribute("errorMessage", "Thêm thất bại, ngày kết thúc phải lớn hơn ngày bắt đầu!");
+				return model;
+			}
+
+		} catch (ParseException e) {
+			reAttr.addFlashAttribute("error", true);
+			reAttr.addFlashAttribute("errorMessage", "Lỗi hệ thống");
+			e.printStackTrace();
+			return model;
+		}
+
+		tenure.setTenureName(tenureName);
+		tenure.setTimeStart(dateStart);
+		tenure.setTimeEnd(dateEnd);
+
+		dataService.saveTenure(tenure);
+		return model;
+	}	
+	
+	//========================================================
 	//FLOW
 	@RequestMapping(value = "/flow", method = RequestMethod.GET)
 	public ModelAndView flowView(){
@@ -378,61 +465,4 @@ public class AdminController extends AbstractController {
 		dataService.downLoadFile(DataConfig.DIR_SERVER_NAME_FLOW_IN, response);
 	}
 	
-	//TENURE
-	@RequestMapping(value = "/tenure_list")
-	public ModelAndView tenureList(){
-		ModelAndView model = new ModelAndView("admin/tenure-list");
-		List<Tenure> tenureList = dataService.findAllTenure();
-		model.addObject("tenureList", tenureList);
-		return model;
-	}
-	
-	@RequestMapping(value = "/save_tenure", method = RequestMethod.POST)
-	public ModelAndView saveTenure(
-			@RequestParam("tenureId") Integer tenureId,
-			@RequestParam("tenureName") String tenureName,
-			@RequestParam("timeStart") String timeStart, 
-			@RequestParam("timeEnd") String timeEnd, 
-			RedirectAttributes reAttr){
-		ModelAndView model = new ModelAndView("redirect:tenure_list");
-		
-		Tenure tenure = new Tenure();
-		if(tenureId > 0){
-			tenure = dataService.findTenureById(tenureId);
-		}
-		
-		Date dateStart;
-		Date dateEnd;
-		String dateFormat = "dd-MM-yyyy";
-		
-		try {
-			 dateStart = UtilMethod.toDate(timeStart, dateFormat);
-			 dateEnd = UtilMethod.toDate(timeEnd, dateFormat);
-			 
-			 logger.info(timeStart);
-			 logger.info(dateStart.toString());
-			 
-			 logger.info(timeEnd);
-			 logger.info(dateEnd.toString());
-			 
-			 if(dateStart.compareTo(dateEnd) > -1){
-				 reAttr.addFlashAttribute("error", true);
-				 reAttr.addFlashAttribute("errorMessage", "Thêm thất bại, ngày kết thúc phải lớn hơn ngày bắt đầu!");
-				 return model;
-			 }
-			 
-		} catch (ParseException e) {
-			reAttr.addFlashAttribute("error", true);
-			reAttr.addFlashAttribute("errorMessage", "Lỗi hệ thống");
-			e.printStackTrace();
-			return model;
-		}
-		
-		tenure.setTenureName(tenureName);
-		tenure.setTimeStart(dateStart);
-		tenure.setTimeEnd(dateEnd);
-		
-		dataService.saveTenure(tenure);
-		return model;
-	}
 }

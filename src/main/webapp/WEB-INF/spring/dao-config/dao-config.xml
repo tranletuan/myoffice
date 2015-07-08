@@ -23,5 +23,6 @@
 	<bean id="unitDaoImp" class="com.myoffice.myapp.models.dao.unit.UnitDaoImp"></bean> 
 	<bean id="roleDaoImp" class="com.myoffice.myapp.models.dao.role.RoleDaoImp"></bean>
 	<bean id="candidateDaoImp" class="com.myoffice.myapp.models.dao.candidate.CandidateDaoImp"></bean>
+	<bean id="levelDaoImp" class="com.myoffice.myapp.models.dao.level.LevelDaoImp"></bean>
 
 </beans>

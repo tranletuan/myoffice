@@ -44,16 +44,21 @@ public class User {
 
 	// mapping
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), 
+							inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<Role>(0);
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "detail_id", nullable = true, insertable = true, updatable = true)
+	@JoinColumn(name = "detail_id")
 	private UserDetail userDetail;
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "organ_id", updatable = true)
+	@JoinColumn(name = "organ_id")
 	private Organ organ;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "level_id")
+	private Level level;
 
 	public User() {
 

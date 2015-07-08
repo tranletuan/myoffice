@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.myoffice.myapp.controllers.FlowController;
 import com.myoffice.myapp.models.dao.candidate.CandidateDao;
 import com.myoffice.myapp.models.dao.document.DocumentDao;
+import com.myoffice.myapp.models.dao.level.LevelDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
 import com.myoffice.myapp.models.dao.role.RoleDao;
 import com.myoffice.myapp.models.dao.unit.UnitDao;
@@ -36,6 +37,7 @@ import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
+import com.myoffice.myapp.models.dto.Level;
 import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.OrganType;
 import com.myoffice.myapp.models.dto.Parameter;
@@ -409,5 +411,21 @@ public class DataService {
 	public Candidate findCandidateById(Integer canId){
 		return candidateDao.findCandidateById(canId);
 	}
+	
+	//======================
+	@Autowired LevelDao levelDao;
+	
+	public List<Level> findAllLevel() {
+		return levelDao.findAllLevel(); 
+	}
+	
+	public Level findLevelById(Integer levelId) {
+		return levelDao.findLevelById(levelId);
+	}
+	
+	public void saveLevel(Level level){
+		levelDao.saveLevel(level);
+	}
+	
 	
 }

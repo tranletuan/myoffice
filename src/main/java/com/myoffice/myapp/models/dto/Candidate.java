@@ -1,9 +1,6 @@
 package com.myoffice.myapp.models.dto;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,15 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.myoffice.myapp.utils.UtilMethod;
 
@@ -51,6 +43,10 @@ public class Candidate {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "document_id")
 	private Document reportDoc;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_id")
+	private User user;
 	
 	public Candidate() {
 		super();
@@ -106,6 +102,14 @@ public class Candidate {
 	
 	public String getTimeEndString(){
 		return UtilMethod.dateToString(timeEnd, "dd-MM-yyyy");
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 	
