@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -21,8 +22,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.myoffice.myapp.models.dto.AssignContent;
 import com.myoffice.myapp.models.dto.DocumentType;
@@ -126,4 +130,57 @@ public class MainController extends AbstractController {
 		model.setViewName("redirect:user_detail/" + curUser.getUserId());
 		return model;
 	}
+
+	@RequestMapping(value = "/change_password", method = RequestMethod.POST)
+	public ModelAndView changePassword(
+			@RequestParam("oldPassword") String oldPassword,
+			@RequestParam("newPassword") String newPassword,
+			@RequestParam("confirmPassword") String confPassword,
+			RedirectAttributes reAttr){
+		ModelAndView model = new ModelAndView("redirect:user_detail/0");
+		User curUser = securityService.getCurrentUser();
+		
+		if(curUser.checkOldPassword(oldPassword) &&
+				curUser.checkNewPassword(newPassword) &&
+				curUser.checkConfPassword(newPassword, confPassword)) {
+			curUser.setPassword(newPassword);
+			dataService.saveUser(curUser);
+			reAttr.addFlashAttribute("success", true);
+			reAttr.addFlashAttribute("successMessage", "Đổi mật khẩu thành công");
+		} else {
+			reAttr.addFlashAttribute("error", true);
+			reAttr.addFlashAttribute("errorMessage", "Lỗi, Đổi mật khẩu thất bại");
+		}
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/check_old_password", method = RequestMethod.GET)
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.OK)
+	public boolean checkOldPassword(
+			@RequestParam("oldPassword") String oldPassword){
+		User curUser = securityService.getCurrentUser();
+		return curUser.checkOldPassword(oldPassword);
+	}
+	
+	@RequestMapping(value = "/check_new_password", method = RequestMethod.GET)
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.OK)
+	public boolean checkNewPassword(
+			@RequestParam("newPassword") String newPassword){
+		User curUser = securityService.getCurrentUser();
+		return curUser.checkNewPassword(newPassword);
+	}
+	
+	@RequestMapping(value = "/check_confirm_password", method = RequestMethod.GET)
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.OK)
+	public boolean checkConfPassword(
+			@RequestParam("newPassword") String newPassword,
+			@RequestParam("confirmPassword") String confirmPassword){
+		User curUser = securityService.getCurrentUser();
+		return curUser.checkConfPassword(newPassword, confirmPassword);
+	}
+
 }

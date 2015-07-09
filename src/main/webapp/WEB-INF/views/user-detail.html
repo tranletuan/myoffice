@@ -19,10 +19,12 @@ xmlns:th="http://www.thymeleaf.org">
 <body>
 	<div class="contailer-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
-		
-		<div th:replace="fragment/message :: message"></div>
 
 		<div class="container-fluid">
+			<!-- message -->
+			<div th:replace="fragment/message :: message"></div>
+
+			<!-- user detail info -->
 			<div class="panel panel-default" th:if="${canChange}">
 				<div class="panel-body">
 					<button type="button" class="btn btn-info" data-toggle="modal" data-target="#detail-form" id="btnChange">
@@ -153,29 +155,32 @@ xmlns:th="http://www.thymeleaf.org">
 							<!-- oldPassword -->
 							<div class="form-group">
 								<label for="oldPassword" class="col-sm-3 control-label">Mật khẩu cũ</label>
-								<div class="col-sm-9">
-									<input type="password" class="form-control" id="oldPassword" th:name="oldPassword" autofocus="true" required="true"/>
+								<div class="col-sm-7">
+									<input type="password" class="form-control" id="oldPassword" th:attr="data=@{/check_old_password}" th:name="oldPassword" placeholder="Mật khẩu cũ" autofocus="true" required="true"/>
 								</div>
+								<div class="col-sm-2 checkOldPassword checkPassword"></div>
 							</div>
 							
 							<!-- newPassword -->
 							<div class="form-group">
 								<label for="newPassword" class="col-sm-3 control-label">Mật khẩu mới</label>
-								<div class="col-sm-9">
-									<input type="password" class="form-control" id="newPassword" th:name="newPassword" placeholder="Mật khẩu mới"/>
+								<div class="col-sm-7">
+									<input type="password" class="form-control" id="newPassword" th:attr="data=@{/check_new_password}" th:name="newPassword" placeholder="Mật khẩu mới phải nhiều hơn 6 ký tự"/>
 								</div>
+								<div class="col-sm-2 checkNewPassword checkPassword"></div>
 							</div>
 
 							<!-- confirmPassword -->
 							<div class="form-group">
 								<label for="confirmPassword" class="col-sm-3 control-label">Xác nhận mật khẩu mới</label>
-								<div class="col-sm-9">
-									<input type="password" class="form-control" id="confirmPassword" th:name="confirmPassword" placeholder="Xác nhận lại mật khẩu mới"/>
+								<div class="col-sm-7">
+									<input type="password" class="form-control" id="confirmPassword" th:attr="data=@{/check_confirm_password}" th:name="confirmPassword" placeholder="Xác nhận lại mật khẩu mới"/>
 								</div>
+								<div class="col-sm-2 checkConfirmPassword checkPassword"></div>
 							</div>
 
 							<div class="modal-footer">
-								<button type="submit" class="btn btn-primary">Lưu</button>
+								<button type="submit" class="btn btn-primary" id="btnSubmit" disabled="true">Lưu</button>
 								<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
 							</div>
 						</form>

@@ -90,7 +90,18 @@ public class User {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		return passwordEncoder.matches(oldPassword, this.password);
 	}
+	
+	public boolean checkNewPassword(String newPassword) {
+		return newPassword.length() >= 6? true : false;
+	}
 
+	public boolean checkConfPassword(String newPassword, String confPassword) {
+		if(newPassword == "" || confPassword == "") return false;
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String newPass = passwordEncoder.encode(newPassword);
+		return passwordEncoder.matches(confPassword, newPass);
+	}
+	
 	public boolean isEnabled() {
 		return enabled;
 	}
