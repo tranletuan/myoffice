@@ -25,7 +25,7 @@ import org.springframework.stereotype.Repository;
 import com.mchange.util.impl.CircularList;
 import com.myoffice.myapp.models.dao.common.AbstractDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
-import com.myoffice.myapp.models.dto.Candidate;
+import com.myoffice.myapp.models.dto.AssignContent;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
@@ -461,7 +461,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId,
+	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId,
 			int completed, Date start, Date end) {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
 		criteria.createAlias("candidate", "c");

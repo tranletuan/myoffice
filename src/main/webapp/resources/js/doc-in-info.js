@@ -60,5 +60,23 @@
  		var report = $('#showReport').html();
  		$('#report').html(report);
  	});
+/*
+ 	$('#selectRole').on('change', function (e) {
+ 		var optionSelected = $("option:selected", this);
+ 		var valueSelected = this.value;
+ 		var URL = $('#userList').attr('data');
+ 		$('#userList').remove();
+
+ 		$.ajax({
+ 			type : "GET",
+ 			url : URL,
+ 			data : {
+ 				"roleId" : valueSelected
+ 			}
+ 			success : function(response){
+ 				$('#userList').append(response);
+ 			}
+ 		});
+ 	});*/
 
  });

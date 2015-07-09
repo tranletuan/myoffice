@@ -11,8 +11,12 @@ public interface UserDao {
 	
 	List<User> findAllUsers();
 	
+	List<User> findAllUsers(Integer organId, Integer roleId);
+	
 	List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName);
 
+	List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, int levelValue);
+	
 	void saveUser(User user);
 	
 	void deleteUser(User user);

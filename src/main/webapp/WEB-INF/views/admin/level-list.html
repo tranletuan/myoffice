@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Quản lý chức vụ</title>
+
+	<script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}" ></script>
+
+	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
+	
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datetimepicker.min.css}" />
+
+	<script type="text/javascript" th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+
+	<script type="text/javascript" th:src="@{/js/level-list.js}" ></script>
+
+</head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="fragment/menu :: menu"></div>
+		<div class="container">
+			<div th:replace="fragment/message :: message"></div>
+			
+			<div>
+				<button id="btn-add" type="button" class="btn btn-info" data-toggle="modal" data-target=".form-level">Thêm</button>
+				<button id="btn-change" type="button" class="btn btn-warning" disabled="true" data-toggle="modal" data-target=".form-level">Sửa</button>	
+			</div>
+			<table class="table">
+				<colgroup>
+					<col class="col-xs-3 col-md-1" />
+					<col class="col-xs-12 col-md-10" />
+					<col class="col-xs-3 col-md-1" />
+				</colgroup>
+				<tbody>
+					<table class="table table-hover">
+						<tbody id="table-body">
+							<thead>
+								<th>ID</th>
+								<th>Tên chức vụ</th>
+								<th>Viết tắt</th>
+								<th>Cấp độ</th>
+							</thead>
+							<tr th:each="level : ${levelList}" th:attr="id=${level.levelId}">
+								<td th:text="${level.levelId}" class="levelId"></td>
+								<td th:text="${level.levelName}" class="levelName"></td>
+								<td th:text="${level.shortName}" class="shortName"></td>
+								<td th:text="${level.value}" class="value"></td>
+							</tr> 
+						</tbody>
+					</table>
+				</tbody>
+			</table>
+
+			<div class="modal fade form-level" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_level}">
+
+							<div class="form-group hidden">
+								<label for="levelId" class="col-sm-3 control-label">ID</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="levelId" th:name="levelId" value=""/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="levelName" class="col-sm-3 control-label">Tên chức vụ</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="levelName" th:name="levelName" placeholder="Tên chức vụ" required="true"/>
+								</div>
+							</div>
+
+					
+							<div class="form-group">
+								<label for="shortName" class="col-sm-3 control-label">Viết tắt</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="shortName" th:name="shortName" placeholder="Tên viết tắt chức vụ" required="true"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="value" class="col-sm-3 control-label">Cấp bậc</label>
+								<div class="col-sm-9">
+									<input type="number" class="form-control" id="value" th:name="value" placeholder="Giá trị cấp bậc" required="true" min="1"/>
+								</div>
+							</div>
+
+							<div class="modal-footer">
+								<div class="col-sm-offset-3 col-sm-9">
+									<button type="submit" class="btn btn-primary">Lưu</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close" aria-hidden="true">Bỏ qua</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:replace="fragment/footer :: footer"></div>
+	</div>
+</body>
+</html>

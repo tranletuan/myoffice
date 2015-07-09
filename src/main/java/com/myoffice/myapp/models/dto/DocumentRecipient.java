@@ -51,7 +51,7 @@ public class DocumentRecipient implements Serializable{
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "candidate_id")
-	private Candidate candidate;
+	private AssignContent assignContent;
 	
 	public DocumentRecipient() {
 		super();
@@ -105,12 +105,14 @@ public class DocumentRecipient implements Serializable{
 		this.completed = completed;
 	}
 
-	public Candidate getCandidate() {
-		return candidate;
+	public AssignContent getAssignContent() {
+		return assignContent;
 	}
 
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
+	public void setAssignContent(AssignContent assignContent) {
+		this.assignContent = assignContent;
 	}
+
+	
 
 }

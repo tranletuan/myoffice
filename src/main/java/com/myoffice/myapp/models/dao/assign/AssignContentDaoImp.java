@@ -1,4 +1,4 @@
-package com.myoffice.myapp.models.dao.candidate;
+package com.myoffice.myapp.models.dao.assign;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -16,35 +16,35 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.myoffice.myapp.models.dao.common.AbstractDao;
-import com.myoffice.myapp.models.dto.Candidate;
+import com.myoffice.myapp.models.dto.AssignContent;
 import com.myoffice.myapp.utils.UtilMethod;
 import com.mysql.jdbc.Util;
 
 @Repository
-public class CandidateDaoImp extends AbstractDao implements CandidateDao {
+public class AssignContentDaoImp extends AbstractDao implements AssignContentDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Candidate> findAllCandidate() {
-		Criteria criteria = getSession().createCriteria(Candidate.class);
+	public List<AssignContent> findAllAssignContent() {
+		Criteria criteria = getSession().createCriteria(AssignContent.class);
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 
 	
 	@Override
-	public void saveCandidate(Candidate candidate) {
-		persist(candidate);
+	public void saveAssignContent(AssignContent assContent) {
+		persist(assContent);
 	}
 
 	@Override
-	public void deleteCandidate(Candidate candidate) {
-		delete(candidate);
+	public void deleteAssignContent(AssignContent assContent) {
+		delete(assContent);
 	}
 
 
 	@Override
-	public Candidate findCandidateById(Integer canId) {
-		return (Candidate) getSession().get(Candidate.class, canId);
+	public AssignContent findAssignContentById(Integer assContentId) {
+		return (AssignContent) getSession().get(AssignContent.class, assContentId);
 	}
 }

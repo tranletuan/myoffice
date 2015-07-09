@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.myoffice.myapp.models.dto.Candidate;
+import com.myoffice.myapp.models.dto.AssignContent;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.User;

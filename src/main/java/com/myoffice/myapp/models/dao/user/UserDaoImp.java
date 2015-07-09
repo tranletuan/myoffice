@@ -10,6 +10,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.service.jta.platform.internal.ResinJtaPlatform;
 import org.springframework.stereotype.Repository;
 
 import com.myoffice.myapp.models.dao.common.AbstractDao;
@@ -31,9 +32,24 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 		criteria.createAlias("organ", "o");
 		criteria.add(Restrictions.eq("o.organId", organId));
 		criteria.add(Restrictions.and(Restrictions.in("r.shortName", arrRoleShortName)));
-	
+		criteria.add(Restrictions.and(Restrictions.eq("enabled", true)));
 		return criteria.list();
 	}
+	
+	
+	@Override
+	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, int levelValue) {
+		Criteria criteria = getSession().createCriteria(User.class);
+		criteria.createAlias("roles", "r");
+		criteria.createAlias("organ", "o");
+		criteria.createAlias("level", "l");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.add(Restrictions.and(Restrictions.in("r.shortName", arrRoleShortName)));
+		criteria.add(Restrictions.and(Restrictions.ge("l.value", levelValue)));
+		criteria.add(Restrictions.and(Restrictions.eq("enabled", true)));
+		return null;
+	}
+
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -56,6 +72,17 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 		Criteria criteria = getSession().createCriteria(User.class);
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return (List<User>)criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> findAllUsers(Integer organId, Integer roleId) {
+		Criteria criteria = getSession().createCriteria(User.class);
+		criteria.createAlias("roles", "r");
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("r.roleId", roleId));
+		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
+		return criteria.list();
 	}
 
 	@Override

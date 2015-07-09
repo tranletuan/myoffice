@@ -96,5 +96,5 @@ public interface DocumentDao {
 	
 	List<DocumentRecipient> findDocRecipient(Integer organId, int completed, int firstResult, int maxResult);
 	
-	List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, Date start, Date end);
+	List<DocumentRecipient> findDocRecByAssignDate(Integer organId, int completed, Date start, Date end);
 }

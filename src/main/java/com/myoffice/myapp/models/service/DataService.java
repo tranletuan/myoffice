@@ -24,14 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.myoffice.myapp.controllers.FlowController;
-import com.myoffice.myapp.models.dao.candidate.CandidateDao;
+import com.myoffice.myapp.models.dao.assign.AssignContentDao;
 import com.myoffice.myapp.models.dao.document.DocumentDao;
 import com.myoffice.myapp.models.dao.level.LevelDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
 import com.myoffice.myapp.models.dao.role.RoleDao;
 import com.myoffice.myapp.models.dao.unit.UnitDao;
 import com.myoffice.myapp.models.dao.user.UserDao;
-import com.myoffice.myapp.models.dto.Candidate;
+import com.myoffice.myapp.models.dto.AssignContent;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
@@ -95,7 +95,15 @@ public class DataService {
 	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName){
 		return userDao.findUserByArrRoleShortName(organId, arrRoleShortName);
 	}
+	
+	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, Integer levelValue){
+		return userDao.findUserByArrRoleShortName(organId, arrRoleShortName, levelValue);
+	}
 
+	public List<User> findAllUsers(Integer organId, Integer roleId){
+		return userDao.findAllUsers(organId, roleId);
+	}
+	
 	public User findUserByName(String username) {
 		return userDao.findUserByName(username);
 	}
@@ -261,8 +269,8 @@ public class DataService {
 		return docDao.findDocRecipient(organId, completed, firstResult, maxResult);
 	}
 	
-	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId, int completed, Date start, Date end){
-		return docDao.findDocRecByCandidateDate(organId, completed, start, end);
+	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId, int completed, Date start, Date end){
+		return docDao.findDocRecByAssignDate(organId, completed, start, end);
 	}
 	
 	//FILE
@@ -394,22 +402,22 @@ public class DataService {
 	}
 	//=====================
 	@Autowired
-	private CandidateDao candidateDao;
+	private AssignContentDao assContentDao;
 
-	public List<Candidate> findAllCandidate(){
-		return candidateDao.findAllCandidate();
+	public List<AssignContent> findAllAssignContent(){
+		return assContentDao.findAllAssignContent();
 	}
 	
-	public void saveCandidate(Candidate candidate){
-		candidateDao.saveCandidate(candidate);
+	public void saveAssignContent(AssignContent AssignContent){
+		assContentDao.saveAssignContent(AssignContent);
 	}
 	
-	public void deleteCandidate(Candidate candidate){
-		candidateDao.deleteCandidate(candidate);
+	public void deleteAssignContent(AssignContent AssignContent){
+		assContentDao.deleteAssignContent(AssignContent);
 	}
 	
-	public Candidate findCandidateById(Integer canId){
-		return candidateDao.findCandidateById(canId);
+	public AssignContent findAssignContentById(Integer assContentId){
+		return assContentDao.findAssignContentById(assContentId);
 	}
 	
 	//======================

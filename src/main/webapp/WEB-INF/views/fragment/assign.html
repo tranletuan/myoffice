@@ -11,7 +11,7 @@
 				Nội dung chỉ đạo
 			</button>
 			
-			<a type="button" class="btn btn-warning" href="#" th:href="@{/flow/complete/1/doc_in_info}" th:if="${docRec.candidate}">Phân công</a>
+			<a type="button" class="btn btn-warning" href="#" th:href="@{/flow/complete/1/doc_in_info}" th:if="${docRec.assignContent}">Phân công</a>
 
 			<a type="button" class="btn btn-success" href="#" th:href="@{/flow/complete_save}">Hoàn thành</a>
 		</div>
@@ -61,6 +61,19 @@
 								</div>
 							</div>
 
+							<!-- <div class="form-group">
+								<label for="roles" class="col-sm-3 control-label">Phân công</label>
+								<div class="col-sm-9 form-inline">
+									<select th:each="role : ${roleList}" id="selectRole">
+										<option th:text="${role.fullName}"
+												th:value="${role.roleId}">
+										</option>
+									</select>
+
+									<div id="userList" th:attr="data=@{/flow/user_list}"></div>
+								</div>
+							</div> -->
+0
 							<div class="modal-footer">
 								<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
 								<button type="submit" class="btn btn-primary">Xác nhận</button>

@@ -18,13 +18,13 @@ import javax.persistence.TemporalType;
 import com.myoffice.myapp.utils.UtilMethod;
 
 @Entity
-@Table(name = "candidate")
-public class Candidate {
+@Table(name = "assign_content")
+public class AssignContent {
 
 	@Id
-	@Column(name = "candidate_id", unique = true, nullable = false)
+	@Column(name = "content_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer candidateId;
+	private Integer contentId;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "time_start", columnDefinition = "DATETIME", nullable = false)
@@ -44,14 +44,14 @@ public class Candidate {
 	@JoinColumn(name = "document_id")
 	private Document reportDoc;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id")
-	private User user;
-	
-	public Candidate() {
+	public AssignContent() {
 		super();
 	}
 	
+	public Integer getContentId() {
+		return contentId;
+	}
+
 	public Date getTimeStart() {		
 		return timeStart;
 	}
@@ -68,9 +68,6 @@ public class Candidate {
 		this.timeEnd = timeEnd;
 	}
 
-	public Integer getCandidateId() {
-		return candidateId;
-	}
 
 	public String getContent() {
 		return content;
@@ -103,14 +100,5 @@ public class Candidate {
 	public String getTimeEndString(){
 		return UtilMethod.dateToString(timeEnd, "dd-MM-yyyy");
 	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-	
 	
 }

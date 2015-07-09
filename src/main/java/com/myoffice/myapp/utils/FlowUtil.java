@@ -46,7 +46,7 @@ public class FlowUtil {
 					.latestVersion().singleResult().getId();
 			return rs;
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("GET PROCESS DEF: " + e.getMessage());
 			return " ";
 			
 			
@@ -131,7 +131,7 @@ public class FlowUtil {
 			logger.info("DELETE PROCESS ID : " + processInstanceId);
 			
 		}catch (ActivitiException e){
-			logger.error(e.getMessage());
+			logger.error("DELETE PROC ID : " + e.getMessage());
 		}
 	}
 	
@@ -163,7 +163,7 @@ public class FlowUtil {
 			return null;
 		}
 		catch(ActivitiException e){
-			logger.error(e.getMessage());
+			logger.error("PRE TASK : " + e.getMessage());
 			return null;
 		}
 	}
@@ -184,7 +184,7 @@ public class FlowUtil {
 			return null;
 		}
 		catch(ActivitiException e){
-			logger.error(e.getMessage());
+			logger.error("PRE TASK : " + e.getMessage());
 			return null;
 		}
 	}
