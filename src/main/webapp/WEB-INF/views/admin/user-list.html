@@ -39,6 +39,7 @@ xmlns:th="http://www.thymeleaf.org">
 								<th>Tên tài khoản</th>
 								<th>Khả dụng</th>
 								<th>Cơ quan</th>
+								<th>Chức vụ</th>
 								<th>Quyền hạn</th>
 							</thead>
 							<tr th:each="user : ${userList}" th:attr="id=${user.userId}">
@@ -49,6 +50,9 @@ xmlns:th="http://www.thymeleaf.org">
 								<td th:if="${user.organ}" th:text="${user.organ.unit.unitName} + ' - ' + ${user.organ.organName}" class="organ" th:attr="data=${user.organ.organId}"></td>
 								<td th:unless="${user.organ}" class="organ" th:value="NULL"></td>
 								
+								<td th:if="${user.level}" th:text="${user.level.levelName}" class="level" th:attr="data=${user.level.levelId}"></td>
+								<td th:unless="${user.level}" class="level" th:value="NULL"></td>
+
 								<td th:text="${user.getRoleNames()}"></td>
 							</tr> 
 						</tbody>
@@ -93,6 +97,18 @@ xmlns:th="http://www.thymeleaf.org">
 									</select>
 								</div>
 							</div>	
+
+							<div class="form-group">
+								<label for="level" class="col-sm-2 control-label">Chức vụ</label>
+								<div class="col-sm-10">
+									<select class="form-control" th:name="levelId" id="level">
+										<option th:each="level : ${levelList}"
+												th:value="${level.levelId}"
+												th:text="${level.levelName}">
+										</option>
+									</select>
+								</div>
+							</div>
 
 							<div class="form-group">
 								<label for="select-roles" class="col-sm-2 control-label">Quyền hạn</label>

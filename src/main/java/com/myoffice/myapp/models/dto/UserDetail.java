@@ -23,16 +23,13 @@ public class UserDetail {
 	@Column(name = "full_name", nullable = false, length = 60)
 	private String fullName;
 
-	@Column(name = "office", nullable = false, length = 60)
-	private String office;
-
-	@Column(name = "address", nullable = false)
+	@Column(name = "address")
 	private String address;
 
-	@Column(name = "phone_number", nullable = false, length = 20)
+	@Column(name = "phone_number", length = 20)
 	private String phoneNumber;
 
-	@Column(name = "email", nullable = false, length = 60)
+	@Column(name = "email", length = 60)
 	private String email;
 
 	public Integer getDetailId() {
@@ -45,14 +42,6 @@ public class UserDetail {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
-	}
-
-	public String getOffice() {
-		return office;
-	}
-
-	public void setOffice(String office) {
-		this.office = office;
 	}
 
 	public String getAddress() {

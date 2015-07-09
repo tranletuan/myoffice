@@ -69,14 +69,31 @@ public class AdminController extends AbstractController {
 
 		List<User> userList = dataService.findAllUsers();
 		List<Role> roleList = dataService.findAllRoles();
-		List<Unit> unitList = dataService.findAllUnit();
 		List<Organ> organList = dataService.findAllOrgan();
+		List<Level> levelList = dataService.findAllLevel();
+		
+		if(roleList.size() <= 0){
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, không thể tạo tài khoản mới khi chưa tạo nhóm quyền");
+			return model;
+		}
+		
+		if(organList.size() <= 0){
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, không thể tạo tài khoản mới khi chưa tạo cơ quan");
+			return model;
+		}
+		
+		if(levelList.size() <= 0){
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, không thể tạo tài khoản mới khi chưa tạo chức vụ");
+			return model;
+		}
 		
 		model.addObject("userList", userList);
 		model.addObject("roleList", roleList);
-		model.addObject("unitList", unitList);
 		model.addObject("organList", organList);
-		
+		model.addObject("levelList", levelList);
 		return model;
 	}
 
@@ -84,6 +101,7 @@ public class AdminController extends AbstractController {
 	public ModelAndView saveUser(
 			@RequestParam("userId") Integer userId,
 			@RequestParam("userName") String userName,
+			@RequestParam("levelId") Integer levelId,
 			@RequestParam(value = "password", required = false) String password,
 			@RequestParam(value = "roles", required = false) Integer[] rolesId,
 			@RequestParam(value = "enabled", required = false) boolean enabled,
@@ -115,6 +133,10 @@ public class AdminController extends AbstractController {
 		
 		if(organId > 0){
 			user.setOrgan(dataService.findOrganById(organId));
+		}
+		
+		if(levelId > 0){
+			user.setLevel(dataService.findLevelById(levelId));
 		}
 		
 		dataService.saveUser(user);
@@ -151,42 +173,6 @@ public class AdminController extends AbstractController {
 		return model;
 	}
 
-	//LEVEL
-	@RequestMapping(value = "/level_list", method = RequestMethod.GET)
-	public ModelAndView levelList(){
-		ModelAndView model = new ModelAndView("admin/level-list");
-		List<Level> levelList = dataService.findAllLevel();
-		model.addObject("levelList", levelList);
-		return model;
-	}
-	
-	@RequestMapping(value = "/save_level", method = RequestMethod.POST)
-	public ModelAndView saveLevel(
-			@RequestParam("levelId") Integer levelId,
-			@RequestParam("levelName") String levelName, 
-			@RequestParam("shortName") String shortName,
-			@RequestParam("value") String value, RedirectAttributes reAttr){
-		ModelAndView model = new ModelAndView("redirect:level_list");
-		Level level = new Level();
-		if(levelId != null && levelId > 0) {
-			level = dataService.findLevelById(levelId);
-		}
-	
-		int val = UtilMethod.parseNumDoc(value);
-		if(val == 0){
-			reAttr.addFlashAttribute("error", true);
-			reAttr.addFlashAttribute("errorMessage", "Giá trị cấp bậc phải là giá trị số và lớn hơn hoặc bằng 0");
-			return model;
-		} else {
-			level.setLevelName(levelName);
-			level.setShortName(shortName);
-			level.setValue(val);
-			dataService.saveLevel(level);
-		}
-		
-		return model;
-	}
-	
 	//=====================================================
 	//ORGAN
 	@RequestMapping(value = "/organ_list", method = RequestMethod.GET)
@@ -195,6 +181,18 @@ public class AdminController extends AbstractController {
 		List<Organ> organList = dataService.findAllOrgan();
 		List<OrganType> organTypeList = dataService.findAllOrganType();
 		List<Unit> unitList = dataService.findAllUnit();
+		
+		if(organTypeList.size() <= 0) {
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, không thể tạo cơ quan vì chưa tạo cấp cơ quan");
+			return model;
+		}
+		
+		if(unitList.size() <= 0) {
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, không thể tạo cơ quan vì chưa tạo đơn vị chủ quản");
+			return model;
+		}
 		
 		model.addObject("organList", organList);
 		model.addObject("organTypeList", organTypeList);
@@ -282,6 +280,42 @@ public class AdminController extends AbstractController {
 		unit.setShortName(shortName);
 		
 		dataService.saveUnit(unit);
+		return model;
+	}
+
+	//LEVEL
+	@RequestMapping(value = "/level_list", method = RequestMethod.GET)
+	public ModelAndView levelList(){
+		ModelAndView model = new ModelAndView("admin/level-list");
+		List<Level> levelList = dataService.findAllLevel();
+		model.addObject("levelList", levelList);
+		return model;
+	}
+	
+	@RequestMapping(value = "/save_level", method = RequestMethod.POST)
+	public ModelAndView saveLevel(
+			@RequestParam("levelId") Integer levelId,
+			@RequestParam("levelName") String levelName, 
+			@RequestParam("shortName") String shortName,
+			@RequestParam("value") String value, RedirectAttributes reAttr){
+		ModelAndView model = new ModelAndView("redirect:level_list");
+		Level level = new Level();
+		if(levelId != null && levelId > 0) {
+			level = dataService.findLevelById(levelId);
+		}
+	
+		int val = UtilMethod.parseNumDoc(value);
+		if(val == 0){
+			reAttr.addFlashAttribute("error", true);
+			reAttr.addFlashAttribute("errorMessage", "Giá trị cấp bậc phải là giá trị số và lớn hơn hoặc bằng 0");
+			return model;
+		} else {
+			level.setLevelName(levelName);
+			level.setShortName(shortName);
+			level.setValue(val);
+			dataService.saveLevel(level);
+		}
+		
 		return model;
 	}
 	

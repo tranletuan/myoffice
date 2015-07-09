@@ -28,6 +28,7 @@ import com.myoffice.myapp.models.dto.AssignContent;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.User;
+import com.myoffice.myapp.models.dto.UserDetail;
 import com.myoffice.myapp.models.service.DataService;
 import com.myoffice.myapp.models.service.SecurityService;
 
@@ -81,5 +82,48 @@ public class MainController extends AbstractController {
 		return "error";
 	}
 	
+	@RequestMapping(value = "/user_detail/{userId}", method = RequestMethod.GET)
+	public ModelAndView userDetail(
+			@PathVariable("userId") Integer userId){
+		ModelAndView model = new ModelAndView("user-detail");
+		User user = null;
+		User curUser = securityService.getCurrentUser();
+		
+		if(userId != null && userId > 0 && curUser.getUserId() != userId) {
+			user = dataService.findUserById(userId);
+			model.addObject("user", user);
+		} 
+		
+		if(user == null) {
+			model.addObject("user", curUser);
+			model.addObject("canChange", true);
+		}
+		
+		return model;
+	}
 	
+	@RequestMapping(value = "/save_user_detail", method = RequestMethod.POST)
+	public ModelAndView saveDetail(
+			@RequestParam("fullName") String fullName,
+			@RequestParam(value = "address", required = false) String address,
+			@RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+			@RequestParam(value = "email", required = false) String email){
+		ModelAndView model = new ModelAndView("redirect:/home");
+		User curUser = securityService.getCurrentUser();
+		UserDetail userDetail = curUser.getUserDetail();
+		
+		if(userDetail == null) {
+			userDetail = new UserDetail();
+		}
+		
+		userDetail.setFullName(fullName);
+		if(address != null) userDetail.setAddress(address);
+		if(phoneNumber != null) userDetail.setPhoneNumber(phoneNumber);
+		if(email != null) userDetail.setEmail(email);
+		
+		curUser.setUserDetail(userDetail);
+		dataService.saveUser(curUser);
+		model.setViewName("redirect:user_detail/" + curUser.getUserId());
+		return model;
+	}
 }

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Tạo văn bản đi</title>
+
+	<script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}" ></script>
+
+	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
+	
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+	
+	<script type="text/javascript" th:src="@{/js/user-detail.js}" ></script>
+
+</head>
+<body>
+	<div class="contailer-fluid">
+		<div th:replace="fragment/menu :: menu"></div>
+		
+		<div th:replace="fragment/message :: message"></div>
+
+		<div class="container-fluid">
+			<div class="panel panel-default" th:if="${canChange}">
+				<div class="panel-body">
+					<button type="button" class="btn btn-info" data-toggle="modal" data-target="#detail-form" id="btnChange">
+						Sửa đổi / Bổ sung
+					</button>
+
+					<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#password-form" id="btnChangePassword">
+						Đổi mật khẩu
+					</button>
+				</div>
+			</div>
+			<div class="panel panel-info" th:if="${user}">
+				<div class="panel-heading"><h4>Thông Tin Người Dùng</h4></div>
+				
+				<table class="table table-bordered">
+					<colgroup>
+					<col class="col-xs-5 col-md-3"/>
+					<col class="col-xs-10 col-md-8"/>
+					<col class="col-xs-3 col-md-1"/>
+				</colgroup>
+				<tbody>
+
+					<!-- userName -->
+					<tr>
+						<th scope="row"><h4><span>Tài khoản : </span></h4></th>
+						<td><h4 th:text="${user.userName}" class="userName"></h4></td>
+					</tr>
+
+					<!--  fullName -->
+					<tr>
+						<th scope="row"><h4><span>Họ và Tên : </span></h4></th>
+						<td><h4 th:if="${user.userDetail}" th:text="${user.userDetail.fullName}" class="fullName"></h4></td>
+					</tr>
+
+					<!-- address -->
+					<tr>
+						<th scope="row"><h4><span>Địa chỉ : </span></h4></th>
+						<td><h4 th:if="${user.userDetail}" th:text="${user.userDetail.address}" class="address"></h4></td>
+					</tr>
+
+					<!-- phoneNumber -->
+					<tr>
+						<th scope="row"><h4><span>Số điện thoại : </span></h4></th>
+						<td><h4 th:if="${user.userDetail}" th:text="${user.userDetail.phoneNumber}" class="phoneNumber"></h4></td>
+					</tr>
+
+					<!-- email -->
+					<tr>
+						<th scope="row"><h4><span>Email : </span></h4></th>
+						<td><h4 th:if="${user.userDetail}" th:text="${user.userDetail.email}" class="email"></h4></td>
+					</tr>
+
+					<!-- level -->
+					<tr>
+						<th scope="row" th:if="${user.level}"><h4><span>Chức vụ : </span></h4></th>
+						<td><h4 th:text="${user.level.levelName}" class="level"></h4></td>
+					</tr>
+
+					<!-- organ -->
+					<tr>
+						<th scope="row" th:if="${user.organ}"><h4><span>Cơ quan : </span></h4></th>
+						<td><h4 th:text="${user.organ.unit.unitName} + ' - ' + ${user.organ.organName}" class="organ"></h4></td>
+					</tr>
+
+				</tbody>			
+				</table>
+			</div>	
+		</div>
+
+		<div class="modal fade" id="detail-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" th:if="${canChange}">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="myModalLabel">Thông tin người dùng</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" th:action="@{/save_user_detail}" method="post" autocomplete="off">
+							<!-- fullName -->
+							<div class="form-group">
+								<label for="fullName" class="col-sm-2 control-label">Họ và Tên</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="fullName" th:name="fullName" autofocus="true" required="true"/>
+								</div>
+							</div>
+							
+							<!-- address -->
+							<div class="form-group">
+								<label for="address" class="col-sm-2 control-label">Địa chỉ</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="address" th:name="address" placeholder="Địa chỉ"/>
+								</div>
+							</div>
+
+							<!-- phoneNumber -->
+							<div class="form-group">
+								<label for="phoneNumber" class="col-sm-2 control-label">Số điện thoại</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" id="phoneNumber" th:name="phoneNumber" placeholder="Số điện thoại"/>
+								</div>
+							</div>
+
+							<!-- email -->
+							<div class="form-group">
+								<label for="email" class="col-sm-2 control-label">Email</label>
+								<div class="col-sm-10">
+									<input type="email" class="form-control" id="email" th:name="email" placeholder="Email"/>
+								</div>
+							</div>
+
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary">Lưu</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="password-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" th:if="${canChange}">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="myModalLabel">Thay đổi mật khẩu</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" th:action="@{/change_password}" method="post" autocomplete="off">
+							<!-- oldPassword -->
+							<div class="form-group">
+								<label for="oldPassword" class="col-sm-3 control-label">Mật khẩu cũ</label>
+								<div class="col-sm-9">
+									<input type="password" class="form-control" id="oldPassword" th:name="oldPassword" autofocus="true" required="true"/>
+								</div>
+							</div>
+							
+							<!-- newPassword -->
+							<div class="form-group">
+								<label for="newPassword" class="col-sm-3 control-label">Mật khẩu mới</label>
+								<div class="col-sm-9">
+									<input type="password" class="form-control" id="newPassword" th:name="newPassword" placeholder="Mật khẩu mới"/>
+								</div>
+							</div>
+
+							<!-- confirmPassword -->
+							<div class="form-group">
+								<label for="confirmPassword" class="col-sm-3 control-label">Xác nhận mật khẩu mới</label>
+								<div class="col-sm-9">
+									<input type="password" class="form-control" id="confirmPassword" th:name="confirmPassword" placeholder="Xác nhận lại mật khẩu mới"/>
+								</div>
+							</div>
+
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary">Lưu</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div th:replace="fragment/footer :: footer"></div>
+	</div>
+</body>
+</html>

@@ -82,29 +82,10 @@ xmlns:th="http://www.thymeleaf.org">
 		<div th:replace="fragment/report-info :: report_info"></div>
 
 		<div class="panel panel-info">
-			<div class="panel-heading"><h3>Thông Tin Văn Bản Đến</h3></div>
-			<div class="panel-body">
-				<div class="form-group" th:if="${assignee}">
-					<label for="assignee" class="col-sm-2 control-label">Người nhận quyền</label>
-					<div class="col-sm-10">
-						<p th:text="${assignee}" id="assignee"></p>
-					</div>
-				</div>
-
-				<div class="form-group" th:if="${userRole}">
-					<label for="userRole" class="col-sm-2 control-label">Quyền hạn</label>
-					<div class="col-sm-10">
-						<p th:text="${userRole}" id="userRole"></p>
-					</div>
-				</div>
-
-				<div class="form-group" th:if="${taskDescription}">
-					<label for="taskDescription" class="col-sm-2 control-label">Mô tả</label>
-					<div class="col-sm-10">
-						<p th:text="${taskDescription}" id="taskDescription"></p>
-					</div>
-				</div>
-			</div>
+			<div class="panel-heading"><h4>Thông Tin Văn Bản Đến</h4></div>
+			
+			<!-- assignee -->
+			<div th:replace="fragment/assignee :: assignee"></div>
 
 			<table class="table table-bordered" id="table-info">
 				<colgroup>
@@ -113,11 +94,6 @@ xmlns:th="http://www.thymeleaf.org">
 				<col class="col-xs-3 col-md-1"/>
 			</colgroup>
 			<tbody>
-				<!-- ID -->
-				<tr class="hidden">
-					<th scope="row"><h4><span>ID : </span></h4></th>
-					<td><h4 th:text="${doc.docId}" class="docId"></h4></td>
-				</tr>
 
 				<!-- title -->
 				<tr>

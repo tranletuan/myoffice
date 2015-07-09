@@ -53,7 +53,8 @@
 							<li><a href="#" th:href="@{/admin/organ_list}">Cơ quan</a></li>
 							<li><a href="#" th:href="@{/admin/organ_type_list}">Cấp cơ quan</a></li>
 							<li><a href="#" th:href="@{/admin/unit_list}">Đơn vị</a></li>
-
+							<li><a href="#" th:href="@{/admin/level_list}">Chức vụ</a></li>
+							
 							<li class="divider">Văn bản</li>
 							<li><a href="#" th:href="@{/admin/doctype_list}">Loại văn bản</a></li>
 							<li><a href="#" th:href="@{/admin/privacy_list}">Mức độ mật</a></li>
@@ -75,7 +76,7 @@
 							<li class="divider">Quyền hạn</li>
 							<li><a href="#" th:href="@{/admin/user_list}">Người dùng</a></li>
 							<li><a href="#" th:href="@{/admin/role_list}">Quyền hạn</a></li>
-							<li><a href="#" th:href="@{/admin/level_list}">Chức vụ</a></li>
+						
 							<li class="divider">Luồng văn bản</li>
 							<li><a href="#" th:href="@{/admin/flow}">Quản lý luồng</a></li>
 
@@ -83,16 +84,8 @@
 					</li>
 				</ul>
 
-				<form class="navbar-form navbar-left" role="search">
-					<div class="form-group">
-						<input type="text" class="form-control"
-							placeholder="Nhập nội dung tìm kiếm"></input>
-					</div>
-					<button type="submit" class="btn btn-default">Tìm kiếm</button>
-				</form>
-
 				<ul sec:authorize="isAuthenticated()" class="nav navbar-nav navbar-right">
-					<li role="presentation"><a sec:authentication="name" href="#">Name</a></li>
+					<li role="presentation"><a sec:authentication="name" href="#" th:href="@{/user_detail/0}">Name</a></li>
 					<form th:action="@{/j_spring_security_logout}" method="post"
 						class="navbar-form navbar-left">
 						<button type="submit" class="btn btn-default">Thoát</button>

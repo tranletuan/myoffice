@@ -51,6 +51,9 @@ xmlns:th="http://www.thymeleaf.org">
 			<div class="modal fade form-organType" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title" id="myModalLabel">Cấp cơ quan</h4>
+						</div>
 						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_organ_type}">
 
 							<div class="form-group hidden">
@@ -74,11 +77,9 @@ xmlns:th="http://www.thymeleaf.org">
 								</div>
 							</div>
 
-							<div class="form-group">
-								<div class="col-sm-offset-3 col-sm-9">
-									<button type="submit" class="btn btn-primary">Lưu</button>
-									<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close" aria-hidden="true">Bỏ qua</button>
-								</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary">Lưu</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
 							</div>
 						</form>
 					</div>

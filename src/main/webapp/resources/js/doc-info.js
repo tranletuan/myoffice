@@ -1,5 +1,9 @@
  $(document).ready(function() {
 
+ 	$('.modal').on('shown.bs.modal', function() {
+	  $(this).find('[autofocus]').focus();
+	});
+	
  	$('#btnChange').click(function(){
  		var docId = $('.docId').html();
  		var title = $('.title').html();

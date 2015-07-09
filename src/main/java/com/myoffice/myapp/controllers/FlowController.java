@@ -323,14 +323,12 @@ public class FlowController extends AbstractController {
 						}
 					} else {
 						User rUser = dataService.findUserByName(preTask.getAssignee());
-						model.addObject("userRole", rUser.getRoleNames());
-						model.addObject("assignee", rUser.getUserName());
+						model.addObject("assignee", rUser);
 						model.addObject("taskDescription", preTask.getDescription());
 					}
 				} else { //task đã được giao quyền
 					User rUser = dataService.findUserByName(curTask.getAssignee());
-					model.addObject("userRole", rUser.getRoleNames());
-					model.addObject("assignee", rUser.getUserName());
+					model.addObject("assignee", rUser);
 					
 					if(curUser.getUserName().equals(curTask.getAssignee())){
 						model.addObject("isAccess", true);
@@ -650,8 +648,7 @@ public class FlowController extends AbstractController {
 				//Đã tiếp nhận văn bản
 				if (preTask != null) {
 					User rUser = dataService.findUserByName(preTask.getAssignee());
-					model.addObject("userRole", rUser.getRoleNames());
-					model.addObject("assignee", rUser.getUserName());
+					model.addObject("assignee", rUser);
 					model.addObject("taskDescription", preTask.getDescription());
 					//Người đăng nhập là người tiếp nhận văn bản
 					if (curUser.getUserName().equals(preTask.getAssignee())) {
@@ -680,8 +677,7 @@ public class FlowController extends AbstractController {
 			}
 			else { //task đã được giao quyền
 				User rUser = dataService.findUserByName(curTask.getAssignee());
-				model.addObject("userRole", rUser.getRoleNames());
-				model.addObject("assignee", rUser.getUserName());
+				model.addObject("assignee", rUser);
 				
 				if(curUser.getUserName().equals(curTask.getAssignee())){
 					model.addObject("isAccess", true);

@@ -4,10 +4,15 @@
 
  $(document).ready(function() {
 
+ 	$('.modal').on('shown.bs.modal', function() {
+	  $(this).find('[autofocus]').focus();
+	});
+	
  	var userId = -1;
  	var userName;
  	var organId;
  	var enabled;
+ 	var levelId;
 
  	$('.table tr').click(function() {
  		$('.table tr').attr('class', ' ');
@@ -17,6 +22,7 @@
  		userName = $(this).find('.userName').html();
  		organId = $(this).find('.organ').attr('data');
  		enabled = $(this).find('.enabled').html();
+ 		levelId = $(this).find('.level'),attr('data');
 
  		if(userId > 0){
  			$("#btn-change").removeAttr('disabled');
@@ -27,6 +33,7 @@
  		$('#userId').val(userId);
  		$('#userName').val(userName);
  		$('#enabled').attr('checked', enabled);
+ 		$('#level').val(levelId);
 
  		if(organId > 0){
  			$('#organ').val(organId);
@@ -41,7 +48,8 @@
  		$('#enabled').attr('checked', 'true');
  		$('#organ').val(1);
  		$('#password').val('');
- 	
+ 		$('#level').val(1);
+ 		
  		$('.change-required').attr('required', 'true');
  	});
 

@@ -29,14 +29,7 @@ public class Level {
 		super();
 	}
 
-	public String getLevelName() {
-		return levelName;
-	}
-
-	public void setLevelName(String levelName) {
-		this.levelName = levelName;
-	}
-
+	
 	public String getShortName() {
 		return shortName;
 	}
@@ -44,6 +37,16 @@ public class Level {
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
 	}
+
+	public String getLevelName() {
+		return levelName;
+	}
+
+
+	public void setLevelName(String levelName) {
+		this.levelName = levelName;
+	}
+
 
 	public Integer getLevelId() {
 		return levelId;

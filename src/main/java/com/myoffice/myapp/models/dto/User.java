@@ -85,6 +85,11 @@ public class User {
 		String hashedPassword = passwordEncoder.encode(password);
 		this.password = hashedPassword;
 	}
+	
+	public boolean checkOldPassword(String oldPassword) {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		return passwordEncoder.matches(oldPassword, this.password);
+	}
 
 	public boolean isEnabled() {
 		return enabled;
