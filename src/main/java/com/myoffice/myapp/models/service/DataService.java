@@ -46,7 +46,7 @@ import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
-import com.myoffice.myapp.support.NoteDoctypeInt;
+import com.myoffice.myapp.support.DocTypeWait;
 
 @Service
 @Transactional
@@ -165,6 +165,11 @@ public class DataService {
 		return docDao.findDocumentBy(organId, completed, firstResult, maxResult, enabled);
 	}
 	
+	public List<Document> findDocumentBy(Integer organId, Integer docTypeId, 
+			int completed, int firstResult, int maxResult, int enabled) {
+		return docDao.findDocumentBy(organId, docTypeId, completed, firstResult, maxResult, enabled);
+	}
+	
 	//DOCUMENT TYPE
 	public List<DocumentType> findAllDocType(){
 		return docDao.findAllDocType();
@@ -178,9 +183,7 @@ public class DataService {
 		docDao.saveDocType(docType);
 	}
 	
-	public List<NoteDoctypeInt> findWaitingMenu(boolean incoming){
-		return docDao.findWaitingMenu(incoming);
-	}
+	
 	
 	//EMERGENCY LEVEL
 	public List<EmergencyLevel> findAllEmergencyLevel(){
@@ -269,6 +272,11 @@ public class DataService {
 		return docDao.findDocRecipient(organId, completed, firstResult, maxResult);
 	}
 	
+	public List<DocumentRecipient> findDocRecipient(Integer organId, int docTypeId, int completed,
+			int firstResult, int maxResult) {
+		return docDao.findDocRecipient(organId, docTypeId, completed, firstResult, maxResult);
+	}
+	
 	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId, int completed, Date start, Date end){
 		return docDao.findDocRecByAssignDate(organId, completed, start, end);
 	}
@@ -288,6 +296,17 @@ public class DataService {
 	
 	public DocumentFile findDocFileById(Integer docFileId){
 		return docDao.findDocFileById(docFileId);
+	}
+	
+	//WAITING DOC
+	//OUT
+	public List<DocTypeWait> findMenuDocOut(Integer organId) {
+		return docDao.findMenuDocOut(organId);
+	}
+	
+	//IN
+	public List<DocTypeWait> findMenuDocIn(Integer organId) {
+		return docDao.findMenuDocIn(organId);
 	}
 	
 	//=====================

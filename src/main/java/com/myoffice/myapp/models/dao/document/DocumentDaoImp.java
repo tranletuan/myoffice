@@ -1,43 +1,30 @@
 package com.myoffice.myapp.models.dao.document;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 
-import org.activiti.engine.impl.HistoryServiceImpl;
-import org.apache.ibatis.executor.ReuseExecutor;
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.ResultTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import com.mchange.util.impl.CircularList;
 import com.myoffice.myapp.models.dao.common.AbstractDao;
-import com.myoffice.myapp.models.dao.parameter.ParameterDao;
-import com.myoffice.myapp.models.dto.AssignContent;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
-import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
-import com.myoffice.myapp.support.CalendarDoc;
-import com.myoffice.myapp.support.NoteDoctypeInt;
-import com.myoffice.myapp.utils.FlowUtil;
-import com.myoffice.myapp.utils.UtilMethod;
+import com.myoffice.myapp.support.DocTypeWait;
 
 @Repository
 public class DocumentDaoImp extends AbstractDao implements DocumentDao {
@@ -96,10 +83,17 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.add(Restrictions.eq("o.organId", organId));
 		criteria.add(Restrictions.and(Restrictions.eq("t.tenureId", tenureId)));
 		criteria.add(Restrictions.and(Restrictions.eq("dt.docTypeId", docTypeId)));	
+		
 		if(completed != -1) {
-			boolean value = completed == 1? true : false;
-			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
+			if(completed == 1) {
+				criteria.add(Restrictions.and(Restrictions.eq("completed", true)));
+			} else {
+				Criterion rest1 = Restrictions.eq("completed", false);
+				Criterion rest2 = Restrictions.eq("sended", false);
+				criteria.add(Restrictions.and(Restrictions.or(rest1, rest2)));
+			}
 		}
+		
 		if(enabled != -1){
 			boolean value = enabled == 1? true : false;
 			criteria.add(Restrictions.and(Restrictions.eq("enabled", value)));
@@ -120,8 +114,13 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.add(Restrictions.eq("o.organId", organId));
 	
 		if(completed != -1) {
-			boolean value = completed == 1? true : false;
-			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
+			if(completed == 1) {
+				criteria.add(Restrictions.and(Restrictions.eq("completed", true)));
+			} else {
+				Criterion rest1 = Restrictions.eq("completed", false);
+				Criterion rest2 = Restrictions.eq("sended", false);
+				criteria.add(Restrictions.and(Restrictions.or(rest1, rest2)));
+			}
 		}
 		
 		if(enabled != -1){
@@ -129,6 +128,38 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			criteria.add(Restrictions.and(Restrictions.eq("enabled", value)));
 		}
 		
+		criteria.addOrder(Order.desc("docId"));
+		criteria.setFirstResult(firstResult);
+		criteria.setMaxResults(maxResult);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Document> findDocumentBy(Integer organId, Integer docTypeId, int completed, int firstResult,
+			int maxResult, int enabled) {
+		Criteria criteria = getSession().createCriteria(Document.class);
+		criteria.createAlias("organ", "o");
+		criteria.createAlias("tenure", "t");
+		criteria.createAlias("docType", "dt");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.add(Restrictions.and(Restrictions.eq("dt.docTypeId", docTypeId)));	
+		
+		if(completed != -1) {
+			if(completed == 1) {
+				criteria.add(Restrictions.and(Restrictions.eq("completed", true)));
+			} else {
+				Criterion rest1 = Restrictions.eq("completed", false);
+				Criterion rest2 = Restrictions.eq("sended", false);
+				criteria.add(Restrictions.and(Restrictions.or(rest1, rest2)));
+			}
+		}
+		
+		if(enabled != -1){
+			boolean value = enabled == 1? true : false;
+			criteria.add(Restrictions.and(Restrictions.eq("enabled", value)));
+		}
 		criteria.addOrder(Order.desc("docId"));
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResult);
@@ -155,23 +186,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		persist(docType);
 	}
 	
-	@Override
-	public List<NoteDoctypeInt> findWaitingMenu(boolean incoming) {
-		List<NoteDoctypeInt> map = new ArrayList<NoteDoctypeInt>();
-		List<DocumentType> listDocType = findAllDocType();
-		
-		for(int i = 0; i < listDocType.size(); i++){
-			DocumentType docType = listDocType.get(i);
-			Query query = (Query)getSession().createQuery("Select count(*) from Document where doc_type_id=? and incoming=? and completed=?");
-			query.setParameter(0, docType.getDocTypeId());
-			query.setParameter(1, incoming);
-			query.setParameter(2, false);
-			
-			map.add(new NoteDoctypeInt(docType, Integer.parseInt(query.uniqueResult().toString())));
-		}
-		
-		return map;
-	}
 
 	// ========EMERGENCY LEVEL
 	@SuppressWarnings("unchecked")
@@ -399,68 +413,31 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
-
-	/*@SuppressWarnings("unchecked")
-	@Override
-	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId,
-			int completed, int month, int year) {
-		
-		Calendar cal = new GregorianCalendar(year, month, 1);
-		String minDateStr = "1-" + month + "-" + year;
-		String maxDateStr = cal.getActualMaximum(Calendar.DAY_OF_MONTH) + "-" + month + "-" + year;
-		
-		Date minDay = new Date();
-		Date maxDay = new Date();
-		try{
-			minDay = UtilMethod.toDate(minDateStr, "dd-MM-yyyy");
-			maxDay = UtilMethod.toDate(maxDateStr, "dd-MM-yyyy");
-		}catch(Exception e){}
-		
-		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
-		criteria.createAlias("candidate", "c");
-		criteria.createAlias("organ", "o");
-		Criterion rest1 = Restrictions.and(Restrictions.ge("c.timeStart", minDay), Restrictions.le("c.timeStart", maxDay));
-		Criterion rest2 = Restrictions.and(Restrictions.ge("c.timeEnd", minDay), Restrictions.le("c.timeEnd", maxDay));
-		criteria.add(Restrictions.or(rest1, rest2));
-		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
-		if(completed != -1) {
-			boolean value = completed == 1? true : false;
-			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
-		}
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		
-		return criteria.list();
-	}
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId,
-			int completed, int startDay, int endDay, int month, int year) {
-		String minDateStr = startDay + "-" + month + "-" + year;
-		String maxDateStr = endDay + "-" + month + "-" + year;
-		
-		Date minDay = new Date();
-		Date maxDay = new Date();
-		try{
-			minDay = UtilMethod.toDate(minDateStr, "dd-MM-yyyy");
-			maxDay = UtilMethod.toDate(maxDateStr, "dd-MM-yyyy");
-		}catch(Exception e){}
-		
+	public List<DocumentRecipient> findDocRecipient(Integer organId, int docTypeId, int completed, int firstResult,
+			int maxResult) {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
-		criteria.createAlias("candidate", "c");
 		criteria.createAlias("organ", "o");
-		Criterion rest1 = Restrictions.and(Restrictions.ge("c.timeStart", minDay), Restrictions.le("c.timeStart", maxDay));
-		Criterion rest2 = Restrictions.and(Restrictions.ge("c.timeEnd", minDay), Restrictions.le("c.timeEnd", maxDay));
-		criteria.add(Restrictions.or(rest1, rest2));
-		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
+		criteria.createAlias("document", "d");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("d.docType.docTypeId", docTypeId)));
+		
 		if(completed != -1) {
 			boolean value = completed == 1? true : false;
 			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
 		}
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		
+		criteria.addOrder(Order.desc("receiveTime"));
+		criteria.setFirstResult(firstResult);
+		criteria.setMaxResults(maxResult);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
-	}*/
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -482,6 +459,62 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 	
+	//WAITING DOC
+	//OUT	
+	@Override
+	public List<DocTypeWait> findMenuDocOut(Integer organId) {
+		List<DocumentType> docTypeList = findAllDocType();
+		List<DocTypeWait> docTypeOutList = new ArrayList<DocTypeWait>();
+		
+		for(DocumentType docType : docTypeList){
+			Criteria criteria = getSession().createCriteria(Document.class);
+			criteria.createAlias("organ", "o");
+			criteria.createAlias("docType", "dt");
+			
+			Criterion rest1 = Restrictions.eq("o.organId", organId);
+			Criterion rest2 = Restrictions.eq("dt.docTypeId", docType.getDocTypeId());
+			Criterion rest3 = Restrictions.eq("completed", false);
+			Criterion rest4 = Restrictions.eq("sended", false);
+			Criterion rest5 = Restrictions.eq("enabled", true);
+			
+			criteria.add(Restrictions.and(rest1, rest2, Restrictions.or(rest3, rest4), rest5));
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			criteria.setProjection(Projections.rowCount());
+			Long count = (Long) criteria.uniqueResult();
+			docTypeOutList.add(new DocTypeWait(docType, count));
+		}
+		
+		return docTypeOutList;
+	}
+
+	//IN
+	@Override
+	public List<DocTypeWait> findMenuDocIn(Integer organId) {
+		List<DocumentType> docTypeList = findAllDocType();
+		List<DocTypeWait> docTypeInList = new ArrayList<DocTypeWait>();
+		
+		for(DocumentType docType : docTypeList) {
+			Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+			criteria.createAlias("document", "d");
+			criteria.createAlias("organ", "o");
+			
+			Criterion rest1 = Restrictions.eq("o.organId", organId);
+			Criterion rest2 = Restrictions.eq("d.docType.docTypeId", docType.getDocTypeId());
+			Criterion rest3 = Restrictions.eq("completed", false);
+			Criterion rest4 = Restrictions.eq("d.completed", true);
+			Criterion rest5 = Restrictions.eq("d.enabled", true);
+			
+			criteria.add(Restrictions.and(rest1, rest2, rest3, rest4, rest5));
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			criteria.setProjection(Projections.rowCount());
+			Long count = (Long) criteria.uniqueResult();
+			docTypeInList.add(new DocTypeWait(docType, count));
+		}
+		
+		return docTypeInList;
+	}
+	
+	 
 	
 	
 }

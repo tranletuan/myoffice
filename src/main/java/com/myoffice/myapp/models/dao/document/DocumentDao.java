@@ -12,7 +12,7 @@ import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.support.CalendarDoc;
-import com.myoffice.myapp.support.NoteDoctypeInt;
+import com.myoffice.myapp.support.DocTypeWait;
 
 public interface DocumentDao {
 	
@@ -32,6 +32,9 @@ public interface DocumentDao {
 	List<Document> findDocumentBy(Integer organId, int completed, 
 			int firstResult, int maxResult, int enabled);
 	
+	List<Document> findDocumentBy(Integer organId, Integer docTypeId, 
+			int completed, int firstResult, int maxResult, int enabled);
+	
 	//DocumentType
 	DocumentType findDocTypeById(Integer typeId);
 	
@@ -39,8 +42,6 @@ public interface DocumentDao {
 	
 	void saveDocType(DocumentType docType);
 	
-	List<NoteDoctypeInt> findWaitingMenu(boolean incoming);
-
 	
 	//EmergencyLevel
 	List<EmergencyLevel> findAllEmergencyLevel();
@@ -96,5 +97,14 @@ public interface DocumentDao {
 	
 	List<DocumentRecipient> findDocRecipient(Integer organId, int completed, int firstResult, int maxResult);
 	
+	List<DocumentRecipient> findDocRecipient(Integer organId, int docTypeId, int completed, int firstResult, int maxResult);
+	
 	List<DocumentRecipient> findDocRecByAssignDate(Integer organId, int completed, Date start, Date end);
+	
+	//WAITING DOC
+	//OUT
+	List<DocTypeWait> findMenuDocOut(Integer organId);
+	
+	//IN
+	List<DocTypeWait> findMenuDocIn(Integer organId);
 }
