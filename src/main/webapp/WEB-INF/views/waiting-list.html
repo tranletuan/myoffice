@@ -62,13 +62,13 @@
 							<div th:if="${out}">
 			
 								<div th:each="tenure : ${tenureList}">
-									<button type="button" class="btn btn-warning btn-tenure" data-toggle="collapse" th:attr="data-target='#tenureOut' + ${tenure.tenureId}">Nhiệm kỳ 4</button>
+									<button type="button" class="btn btn-warning btn-tenure" data-toggle="collapse" th:attr="data-target='#tenureOut' + ${tenure.tenureId}" th:text="${tenure.tenureName}"></button>
 
 									<div class="collapse" th:attr="id='tenureOut' + ${tenure.tenureId}"
 										aria-expanded="true">
 										<div class="list-group list-menu-doc">
 												<a th:each="docType : ${typeList}" href="#"
-													th:href="@{'/flow/wait_list/out/' + ${tenure.tenureId} + '/' + ${docType.docTypeId} + '/1'}"
+													th:href="@{'/flow/wait_list/out/' + ${tenure.tenureId} + '/' + ${docType.docTypeId} + '/0'}"
 													class="list-group-item"> 
 													
 													<span th:text="${docType.docTypeName}"></span> 
@@ -81,13 +81,13 @@
 							<div th:if="${in}">
 							
 								<div th:each="tenure : ${tenureList}">
-									<button type="button" class="btn btn-warning btn-tenure" data-toggle="collapse" th:attr="data-target='#tenureIn' + ${tenure.tenureId}">Nhiệm kỳ 4</button>
+									<button type="button" class="btn btn-warning btn-tenure" data-toggle="collapse" th:attr="data-target='#tenureIn' + ${tenure.tenureId}" th:text="${tenure.tenureName}"></button>
 
 									<div class="collapse" th:attr="id='tenureIn' + ${tenure.tenureId}"
 										aria-expanded="true">
 										<div class="list-group list-menu-doc">
 											<a th:each="docType : ${typeList}" href="#"
-													th:href="@{'/flow/wait_list/in/' + ${tenure.tenureId} + '/' + ${docType.docTypeId} + '/1'}"
+													th:href="@{'/flow/wait_list/in/' + ${tenure.tenureId} + '/' + ${docType.docTypeId} + '/0'}"
 													class="list-group-item"> 
 													
 													<span th:text="${docType.docTypeName}"></span> 
@@ -109,15 +109,10 @@
 
 							<div class="list-group doc-group" th:if="${in}">
 								<div th:each="docRec : ${docList}" class="doc">
-									<a href="#" class="list-group-item list-group-item-warning" th:href="@{/flow/doc_in_info/} + ${docRec.document.docId}" th:if="${docRec.number}">
-										<h4 class="list-group-item-heading" th:text="${docRec.number} + ' - ' + ${docRec.receiveTime} + ' - ' + ${docRec.document.docName}"></h4>
-										<p class="list-group-item-text p-doc" th:text="${docRec.document.epitome}"></p>
-									</a> 
-								</div>
+									<a href="#" class="list-group-item list-group-item-warning" th:href="@{/flow/doc_in_info/} + ${docRec.document.docId}">
+										<h4 class="list-group-item-heading" th:text="${docRec.number} + ' - ' + ${docRec.receiveTime} + ' - ' + ${docRec.document.docName}" th:if="${docRec.number}"></h4>
+										<h4 class="list-group-item-heading" th:text="${'Chưa nhận - '} + ${docRec.document.docName}" th:unless="${docRec.number}"></h4>
 
-								<div th:each="docRec : ${docList}" class="doc">
-									<a href="#" class="list-group-item list-group-item-danger" th:href="@{/flow/doc_in_info/} + ${docRec.document.docId}" th:unless="${docRec.number}">
-										<h4 class="list-group-item-heading" th:text="${'Chưa nhận - '} + ${docRec.document.docName}"></h4>
 										<p class="list-group-item-text p-doc" th:text="${docRec.document.epitome}"></p>
 									</a> 
 								</div>

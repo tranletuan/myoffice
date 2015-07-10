@@ -33,6 +33,7 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 		criteria.add(Restrictions.eq("o.organId", organId));
 		criteria.add(Restrictions.and(Restrictions.in("r.shortName", arrRoleShortName)));
 		criteria.add(Restrictions.and(Restrictions.eq("enabled", true)));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 	
@@ -47,6 +48,7 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 		criteria.add(Restrictions.and(Restrictions.in("r.shortName", arrRoleShortName)));
 		criteria.add(Restrictions.and(Restrictions.ge("l.value", levelValue)));
 		criteria.add(Restrictions.and(Restrictions.eq("enabled", true)));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return null;
 	}
 

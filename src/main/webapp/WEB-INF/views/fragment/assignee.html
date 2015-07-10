@@ -4,9 +4,9 @@
 	<title></title>
 </head>
 <body>
-<div class="panel-body" th:fragment="assignee">
-		<div class="form-group" th:if="${assignee}">
-			<label for="assignee" class="col-sm-2 control-label">Người nhận quyền</label>
+<div class="panel-body" th:if="${assignee}" th:fragment="assignee">
+		<div class="form-group">
+			<label for="assignee" class="col-sm-2 control-label">Người giữ quyền</label>
 			<div class="col-sm-10">
 				<p th:if="${assignee.userDetail}" th:text="${assignee.userDetail.fullName}" id="assignee"></p>
 				<p th:unless="${assignee.userDetail}" th:text="${assignee.userName}" id="assignee"></p>
@@ -16,7 +16,7 @@
 		<div class="form-group" th:if="${assignee.level}">
 			<label for="level" class="col-sm-2 control-label">Chức vụ</label>
 			<div class="col-sm-10">
-				<p th:text="${assignee.level.fullName}" id="level"></p>
+				<p th:text="${assignee.level.levelName}" id="level"></p>
 			</div>
 		</div>
 

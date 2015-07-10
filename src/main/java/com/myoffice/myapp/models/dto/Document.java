@@ -41,7 +41,7 @@ public class Document {
 	@Column(name = "number", nullable = false)
 	private Integer number;
 	
-	@Column(name = "departments", nullable = false, length = 60)
+	@Column(name = "departments", length = 60)
 	private String departments;
 	
 	@Column(name = "document_name", length = 100)

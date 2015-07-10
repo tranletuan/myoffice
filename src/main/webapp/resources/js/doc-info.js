@@ -31,7 +31,7 @@
  		var organ = $('#organ').attr('class');
  		var departments = $('.departments').html();
 
- 		var numberSign =  '-' + docType + '/' + organ + '-';
+ 		var numberSign =  docType + '/' + organ;
   		$('#numberSign').val(numberSign);
   		$('#departments').val(departments);
 
@@ -50,7 +50,7 @@
  		var departments = $('.departments').html();
  		var number = $('.number').html();
 
- 		var numberSign =  '-' + docType + '/' + organ + '-';
+ 		var numberSign =  docType + '/' + organ;
  		$('#number').val(number);
   		$('#numberSign').val(numberSign);
   		$('#departments').val(departments);

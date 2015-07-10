@@ -22,7 +22,7 @@
  		userName = $(this).find('.userName').html();
  		organId = $(this).find('.organ').attr('data');
  		enabled = $(this).find('.enabled').html();
- 		levelId = $(this).find('.level'),attr('data');
+ 		levelId = $(this).find('.level').attr('data');
 
  		if(userId > 0){
  			$("#btn-change").removeAttr('disabled');

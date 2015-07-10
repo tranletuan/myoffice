@@ -32,6 +32,9 @@ xmlns:th="http://www.thymeleaf.org">
 	<div class="container-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
 		<div class="container">
+			<!-- Message -->
+			<div th:replace="fragment/message :: message"></div>
+			
 			<!-- Forward -->
 			<div th:replace="fragment/forward-out :: forward_out"></div>
 
@@ -111,7 +114,7 @@ xmlns:th="http://www.thymeleaf.org">
 
 						<!-- releaseTime -->
 						<tr>
-							<th scope="row"><h4><span>Ngày ban hành : </span></h4></th>
+							<th scope="row" th:if="${doc.releaseTime}"><h4><span>Ngày ban hành : </span></h4></th>
 							<td><h4 th:text="${doc.releaseTime}" class="releaseTime"></h4></td>
 						</tr>
 

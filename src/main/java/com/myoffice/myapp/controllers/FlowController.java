@@ -44,6 +44,7 @@ import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
+import com.myoffice.myapp.models.dto.Level;
 import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
@@ -76,16 +77,44 @@ public class FlowController extends AbstractController {
 		
 		User user = securityService.getCurrentUser();
 		Organ organ = user.getOrgan();
+		Level level = user.getLevel();
 		
-		if(organ == null){
-			model.setViewName("redirect:/store/list/out/1");
+		if(organ == null || level == null){
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, tài khoản chưa thuộc cơ quan nào hoặc chưa có chức vụ");
+			return model;
 		}
 		
 		List<DocumentType> docTypeList = dataService.findAllDocType();
 		List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
 		List<PrivacyLevel> privacyList = dataService.findAllPrivacyLevel();
 		List<Tenure> tenureList = dataService.findAllTenure(); 
-	
+		
+		if(docTypeList.size() == 0) {
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, chưa cập nhật danh sách loại văn bản");
+			return model;
+		}
+		
+		if(emeList.size() == 0) {
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, chưa cập nhật danh sách mức độ khẩn");
+			return model;
+		}
+		
+
+		if(privacyList.size() == 0) {
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, chưa cập nhật danh sách mức độ mật");
+			return model;
+		}
+		
+		if(tenureList.size() == 0) {
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, chưa cập nhật danh sách năm/nhiệm kỳ");
+			return model;
+		}
+		
 		model.addObject("docTypeList", docTypeList);
 		model.addObject("emeList", emeList);
 		model.addObject("privacyList", privacyList);
@@ -124,14 +153,15 @@ public class FlowController extends AbstractController {
 			@RequestParam("tenureId") Integer tenureId,
 			@RequestParam("number") String number,
 			@RequestParam("numberSign") String numberSign,
-			@RequestParam("departments") String departments,
+			@RequestParam(value = "departments", required = false) String departments,
 			@RequestParam(value = "file", required = false) MultipartFile file,
 			@RequestParam(value = "comment", required = false) String comment) throws ParseException, IllegalStateException, IOException{
 		ModelAndView model = new ModelAndView("redirect:doc_info");
 		Tenure tenure = dataService.findTenureById(tenureId);
 		DocumentType docType = dataService.findDocTypeById(docTypeId);
 		Organ organ = securityService.getCurrentUser().getOrgan();
-		numberSign = number + numberSign + departments;
+		numberSign = number + "-" + numberSign;
+		if(departments != null) numberSign += "-" + departments;
 		
 		if(organ == null){
 			model.setViewName("error");
@@ -153,8 +183,8 @@ public class FlowController extends AbstractController {
 		doc.setTenure(tenure);
 		doc.setOrgan(organ);
 		doc.setNumberSign(numberSign);
-		doc.setDepartments(departments);
-		if(comment != null) doc.setComment(comment);
+		if(departments != null) doc.setDepartments(departments);
+		if(comment != null && comment.trim().length() > 0) doc.setComment(comment);
 		
 		Integer num = UtilMethod.parseNumDoc(number);
 		if (num > 0) {
@@ -191,10 +221,19 @@ public class FlowController extends AbstractController {
 						dataService.saveAssignContent(assContent);
 					}
 					
-					Task task = flowUtil.getCurrentTask(doc
-							.getProcessInstanceId());
+					Task task = flowUtil.getCurrentTask(doc.getProcessInstanceId());
 					flowUtil.getTaskService().setAssignee(task.getId(), curUser.getUserName());
 					flowUtil.getTaskService().complete(task.getId());
+					
+					//Kiểm tra người thêm văn bản có phải là người nhận task tiếp theo
+					//Nếu đúng bỏ qua task tiếp theo
+					task = flowUtil.getCurrentTask(doc.getProcessInstanceId());
+					String []taskName = task.getName().split(" ");
+					if(curUser.checkRoleByShortName(taskName[0])) {
+						flowUtil.getTaskService().setAssignee(task.getId(), curUser.getUserName());
+						flowUtil.getTaskService().complete(task.getId());
+					}
+					
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 					if (procInsId != null) {
@@ -307,6 +346,7 @@ public class FlowController extends AbstractController {
 				
 				//Khi hoàn thành task trước và chưa ủy quyền
 				if(curTask.getAssignee() == null){
+					
 					if(curUser.getUserName().equals(preTask.getAssignee())){	
 						List<Role> assignRole = dataService.findRolesByArrShortName(roles);
 						List<User> userList = dataService.findUserByArrRoleShortName(curUser.getOrgan().getOrganId(), roles);
@@ -321,7 +361,10 @@ public class FlowController extends AbstractController {
 							model.addObject("preUser", preUser);
 							model.addObject("canReturn", true);
 						}
-					} else {
+					}
+					
+					//Thông tin người vừa hoàn thành task trước nhưng chưa trao quyền tiếp theo
+					if(preTask != null) {
 						User rUser = dataService.findUserByName(preTask.getAssignee());
 						model.addObject("assignee", rUser);
 						model.addObject("taskDescription", preTask.getDescription());
@@ -789,9 +832,10 @@ public class FlowController extends AbstractController {
 	}
 	
 	//=============WAITING DOC=============
-	@RequestMapping(value = "/wait_list/{type}")
+	@RequestMapping(value = "/wait_list/{type}/{firstNumber}")
 	public ModelAndView waitingPage(
-			@PathVariable("type") String type) {
+			@PathVariable("type") String type,
+			@PathVariable("firstNumber") Integer firstNumbers) {
 		ModelAndView model = new ModelAndView("waiting-list");
 		
 		List<DocumentType> typeList = dataService.findAllDocType();
@@ -803,13 +847,13 @@ public class FlowController extends AbstractController {
 		Organ organ = curUser.getOrgan();
 		
 		if(type.equals("in")) {
-			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), 0, 1, 10);
+			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), 0, firstNumbers, firstNumbers + 9);
 			model.addObject("docList", docList);
 			model.addObject("in", true);
 			
 		} else if(type.equals("out")){
-			int value = curUser.checkRoleByShortName("mng")? -1 : 1;
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), 0, 1, 10, value);
+			int enabled = curUser.checkRoleByShortName("mng")? -1 : 1;
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), 0, firstNumbers, firstNumbers + 9, enabled);
 			model.addObject("docList", docList);
 			model.addObject("out", true);
 		}

@@ -18,30 +18,35 @@
 				<a class="navbar-brand">Trang chủ</a>
 			</div>
 
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
+			<!-- Authentiacated -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" sec:authorize="isAuthenticated()">
+				<!-- hasn't Admin role -->
+				<ul class="nav navbar-nav" sec:authorize="!hasRole('ROLE_ADMIN')">
 					<li><a href="#" th:href="@{/store/list/out/1}">Lưu trữ</a></li>
-					<li class="dropdown" sec:authorize="isAuthenticated()">
+
+					<li class="dropdown" >
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Xử
 							lý văn bản<span class="caret"></span>
 						</a>
 
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="#" th:href="@{/flow/wait_list/in}">Văn bản đến</a></li>
-							<li><a href="#" th:href="@{/flow/wait_list/out}">Văn bản đi</a></li>
+							<li><a href="#" th:href="@{/flow/wait_list/in/0}">Văn bản đến</a></li>
+							<li><a href="#" th:href="@{/flow/wait_list/out/0}">Văn bản đi</a></li>
 						</ul>
 					</li>
-
-					<li class="dropdown" sec:authorize="hasRole('ROLE_INPUTER')">
+		
+					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tạo văn bản<span class="caret"></span></a>
 
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="#" th:href="@{/flow/create_doc_out}">Tạo văn bản đi</a></li>
-							<li><a href="#" th:href="@{/flow/import_doc_in}">Nhận văn bản đến</a></li>
+							<li><a href="#" th:href="@{/flow/import_doc_in}" sec:authorize="hasRole('ROLE_INPUTER')">Nhập văn bản đến</a></li>
 						</ul>
 					</li>
-					
+				</ul>
+
+				<!-- Admin role -->
+				<ul class="nav navbar-nav" sec:authorize="hasRole('ROLE_ADMIN')">
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle"
 						data-toggle="dropdown" role="button" aria-expanded="false" sec:authorize="hasRole('ROLE_ADMIN')">Quản
@@ -49,7 +54,6 @@
 						</a>
 
 						<ul class="dropdown-menu" role="menu">
-							<li class="divider">Cơ quan</li>
 							<li><a href="#" th:href="@{/admin/organ_list}">Cơ quan</a></li>
 							<li><a href="#" th:href="@{/admin/organ_type_list}">Cấp cơ quan</a></li>
 							<li><a href="#" th:href="@{/admin/unit_list}">Đơn vị</a></li>
@@ -73,7 +77,6 @@
 						</a>
 						
 						<ul class="dropdown-menu" role="menu">
-							<li class="divider">Quyền hạn</li>
 							<li><a href="#" th:href="@{/admin/user_list}">Người dùng</a></li>
 							<li><a href="#" th:href="@{/admin/role_list}">Quyền hạn</a></li>
 						
@@ -84,21 +87,23 @@
 					</li>
 				</ul>
 
-				<ul sec:authorize="isAuthenticated()" class="nav navbar-nav navbar-right">
+				<ul class="nav navbar-nav navbar-right">
 					<li role="presentation"><a sec:authentication="name" href="#" th:href="@{/user_detail/0}">Name</a></li>
 					<form th:action="@{/j_spring_security_logout}" method="post"
 						class="navbar-form navbar-left">
 						<button type="submit" class="btn btn-default">Thoát</button>
 					</form>
 				</ul>
-				
-				<ul sec:authorize="isAnonymous()" class="nav navbar-nav navbar-right">
+			</div>
+
+			<!-- Anonymous -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" sec:authorize="isAnonymous()">
+				<ul class="nav navbar-nav navbar-right">
 					<form th:action="@{/signin}" method="post"
 						class="navbar-form navbar-left">
 						<button type="submit" class="btn btn-default">Đăng nhập</button>
 					</form>
 				</ul>
-
 			</div>
 			<!-- /.navbar-collapse -->
 		</div>

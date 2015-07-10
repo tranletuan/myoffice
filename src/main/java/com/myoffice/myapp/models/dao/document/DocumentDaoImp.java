@@ -107,6 +107,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.addOrder(Order.desc("docId"));
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResult);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 
@@ -127,9 +128,11 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			boolean value = enabled == 1? true : false;
 			criteria.add(Restrictions.and(Restrictions.eq("enabled", value)));
 		}
+		
 		criteria.addOrder(Order.desc("docId"));
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResult);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 
@@ -151,7 +154,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	public void saveDocType(DocumentType docType) {
 		persist(docType);
 	}
-
 	
 	@Override
 	public List<NoteDoctypeInt> findWaitingMenu(boolean incoming) {
@@ -372,6 +374,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.addOrder(Order.desc("receiveTime"));
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResult);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 
@@ -393,10 +396,10 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.addOrder(Order.desc("receiveTime"));
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResult);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 
-	
 	/*@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findDocRecByCandidateDate(Integer organId,

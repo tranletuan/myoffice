@@ -5,18 +5,6 @@
 </head>
 <body>
 <div th:fragment="send">
-	<div th:if="${success}" class="alert alert-success" role="alert">
-		<span class="glyphicon glyphicon-exclamation-sign"
-		aria-hidden="true"></span> <span class="sr-only">Thông báo:</span>
-		<span th:text="${successMessage}"></span>
-	</div>
-
-	<div th:if="${error}" class="alert alert-danger" role="alert">
-		<span class="glyphicon glyphicon-exclamation-sign"
-		aria-hidden="true"></span> <span class="sr-only">Thông báo:</span>
-		<span th:text="${errorMessage}"></span>
-	</div>
-
 	<div class="panel panel-default" th:if="${doc.completed}" sec:authorize="hasRole('ROLE_OUTPUTER')">
 		<div class="panel-body">
 			<button type="button" id="btnSend" class="btn btn-info" data-toggle="modal" data-target="#send-form">Gửi</button>
