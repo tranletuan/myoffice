@@ -8,12 +8,14 @@
 		<div class="panel-heading"><h4>Chỉ đạo thực hiện</h4></div>
 		<div class="panel-body">
 			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#assign-form" id="btnAssign">
-				Nội dung chỉ đạo
+				Bổ sung/Chỉnh sửa chỉ đạo
 			</button>
 			
-			<a type="button" class="btn btn-warning" href="#" th:href="@{/flow/complete/1/doc_in_info}" th:if="${docRec.assignContent}">Phân công</a>
+			<div th:if="${isCheckTask}">
+				<a type="button" class="btn btn-warning" href="#" th:href="@{/flow/complete/1/doc_in_info}" th:if="${docRec.assignContent}">Phân công</a>
 
-			<a type="button" class="btn btn-success" href="#" th:href="@{/flow/complete_save}">Hoàn thành</a>
+				<a type="button" class="btn btn-success" href="#" th:href="@{/flow/complete_save}">Hoàn thành</a>
+			</div>
 		</div>
 
 		<div class="modal fade" id="assign-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -24,7 +26,7 @@
 						<h4 class="modal-title" id="myModalLabel">Chỉ đạo thực hiện</h4>
 					</div>
 					<div class="modal-body">
-						<form class="form-horizontal" th:action="@{/flow/assign}" method="post" autocompleted="off">
+						<form class="form-horizontal" th:action="@{/flow/assign_content}" method="post" autocompleted="off">
 							
 							<div class="form-group">
 								<label for="timeStart" class="col-sm-3 control-label">Thời gian bắt đầu</label>
@@ -57,7 +59,7 @@
 							<div class="form-group">
 								<label for="content" class="col-sm-3 control-label">Nội dung chỉ đạo</label>
 								<div class="col-sm-9">
-									<textarea class="form-control" rows="8" maxlength="1200" placeholder="Nội dung" th:name="content" id="content" required="true"></textarea>
+									<textarea class="form-control" rows="8" maxlength="1200" autofocus="true" placeholder="Nội dung" th:name="content" id="content" required="true"></textarea>
 								</div>
 							</div>
 
@@ -74,8 +76,8 @@
 								</div>
 							</div> -->
 							<div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
 								<button type="submit" class="btn btn-primary">Xác nhận</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">Bỏ qua</button>
 							</div>
 						</form>
 					</div>

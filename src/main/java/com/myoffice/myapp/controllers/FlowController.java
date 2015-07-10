@@ -2,6 +2,7 @@ package com.myoffice.myapp.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.spec.MGF1ParameterSpec;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.cmd.FindActiveActivityIdsCmd;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.task.Task;
 import org.junit.runner.Request;
 import org.slf4j.Logger;
@@ -696,11 +698,8 @@ public class FlowController extends AbstractController {
 					//Người đăng nhập là người tiếp nhận văn bản
 					if (curUser.getUserName().equals(preTask.getAssignee())) {
 						List<Role> assignRole = dataService.findRolesByArrShortName(roles);
-						List<User> userList = dataService.findUserByArrRoleShortName(
-								organ.getOrganId(), 
-								roles, 
-								curUser.getLevel().getValue());
-						
+						List<User> userList = dataService.findUserByArrRoleShortName(organ.getOrganId(), roles);
+					
 						model.addObject("isForward", true);
 						model.addObject("userList", userList);
 						model.addObject("assignRole", assignRole);
@@ -721,12 +720,13 @@ public class FlowController extends AbstractController {
 			else { //task đã được giao quyền
 				User rUser = dataService.findUserByName(curTask.getAssignee());
 				model.addObject("assignee", rUser);
-				
+						
 				if(curUser.getUserName().equals(curTask.getAssignee())){
 					model.addObject("isAccess", true);
 					
 					if(taskName[taskName.length - 1].equals("check")){
 						model.addObject("isAssign", true);
+						model.addObject("isCheckTask", true);
 					} 
 					else if(taskName[taskName.length - 1].equals("report")){
 						model.addObject("isReport", true);
@@ -799,7 +799,7 @@ public class FlowController extends AbstractController {
 	}
 	
 	@RequestMapping(value = "/complete_save")
-	public ModelAndView saveDocIn(
+	public ModelAndView completeDocIn(
 			@ModelAttribute("docId") Integer docId,
 			@ModelAttribute("procId") String procId,
 			RedirectAttributes reAttr){
@@ -811,7 +811,7 @@ public class FlowController extends AbstractController {
 		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
 		if(docRec.getAssignContent().getReportDoc() == null){
 			reAttr.addFlashAttribute("error", true);
-			reAttr.addFlashAttribute("errorMessage", "Lỗi, chưa tạo file báo cáo");
+			reAttr.addFlashAttribute("errorMessage", "Lỗi, không tồn tại file báo cáo");
 			return model;
 		} else {
 			String reportProcId = docRec.getAssignContent().getReportDoc().getProcessInstanceId();

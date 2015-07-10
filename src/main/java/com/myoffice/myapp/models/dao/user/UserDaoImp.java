@@ -38,6 +38,7 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, int levelValue) {
 		Criteria criteria = getSession().createCriteria(User.class);
@@ -49,7 +50,7 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 		criteria.add(Restrictions.and(Restrictions.ge("l.value", levelValue)));
 		criteria.add(Restrictions.and(Restrictions.eq("enabled", true)));
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		return null;
+		return criteria.list();
 	}
 
 
