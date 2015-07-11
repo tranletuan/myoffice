@@ -90,7 +90,7 @@ public interface DocumentDao {
 	
 	List<DocumentRecipient> findDocRecipient(Integer organId, Integer tenureId, Integer docTypeId, Boolean completed, int firstResult, int maxResult);
 	
-	List<DocumentRecipient> findDocRecByAssignDate(Integer organId, int completed, Date start, Date end);
+	List<DocumentRecipient> findDocRecByAssignDate(Integer organId, Boolean completed, Date start, Date end);
 	
 	//DOCTYPE MENU
 	List<DocTypeMenuItem> findMenuDocOut(Integer organId, boolean completed, Integer tenureId);

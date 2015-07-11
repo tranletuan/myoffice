@@ -50,7 +50,7 @@ public class DocumentRecipient implements Serializable{
 	private boolean completed = false;
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "candidate_id")
+	@JoinColumn(name = "assign_content_id")
 	private AssignContent assignContent;
 	
 	public DocumentRecipient() {

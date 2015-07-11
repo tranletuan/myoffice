@@ -259,7 +259,7 @@ public class DataService {
 	}
 
 	
-	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId, int completed, Date start, Date end){
+	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId, Boolean completed, Date start, Date end){
 		return docDao.findDocRecByAssignDate(organId, completed, start, end);
 	}
 	

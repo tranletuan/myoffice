@@ -42,31 +42,27 @@ public class MainController extends AbstractController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(MainController.class);
 	
-	@RequestMapping(value = { "/", "/home**" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/", "/home**", "/signin" })
 	public ModelAndView defaultPage() throws ParseException {
-
-		ModelAndView model = new ModelAndView("home");
-		return model;
-	}
-
-	@RequestMapping(value = "/signin")
-	public String login() {
+		ModelAndView model = new ModelAndView("signin");
 		
 		User user = securityService.getCurrentUser();
 		if(user != null) {
-			return "home";
+			model.setViewName("home");
 		}
-		return "signin";
+		return model;
 	}
 
 	@RequestMapping(value = "/signin-{msg}", method = RequestMethod.GET)
 	public ModelAndView loginMessage(@PathVariable("msg") String message) {
-		ModelAndView model = new ModelAndView("signin");
+		ModelAndView model = new ModelAndView("home");
 		
 		if (message.equals("error")) {
 			model.addObject("error", true);
+			model.setViewName("signin");
 		}else if(message.equals("signout")){
 			model.addObject("signout", true);
+			model.setViewName("signin");
 		}
 
 		return model;

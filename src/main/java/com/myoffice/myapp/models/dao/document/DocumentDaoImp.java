@@ -347,18 +347,20 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId,
-			int completed, Date start, Date end) {
+			Boolean completed, Date start, Date end) {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
-		criteria.createAlias("candidate", "c");
+		criteria.createAlias("assignContent", "ac");
 		criteria.createAlias("organ", "o");
-		Criterion rest1 = Restrictions.and(Restrictions.ge("c.timeStart", start), Restrictions.le("c.timeStart", end));
-		Criterion rest2 = Restrictions.and(Restrictions.ge("c.timeEnd", start), Restrictions.le("c.timeEnd", end));
-		criteria.add(Restrictions.or(rest1, rest2));
-		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
-		if(completed != -1) {
-			boolean value = completed == 1? true : false;
-			criteria.add(Restrictions.and(Restrictions.eq("completed", value)));
+		criteria.add(Restrictions.eq("o.organId", organId));
+		if(completed != null) {
+			criteria.add(Restrictions.and(Restrictions.eq("completed", completed)));
 		}
+		
+		Criterion rest1 = Restrictions.and(Restrictions.ge("ac.timeStart", start), Restrictions.le("ac.timeStart", end));
+		Criterion rest2 = Restrictions.and(Restrictions.ge("ac.timeEnd", start), Restrictions.le("ac.timeEnd", end));
+		
+		criteria.add(Restrictions.and(Restrictions.or(rest1, rest2)));
+	
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		
 		return criteria.list();

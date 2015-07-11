@@ -124,6 +124,13 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>${org.hibernate-version}</version>
 		</dependency>
+		
+		<!-- Jackson JSon Mapper  -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
 
 
 		<!-- http://mvnrepository.com/artifact/org.hibernate/hibernate-c3p0 -->

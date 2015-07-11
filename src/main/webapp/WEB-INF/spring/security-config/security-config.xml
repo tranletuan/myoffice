@@ -9,6 +9,7 @@
 	<http auto-config="true" use-expressions="true">
 
 		<intercept-url pattern="/signin/**" access="permitAll" />
+		
 		<intercept-url pattern="/store/**" access="isAuthenticated()" />
 		
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
@@ -23,7 +24,7 @@
 		
 		<form-login 
 			login-page="/signin" 
-			default-target-url="/home"
+			default-target-url="/calendar/show"
 			always-use-default-target="false"
 			login-processing-url="/j_spring_security_check"
 			authentication-failure-url="/signin-error" 
@@ -33,13 +34,13 @@
 		<logout logout-success-url="/signin-signout" invalidate-session="false" logout-url="/j_spring_security_logout"
 			delete-cookies="JSESSIONID" />
 
-		<session-management>
+		<session-management invalid-session-url="/signin">
 			<concurrency-control 
 				max-sessions="1"
 				expired-url="/signin-time-out"/>
 		</session-management>
 		
-		<access-denied-handler error-page="/" />
+		<access-denied-handler error-page="/error" />
 		
 		<!-- enable csrf protection -->
 		<csrf />
