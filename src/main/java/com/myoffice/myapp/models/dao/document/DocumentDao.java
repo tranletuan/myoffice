@@ -12,7 +12,8 @@ import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.support.CalendarDoc;
-import com.myoffice.myapp.support.DocTypeWait;
+import com.myoffice.myapp.support.DocTypeMenuItem;
+import com.myoffice.myapp.support.TenureMenuItem;
 
 public interface DocumentDao {
 	
@@ -27,13 +28,13 @@ public interface DocumentDao {
 	void deleteDocument(Document doc);
 	
 	List<Document> findDocumentBy(Integer organId, Integer tenureId, 
-			Integer docTypeId, int completed, int firstResult, int maxResult, int enabled);
+			Integer docTypeId, Boolean completed, int firstResult, int maxResult, Boolean enabled);
 	
-	List<Document> findDocumentBy(Integer organId, int completed, 
-			int firstResult, int maxResult, int enabled);
+	List<Document> findDocumentBy(Integer organId, Boolean completed, 
+			int firstResult, int maxResult, Boolean enabled);
 	
 	List<Document> findDocumentBy(Integer organId, Integer docTypeId, 
-			int completed, int firstResult, int maxResult, int enabled);
+			Boolean completed, int firstResult, int maxResult, Boolean enabled);
 	
 	//DocumentType
 	DocumentType findDocTypeById(Integer typeId);
@@ -101,10 +102,11 @@ public interface DocumentDao {
 	
 	List<DocumentRecipient> findDocRecByAssignDate(Integer organId, int completed, Date start, Date end);
 	
-	//WAITING DOC
-	//OUT
-	List<DocTypeWait> findMenuDocOut(Integer organId);
+	//DOCTYPE MENU
+	List<DocTypeMenuItem> findMenuDocOut(Integer organId, boolean completed, Integer tenureId);
 	
-	//IN
-	List<DocTypeWait> findMenuDocIn(Integer organId);
+	List<DocTypeMenuItem> findMenuDocIn(Integer organId, boolean completed, Integer tenureId);
+	
+	//TENURE MENU
+	List<TenureMenuItem> findMenuTenureOut(Integer organId);
 }

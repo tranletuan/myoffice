@@ -19,6 +19,7 @@ import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataService;
+import com.myoffice.myapp.support.TenureMenuItem;
 
 @Controller
 @RequestMapping(value = "/store")
@@ -32,24 +33,13 @@ public class StoreController extends AbstractController {
 			@PathVariable("type") String type,
 			@PathVariable("firstNumber") Integer firstNumber) {
 		ModelAndView model = new ModelAndView("store");
-		
-		List<DocumentType> typeList = dataService.findAllDocType();
-		List<Tenure> tenureList = dataService.findAllTenure();
-		model.addObject("typeList", typeList);
-		model.addObject("tenureList", tenureList);
-		
 		User curUser = securityService.getCurrentUser();
-		int enabled = curUser.checkRoleByShortName("mng")? -1 : 1;
 		Organ organ = curUser.getOrgan();
 		
-		if(type.equals("out")){
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), 1, firstNumber, 10, enabled);
-			model.addObject("docList", docList);
-			model.addObject("out", true);
-		} else {
-			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), 1, firstNumber, 10);
-			model.addObject("docList", docList);
-			model.addObject("in", true);
+		if(type.equals("out")) {
+			List<TenureMenuItem> tenureItemOutList = dataService.findMenuTenureOut(organ.getOrganId());
+			
+			model.addObject("tenureItemOutList", tenureItemOutList);
 		}
 		
 		return model;
@@ -62,26 +52,7 @@ public class StoreController extends AbstractController {
 			@PathVariable("docTypeId") Integer docTypeId,
 			@PathVariable("firstNumber") Integer firstNumber){
 		ModelAndView model = new ModelAndView("store");
-		List<DocumentType> typeList = dataService.findAllDocType();
-		List<Tenure> tenureList = dataService.findAllTenure();
-		model.addObject("typeList", typeList);
-		model.addObject("tenureList", tenureList);
 		
-		User curUser = securityService.getCurrentUser();
-		int enabled = curUser.checkRoleByShortName("mng")? -1 : 1;
-		Organ organ = curUser.getOrgan();
-		
-		if(type.equals("in")){
-			List<DocumentRecipient> docList = dataService.findDocRecipient(
-					organ.getOrganId(), tenureId, docTypeId, 1, firstNumber, 10);
-			model.addObject("docList", docList);
-			model.addObject("in", true);
-		} else if(type.equals("out")){
-			List<Document> docList = dataService.findDocumentBy(
-					organ.getOrganId(), tenureId, docTypeId, 1, firstNumber, 10, enabled);
-			model.addObject("docList", docList);
-			model.addObject("out", true);
-		}
 		return model;
 	}
 }

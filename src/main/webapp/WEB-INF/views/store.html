@@ -60,20 +60,24 @@
 			<tbody>
 				<tr>
 					<th scope="row">
-						<a type="button" class="btn btn-primary btn-doc" th:href="@{/store/list/out/1}">Văn bản đi</a>
+						<button type="button" class="btn btn-primary btn-doc" data-toggle="collapse" data-target="#tenure-out">Văn bản đi</button>
 						
-						<div th:each="tenure : ${tenureList}">
-							<button type="button" class="btn btn-warning btn-tenure" data-toggle="collapse" th:attr="data-target='#tenureOut' + ${tenure.tenureId}">Nhiệm kỳ 4</button>
+						<div th:each="tio : ${tenureItemOutList}" class="collapse in" id="tenure-out">
+							<button type="button" class="btn btn-info btn-tenure list-group-item list-group-item-success" data-toggle="collapse" th:attr="data-target='#tenureOut' + ${tio.tenure.tenureId}" >
+								<span th:text="${tio.tenure.tenureName}"></span>
+								<span class="badge" th:text="${tio.count}"></span>
+							</button>
 
-							<div class="collapse" th:attr="id='tenureOut' + ${tenure.tenureId}"
+							<div class="collapse" th:attr="id='tenureOut' + ${tio.tenure.tenureId}"
 								aria-expanded="true">
 								<div class="list-group list-menu-doc">
-										<a th:each="docType : ${typeList}" href="#"
-											th:href="@{'/store/list/out/' + ${tenure.tenureId} + '/' + ${docType.docTypeId} + '/1'}"
-											class="list-group-item"> 
-											
-											<span th:text="${docType.docTypeName}"></span> 
-										</a>
+									<a	th:each="to : ${tio.docTypeItemList}" href="#"
+									th:href="@{'/store/list/out/' + ${tio.tenure.tenureId} + '/' + ${to.docType.docTypeId} + '/0'}"
+									class="list-group-item"> 
+
+										<span th:text="${to.docType.docTypeName}"></span> 
+										<span class="badge" th:text="${to.count}"></span>	
+									</a>
 								</div>
 							</div>
 						</div>
@@ -121,7 +125,7 @@
 							</div>
 						</div>
 
-						<nav th:if="${docList.size() > 10}">
+						<!-- <nav th:if="${docList.size() > 10}">
 							<ul class="pager">
 								<li class="previous disabled"><a href="#"><span
 										aria-hidden="true">&larr;</span> Cũ</a></li>
@@ -129,7 +133,7 @@
 								<li class="next"><a href="#">Mới <span
 										aria-hidden="true">&rarr;</span></a></li>
 							</ul>
-						</nav>
+						</nav> -->
 					</td>
 				</tr>
 			</tbody>

@@ -46,7 +46,8 @@ import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
-import com.myoffice.myapp.support.DocTypeWait;
+import com.myoffice.myapp.support.DocTypeMenuItem;
+import com.myoffice.myapp.support.TenureMenuItem;
 
 @Service
 @Transactional
@@ -156,17 +157,17 @@ public class DataService {
 	}
 	
 	public List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, 
-			int completed, int firstResult, int maxResult, int enabled){
+			Boolean completed, int firstResult, int maxResult, Boolean enabled){
 		return docDao.findDocumentBy(organId, tenureId, docTypeId, completed, firstResult, maxResult, enabled);
 	}
 	
-	public List<Document> findDocumentBy(Integer organId, int completed, 
-			int firstResult, int maxResult, int enabled){
+	public List<Document> findDocumentBy(Integer organId, Boolean completed, 
+			int firstResult, int maxResult, Boolean enabled){
 		return docDao.findDocumentBy(organId, completed, firstResult, maxResult, enabled);
 	}
 	
 	public List<Document> findDocumentBy(Integer organId, Integer docTypeId, 
-			int completed, int firstResult, int maxResult, int enabled) {
+			Boolean completed, int firstResult, int maxResult, Boolean enabled) {
 		return docDao.findDocumentBy(organId, docTypeId, completed, firstResult, maxResult, enabled);
 	}
 	
@@ -298,15 +299,18 @@ public class DataService {
 		return docDao.findDocFileById(docFileId);
 	}
 	
-	//WAITING DOC
-	//OUT
-	public List<DocTypeWait> findMenuDocOut(Integer organId) {
-		return docDao.findMenuDocOut(organId);
+	//DOCTYPE MENU
+	public List<DocTypeMenuItem> findMenuDocOut(Integer organId, boolean completed, Integer tenureId) {
+		return docDao.findMenuDocOut(organId, completed, tenureId);
 	}
 	
-	//IN
-	public List<DocTypeWait> findMenuDocIn(Integer organId) {
-		return docDao.findMenuDocIn(organId);
+	public List<DocTypeMenuItem> findMenuDocIn(Integer organId, boolean completed, Integer tenureId) {
+		return docDao.findMenuDocIn(organId, completed, tenureId);
+	}
+	
+	//TENURE MENU
+	public List<TenureMenuItem> findMenuTenureOut(Integer organId) {
+		return docDao.findMenuTenureOut(organId);
 	}
 	
 	//=====================

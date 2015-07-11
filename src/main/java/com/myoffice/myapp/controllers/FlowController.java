@@ -59,7 +59,7 @@ import com.myoffice.myapp.models.service.DataService;
 import com.myoffice.myapp.models.service.SecurityService;
 import com.myoffice.myapp.support.DocInInfo;
 import com.myoffice.myapp.support.DocOutInfo;
-import com.myoffice.myapp.support.DocTypeWait;
+import com.myoffice.myapp.support.DocTypeMenuItem;
 import com.myoffice.myapp.utils.FlowUtil;
 import com.myoffice.myapp.utils.UtilMethod;
 
@@ -844,7 +844,7 @@ public class FlowController extends AbstractController {
 		Organ organ = curUser.getOrgan();
 		
 		if(type.equals("in")) {
-			List<DocTypeWait> typeInList = dataService.findMenuDocIn(organ.getOrganId());
+			List<DocTypeMenuItem> typeInList = dataService.findMenuDocIn(organ.getOrganId(), false, null);
 			
 			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), 0, firstNumber, firstNumber + 9);
 			List<DocInInfo> docInList = new ArrayList<DocInInfo>();
@@ -869,9 +869,9 @@ public class FlowController extends AbstractController {
 			model.addObject("in", true);
 			
 		} else if(type.equals("out")){
-			List<DocTypeWait> typeOutList = dataService.findMenuDocOut(organ.getOrganId());
+			List<DocTypeMenuItem> typeOutList = dataService.findMenuDocOut(organ.getOrganId(), false, null);
 			
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), 0, firstNumber, firstNumber + 9, 1);
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), false, firstNumber, firstNumber + 9, true);
 			List<DocOutInfo> docOutList = new ArrayList<DocOutInfo>();
 			
 			for(Document doc : docList) {
@@ -913,7 +913,7 @@ public class FlowController extends AbstractController {
 		
 		//flow in
 		if (type.equals("in")) {
-			List<DocTypeWait> typeInList = dataService.findMenuDocIn(organ.getOrganId());
+			List<DocTypeMenuItem> typeInList = dataService.findMenuDocIn(organ.getOrganId(), false, null);
 			
 			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), docTypeId, 0, firstNumber, firstNumber + 9);
 			List<DocInInfo> docInList = new ArrayList<DocInInfo>();
@@ -938,9 +938,9 @@ public class FlowController extends AbstractController {
 			model.addObject("in", true);
 			
 		} else if (type.equals("out")) { //flow out
-			List<DocTypeWait> typeOutList = dataService.findMenuDocOut(organ.getOrganId());
+			List<DocTypeMenuItem> typeOutList = dataService.findMenuDocOut(organ.getOrganId(), false, null);
 			
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), docTypeId, 0, firstNumber, firstNumber + 9, 1);
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), docTypeId, false, firstNumber, firstNumber + 9, true);
 			List<DocOutInfo> docOutList = new ArrayList<DocOutInfo>();
 			
 			for(Document doc : docList) {
