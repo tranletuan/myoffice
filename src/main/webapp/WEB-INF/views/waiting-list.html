@@ -82,12 +82,12 @@
 									</a> 
 
 									<a href="#" th:href="@{'/user_detail/' + ${d.user.userId}}" th:if="${d.user}" style="color:#0051FF;">
-											<span>Người giữ quyền : </span>
-											<strong th:text="${d.user.userDetail} ? 
-													${d.user.userDetail.fullName} + ' - ' + ${d.user.level.levelName} : 
-													${d.user.userName} + ' - ' + ${d.user.level.levelName}">
-											</strong>
-										</a>
+										<span>Người giữ quyền : </span>
+										<strong th:text="${d.user.userDetail} ? 
+											${d.user.userDetail.fullName} + ' - ' + ${d.user.level.levelName} : 
+											${d.user.userName} + ' - ' + ${d.user.level.levelName}">
+										</strong>
+									</a>
 								</div>
 							</div>
 

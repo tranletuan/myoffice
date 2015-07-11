@@ -35,11 +35,22 @@ public class StoreController extends AbstractController {
 		ModelAndView model = new ModelAndView("store");
 		User curUser = securityService.getCurrentUser();
 		Organ organ = curUser.getOrgan();
+		List<TenureMenuItem> tenureItemOutList = dataService.findMenuTenureOut(organ.getOrganId());
+		List<TenureMenuItem> tenureItemInList = dataService.findMenuTenureIn(organ.getOrganId());
+		
+		model.addObject("tenureItemOutList", tenureItemOutList);
+		model.addObject("tenureItemInList", tenureItemInList);
 		
 		if(type.equals("out")) {
-			List<TenureMenuItem> tenureItemOutList = dataService.findMenuTenureOut(organ.getOrganId());
-			
-			model.addObject("tenureItemOutList", tenureItemOutList);
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, null, true, firstNumber,
+					firstNumber + 9, true);
+			model.addObject("docList", docList);
+			model.addObject("out", true);
+		} else {
+			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), null, null, true,
+					firstNumber, firstNumber + 9);
+			model.addObject("docList", docList);
+			model.addObject("in", true);
 		}
 		
 		return model;
@@ -52,7 +63,25 @@ public class StoreController extends AbstractController {
 			@PathVariable("docTypeId") Integer docTypeId,
 			@PathVariable("firstNumber") Integer firstNumber){
 		ModelAndView model = new ModelAndView("store");
+		User curUser = securityService.getCurrentUser();
+		Organ organ = curUser.getOrgan();
+		List<TenureMenuItem> tenureItemOutList = dataService.findMenuTenureOut(organ.getOrganId());
+		List<TenureMenuItem> tenureItemInList = dataService.findMenuTenureIn(organ.getOrganId());
 		
+		model.addObject("tenureItemOutList", tenureItemOutList);
+		model.addObject("tenureItemInList", tenureItemInList);
+		
+		if(type.equals("out")) {
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), tenureId, docTypeId, true,
+					firstNumber, firstNumber + 9, true);
+			model.addObject("docList", docList);
+			model.addObject("out", true);
+		} else {
+			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), tenureId, docTypeId, true,
+					firstNumber, firstNumber + 9);
+			model.addObject("docList", docList);
+			model.addObject("in", true);
+		}
 		return model;
 	}
 }

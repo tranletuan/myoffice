@@ -18,6 +18,9 @@
 		<intercept-url pattern="/flow/send/**" access="hasRole('ROLE_OUTPUTER')"/>
 		<intercept-url pattern="/flow/status/**" access="hasRole('ROLE_MANAGER')"/>
 		
+		<intercept-url pattern="/calendar/**" access="isAuthenticated()"/>
+		<intercept-url pattern="/calendar/**" access="!hasRole('ROLE_ADMIN')"/>
+		
 		<form-login 
 			login-page="/signin" 
 			default-target-url="/home"

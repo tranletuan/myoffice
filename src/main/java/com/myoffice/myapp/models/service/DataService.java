@@ -161,16 +161,6 @@ public class DataService {
 		return docDao.findDocumentBy(organId, tenureId, docTypeId, completed, firstResult, maxResult, enabled);
 	}
 	
-	public List<Document> findDocumentBy(Integer organId, Boolean completed, 
-			int firstResult, int maxResult, Boolean enabled){
-		return docDao.findDocumentBy(organId, completed, firstResult, maxResult, enabled);
-	}
-	
-	public List<Document> findDocumentBy(Integer organId, Integer docTypeId, 
-			Boolean completed, int firstResult, int maxResult, Boolean enabled) {
-		return docDao.findDocumentBy(organId, docTypeId, completed, firstResult, maxResult, enabled);
-	}
-	
 	//DOCUMENT TYPE
 	public List<DocumentType> findAllDocType(){
 		return docDao.findAllDocType();
@@ -264,19 +254,10 @@ public class DataService {
 	}
 	
 	public List<DocumentRecipient> findDocRecipient(Integer organId,
-			Integer tenureId, Integer docTypeId, int completed, int firstResult, int maxResult){
+			Integer tenureId, Integer docTypeId, Boolean completed, int firstResult, int maxResult){
 		return docDao.findDocRecipient(organId, tenureId, docTypeId, completed, firstResult, maxResult);
 	}
-	
-	public List<DocumentRecipient> findDocRecipient(Integer organId, int completed,
-			int firstResult, int maxResult) {
-		return docDao.findDocRecipient(organId, completed, firstResult, maxResult);
-	}
-	
-	public List<DocumentRecipient> findDocRecipient(Integer organId, int docTypeId, int completed,
-			int firstResult, int maxResult) {
-		return docDao.findDocRecipient(organId, docTypeId, completed, firstResult, maxResult);
-	}
+
 	
 	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId, int completed, Date start, Date end){
 		return docDao.findDocRecByAssignDate(organId, completed, start, end);
@@ -312,6 +293,11 @@ public class DataService {
 	public List<TenureMenuItem> findMenuTenureOut(Integer organId) {
 		return docDao.findMenuTenureOut(organId);
 	}
+	
+	public List<TenureMenuItem> findMenuTenureIn(Integer organId) {
+		return docDao.findMenuTenureIn(organId);
+	}
+	
 	
 	//=====================
 	@Autowired

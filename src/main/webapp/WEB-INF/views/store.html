@@ -13,40 +13,8 @@
 
 <link rel="stylesheet" href="#" th:href="@{/css/bootstrap.min.css}" />
 
-<style type="text/css">
+<link rel="stylesheet" href="#" th:href="@{/css/store.css}" />
 
-.p-doc {
-    max-height: 60px;
-    overflow: auto;
-}
-
-.btn-doc {
-	width: 100%;
-	height: 50px;
-	font-style: italic;
-	margin-bottom: 5px;
-}
-
-.list-menu-doc, .ul-doc {
-	padding-top: 10px;
-	padding-left: 10px;
-}
-
-.doc-group {
-	max-height: 87%;
-}
-
-.doc {
-	margin-left: 10px;
-	margin-bottom: 10px;
-}
-
-.btn-tenure {
-	width: 100%;
-  	margin-bottom: 5px;
-}
-
-</style>
 </head>
 <body>
 <div class="container-fluid">
@@ -62,40 +30,49 @@
 					<th scope="row">
 						<button type="button" class="btn btn-primary btn-doc" data-toggle="collapse" data-target="#tenure-out">Văn bản đi</button>
 						
-						<div th:each="tio : ${tenureItemOutList}" class="collapse in" id="tenure-out">
-							<button type="button" class="btn btn-info btn-tenure list-group-item list-group-item-success" data-toggle="collapse" th:attr="data-target='#tenureOut' + ${tio.tenure.tenureId}" >
-								<span th:text="${tio.tenure.tenureName}"></span>
-								<span class="badge" th:text="${tio.count}"></span>
-							</button>
+						<div class="collapse in" id="tenure-out">
+							<div th:each="tio : ${tenureItemOutList}">
+								<button type="button" class="btn btn-tenure btn-warning" data-toggle="collapse" th:attr="data-target='#tenureOut' + ${tio.tenure.tenureId}" >
+									<span th:text="${tio.tenure.tenureName}"></span>
+									<span class="badge" th:text="${tio.count}"></span>
+								</button>
 
-							<div class="collapse" th:attr="id='tenureOut' + ${tio.tenure.tenureId}"
-								aria-expanded="true">
-								<div class="list-group list-menu-doc">
-									<a	th:each="to : ${tio.docTypeItemList}" href="#"
-									th:href="@{'/store/list/out/' + ${tio.tenure.tenureId} + '/' + ${to.docType.docTypeId} + '/0'}"
-									class="list-group-item"> 
+								<div class="collapse" th:attr="id='tenureOut' + ${tio.tenure.tenureId}"
+									aria-expanded="true">
+									<div class="list-group list-menu-doc">
+										<a	th:each="to : ${tio.docTypeItemList}" href="#"
+										th:href="@{'/store/list/out/' + ${tio.tenure.tenureId} + '/' + ${to.docType.docTypeId} + '/0'}"
+										class="list-group-item"> 
 
-										<span th:text="${to.docType.docTypeName}"></span> 
-										<span class="badge" th:text="${to.count}"></span>	
-									</a>
+											<span th:text="${to.docType.docTypeName}"></span> 
+											<span class="badge" th:text="${to.count}"></span>	
+										</a>
+									</div>
 								</div>
 							</div>
 						</div>
 
-						<a type="button" class="btn btn-primary btn-doc" th:href="@{/store/list/in/1}">Văn bản đến</a>
 
-						<div th:each="tenure : ${tenureList}">
-							<button type="button" class="btn btn-warning btn-tenure" data-toggle="collapse" th:attr="data-target='#tenureIn' + ${tenure.tenureId}">Nhiệm kỳ 4</button>
+						<button type="button" class="btn btn-primary btn-doc" data-toggle="collapse" data-target="#tenure-in">Văn bản đến</button>
+						
+						<div class="collapse in" id="tenure-in">
+							<div th:each="tii : ${tenureItemInList}">
+								<button type="button" class="btn btn-tenure btn-warning" data-toggle="collapse" th:attr="data-target='#tenureIn' + ${tii.tenure.tenureId}" >
+									<span th:text="${tii.tenure.tenureName}"></span>
+									<span class="badge" th:text="${tii.count}"></span>
+								</button>
 
-							<div class="collapse" th:attr="id='tenureIn' + ${tenure.tenureId}"
-								aria-expanded="true">
-								<div class="list-group list-menu-doc">
-									<a th:each="docType : ${typeList}" href="#"
-											th:href="@{'/store/list/in/' + ${tenure.tenureId} + '/' + ${docType.docTypeId} + '/1'}"
-											class="list-group-item"> 
-											
-											<span th:text="${docType.docTypeName}"></span> 
-									</a>
+								<div class="collapse" th:attr="id='tenureIn' + ${tii.tenure.tenureId}"
+									aria-expanded="true">
+									<div class="list-group list-menu-doc">
+										<a	th:each="ti : ${tii.docTypeItemList}" href="#"
+										th:href="@{'/store/list/in/' + ${tii.tenure.tenureId} + '/' + ${ti.docType.docTypeId} + '/0'}"
+										class="list-group-item"> 
+
+											<span th:text="${ti.docType.docTypeName}"></span> 
+											<span class="badge" th:text="${ti.count}"></span>	
+										</a>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -103,23 +80,18 @@
 					<td>
 						<div class="list-group doc-group" th:if="${out}">
 							<div th:each="doc : ${docList}" class="doc">
-								<a href="#" class="list-group-item list-group-item-success" th:if="${doc.sended}" th:href="@{/flow/doc_info/} + ${doc.docId}">
+								<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_info/} + ${doc.docId}">
 									<h4 class="list-group-item-heading" th:text="${doc.numberSign} + ' - ' + ${doc.docName}"></h4>
 									<p class="list-group-item-text p-doc" th:text="${doc.epitome}"></p>
-								</a> 
-
-								<a href="#" class="list-group-item list-group-item-danger" th:unless="${doc.sended}" th:href="@{/flow/doc_info/} + ${doc.docId}">
-									<h4 class="list-group-item-heading" th:text="${doc.numberSign} + ' - ' + ${doc.docName}"></h4>
-									<p class="list-group-item-text p-doc" th:text="${doc.epitome}"></p>
-								</a> 
-
+								</a>
 							</div>
 						</div>
 
 						<div class="list-group doc-group" th:if="${in}">
 							<div th:each="docRec : ${docList}" class="doc">
-								<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_info/} + ${docRec.document.docId}">
-									<h4 class="list-group-item-heading" th:text="${docRec.number} + ' - ' + ${docRec.receiveTime} + ' - ' + ${docRec.document.docName}"></h4>
+								<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_in_info/} + ${docRec.document.docId}">
+									<h4 class="list-group-item-heading" th:text="${docRec.number} + ' - ' + ${docRec.receiveTime} + ' - ' + ${docRec.document.docName}" th:if="${docRec.number}"></h4>
+
 									<p class="list-group-item-text p-doc" th:text="${docRec.document.epitome}"></p>
 								</a> 
 							</div>

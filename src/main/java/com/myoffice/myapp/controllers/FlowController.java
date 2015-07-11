@@ -846,7 +846,8 @@ public class FlowController extends AbstractController {
 		if(type.equals("in")) {
 			List<DocTypeMenuItem> typeInList = dataService.findMenuDocIn(organ.getOrganId(), false, null);
 			
-			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), 0, firstNumber, firstNumber + 9);
+			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), null, null, false,
+					firstNumber, firstNumber + 9);
 			List<DocInInfo> docInList = new ArrayList<DocInInfo>();
 			
 			for(DocumentRecipient docRec : docList) {
@@ -871,7 +872,7 @@ public class FlowController extends AbstractController {
 		} else if(type.equals("out")){
 			List<DocTypeMenuItem> typeOutList = dataService.findMenuDocOut(organ.getOrganId(), false, null);
 			
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), false, firstNumber, firstNumber + 9, true);
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, null, false, firstNumber, firstNumber + 9, true);
 			List<DocOutInfo> docOutList = new ArrayList<DocOutInfo>();
 			
 			for(Document doc : docList) {
@@ -915,7 +916,8 @@ public class FlowController extends AbstractController {
 		if (type.equals("in")) {
 			List<DocTypeMenuItem> typeInList = dataService.findMenuDocIn(organ.getOrganId(), false, null);
 			
-			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), docTypeId, 0, firstNumber, firstNumber + 9);
+			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), null, docTypeId, false,
+					firstNumber, firstNumber + 9);
 			List<DocInInfo> docInList = new ArrayList<DocInInfo>();
 			
 			for(DocumentRecipient docRec : docList) {
@@ -940,7 +942,7 @@ public class FlowController extends AbstractController {
 		} else if (type.equals("out")) { //flow out
 			List<DocTypeMenuItem> typeOutList = dataService.findMenuDocOut(organ.getOrganId(), false, null);
 			
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), docTypeId, false, firstNumber, firstNumber + 9, true);
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, docTypeId, false, firstNumber, firstNumber + 9, true);
 			List<DocOutInfo> docOutList = new ArrayList<DocOutInfo>();
 			
 			for(Document doc : docList) {

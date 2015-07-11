@@ -30,12 +30,6 @@ public interface DocumentDao {
 	List<Document> findDocumentBy(Integer organId, Integer tenureId, 
 			Integer docTypeId, Boolean completed, int firstResult, int maxResult, Boolean enabled);
 	
-	List<Document> findDocumentBy(Integer organId, Boolean completed, 
-			int firstResult, int maxResult, Boolean enabled);
-	
-	List<Document> findDocumentBy(Integer organId, Integer docTypeId, 
-			Boolean completed, int firstResult, int maxResult, Boolean enabled);
-	
 	//DocumentType
 	DocumentType findDocTypeById(Integer typeId);
 	
@@ -94,11 +88,7 @@ public interface DocumentDao {
 	
 	Integer findMaxDocRecNumber(Integer tenureId, Integer organId);
 	
-	List<DocumentRecipient> findDocRecipient(Integer organId, Integer tenureId, Integer docTypeId, int completed, int firstResult, int maxResult);
-	
-	List<DocumentRecipient> findDocRecipient(Integer organId, int completed, int firstResult, int maxResult);
-	
-	List<DocumentRecipient> findDocRecipient(Integer organId, int docTypeId, int completed, int firstResult, int maxResult);
+	List<DocumentRecipient> findDocRecipient(Integer organId, Integer tenureId, Integer docTypeId, Boolean completed, int firstResult, int maxResult);
 	
 	List<DocumentRecipient> findDocRecByAssignDate(Integer organId, int completed, Date start, Date end);
 	
@@ -109,4 +99,7 @@ public interface DocumentDao {
 	
 	//TENURE MENU
 	List<TenureMenuItem> findMenuTenureOut(Integer organId);
-}
+	
+	List<TenureMenuItem> findMenuTenureIn(Integer organId);
+	
+} 

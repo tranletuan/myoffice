@@ -21,6 +21,13 @@ public class CalendarController extends AbstractController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(CalendarController.class);
 	
+	@RequestMapping(value = "/show", method = RequestMethod.GET)
+	public ModelAndView calendar() {
+		ModelAndView model = new ModelAndView("my-calendar");
+			
+		return model;
+	}
+	
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public String updateCalendar(
 			@RequestParam("start") String startDate,
