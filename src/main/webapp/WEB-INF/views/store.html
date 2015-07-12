@@ -15,6 +15,12 @@
 
 <link rel="stylesheet" href="#" th:href="@{/css/store.css}" />
 
+<script type="text/javascript" th:src="@{/js/store.js}" ></script>
+
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datetimepicker.min.css}" />
+
+<script type="text/javascript" th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+
 </head>
 <body>
 <div class="container-fluid">
@@ -23,7 +29,8 @@
 		<table class="table">
 			<colgroup>
 				<col class="col-xs-3 col-md-2" />
-				<col class="col-xs-15 col-md-10" />
+				<col class="col-xs-10 col-md-7" />
+				<col class="col-xs-5 col-md-3" />
 			</colgroup>
 			<tbody>
 				<tr>
@@ -106,6 +113,9 @@
 										aria-hidden="true">&rarr;</span></a></li>
 							</ul>
 						</nav> -->
+					</td>
+					<td>
+						<div th:replace="fragment/search :: search"></div>
 					</td>
 				</tr>
 			</tbody>
