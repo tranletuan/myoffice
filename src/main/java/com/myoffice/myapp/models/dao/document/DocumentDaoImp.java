@@ -25,6 +25,7 @@ import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.support.DocTypeMenuItem;
+import com.myoffice.myapp.support.ListDocOut;
 import com.myoffice.myapp.support.TenureMenuItem;
 
 @Repository
@@ -470,6 +471,52 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		
 		return tenureItemList;
 	}
+
+	//STORE
+	@SuppressWarnings("unchecked")
+	@Override
+	public ListDocOut findCompletedDocOut(Integer organId, String number, String docTypeShortName, String deparment,
+			String epitome, Date minDay, Date maxDay, Integer firstResult, Integer maxResult) {
+		ListDocOut listDoc = new ListDocOut();
+		
+		Criteria criteria = getSession().createCriteria(Document.class);
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		
+		if (number != null)
+			criteria.add(Restrictions.and(Restrictions.like("numberSign", "%" + number + "%")));
+		if (docTypeShortName != null)
+			criteria.add(Restrictions.and(Restrictions.like("numberSign", "%" + docTypeShortName + "%")));
+		if (deparment != null)
+			criteria.add(Restrictions.and(Restrictions.like("numberSign", "%" + deparment + "%")));
+		if(epitome != null) {
+			Criterion rest1 = Restrictions.like("docName", "%" + epitome + "%");
+			Criterion rest2 = Restrictions.like("epitome", "%" + epitome + "%");
+			criteria.add(Restrictions.and(Restrictions.or(rest1, rest2)));
+		}
+		
+		if(minDay != null && maxDay != null){
+			Criterion rest1 = Restrictions.ge("releaseTime", minDay);
+			Criterion rest2 = Restrictions.le("releaseTime", maxDay);
+			criteria.add(Restrictions.and(rest1, rest2));
+		}
+		
+		if(firstResult != null && maxResult != null) {
+			criteria.setFirstResult(firstResult);
+			criteria.setMaxResults(maxResult);
+		}
+		
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		
+		return listDoc;
+	}
+
+	
+
+	
+	
+	
+	
 	
 	
 	

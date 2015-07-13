@@ -54,8 +54,6 @@
  		$('#number').val(number);
   		$('#numberSign').val(numberSign);
   		$('#departments').val(departments);
-
-  		console.log(departments);
  	});
 
 

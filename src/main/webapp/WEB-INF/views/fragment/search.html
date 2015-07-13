@@ -8,44 +8,52 @@
 	<div class="panel-heading">
 		<div class="btn-group btn-search-group">
 			<button type="button" class="btn btn-info dropdown-toggle btn-search-group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				Tìm kiếm<span class="caret"></span>
+				Lựa chọn tìm kiếm<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu btn-search-group" id="search-menu">
-				<li><a role="button" data-toggle="collapse" href="#searchEpitome" aria-expanded="false" aria-controls="searchEpitome">Trích yếu</a></li>
-				<li><a role="button" data-toggle="collapse" href="#searchNumberSign" aria-expanded="false" aria-controls="searchNumberSign">Số và ký hiệu</a></li>
-				<li><a role="button" data-toggle="collapse" href="#releaseDay" aria-expanded="false" aria-controls="releaseDay">Ngày ban hành</a></li>
+				<li class="menu disabled">
+					<a role="button" data-toggle="collapse" href="#searchEpitome" aria-expanded="false" aria-controls="searchEpitome">Trích yếu</a>
+				</li>
+				<li role="separator" class="divider"></li>
+				
+				<li class="menu">
+					<a role="button" data-toggle="collapse" href="#searchNumberSign" aria-expanded="false" aria-controls="searchNumberSign">Số và ký hiệu</a>
+				</li>
+				<li role="separator" class="divider"></li>
+
+				<li class="menu"><a role="button" data-toggle="collapse" href="#releaseDay" aria-expanded="false" aria-controls="releaseDay">Ngày ban hành</a></li>
 			</ul>
 		</div>
 	</div>
 
 	<div class="panel-body">
 		<!-- Search epitome -->
-		<div class="panel panel-primary collapse in" id="searchEpitome">
+		<div class="panel panel-primary collapse in menu-content" id="searchEpitome">
 			<div class="panel-heading">
 				<h4 class="panel-title">Trích yếu / Tên văn bản</h4>
 			</div>
 			<div class="panel-body">
-				<form th:action="@{/store/search_epitome}" method="get" autocomplete="off">
-					<textarea class="form-control" column="6" th:name="epitome" required="true" id="epitome" placeholder="Nhập tên văn bản hoặc nội dung trích yếu" autofocus="true"></textarea>
+				<form th:action="@{/store/search_epitome}" method="post" autocomplete="off" class="search-form">
+					<textarea class="form-control" rows="6" th:name="epitome" required="true" id="epitome" placeholder="Nhập tên văn bản hoặc nội dung trích yếu" autofocus="true"></textarea>
 
 					<div class="panel-footer">
-						<button type="submit" class="btn btn-primary">Tìm</button>
+						<button type="submit" data-loading-text="Đang tìm..." class="btn btn-primary btn-search">Tìm</button>
 					</div>
 				</form>
 			</div>
 		</div>
 
 		<!-- Search Number & Sign -->
-		<div class="panel panel-primary collapse" id="searchNumberSign">
+		<div class="panel panel-primary collapse menu-content" id="searchNumberSign">
 			<div class="panel-heading">
 				<h4 class="panel-title">Số và ký hiệu</h4>
 			</div>
 			<div class="panel-body">
-				<form th:action="@{/store/search_number_sign}" method="get" autocomplete="off">
+				<form th:action="@{/store/search_number_sign}" method="post" autocomplete="off" class="search-form">
 					<!-- number -->
 					<div class="form-group">
 						<label for="number" class="control-label">Số</label>
-						<input type="number" class="form-control" id="number" data-min="1" th:name="number" placeholder="Số văn bản" autofocus="true"/>
+						<input type="number" class="form-control" id="number" min="1" th:name="number" placeholder="Số văn bản" autofocus="true"/>
 					</div>
 
 					<!-- sign -->
@@ -61,19 +69,19 @@
 					</div>
 
 					<div class="panel-footer">
-						<button type="submit" class="btn btn-primary">Tìm</button>
+						<button type="submit" data-loading-text="Đang tìm..." class="btn btn-primary btn-search">Tìm</button>
 					</div>
 				</form>
 			</div>
 		</div>
 
 		<!-- Search release day -->
-		<div class="panel panel-primary collapse" id="releaseDay">
+		<div class="panel panel-primary collapse menu-content" id="releaseDay">
 			<div class="panel-heading">
 				<h4 class="panel-title">Số và ký hiệu</h4>
 			</div>
 			<div class="panel-body">
-				<form th:action="@{/store/search_release_day}" method="get" autocomplete="off">
+				<form th:action="@{/store/search_release_day}" method="post" autocomplete="off" class="search-form">
 					<!-- minDay -->
 					<div class="form-group">
 						<label for="minDay" class="control-label">Từ ngày :</label>
@@ -99,7 +107,7 @@
 					</div>
 
 					<div class="panel-footer">
-						<button type="submit" class="btn btn-primary">Tìm</button>
+						<button type="submit" data-loading-text="Đang tìm..." class="btn btn-primary btn-search">Tìm</button>
 					</div>
 				</form>
 			</div>
