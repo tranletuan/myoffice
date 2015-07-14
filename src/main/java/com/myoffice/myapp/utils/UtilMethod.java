@@ -4,8 +4,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.activiti.engine.task.Task;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.myoffice.myapp.models.dto.User;
 
@@ -34,5 +36,25 @@ public class UtilMethod {
 
 		}
 		return integer;
+	}
+	
+	public static void preparePagination(List<Integer> rowList, List<Integer> elemList, List infoList,
+			ModelAndView model, Integer maxElementPerRow) {
+		int maxElem = 10;
+		if(maxElementPerRow != null) maxElem = maxElementPerRow;
+		for(int i = 0; i < maxElem; i++){
+			elemList.add(i);
+		}
+		
+		int numRow = infoList.size() / 10;
+		int maxRow = infoList.size() % 10 == 0 ? numRow : numRow + 1;
+		
+		for(int i = 0; i < maxRow; i++){
+			rowList.add(i);
+		}
+		
+
+		model.addObject("rowList", rowList);
+		model.addObject("elemList", elemList);
 	}
 }
