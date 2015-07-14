@@ -47,6 +47,7 @@ import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.support.DocTypeMenuItem;
+import com.myoffice.myapp.support.ListDoc;
 import com.myoffice.myapp.support.TenureMenuItem;
 
 @Service
@@ -298,7 +299,13 @@ public class DataService {
 		return docDao.findMenuTenureIn(organId);
 	}
 	
-	
+	//STORE
+	public ListDoc findCompletedDocOut(Integer organId, String docName, String epitome, String number, int docTypeId,
+			String department, Date minDaySet, Date maxDaySet, int firstResult, int maxResult) {
+		return docDao.findCompletedDocOut(organId, docName, epitome, number, docTypeId, department, minDaySet, maxDaySet,
+				firstResult, maxResult);
+	}
+
 	//=====================
 	@Autowired
 	private ParameterDao paramDao;

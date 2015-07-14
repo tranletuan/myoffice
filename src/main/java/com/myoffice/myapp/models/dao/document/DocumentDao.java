@@ -13,7 +13,7 @@ import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.support.CalendarDoc;
 import com.myoffice.myapp.support.DocTypeMenuItem;
-import com.myoffice.myapp.support.ListDocOut;
+import com.myoffice.myapp.support.ListDoc;
 import com.myoffice.myapp.support.TenureMenuItem;
 
 public interface DocumentDao {
@@ -104,8 +104,12 @@ public interface DocumentDao {
 	List<TenureMenuItem> findMenuTenureIn(Integer organId);
 	
 	//STORE
-	ListDocOut findCompletedDocOut(Integer organId, String number, String docTypeShortName, String deparment,
+	ListDoc findCompletedDocOut(Integer organId, String docName, String epitome, String number, int docTypeId,
+			String department, Date minDay, Date maxDay, int firstResult, int maxResult); 
+
+	List<DocumentRecipient> findCompletedDocIn(Integer organId, String number, String docTypeShortName, String department,
 			String epitome, Date minDay, Date maxDay, Integer firstResult, Integer maxResult);
-
-
+	
+	List<DocumentRecipient> findCompletedDocIn(Integer organId, String number, Date minDay, Date maxDay,
+			Integer firstResult, Integer maxResult);
 } 

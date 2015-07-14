@@ -54,4 +54,17 @@
  		ev.preventDefault();
  	});
 
+ 	$('#docType').change(function(){
+ 		var value = $(this).val();
+ 		if(value > 0) {
+	 		var shortName = $('#docType :selected').attr('class');
+	 		var organType = $('#organType').html();
+	 		$('#numberSign').val(shortName + '/' + organType);
+ 		} else {
+ 			$('#numberSign').val('');
+ 		}
+
+ 		$(this).next().focus();
+ 	});
+
  });

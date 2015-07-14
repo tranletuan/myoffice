@@ -25,7 +25,7 @@ import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.support.DocTypeMenuItem;
-import com.myoffice.myapp.support.ListDocOut;
+import com.myoffice.myapp.support.ListDoc;
 import com.myoffice.myapp.support.TenureMenuItem;
 
 @Repository
@@ -475,44 +475,62 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	//STORE
 	@SuppressWarnings("unchecked")
 	@Override
-	public ListDocOut findCompletedDocOut(Integer organId, String number, String docTypeShortName, String deparment,
-			String epitome, Date minDay, Date maxDay, Integer firstResult, Integer maxResult) {
-		ListDocOut listDoc = new ListDocOut();
+	public ListDoc findCompletedDocOut(Integer organId, String docName, String epitome, String number, int docTypeId,
+			String department, Date minDay, Date maxDay, int firstResult, int maxResult) {
+		ListDoc list = new ListDoc();
 		
 		Criteria criteria = getSession().createCriteria(Document.class);
 		criteria.createAlias("organ", "o");
 		criteria.add(Restrictions.eq("o.organId", organId));
 		
+		if(docName != null)
+			criteria.add(Restrictions.and(Restrictions.like("docName", "%" + docName + "%")));
+		if(epitome != null)
+			criteria.add(Restrictions.and(Restrictions.like("epitome", "%" + epitome + "%")));
 		if (number != null)
 			criteria.add(Restrictions.and(Restrictions.like("numberSign", "%" + number + "%")));
-		if (docTypeShortName != null)
-			criteria.add(Restrictions.and(Restrictions.like("numberSign", "%" + docTypeShortName + "%")));
-		if (deparment != null)
-			criteria.add(Restrictions.and(Restrictions.like("numberSign", "%" + deparment + "%")));
-		if(epitome != null) {
-			Criterion rest1 = Restrictions.like("docName", "%" + epitome + "%");
-			Criterion rest2 = Restrictions.like("epitome", "%" + epitome + "%");
-			criteria.add(Restrictions.and(Restrictions.or(rest1, rest2)));
-		}
-		
+		if (docTypeId > 0)
+			criteria.add(Restrictions.and(Restrictions.eq("docType.docTypeId", docTypeId)));
+		if (department != null)
+			criteria.add(Restrictions.and(Restrictions.like("numberSign", "%" + department + "%")));
 		if(minDay != null && maxDay != null){
 			Criterion rest1 = Restrictions.ge("releaseTime", minDay);
 			Criterion rest2 = Restrictions.le("releaseTime", maxDay);
 			criteria.add(Restrictions.and(rest1, rest2));
 		}
 		
-		if(firstResult != null && maxResult != null) {
-			criteria.setFirstResult(firstResult);
-			criteria.setMaxResults(maxResult);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		List<Document> docList = criteria.list();
+		list.setCount(docList.size());
+		
+		int step = maxResult - firstResult + 1;
+		list.setStep(step);
+		list.setCurrentNumber(maxResult / step + 1);
+		if(docList.size() > 10) {
+			list.setDocList(docList.subList(firstResult, maxResult));
+		} else {
+			list.setDocList(docList);
 		}
 		
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		
-		return listDoc;
+		return list;
+	}
+
+	@Override
+	public List<DocumentRecipient> findCompletedDocIn(Integer organId, String number, String docTypeShortName,
+			String deparment, String epitome, Date minDay, Date maxDay, Integer firstResult, Integer maxResult) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<DocumentRecipient> findCompletedDocIn(Integer organId, String number, Date minDay, Date maxDay,
+			Integer firstResult, Integer maxResult) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
-
+	
 	
 	
 	

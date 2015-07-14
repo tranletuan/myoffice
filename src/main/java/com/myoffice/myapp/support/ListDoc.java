@@ -4,13 +4,20 @@ import java.util.List;
 
 import com.myoffice.myapp.models.dto.Document;
 
-public class ListDocOut {
+public class ListDoc {
 	
-	private Long count;
+	private int count;
 	private List<Document> docList;
 	private String url;
 	private int step = 10;
+	private int currentNumber = 0;
 	
+	public int getCurrentNumber() {
+		return currentNumber;
+	}
+	public void setCurrentNumber(int currentNumber) {
+		this.currentNumber = currentNumber;
+	}
 	public String getUrl() {
 		return url;
 	}
@@ -23,10 +30,10 @@ public class ListDocOut {
 	public void setStep(int step) {
 		this.step = step;
 	}
-	public Long getCount() {
+	public int getCount() {
 		return count;
 	}
-	public void setCount(Long count) {
+	public void setCount(int count) {
 		this.count = count;
 	}
 	public List<Document> getDocList() {

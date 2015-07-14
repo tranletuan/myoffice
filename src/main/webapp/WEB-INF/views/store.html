@@ -88,7 +88,7 @@
 						<div class="list-group doc-group" th:if="${out}">
 							<div th:each="doc : ${docList}" class="doc">
 								<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_info/} + ${doc.docId}">
-									<h4 class="list-group-item-heading" th:text="${doc.numberSign} + ' - ' + ${doc.docName}"></h4>
+									<h4 class="list-group-item-heading" th:text="'Số : ' + ${doc.numberSign} + ' - ' + ${doc.docName}"></h4>
 									<p class="list-group-item-text p-doc" th:text="${doc.epitome}"></p>
 								</a>
 							</div>
@@ -97,7 +97,7 @@
 						<div class="list-group doc-group" th:if="${in}">
 							<div th:each="docRec : ${docList}" class="doc">
 								<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_in_info/} + ${docRec.document.docId}">
-									<h4 class="list-group-item-heading" th:text="${docRec.number} + ' - ' + ${docRec.receiveTime} + ' - ' + ${docRec.document.docName}" th:if="${docRec.number}"></h4>
+									<h4 class="list-group-item-heading" th:text="'Số : ' + ${docRec.number} + ' - ' + ${docRec.receiveTime} + ' - ' + ${docRec.document.docName}" th:if="${docRec.number}"></h4>
 
 									<p class="list-group-item-text p-doc" th:text="${docRec.document.epitome}"></p>
 								</a> 
