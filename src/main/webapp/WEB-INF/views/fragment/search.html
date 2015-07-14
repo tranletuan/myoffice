@@ -30,21 +30,21 @@
 				<h4 class="panel-title">Văn bản đi</h4>
 			</div>
 			<div class="panel-body">
-				<form th:action="@{/store/search_doc_out/0}" method="get" autocomplete="off" class="search-form">
+				<form th:action="@{/store/search_doc_out}" method="post" autocomplete="off" class="search-form">
 
 					<div class="form-group">
 						<label for="docName" class="control-label">Tên văn bản</label>
-						<input class="form-control" th:name="docName" id="docName" placeholder="Nhập tên văn bản" autofocus="true"></input>
+						<input class="form-control" th:name="docName" id="docNameOut" placeholder="Nhập tên văn bản" autofocus="true"></input>
 					</div>
 
 					<div class="form-group">
 						<label for="deparment" class="control-label">Trích yếu</label>
-						<textarea class="form-control" rows="5" th:name="epitome" id="epitome" placeholder="Nhập nội dung trích yếu"></textarea>
+						<textarea class="form-control" rows="5" th:name="epitome" id="epitomeOut" placeholder="Nhập nội dung trích yếu"></textarea>
 					</div>
 
 					<div class="form-group">
 						<label for="docType" class="control-label">Loại văn bản</label>
-						<select class="form-control" id="docType"  th:name="docTypeId">
+						<select class="form-control" id="docTypeOut"  th:name="docTypeId">
 							<option value="-1">Chọn loại văn bản</option>
 							<option th:each="docType : ${docTypeList}"
 								th:value="${docType.docTypeId}"
@@ -53,22 +53,40 @@
 							</option>
 						</select>
 					</div>
-					<div class="hidden" th:if="${organ}" th:text="${organ.organType.shortName}" id="organType"></div>
+					<div class="hidden" th:if="${organ}" th:text="${organ.organType.shortName}" id="organTypeOut"></div>
 
 					<!-- numberSign -->
 					<div class="form-group">
 						<label for="number" class="control-label">Số và ký hiệu</label>
 		
 						<div class="form-inline">
-							<input type="text" class="form-control" id="number" th:name="number" placeholder="Số văn bản"/>
-							<input type="text" class="form-control" id="numberSign" th:name="numberSign" disabled="true"/>
-							<input type="text" class="form-control" id="department" th:name="department" value="" placeholder="Bộ phận tham mưu"/>
+							<input type="text" class="form-control" id="numberOut" th:name="number" placeholder="Số văn bản"/>
+							<input type="text" class="form-control" id="numberSignOut" th:name="numberSign" disabled="true"/>
+							<input type="text" class="form-control" id="departmentOut" th:name="department" value="" placeholder="Bộ phận tham mưu"/>
 						</div>
-					
+					</div>
+
+					<!-- minDay -->
+					<div class="form-group">
+						<label for="minDay" class="control-label">Thời gian bắt đầu</label>
+						<div class="input-group date form_date date-start" data-date="" data-date-format="dd MM yyyy" data-link-field="minDay" data-link-format="dd-mm-yyyy">
+						<input class="form-control" size="16" type="text" value="" th:name="minDay" id="minDayOut"/>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+
+					<!-- maxDay -->
+					<div class="form-group">
+						<label for="maxDay" class="control-label">Thời gian bắt đầu</label>
+						<div class="input-group date form_date date-start" data-date="" data-date-format="dd MM yyyy" data-link-field="maxDay" data-link-format="dd-mm-yyyy">
+						<input class="form-control" size="16" type="text" value="" th:name="maxDay" id="maxDayOut"/>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
 					</div>
 
 					<div class="panel-footer">
 						<button type="submit" data-loading-text="Đang tìm..." class="btn btn-primary btn-search">Tìm</button>
+						<button type="button" class="btn btn-success" id="btn-reset-out">Làm mới</button>
 					</div>
 
 				</form>

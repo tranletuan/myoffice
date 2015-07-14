@@ -77,7 +77,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findDocumentBy(Integer organId, Integer tenureId,
-			Integer docTypeId, Boolean completed, int firstResult, int maxResult, Boolean enabled) {
+			Integer docTypeId, Boolean completed, Integer firstResult, Integer maxResult, Boolean enabled) {
 		Criteria criteria = getSession().createCriteria(Document.class);
 		criteria.createAlias("organ", "o");
 		criteria.createAlias("tenure", "t");
@@ -98,7 +98,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			if(completed) {
 				criteria.add(Restrictions.and(rest1, rest2));
 			} else {
-				
 				criteria.add(Restrictions.and(Restrictions.or(rest1, rest2)));
 			}
 		}
@@ -107,8 +106,11 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			criteria.add(Restrictions.and(Restrictions.eq("enabled", enabled)));
 		}
 		criteria.addOrder(Order.desc("docId"));
-		criteria.setFirstResult(firstResult);
-		criteria.setMaxResults(maxResult);
+		if (firstResult != null && maxResult != null) {
+			criteria.setFirstResult(firstResult);
+			criteria.setMaxResults(maxResult);
+		} 
+		
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
@@ -318,7 +320,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findDocRecipient(Integer organId,
-			Integer tenureId, Integer docTypeId, Boolean completed, int firstResult, int maxResult) {
+			Integer tenureId, Integer docTypeId, Boolean completed, Integer firstResult, Integer maxResult) {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
 		criteria.createAlias("organ", "o");
 		criteria.createAlias("document", "d");
@@ -338,8 +340,11 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		}
 		
 		criteria.addOrder(Order.desc("receiveTime"));
-		criteria.setFirstResult(firstResult);
-		criteria.setMaxResults(maxResult);
+		if (firstResult != null && maxResult != null) {
+			criteria.setFirstResult(firstResult);
+			criteria.setMaxResults(maxResult);
+		}
+		
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
@@ -475,13 +480,14 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	//STORE
 	@SuppressWarnings("unchecked")
 	@Override
-	public ListDoc findCompletedDocOut(Integer organId, String docName, String epitome, String number, int docTypeId,
-			String department, Date minDay, Date maxDay, int firstResult, int maxResult) {
-		ListDoc list = new ListDoc();
-		
+	public List<Document> findCompletedDocOut(Integer organId, String docName, String epitome, String number,
+			int docTypeId, String department, Date minDay, Date maxDay, Integer firstResult, Integer maxResult) {
 		Criteria criteria = getSession().createCriteria(Document.class);
 		criteria.createAlias("organ", "o");
 		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.add(Restrictions.eq("completed", true));
+		criteria.add(Restrictions.eq("sended", true));
+		criteria.add(Restrictions.eq("enabled", true));
 		
 		if(docName != null)
 			criteria.add(Restrictions.and(Restrictions.like("docName", "%" + docName + "%")));
@@ -498,21 +504,13 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			Criterion rest2 = Restrictions.le("releaseTime", maxDay);
 			criteria.add(Restrictions.and(rest1, rest2));
 		}
-		
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		List<Document> docList = criteria.list();
-		list.setCount(docList.size());
-		
-		int step = maxResult - firstResult + 1;
-		list.setStep(step);
-		list.setCurrentNumber(maxResult / step + 1);
-		if(docList.size() > 10) {
-			list.setDocList(docList.subList(firstResult, maxResult));
-		} else {
-			list.setDocList(docList);
+		if(firstResult != null && maxResult != null) {
+			criteria.setFirstResult(firstResult);
+			criteria.setMaxResults(maxResult);
 		}
 		
-		return list;
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
 	}
 
 	@Override

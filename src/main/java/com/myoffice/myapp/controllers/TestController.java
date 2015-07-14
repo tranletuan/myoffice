@@ -29,7 +29,7 @@ public class TestController extends AbstractController {
 		List<Integer> elemList = new ArrayList<Integer>();
 		List<Integer> rowList = new ArrayList<Integer>();	
 		List<String> testList = new ArrayList<String>();
-		for(int i = 0; i <= 35; i++){
+		for(int i = 0; i <= 20; i++){
 			testList.add("Content : " + i);
 		}
 

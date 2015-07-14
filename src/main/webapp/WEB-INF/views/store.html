@@ -21,6 +21,9 @@
 
 <script type="text/javascript" th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
 
+<script type="text/javascript" th:src="@{/js/jquery.bootpag.min.js}" ></script>
+
+
 </head>
 <body>
 <div class="container-fluid">
@@ -29,8 +32,8 @@
 		<table class="table">
 			<colgroup>
 				<col class="col-xs-3 col-md-2" />
-				<col class="col-xs-10 col-md-7" />
-				<col class="col-xs-5 col-md-3" />
+				<col class="col-xs-9 col-md-6" />
+				<col class="col-xs-6 col-md-4" />
 			</colgroup>
 			<tbody>
 				<tr>
@@ -48,8 +51,8 @@
 									aria-expanded="true">
 									<div class="list-group list-menu-doc">
 										<a	th:each="to : ${tio.docTypeItemList}" href="#"
-										th:href="@{'/store/list/out/' + ${tio.tenure.tenureId} + '/' + ${to.docType.docTypeId} + '/0'}"
-										class="list-group-item"> 
+										th:href="@{'/store/list/out/' + ${tio.tenure.tenureId} + '/' + ${to.docType.docTypeId}}"
+										class="list-group-item store-link"> 
 
 											<span th:text="${to.docType.docTypeName}"></span> 
 											<span class="badge" th:text="${to.count}"></span>	
@@ -73,8 +76,8 @@
 									aria-expanded="true">
 									<div class="list-group list-menu-doc">
 										<a	th:each="ti : ${tii.docTypeItemList}" href="#"
-										th:href="@{'/store/list/in/' + ${tii.tenure.tenureId} + '/' + ${ti.docType.docTypeId} + '/0'}"
-										class="list-group-item"> 
+										th:href="@{'/store/list/in/' + ${tii.tenure.tenureId} + '/' + ${ti.docType.docTypeId}}"
+										class="list-group-item store-link"> 
 
 											<span th:text="${ti.docType.docTypeName}"></span> 
 											<span class="badge" th:text="${ti.count}"></span>	
@@ -84,11 +87,11 @@
 							</div>
 						</div>
 					</th>
-					<td>
+					<td id="show-content">
 						<div class="list-group doc-group" th:if="${out}">
 							<div th:each="doc : ${docList}" class="doc">
 								<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_info/} + ${doc.docId}">
-									<h4 class="list-group-item-heading" th:text="'Số : ' + ${doc.numberSign} + ' - ' + ${doc.docName}"></h4>
+									<h4 class="list-group-item-heading" th:text="'Số : ' + ${doc.numberSign} + ' : ' + ${doc.docName}"></h4>
 									<p class="list-group-item-text p-doc" th:text="${doc.epitome}"></p>
 								</a>
 							</div>
@@ -97,22 +100,12 @@
 						<div class="list-group doc-group" th:if="${in}">
 							<div th:each="docRec : ${docList}" class="doc">
 								<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_in_info/} + ${docRec.document.docId}">
-									<h4 class="list-group-item-heading" th:text="'Số : ' + ${docRec.number} + ' - ' + ${docRec.receiveTime} + ' - ' + ${docRec.document.docName}" th:if="${docRec.number}"></h4>
+									<h4 class="list-group-item-heading" th:text="'Số : ' + ${docRec.number} + ' - ' + ${docRec.receiveTime} + ' : ' + ${docRec.document.docName}" th:if="${docRec.number}"></h4>
 
 									<p class="list-group-item-text p-doc" th:text="${docRec.document.epitome}"></p>
 								</a> 
 							</div>
 						</div>
-
-						<!-- <nav th:if="${docList.size() > 10}">
-							<ul class="pager">
-								<li class="previous disabled"><a href="#"><span
-										aria-hidden="true">&larr;</span> Cũ</a></li>
-								<li><span>1</span></li>
-								<li class="next"><a href="#">Mới <span
-										aria-hidden="true">&rarr;</span></a></li>
-							</ul>
-						</nav> -->
 					</td>
 					<td>
 						<div th:replace="fragment/search :: search"></div>

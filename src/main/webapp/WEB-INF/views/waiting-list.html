@@ -32,7 +32,7 @@
 							<div th:if="${out}">
 								<div class="list-group list-menu-doc"> 
 									<a	th:each="to : ${typeOutList}" href="#"
-									 	th:href="@{'/flow/wait_list/out/' + ${to.docType.docTypeId} + '/0'}"
+									 	th:href="@{'/flow/wait_list/out/' + ${to.docType.docTypeId}}"
 										class="list-group-item"> 
 
 										<span th:text="${to.docType.docTypeName}"></span> 
@@ -45,7 +45,7 @@
 							<div th:if="${in}">
 								<div class="list-group list-menu-doc">
 									<a th:each="ti : ${typeInList}" href="#"
-									th:href="@{'/flow/wait_list/in/' + ${ti.docType.docTypeId} + '/0'}"
+									th:href="@{'/flow/wait_list/in/' + ${ti.docType.docTypeId}}"
 									class="list-group-item"> 
 
 										<span th:text="${ti.docType.docTypeName}"></span> 

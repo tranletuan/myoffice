@@ -16,7 +16,7 @@
  		initialDate : new Date()
  	});
 
- 	$('.form_date').datetimepicker("setDate", new Date());
+ 	/*$('.form_date').datetimepicker("setDate", new Date());*/
 
 
  	$('.menu').click(function(){
@@ -42,11 +42,10 @@
  			url : $(this).attr('action'),
  			data : $(this).serialize(),
  			success : function(response) {
- 				console.log("ok");
+ 				$('#show-content').html(response);
  				$('.btn-search').button('reset');
  			},
  			error : function(){
- 				console.log('error');
  				$('.btn-search').button('reset');
  			}
  		});
@@ -54,17 +53,59 @@
  		ev.preventDefault();
  	});
 
- 	$('#docType').change(function(){
+ 	$('.store-link').click(function(ev){
+
+ 		$.ajax({
+ 			type : 'GET',
+ 			url : $(this).attr('href'),
+ 			data : $(this).serialize(),
+ 			success : function(response) {
+ 				$('#show-content').html(response);
+ 			}
+ 		});
+
+ 		ev.preventDefault();
+ 	}); 
+ 	// Search Doc Out
+
+ 	$('#docTypeOut').change(function(){
  		var value = $(this).val();
  		if(value > 0) {
-	 		var shortName = $('#docType :selected').attr('class');
-	 		var organType = $('#organType').html();
-	 		$('#numberSign').val(shortName + '/' + organType);
+	 		var shortName = $('#docTypeOut :selected').attr('class');
+	 		var organType = $('#organTypeOut').html();
+	 		$('#numberSignOut').val(shortName + '/' + organType);
  		} else {
- 			$('#numberSign').val('');
+ 			$('#numberSignOut').val('');
  		}
-
- 		$(this).next().focus();
  	});
+
+ 	$('#btn-reset-out').click(function(){
+ 		$('#docNameOut').val('');
+ 		$('#epitomeOut').val('');
+ 		$('#numberOut').val('');
+ 		$('#docTypeOut').val(-1);
+ 		$('#numberSignOut').val('');
+ 		$('#departmentOut').val('');
+ 		$('#minDayOut').val('');
+ 		$('#maDayOut').val('');
+ 		$('#docNameOut').focus();
+ 	});
+
+
+ 	// Search Doc In
+
+ 	$('#docTypeIn').change(function(){
+ 		var value = $(this).val();
+ 		if(value > 0) {
+	 		var shortName = $('#docTypeIn :selected').attr('class');
+	 		var organType = $('#organTypeIn').html();
+	 		$('#numberSignIn').val(shortName + '/' + organType);
+ 		} else {
+ 			$('#numberSignIn').val('');
+ 		}
+ 	});
+
+
+ 	
 
  });

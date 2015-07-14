@@ -158,7 +158,7 @@ public class DataService {
 	}
 	
 	public List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, 
-			Boolean completed, int firstResult, int maxResult, Boolean enabled){
+			Boolean completed, Integer firstResult, Integer maxResult, Boolean enabled){
 		return docDao.findDocumentBy(organId, tenureId, docTypeId, completed, firstResult, maxResult, enabled);
 	}
 	
@@ -255,7 +255,7 @@ public class DataService {
 	}
 	
 	public List<DocumentRecipient> findDocRecipient(Integer organId,
-			Integer tenureId, Integer docTypeId, Boolean completed, int firstResult, int maxResult){
+			Integer tenureId, Integer docTypeId, Boolean completed, Integer firstResult, Integer maxResult){
 		return docDao.findDocRecipient(organId, tenureId, docTypeId, completed, firstResult, maxResult);
 	}
 
@@ -300,8 +300,8 @@ public class DataService {
 	}
 	
 	//STORE
-	public ListDoc findCompletedDocOut(Integer organId, String docName, String epitome, String number, int docTypeId,
-			String department, Date minDaySet, Date maxDaySet, int firstResult, int maxResult) {
+	public List<Document> findCompletedDocOut(Integer organId, String docName, String epitome, String number, int docTypeId,
+			String department, Date minDaySet, Date maxDaySet, Integer firstResult, Integer maxResult) {
 		return docDao.findCompletedDocOut(organId, docName, epitome, number, docTypeId, department, minDaySet, maxDaySet,
 				firstResult, maxResult);
 	}

@@ -165,7 +165,7 @@ public class FlowController extends AbstractController {
 		DocumentType docType = dataService.findDocTypeById(docTypeId);
 		Organ organ = securityService.getCurrentUser().getOrgan();
 		numberSign = number + "-" + numberSign;
-		if(departments != null) numberSign += "-" + departments;
+		if(departments != null && departments.trim().length() > 0) numberSign += "-" + departments;
 		
 		if(organ == null){
 			model.setViewName("error");
@@ -187,7 +187,7 @@ public class FlowController extends AbstractController {
 		doc.setTenure(tenure);
 		doc.setOrgan(organ);
 		doc.setNumberSign(numberSign);
-		if(departments != null) doc.setDepartments(departments);
+		if(departments != null && departments.trim().length() > 0) doc.setDepartments(departments);
 		if(comment != null && comment.trim().length() > 0) doc.setComment(comment);
 		
 		Integer num = UtilMethod.parseNumDoc(number);
@@ -834,138 +834,133 @@ public class FlowController extends AbstractController {
 	}
 	
 	//=============WAITING DOC=============
-	@RequestMapping(value = "/wait_list/{type}/{firstNumber}")
-	public ModelAndView waitingPage(
-			@PathVariable("type") String type,
-			@PathVariable("firstNumber") Integer firstNumber) {
+	@RequestMapping(value = "/wait_list/{type}")
+	public ModelAndView waitingPage(@PathVariable("type") String type) {
 		ModelAndView model = new ModelAndView("waiting-list");
-		
 		User curUser = securityService.getCurrentUser();
 		Organ organ = curUser.getOrgan();
-		
-		if(type.equals("in")) {
+
+		if (type.equals("in")) {
 			List<DocTypeMenuItem> typeInList = dataService.findMenuDocIn(organ.getOrganId(), false, null);
-			
-			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), null, null, false,
-					firstNumber, firstNumber + 9);
+
+			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), null, null, false, 0, 9);
 			List<DocInInfo> docInList = new ArrayList<DocInInfo>();
-			
-			for(DocumentRecipient docRec : docList) {
+
+			for (DocumentRecipient docRec : docList) {
 				Task task = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
 				User user = null;
-				if(task.getAssignee() == null) {
+				if (task.getAssignee() == null) {
 					HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(docRec.getProcessInstanceId());
-					if(preTask != null) {
+					if (preTask != null) {
 						user = dataService.findUserByName(preTask.getAssignee());
 					}
 				} else {
 					user = dataService.findUserByName(task.getAssignee());
 				}
-				
+
 				docInList.add(new DocInInfo(docRec, user));
 			}
-			
+
 			model.addObject("typeInList", typeInList);
 			model.addObject("docInList", docInList);
 			model.addObject("in", true);
-			
-		} else if(type.equals("out")){
+
+		} else if (type.equals("out")) {
 			List<DocTypeMenuItem> typeOutList = dataService.findMenuDocOut(organ.getOrganId(), false, null);
-			
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, null, false, firstNumber, firstNumber + 9, true);
+
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, null, false, 0, 9, true);
 			List<DocOutInfo> docOutList = new ArrayList<DocOutInfo>();
-			
-			for(Document doc : docList) {
+
+			for (Document doc : docList) {
 				User user = null;
-				if(!flowUtil.isEnded(doc.getProcessInstanceId())) {
+				if (!flowUtil.isEnded(doc.getProcessInstanceId())) {
 					Task task = flowUtil.getCurrentTask(doc.getProcessInstanceId());
-					if(task.getAssignee() == null) {
+					if (task.getAssignee() == null) {
 						HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(doc.getProcessInstanceId());
-						if(preTask != null) {
+						if (preTask != null) {
 							user = dataService.findUserByName(preTask.getAssignee());
 						}
 					} else {
 						user = dataService.findUserByName(task.getAssignee());
 					}
 				}
-				
+
 				DocOutInfo docInfo = new DocOutInfo();
 				docInfo.setDoc(doc);
-				if(user != null) docInfo.setUser(user);
+				if (user != null)
+					docInfo.setUser(user);
 				docOutList.add(docInfo);
 			}
-			
+
 			model.addObject("typeOutList", typeOutList);
 			model.addObject("docOutList", docOutList);
 			model.addObject("out", true);
 		}
 		return model;
 	}
-	
-	@RequestMapping(value = "/wait_list/{type}/{docTypeId}/{firstNumber}")
-	public ModelAndView waitListType(
-			@PathVariable("type") String type,
-			@PathVariable("docTypeId") Integer docTypeId,
-			@PathVariable("firstNumber") Integer firstNumber){
+
+	@RequestMapping(value = "/wait_list/{type}/{docTypeId}")
+	public ModelAndView waitListType(@PathVariable("type") String type, @PathVariable("docTypeId") Integer docTypeId) {
 		ModelAndView model = new ModelAndView("waiting-list");
-		
+
 		User curUser = securityService.getCurrentUser();
 		Organ organ = curUser.getOrgan();
-		
-		//flow in
+
+		// flow in
 		if (type.equals("in")) {
 			List<DocTypeMenuItem> typeInList = dataService.findMenuDocIn(organ.getOrganId(), false, null);
-			
+
 			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), null, docTypeId, false,
-					firstNumber, firstNumber + 9);
+					null, null);
 			List<DocInInfo> docInList = new ArrayList<DocInInfo>();
-			
-			for(DocumentRecipient docRec : docList) {
+
+			for (DocumentRecipient docRec : docList) {
 				Task task = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
 				User user = null;
-				if(task.getAssignee() == null) {
+				if (task.getAssignee() == null) {
 					HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(docRec.getProcessInstanceId());
-					if(preTask != null) {
+					if (preTask != null) {
 						user = dataService.findUserByName(preTask.getAssignee());
 					}
 				} else {
 					user = dataService.findUserByName(task.getAssignee());
 				}
-				
+
 				docInList.add(new DocInInfo(docRec, user));
 			}
-			
+
 			model.addObject("typeInList", typeInList);
 			model.addObject("docInList", docInList);
 			model.addObject("in", true);
-			
-		} else if (type.equals("out")) { //flow out
+
+		} else if (type.equals("out")) { // flow out
 			List<DocTypeMenuItem> typeOutList = dataService.findMenuDocOut(organ.getOrganId(), false, null);
-			
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, docTypeId, false, firstNumber, firstNumber + 9, true);
+
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, docTypeId, false, null, null,
+					true);
 			List<DocOutInfo> docOutList = new ArrayList<DocOutInfo>();
-			
-			for(Document doc : docList) {
+
+			for (Document doc : docList) {
 				User user = null;
-				if(!flowUtil.isEnded(doc.getProcessInstanceId())) {
+				if (!flowUtil.isEnded(doc.getProcessInstanceId())) {
 					Task task = flowUtil.getCurrentTask(doc.getProcessInstanceId());
-					if(task.getAssignee() == null) {
+					if (task.getAssignee() == null) {
 						HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(doc.getProcessInstanceId());
-						if(preTask != null) {
+						if (preTask != null) {
 							user = dataService.findUserByName(preTask.getAssignee());
 						}
 					} else {
 						user = dataService.findUserByName(task.getAssignee());
 					}
 				}
-				
+
 				DocOutInfo docInfo = new DocOutInfo();
 				docInfo.setDoc(doc);
-				if(user != null) docInfo.setUser(user);
+				if (user != null)
+					docInfo.setUser(user);
 				docOutList.add(docInfo);
 			}
-			
-			
+
 			model.addObject("typeOutList", typeOutList);
 			model.addObject("docOutList", docOutList);
 			model.addObject("out", true);

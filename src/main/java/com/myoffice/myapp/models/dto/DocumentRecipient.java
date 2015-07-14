@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.myoffice.myapp.utils.UtilMethod;
+
 @Entity
 @Table(name = "document_recipient")
 public class DocumentRecipient implements Serializable{
@@ -79,6 +81,10 @@ public class DocumentRecipient implements Serializable{
 
 	public void setReceiveTime(Date receiveTime) {
 		this.receiveTime = receiveTime;
+	}
+	
+	public String getReceiveTimeString() {
+		return UtilMethod.dateToString(receiveTime, "dd-MM-yyyy");
 	}
 
 	public Integer getNumber() {

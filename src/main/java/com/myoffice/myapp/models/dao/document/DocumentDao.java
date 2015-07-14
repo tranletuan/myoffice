@@ -28,8 +28,8 @@ public interface DocumentDao {
 	
 	void deleteDocument(Document doc);
 	
-	List<Document> findDocumentBy(Integer organId, Integer tenureId, 
-			Integer docTypeId, Boolean completed, int firstResult, int maxResult, Boolean enabled);
+	List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, Boolean completed,
+			Integer firstResult, Integer maxResult, Boolean enabled);
 	
 	//DocumentType
 	DocumentType findDocTypeById(Integer typeId);
@@ -89,7 +89,7 @@ public interface DocumentDao {
 	
 	Integer findMaxDocRecNumber(Integer tenureId, Integer organId);
 	
-	List<DocumentRecipient> findDocRecipient(Integer organId, Integer tenureId, Integer docTypeId, Boolean completed, int firstResult, int maxResult);
+	List<DocumentRecipient> findDocRecipient(Integer organId, Integer tenureId, Integer docTypeId, Boolean completed, Integer firstResult, Integer maxResult);
 	
 	List<DocumentRecipient> findDocRecByAssignDate(Integer organId, Boolean completed, Date start, Date end);
 	
@@ -104,8 +104,8 @@ public interface DocumentDao {
 	List<TenureMenuItem> findMenuTenureIn(Integer organId);
 	
 	//STORE
-	ListDoc findCompletedDocOut(Integer organId, String docName, String epitome, String number, int docTypeId,
-			String department, Date minDay, Date maxDay, int firstResult, int maxResult); 
+	List<Document> findCompletedDocOut(Integer organId, String docName, String epitome, String number, int docTypeId,
+			String department, Date minDay, Date maxDay, Integer firstResult, Integer maxResult); 
 
 	List<DocumentRecipient> findCompletedDocIn(Integer organId, String number, String docTypeShortName, String department,
 			String epitome, Date minDay, Date maxDay, Integer firstResult, Integer maxResult);
