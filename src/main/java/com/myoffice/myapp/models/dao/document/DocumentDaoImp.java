@@ -516,8 +516,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
-			Integer docTypeId, Integer organTypeId, String department, Date minDay, Date maxDay, Date minDayRec, Date maxDayRec,
-			Integer firstResult, Integer maxResult) {
+			Integer docTypeId, Integer organTypeId, String department, Date minDay, Date maxDay, Integer numberRec,
+			Date minDayRec, Date maxDayRec, Integer firstResult, Integer maxResult) {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
 		criteria.createAlias("document", "d");
 		criteria.createAlias("organ", "o");
@@ -542,6 +542,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			Criterion rest2 = Restrictions.le("d.releaseTime", maxDay);
 			criteria.add(Restrictions.and(rest1, rest2));
 		}
+		if(numberRec != null && numberRec > 0)
+			criteria.add(Restrictions.and(Restrictions.eq("number", numberRec)));
 		if(minDayRec != null && maxDayRec != null){
 			Criterion rest1 = Restrictions.ge("receiveTime", minDayRec);
 			Criterion rest2 = Restrictions.le("receiveTime", maxDayRec);

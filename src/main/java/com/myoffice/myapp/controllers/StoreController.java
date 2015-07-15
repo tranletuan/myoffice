@@ -147,7 +147,7 @@ public class StoreController extends AbstractController {
 			@RequestParam(value = "department" , required = false) String department,
 			@RequestParam(value = "minDay", required = false) String minDay,
 			@RequestParam(value = "maxDay", required = false) String maxDay,
-			@RequestParam(value = "numberRec", required = false) String numberRec,
+			@RequestParam(value = "numberRec", required = false) Integer numberRec,
 			@RequestParam(value = "minDayRec", required = false) String minDayRec,
 			@RequestParam(value = "maxDayRec", required = false) String maxDayRec){
 		ModelAndView model = new ModelAndView("fragment/store-element");
@@ -168,8 +168,8 @@ public class StoreController extends AbstractController {
 			if(maxDayRec != null) maxDayRecSet = UtilMethod.toDate(maxDayRec, "dd-MM-yyyy");
 		} catch(Exception e){}
 		
-		List<DocumentRecipient> docList = dataService.findCompletedDocIn(organ.getOrganId(), docName, epitome,
-				numberRec, docTypeId, organTypeId, department, minDaySet, maxDaySet, minDayRecSet, maxDayRecSet, null,
+		List<DocumentRecipient> docList = dataService.findCompletedDocIn(organ.getOrganId(), docName, epitome, number,
+				docTypeId, organTypeId, department, minDaySet, maxDaySet, numberRec, minDayRecSet, maxDayRecSet, null,
 				null);
 
 		UtilMethod.preparePagination(rowList, elemList, docList, model, null);

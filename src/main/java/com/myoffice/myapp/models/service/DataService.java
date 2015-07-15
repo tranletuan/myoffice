@@ -307,10 +307,10 @@ public class DataService {
 	}
 	
 	public List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
-			Integer docTypeId, Integer organTypeId, String department, Date minDay, Date maxDay, Date minDayRec, Date maxDayRec,
+			Integer docTypeId, Integer organTypeId, String department, Date minDay, Date maxDay, Integer numberRec, Date minDayRec, Date maxDayRec,
 			Integer firstResult, Integer maxResult) {
 		return docDao.findCompletedDocIn(organId, docName, epitome, number, docTypeId, organTypeId, department, minDay,
-				maxDay, minDayRec, maxDayRec, firstResult, maxResult);
+				maxDay, numberRec, minDayRec, maxDayRec, firstResult, maxResult);
 	}
 
 	//=====================

@@ -104,7 +104,9 @@
 
  	$('.btn-reset-in').click(resetSearchIn);
 
- 	$('a[data-toggle="tab"]').on('shown.bs.tab', resetSearchIn);
+ 	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+ 		resetSearchIn();
+ 	});
 
  	function resetSearchIn () {
  		$('#docNameIn').val('');
@@ -116,6 +118,8 @@
  		$('#departmentIn').val('');
  		$('#minDayIn').val('');
  		$('#maxDayIn').val('');
+
+ 		$('#numberRec').val('');
  		$('#minDayRec').val('');
  		$('#maxDayRec').val('');
  	}
