@@ -23,6 +23,7 @@ import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
 import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.Organ;
+import com.myoffice.myapp.models.dto.OrganType;
 import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.User;
@@ -47,10 +48,12 @@ public class StoreController extends AbstractController {
 		List<TenureMenuItem> tenureItemOutList = dataService.findMenuTenureOut(organ.getOrganId());
 		List<TenureMenuItem> tenureItemInList = dataService.findMenuTenureIn(organ.getOrganId());
 		List<DocumentType> docTypeList = dataService.findAllDocType();
+		List<OrganType> organTypeList = dataService.findAllOrganType();
 		
 		model.addObject("tenureItemOutList", tenureItemOutList);
 		model.addObject("tenureItemInList", tenureItemInList);
 		model.addObject("docTypeList", docTypeList);
+		model.addObject("organTypeList", organTypeList);
 		model.addObject("organ", organ);
 		
 		if(type.equals("out")) {
@@ -96,7 +99,7 @@ public class StoreController extends AbstractController {
 		return model;
 	}
 	
-	
+	//Search Document Out
 	@RequestMapping(value = "/search_doc_out", method = RequestMethod.POST)
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.OK)
@@ -130,18 +133,23 @@ public class StoreController extends AbstractController {
 		return model;
 	}
 	
+	
+	//Search Document In
 	@RequestMapping(value = "/search_doc_in", method = RequestMethod.POST)
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.OK)
 	public ModelAndView searchDocIn(
 			@RequestParam(value = "docName", required = false) String docName,
 			@RequestParam(value = "epitome", required = false) String epitome,
+			@RequestParam(value = "docTypeId", required = false) Integer docTypeId,
+			@RequestParam(value = "organTypeId", required = false) Integer organTypeId,
 			@RequestParam(value = "number", required = false) String number,
-			@RequestParam(value = "docTypeId") int docTypeId,
-			@RequestParam(value = "organTypeId") int organTypeId,
 			@RequestParam(value = "department" , required = false) String department,
 			@RequestParam(value = "minDay", required = false) String minDay,
-			@RequestParam(value = "maxDay", required = false) String maxDay){
+			@RequestParam(value = "maxDay", required = false) String maxDay,
+			@RequestParam(value = "numberRec", required = false) String numberRec,
+			@RequestParam(value = "minDayRec", required = false) String minDayRec,
+			@RequestParam(value = "maxDayRec", required = false) String maxDayRec){
 		ModelAndView model = new ModelAndView("fragment/store-element");
 		User curUser = securityService.getCurrentUser();
 		Organ organ = curUser.getOrgan();
@@ -150,16 +158,23 @@ public class StoreController extends AbstractController {
 		
 		Date minDaySet = null;
 		Date maxDaySet = null;
+		Date minDayRecSet = null;
+		Date maxDayRecSet = null;
+		
 		try {
 			if(minDay != null) minDaySet = UtilMethod.toDate(minDay, "dd-MM-yyyy");
 			if(maxDay != null) maxDaySet = UtilMethod.toDate(maxDay, "dd-MM-yyyy");
+			if(minDayRec != null) minDayRecSet = UtilMethod.toDate(minDayRec, "dd-MM-yyyy");
+			if(maxDayRec != null) maxDayRecSet = UtilMethod.toDate(maxDayRec, "dd-MM-yyyy");
 		} catch(Exception e){}
 		
-		List<Document> docList = dataService.findCompletedDocOut(organ.getOrganId(), docName, epitome, number, docTypeId,
-				department, minDaySet, maxDaySet, null, null);
+		List<DocumentRecipient> docList = dataService.findCompletedDocIn(organ.getOrganId(), docName, epitome,
+				numberRec, docTypeId, organTypeId, department, minDaySet, maxDaySet, minDayRecSet, maxDayRecSet, null,
+				null);
+
 		UtilMethod.preparePagination(rowList, elemList, docList, model, null);
 		model.addObject("docList", docList);
-		model.addObject("out", true);
+		model.addObject("in", true);
 
 		return model;
 	}

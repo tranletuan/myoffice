@@ -105,11 +105,10 @@ public interface DocumentDao {
 	
 	//STORE
 	List<Document> findCompletedDocOut(Integer organId, String docName, String epitome, String number, int docTypeId,
-			String department, Date minDay, Date maxDay, Integer firstResult, Integer maxResult); 
+			String department, Date minDay, Date maxDay, Integer firstResult, Integer maxResult);
 
-	List<DocumentRecipient> findCompletedDocIn(Integer organId, String number, String docTypeShortName, String department,
-			String epitome, Date minDay, Date maxDay, Integer firstResult, Integer maxResult);
-	
-	List<DocumentRecipient> findCompletedDocIn(Integer organId, String number, Date minDay, Date maxDay,
+	List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
+			Integer docTypeId, Integer organTypeId, String department, Date minDay, Date maxDay, Date minDayRec, Date maxDayRec,
 			Integer firstResult, Integer maxResult);
+
 } 

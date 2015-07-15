@@ -305,6 +305,13 @@ public class DataService {
 		return docDao.findCompletedDocOut(organId, docName, epitome, number, docTypeId, department, minDaySet, maxDaySet,
 				firstResult, maxResult);
 	}
+	
+	public List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
+			Integer docTypeId, Integer organTypeId, String department, Date minDay, Date maxDay, Date minDayRec, Date maxDayRec,
+			Integer firstResult, Integer maxResult) {
+		return docDao.findCompletedDocIn(organId, docName, epitome, number, docTypeId, organTypeId, department, minDay,
+				maxDay, minDayRec, maxDayRec, firstResult, maxResult);
+	}
 
 	//=====================
 	@Autowired

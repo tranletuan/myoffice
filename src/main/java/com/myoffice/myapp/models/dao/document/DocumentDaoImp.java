@@ -77,7 +77,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findDocumentBy(Integer organId, Integer tenureId,
-			Integer docTypeId, Boolean completed, Integer firstResult, Integer maxResult, Boolean enabled) {
+			Integer docTypeId, Boolean completed, Integer firstResult, Integer maxResult, Boolean isEnabled) {
 		Criteria criteria = getSession().createCriteria(Document.class);
 		criteria.createAlias("organ", "o");
 		criteria.createAlias("tenure", "t");
@@ -102,8 +102,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			}
 		}
 		
-		if(enabled != null){
-			criteria.add(Restrictions.and(Restrictions.eq("enabled", enabled)));
+		if(isEnabled != null){
+			criteria.add(Restrictions.and(Restrictions.eq("isEnabled", isEnabled)));
 		}
 		criteria.addOrder(Order.desc("docId"));
 		if (firstResult != null && maxResult != null) {
@@ -325,7 +325,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.createAlias("organ", "o");
 		criteria.createAlias("document", "d");
 		criteria.add(Restrictions.eq("o.organId", organId));
-		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("d.isEnabled", true)));
 		
 		if(tenureId != null && tenureId > 0) {
 			criteria.add(Restrictions.and(Restrictions.eq("d.tenure.tenureId", tenureId)));
@@ -387,7 +387,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			Criterion rest2 = Restrictions.eq("dt.docTypeId", docType.getDocTypeId());
 			Criterion rest3 = Restrictions.eq("completed", completed);
 			Criterion rest4 = Restrictions.eq("sended", completed);
-			Criterion rest5 = Restrictions.eq("enabled", true);
+			Criterion rest5 = Restrictions.eq("isEnabled", true);
 			
 			if(completed == false) {
 				criteria.add(Restrictions.and(rest1, rest2, Restrictions.or(rest3, rest4), rest5));
@@ -423,7 +423,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			Criterion rest2 = Restrictions.eq("d.docType.docTypeId", docType.getDocTypeId());
 			Criterion rest3 = Restrictions.eq("completed", completed);
 			Criterion rest4 = Restrictions.eq("d.completed", true);
-			Criterion rest5 = Restrictions.eq("d.enabled", true);
+			Criterion rest5 = Restrictions.eq("d.isEnabled", true);
 			
 			criteria.add(Restrictions.and(rest1, rest2, rest3, rest4, rest5));
 			
@@ -487,7 +487,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.add(Restrictions.eq("o.organId", organId));
 		criteria.add(Restrictions.eq("completed", true));
 		criteria.add(Restrictions.eq("sended", true));
-		criteria.add(Restrictions.eq("enabled", true));
+		criteria.add(Restrictions.eq("isEnabled", true));
 		
 		if(docName != null)
 			criteria.add(Restrictions.and(Restrictions.like("docName", "%" + docName + "%")));
@@ -513,19 +513,51 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<DocumentRecipient> findCompletedDocIn(Integer organId, String number, String docTypeShortName,
-			String deparment, String epitome, Date minDay, Date maxDay, Integer firstResult, Integer maxResult) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
+			Integer docTypeId, Integer organTypeId, String department, Date minDay, Date maxDay, Date minDayRec, Date maxDayRec,
+			Integer firstResult, Integer maxResult) {
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("document", "d");
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.add(Restrictions.eq("d.isEnabled", true));
+		criteria.add(Restrictions.eq("completed", true));
+		
+		if(docName != null)
+			criteria.add(Restrictions.and(Restrictions.like("d.docName", "%" + docName + "%")));
+		if(epitome != null)
+			criteria.add(Restrictions.and(Restrictions.like("d.epitome", "%" + epitome + "%")));
+		if (number != null)
+			criteria.add(Restrictions.and(Restrictions.like("d.numberSign", "%" + number + "%")));
+		if (docTypeId != null && docTypeId > 0)
+			criteria.add(Restrictions.and(Restrictions.eq("d.docType.docTypeId", docTypeId)));
+		if (organTypeId != null && organTypeId > 0)
+			criteria.add(Restrictions.and(Restrictions.eq("d.organ.organType.organTypeId", organTypeId)));
+		if (department != null)
+			criteria.add(Restrictions.and(Restrictions.like("d.numberSign", "%" + department + "%")));
+		if(minDay != null && maxDay != null){
+			Criterion rest1 = Restrictions.ge("d.releaseTime", minDay);
+			Criterion rest2 = Restrictions.le("d.releaseTime", maxDay);
+			criteria.add(Restrictions.and(rest1, rest2));
+		}
+		if(minDayRec != null && maxDayRec != null){
+			Criterion rest1 = Restrictions.ge("receiveTime", minDayRec);
+			Criterion rest2 = Restrictions.le("receiveTime", maxDayRec);
+			criteria.add(Restrictions.and(rest1, rest2));
+		}
+		
+		if(firstResult != null && maxResult != null) {
+			criteria.setFirstResult(firstResult);
+			criteria.setMaxResults(maxResult);
+		}
+		
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
 	}
 
-	@Override
-	public List<DocumentRecipient> findCompletedDocIn(Integer organId, String number, Date minDay, Date maxDay,
-			Integer firstResult, Integer maxResult) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	
 	

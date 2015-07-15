@@ -20,17 +20,12 @@
 
 
  	$('.menu').click(function(){
- 		if($(this).hasClass('disabled') == false) {
- 			$('.menu').removeClass('disabled');
- 			$(this).addClass('disabled');
+ 		$('.menu-content.in').addClass('hidden');
+ 		$('.menu-content.in').collapse('hide');
 
- 			$('.menu-content.in').addClass('hidden');
- 			$('.menu-content.in').collapse('hide');
-
- 			$('.collapse').on('show.bs.collapse', function(){
- 				$(this).removeClass('hidden');
- 			});
- 		}
+ 		$('.collapse').on('show.bs.collapse', function(){
+ 			$(this).removeClass('hidden');
+ 		});
  	});
 
  	$('.search-form').submit(function(ev){
@@ -79,7 +74,7 @@
  		}
  	});
 
- 	$('#btn-reset-out').click(function(){
+ 	$('.btn-reset-out').click(function(){
  		$('#docNameOut').val('');
  		$('#epitomeOut').val('');
  		$('#numberOut').val('');
@@ -87,7 +82,7 @@
  		$('#numberSignOut').val('');
  		$('#departmentOut').val('');
  		$('#minDayOut').val('');
- 		$('#maDayOut').val('');
+ 		$('#maxDayOut').val('');
  		$('#docNameOut').focus();
  	});
 
@@ -95,17 +90,34 @@
  	// Search Doc In
 
  	$('#docTypeIn').change(function(){
- 		var value = $(this).val();
- 		if(value > 0) {
-	 		var shortName = $('#docTypeIn :selected').attr('class');
-	 		var organType = $('#organTypeIn').html();
-	 		$('#numberSignIn').val(shortName + '/' + organType);
- 		} else {
- 			$('#numberSignIn').val('');
- 		}
+ 		var typeShortName = $('#docTypeIn :selected').attr('class');
+ 		var organTypeShortName = $('#organTypeId :selected').attr('class');
+ 		$('#numberSignIn').val(typeShortName + '/' + organTypeShortName);
+
  	});
 
+ 	$('#organTypeId').change(function(){
+ 		var typeShortName = $('#docTypeIn :selected').attr('class');
+ 		var organTypeShortName = $('#organTypeId :selected').attr('class');
+ 		$('#numberSignIn').val(typeShortName + '/' + organTypeShortName);
+ 	});
 
- 	
+ 	$('.btn-reset-in').click(resetSearchIn);
+
+ 	$('a[data-toggle="tab"]').on('shown.bs.tab', resetSearchIn);
+
+ 	function resetSearchIn () {
+ 		$('#docNameIn').val('');
+ 		$('#epitomeIn').val('');
+ 		$('#numberIn').val('');
+ 		$('#docTypeIn').val(-1);
+ 		$('#numberSignIn').val('');
+ 		$('#organTypeId').val(-1);
+ 		$('#departmentIn').val('');
+ 		$('#minDayIn').val('');
+ 		$('#maxDayIn').val('');
+ 		$('#minDayRec').val('');
+ 		$('#maxDayRec').val('');
+ 	}
 
  });
