@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.task.Task;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -24,9 +26,11 @@ import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
+import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.support.DocTypeMenuItem;
-import com.myoffice.myapp.support.ListDoc;
+import com.myoffice.myapp.support.ItemDocOutWait;
 import com.myoffice.myapp.support.TenureMenuItem;
+import com.myoffice.myapp.utils.FlowUtil;
 
 @Repository
 public class DocumentDaoImp extends AbstractDao implements DocumentDao {
@@ -560,7 +564,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 
 	
-
 	
 	
 	

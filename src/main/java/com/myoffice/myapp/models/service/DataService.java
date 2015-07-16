@@ -47,7 +47,6 @@ import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.support.DocTypeMenuItem;
-import com.myoffice.myapp.support.ListDoc;
 import com.myoffice.myapp.support.TenureMenuItem;
 
 @Service

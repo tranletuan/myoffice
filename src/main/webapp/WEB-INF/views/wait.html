@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title th:text="${title}"></title>
+
+<script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}" ></script>
+
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
+
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+<link rel="stylesheet" th:href="@{/css/waiting-list.css}" />
+
+<script type="text/javascript" th:src="@{/js/waiting-list.js}" ></script>
+
+</head>
+
+<body>
+	<div class="container-fluid">
+		<div th:replace="fragment/menu :: menu"></div>
+		<div>
+			<table class="table">
+				<colgroup>
+					<col class="col-xs-3 col-md-2" />
+					<col class="col-xs-15 col-md-10" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<th scope="row">
+							<div th:if="${out}">
+								<div class="list-group list-menu-doc"> 
+									<a	th:each="to : ${typeOutList}" href="#"
+									 	th:href="@{'/flow/wait_list/out/' + ${to.docType.docTypeId}}"
+										class="list-group-item wait-link"> 
+
+										<span th:text="${to.docType.docTypeName}"></span> 
+										<span class="badge" th:text="${to.count}"></span>	
+									</a>
+								</div>
+							</div>
+					
+
+							<div th:if="${in}">
+								<div class="list-group list-menu-doc">
+									<a th:each="ti : ${typeInList}" href="#"
+									th:href="@{'/flow/wait_list/in/' + ${ti.docType.docTypeId}}"
+									class="list-group-item wait-link"> 
+
+										<span th:text="${ti.docType.docTypeName}"></span> 
+										<span class="badge" th:text="${ti.count}"></span>	
+									</a>
+								</div>
+							</div>
+						</th>
+						<td id="show-content">
+							<div class="list-group doc-group" th:if="${out}">
+								<div th:each="d : ${docList}" class="doc">
+									<a href="#" class="list-group-item panel panel-info" th:href="@{/flow/doc_info/} + ${d.doc.docId}">
+										<div class="panel-heading">
+											<h4 class="list-group-item-heading" th:text="${d.doc.numberSign} + ' - ' + ${d.doc.docName}"></h4>
+										</div>
+
+										<div class="panel-body">
+											<p class="list-group-item-text p-doc" th:text="${d.doc.epitome}"></p>
+										</div>
+
+										<ul class="list-group">
+											<li class="list-group-item" th:if="${d.user}">
+												<span>Người giữ quyền : </span>
+												<strong th:text="${d.user.userDetail} ? 
+													${d.user.userDetail.fullName} + ' - ' + ${d.user.level.levelName} : 
+													${d.user.userName} + ' - ' + ${d.user.level.levelName}">
+												</strong>
+											</li>
+											<li class="list-group-item" th:unless="${d.user}">
+												<strong>Đã hoàn thành, chưa gửi</strong>
+											</li>
+										</ul>
+									</a>
+								</div>
+							</div>
+
+							<div class="list-group doc-group" th:if="${in}">
+								<div th:each="d : ${docList}" class="doc">
+									<a href="#" class="list-group-item panel panel-info" th:href="@{/flow/doc_in_info/} + ${d.docRec.document.docId}">
+										<div class="panel-heading">
+											<h4 class="list-group-item-heading" th:text="'Nhận số : ' + ${d.docRec.number} + ' - ' + ${d.docRec.getReceiveTimeString()}" th:if="${d.docRec.number}"></h4>
+											<h4 class="list-group-item-heading" th:unless="${d.docRec.number}">Chưa tiếp nhận</h4>
+											<h4 class="list-group-item-heading" th:text="'Đến số : ' + ${d.docRec.document.numberSign} + ' : ' + ${d.docRec.document.docName}"></h4>
+										</div>
+
+										<div class="panel-body">
+											<p class="list-group-item-text p-doc" th:text="${d.docRec.document.epitome}"></p>
+										</div>
+									</a> 
+								</div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div th:replace="fragment/footer :: footer"></div>
+	</div>
+</body>
+</html>

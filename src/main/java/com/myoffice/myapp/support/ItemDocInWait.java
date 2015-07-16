@@ -3,11 +3,11 @@ package com.myoffice.myapp.support;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
 import com.myoffice.myapp.models.dto.User;
 
-public class DocInInfo {
+public class ItemDocInWait {
 
 	private DocumentRecipient docRec;
 	private User user;
-	public DocInInfo(DocumentRecipient docRec, User user) {
+	public ItemDocInWait(DocumentRecipient docRec, User user) {
 		super();
 		this.docRec = docRec;
 		this.user = user;

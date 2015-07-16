@@ -13,8 +13,9 @@ import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.support.CalendarDoc;
 import com.myoffice.myapp.support.DocTypeMenuItem;
-import com.myoffice.myapp.support.ListDoc;
+import com.myoffice.myapp.support.ItemDocOutWait;
 import com.myoffice.myapp.support.TenureMenuItem;
+import com.myoffice.myapp.utils.FlowUtil;
 
 public interface DocumentDao {
 	
@@ -110,5 +111,4 @@ public interface DocumentDao {
 	List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
 			Integer docTypeId, Integer organTypeId, String department, Date minDay, Date maxDay, Integer numberRec,
 			Date minDayRec, Date maxDayRec, Integer firstResult, Integer maxResult);
-
 } 
