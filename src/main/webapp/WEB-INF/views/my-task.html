@@ -26,24 +26,76 @@ xmlns:th="http://www.thymeleaf.org">
 			<div class="container-fluid col-sm-8">
 				<ul class="nav nav-tabs" role="tablist">
 					<li role="presentation" class="active"><a href="#release-task" aria-controls="release-task" role="tab" data-toggle="tab">Văn bản chờ</a></li>
-					<li role="presentation"><a href="#receive-task" aria-controls="receive-task" role="tab" data-toggle="tab">Nhiệm vụ</a></li>
+					<li role="presentation"><a href="#assgin-task" aria-controls="receive-task" role="tab" data-toggle="tab">Nhiệm vụ được giao</a></li>
 					<li role="presentation"><a href="#own-task" aria-controls="own-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_MANAGER')">Nhiệm vụ đã giao</a></li>
+					<li role="presentation"><a href="#send-task" aria-controls="own-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_OUTPUTER')">Văn bản chờ gửi</a></li>
+					<li role="presentation"><a href="#receive-task" aria-controls="own-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_INTPUTER')">Văn bản chờ nhận</a></li>
 				</ul>
 
 				<div class="tab-content">
 					<!-- release task -->
 					<div role="tabpanel" class="tab-pane active" id="release-task">
-					 Release Task
+						<div id="content-out"></div>
+						<div id="page-selection-out" th:if="${rowListDocOut.size() >  ${elemList.size()}"></div>
+						<div class="hidden" id="totalPageDocOut" th:attr="data=${rowListDocOut.size()}"></div>
+
+						<!-- List document out -->
+						<div th:each="row : ${rowListDocOut}" th:attr="id='content-out-' + (${row}  + 1)" class="hidden list-group doc-group">
+							<div th:each="elem : ${elemList}" th:with="Index=${row} * ${elemList.size()} + ${elem}" class="doc row">
+								<a href="#" class="list-group-item panel panel-info" th:href="@{/flow/doc_info/} + ${docListOut[Index].doc.docId}" th:if="${Index} lt ${docListOut.size()}">
+									<div class="panel-heading">
+										<h4 class="list-group-item-heading" th:text="${docListOut[Index].doc.numberSign} + ' - ' + ${docListOut[Index].doc.docName}"></h4>
+									</div>
+
+									<div class="panel-body">
+										<p class="list-group-item-text p-doc" th:text="${docListOut[Index].doc.epitome}"></p>
+									</div>
+								</a>
+							</div>
+						</div>
+
+						<script>
+							var totalPage = $('#totalPageDocOut').attr('data');
+							$('#content-out').html($('#content-out-1').html());
+							$('#content-out').css('height', $(window).height() * 3 / 4);
+							$(window).resize(function(){
+								var windowHeight = $(window).height() * 3 / 4;
+								$('#content-out').css('height', windowHeight );
+								$('#content-out').css('max-height', windowHeight);
+								$('#content-out').css('overflow-y', 'scroll');
+							});
+
+
+							$('#page-selection').bootpag({
+								total : totalPage,
+								page : 1,
+								maxVisible : 10
+							}).on("page", function(event, num){
+								var idShow = '#content-out-' + num;
+				            	$("#content-out").html($(idShow).html()); // some ajax content-out loading...
+				            	$("#content-out").removeClass('hidden');
+				            });
+						</script>
 					</div>
 
 					<!-- receive task -->
-					<div role="tabpanel" class="tab-pane" id="receive-task">
+					<div role="tabpanel" class="tab-pane" id="assgin-task">
 					Receive Task
 					</div>
 
 					<!-- owner -->
-					<div role="tabpanel" class="tab-pane" id="own-task">
+					<div role="tabpanel" class="tab-pane" id="own-task" sec:authorize="hasRole('ROLE_MANAGER')">
 					Owner
+					</div>
+
+					<!-- send -->
+					<div role="tabpanel" class="tab-pane" id="send-task" sec:authorize="hasRole('ROLE_OUTPUTER')">
+					Sender
+					</div>
+
+					<!-- send -->
+					<div role="tabpanel" class="tab-pane" id="receive-task" sec:authorize="hasRole('ROLE_INPUTER')">
+					Sender
 					</div>
 
 				</div>
