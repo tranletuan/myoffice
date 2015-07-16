@@ -92,14 +92,23 @@
  	$('#docTypeIn').change(function(){
  		var typeShortName = $('#docTypeIn :selected').attr('class');
  		var organTypeShortName = $('#organTypeId :selected').attr('class');
- 		$('#numberSignIn').val(typeShortName + '/' + organTypeShortName);
+ 		var numberSign = "";
+ 		if(typeShortName != null) numberSign += typeShortName;
+ 		if(organTypeShortName != null) numberSign += '/' + organTypeShortName;
+
+ 		$('#numberSignIn').val(numberSign);
 
  	});
 
  	$('#organTypeId').change(function(){
  		var typeShortName = $('#docTypeIn :selected').attr('class');
  		var organTypeShortName = $('#organTypeId :selected').attr('class');
- 		$('#numberSignIn').val(typeShortName + '/' + organTypeShortName);
+ 		
+ 		var numberSign = "";
+ 		if(typeShortName != null) numberSign += typeShortName;
+ 		if(organTypeShortName != null) numberSign += '/' + organTypeShortName;
+
+ 		$('#numberSignIn').val(numberSign);
  	});
 
  	$('.btn-reset-in').click(resetSearchIn);

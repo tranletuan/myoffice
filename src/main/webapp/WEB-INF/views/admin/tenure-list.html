@@ -51,65 +51,64 @@ xmlns:th="http://www.thymeleaf.org">
 							<tr th:each="tenure : ${tenureList}" th:attr="id=${tenure.tenureId}">
 								<td th:text="${tenure.tenureId}" class="tenureId"></td>
 								<td th:text="${tenure.tenureName}" class="tenureName"></td>
-								<td th:text="${tenure.timeStart}" class="timeStart"></td>
-								<td th:text="${tenure.timeEnd}" class="timeEnd"></td>
+								<td th:text="${tenure.getTimeStartString()}" class="timeStart"></td>
+								<td th:text="${tenure.getTimeEndString()}" class="timeEnd"></td>
 							</tr> 
 						</tbody>
 					</table>
 				</tbody>
 			</table>
+		</div>
 
-			<div class="modal fade form-tenure" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-lg">
-					<div class="modal-content">
-						<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_tenure}">
+		<div class="modal fade form-tenure" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<form class="form-horizontal" method="post" style="margin: 15px;" autocomplete="off" th:action="@{/admin/save_tenure}">
 
-							<div class="form-group hidden">
-								<label for="tenureId" class="col-sm-3 control-label">ID</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="tenureId" th:name="tenureId" value=""/>
-								</div>
+						<div class="form-group hidden">
+							<label for="tenureId" class="col-sm-3 control-label">ID</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="tenureId" th:name="tenureId" value=""/>
 							</div>
+						</div>
 
-							<div class="form-group">
-								<label for="tenureName" class="col-sm-3 control-label">Tên chu kỳ</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="tenureName" th:name="tenureName" autofocus="true" placeholder="Tên chu kỳ" required="true"/>
-								</div>
+						<div class="form-group">
+							<label for="tenureName" class="col-sm-3 control-label">Tên năm (Nhiệm kỳ)</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="tenureName" th:name="tenureName" autofocus="true" placeholder="Tên chu kỳ" required="true"/>
 							</div>
+						</div>
 
-					
-							<div class="form-group">
-								<label for="timeStart" class="col-sm-3 control-label">Thời gian bắt đầu</label>
-								<div class="input-group date form_date col-sm-9" style="padding-left:15px; padding-right:15px;" data-date="" data-date-format="dd MM yyyy" data-link-field="timeStart" data-link-format="yyyy-mm-dd">
-									<input class="form-control" size="16" type="text" value="" readonly="true" th:name="timeStart"/>
-									<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-								</div>
-								<input type="hidden" id="timeStart" value="" /><br/>
+						<div class="form-group">
+							<label for="timeStart" class="col-sm-3 control-label">Thời gian bắt đầu</label>
+							<div class="input-group date form_date col-sm-9" style="padding-left:15px; padding-right:15px;" data-date="" data-date-format="dd MM yyyy" data-link-field="timeStart" data-link-format="dd-mm-yyyy">
+								<input class="form-control" size="16" type="text" value="" th:name="timeStart" id="timeStart"/>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
+							<input type="hidden" value=""/>
+						</div>
 
-							<div class="form-group">
-								<label for="timeEnd" class="col-sm-3 control-label">Thời gian kết thúc</label>
-								<div class="input-group date form_date col-sm-9" style="padding-left:15px; padding-right:15px;" data-date="" data-date-format="dd MM yyyy" data-link-field="timeEnd" data-link-format="yyyy-mm-dd">
-									<input class="form-control" size="16" type="text" value="" readonly="true" th:name="timeEnd"/>
-									<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-								</div>
-								<input type="hidden" id="timeEnd" value="" /><br/>
+						<div class="form-group">
+							<label for="timeEnd" class="col-sm-3 control-label">Thời gian kết thúc</label>
+							<div class="input-group date form_date col-sm-9" style="padding-left:15px; padding-right:15px;" data-date="" data-date-format="dd MM yyyy" data-link-field="timeEnd" data-link-format="dd-mm-yyyy">
+								<input class="form-control" size="16" type="text" value="" th:name="timeEnd"  id="timeEnd"/>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
+							<input type="hidden" value=""/>
+						</div>
 
-							<div class="form-group">
-								<div class="col-sm-offset-3 col-sm-9">
-									<button type="submit" class="btn btn-primary">Lưu</button>
-									<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close" aria-hidden="true">Bỏ qua</button>
-								</div>
-							</div>
-						</form>
-					</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">Lưu</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close" aria-hidden="true">Bỏ qua</button>
+						</div>
+
+					</form>
 				</div>
 			</div>
 		</div>
+
 		<div th:replace="fragment/footer :: footer"></div>
 	</div>
 </body>

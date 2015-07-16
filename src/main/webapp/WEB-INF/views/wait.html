@@ -59,7 +59,7 @@
 						<td id="show-content">
 							<div class="list-group doc-group" th:if="${out}">
 								<div th:each="d : ${docList}" class="doc">
-									<a href="#" class="list-group-item panel panel-info" th:href="@{/flow/doc_info/} + ${d.doc.docId}">
+									<a href="#" class="list-group-item panel panel-warning" th:href="@{/flow/doc_info/} + ${d.doc.docId}">
 										<div class="panel-heading">
 											<h4 class="list-group-item-heading" th:text="${d.doc.numberSign} + ' - ' + ${d.doc.docName}"></h4>
 										</div>

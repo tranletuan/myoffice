@@ -13,7 +13,7 @@
 	<!-- List document out -->
 	<div th:each="row : ${rowList}" th:attr="id='content-' + (${row}  + 1)" class="hidden list-group doc-group" th:if="${out}">
 		<div th:each="elem : ${elemList}" th:with="Index=${row} * ${elemList.size()} + ${elem}" class="doc">
-			<a href="#" class="list-group-item panel panel-info" th:href="@{/flow/doc_info/} + ${docList[Index].doc.docId}" th:if="${Index} lt ${docList.size()}">
+			<a href="#" class="list-group-item panel panel-warning" th:href="@{/flow/doc_info/} + ${docList[Index].doc.docId}" th:if="${Index} lt ${docList.size()}">
 				<div class="panel-heading">
 					<h4 class="list-group-item-heading" th:text="${docList[Index].doc.numberSign} + ' - ' + ${docList[Index].doc.docName}"></h4>
 				</div>

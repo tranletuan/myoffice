@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.myoffice.myapp.utils.UtilMethod;
+
 @Entity
 @Table(name = "document")
 public class Document {
@@ -126,6 +128,10 @@ public class Document {
 
 	public void setReleaseTime(Date releaseTime) {
 		this.releaseTime = releaseTime;
+	}
+	
+	public String getReleaseTimeString() {
+		return UtilMethod.dateToString(releaseTime, "dd-MM-yyyy");
 	}
 
 	public String getEpitome() {

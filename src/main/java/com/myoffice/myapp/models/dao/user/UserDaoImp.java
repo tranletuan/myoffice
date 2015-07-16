@@ -25,34 +25,20 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName) {
+	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, User nUser, boolean checkValue) {
 		
-		Criteria criteria = getSession().createCriteria(User.class);
-		criteria.createAlias("roles", "r");
-		criteria.createAlias("organ", "o");
-		criteria.add(Restrictions.eq("o.organId", organId));
-		criteria.add(Restrictions.and(Restrictions.in("r.shortName", arrRoleShortName)));
-		criteria.add(Restrictions.and(Restrictions.eq("enabled", true)));
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
-	}
-	
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, int levelValue) {
 		Criteria criteria = getSession().createCriteria(User.class);
 		criteria.createAlias("roles", "r");
 		criteria.createAlias("organ", "o");
 		criteria.createAlias("level", "l");
 		criteria.add(Restrictions.eq("o.organId", organId));
 		criteria.add(Restrictions.and(Restrictions.in("r.shortName", arrRoleShortName)));
-		criteria.add(Restrictions.and(Restrictions.ge("l.value", levelValue)));
+		if(checkValue) criteria.add(Restrictions.and(Restrictions.ge("l.value", nUser.getLevel().getValue())));
 		criteria.add(Restrictions.and(Restrictions.eq("enabled", true)));
+		criteria.add(Restrictions.and(Restrictions.ne("userId", nUser.getUserId())));
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
-
 
 	@Override
 	@SuppressWarnings("unchecked")

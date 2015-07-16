@@ -3,6 +3,17 @@
  	$('.modal').on('shown.bs.modal', function() {
 	  $(this).find('[autofocus]').focus();
 	});
+
+	$('.form_date').datetimepicker({
+ 		format : 'dd-mm-yyyy',
+ 		weekStart: 1,
+ 		todayBtn:  1,
+ 		autoclose: 1,
+ 		todayHighlight: 1,
+ 		startView: 2,
+ 		minView: 2,
+ 		forceParse: 0
+ 	});
 	
  	$('#btnChange').click(function(){
  		var docId = $('.docId').html();
@@ -15,6 +26,7 @@
  		var privacyLevel = $('.privacyLevel').attr('data');
  		var emergencyLevel = $('.emergencyLevel').attr('data');
  		var comment = $('.comment').html();
+ 		var releaseTime = $('.releaseTime').html();
 
  		$('#docId').val(docId);
  		$('#title').val(title);
@@ -26,6 +38,7 @@
  		$('#privacyId').val(privacyLevel);
  		$('#emeId').val(emergencyLevel);
  		$('#comment').val(comment);
+ 		$('#releaseTime').val(releaseTime);
 
  		var docType = $('#docType option:selected').attr('class');
  		var organ = $('#organ').attr('class');
@@ -34,8 +47,6 @@
  		var numberSign =  docType + '/' + organ;
   		$('#numberSign').val(numberSign);
   		$('#departments').val(departments);
-
-  		console.log(departments);
  	});
 
  	$('#btnSend').click(function (){

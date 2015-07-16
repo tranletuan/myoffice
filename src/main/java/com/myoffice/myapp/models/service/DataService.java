@@ -93,14 +93,10 @@ public class DataService {
 	@Autowired
 	private UserDao userDao;
 	
-	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName){
-		return userDao.findUserByArrRoleShortName(organId, arrRoleShortName);
+	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, User nUser, boolean checkValue){
+		return userDao.findUserByArrRoleShortName(organId, arrRoleShortName, nUser, checkValue);
 	}
 	
-	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, Integer levelValue){
-		return userDao.findUserByArrRoleShortName(organId, arrRoleShortName, levelValue);
-	}
-
 	public List<User> findAllUsers(Integer organId, Integer roleId){
 		return userDao.findAllUsers(organId, roleId);
 	}
@@ -304,12 +300,12 @@ public class DataService {
 		return docDao.findCompletedDocOut(organId, docName, epitome, number, docTypeId, department, minDaySet, maxDaySet,
 				firstResult, maxResult);
 	}
-	
+
 	public List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
-			Integer docTypeId, Integer organTypeId, String department, Date minDay, Date maxDay, Integer numberRec, Date minDayRec, Date maxDayRec,
-			Integer firstResult, Integer maxResult) {
-		return docDao.findCompletedDocIn(organId, docName, epitome, number, docTypeId, organTypeId, department, minDay,
-				maxDay, numberRec, minDayRec, maxDayRec, firstResult, maxResult);
+			Integer docTypeId, Integer organTypeId, String numberSign, String department, Date minDay, Date maxDay,
+			Integer numberRec, Date minDayRec, Date maxDayRec, Integer firstResult, Integer maxResult) {
+		return docDao.findCompletedDocIn(organId, docName, epitome, number, docTypeId, organTypeId, numberSign,
+				department, minDay, maxDay, numberRec, minDayRec, maxDayRec, firstResult, maxResult);
 	}
 
 	//=====================

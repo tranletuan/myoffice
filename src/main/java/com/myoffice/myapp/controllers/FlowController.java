@@ -155,12 +155,14 @@ public class FlowController extends AbstractController {
 			@RequestParam("privacyId") Integer privacyId,
 			@RequestParam("emeId") Integer emeId,
 			@RequestParam("tenureId") Integer tenureId,
+			@RequestParam(value = "releaseTime", required = false) String releaseTime,
 			@RequestParam("number") String number,
 			@RequestParam("numberSign") String numberSign,
 			@RequestParam(value = "departments", required = false) String departments,
 			@RequestParam(value = "file", required = false) MultipartFile file,
-			@RequestParam(value = "comment", required = false) String comment) throws ParseException, IllegalStateException, IOException{
-		ModelAndView model = new ModelAndView("redirect:doc_info");
+			@RequestParam(value = "comment", required = false) String comment,
+			RedirectAttributes reAttr) throws ParseException, IllegalStateException, IOException{
+		ModelAndView model = new ModelAndView("redirect:error");
 		Tenure tenure = dataService.findTenureById(tenureId);
 		DocumentType docType = dataService.findDocTypeById(docTypeId);
 		Organ organ = securityService.getCurrentUser().getOrgan();
@@ -189,6 +191,21 @@ public class FlowController extends AbstractController {
 		doc.setNumberSign(numberSign);
 		if(departments != null && departments.trim().length() > 0) doc.setDepartments(departments);
 		if(comment != null && comment.trim().length() > 0) doc.setComment(comment);
+		if(releaseTime != null && releaseTime.trim().length() > 0) {
+			try {
+				Date releaseDate = UtilMethod.toDate(releaseTime, "dd-MM-yyyy");
+				int cmpStart = releaseDate.compareTo(tenure.getTimeStart());
+				int cmpEnd = releaseDate.compareTo(tenure.getTimeEnd());
+
+				if (cmpStart >= 0 && cmpEnd <= 0) {
+					doc.setReleaseTime(releaseDate);
+				} else {
+					reAttr.addFlashAttribute("error", true);
+					reAttr.addFlashAttribute("errorMessage",
+							"Ngày ban hành phải thuộc khoảng thời gian trong năm đã chọn, vui lòng cập nhật lại");
+				}
+			} catch (Exception e) {}
+		}
 		
 		Integer num = UtilMethod.parseNumDoc(number);
 		if (num > 0) {
@@ -353,7 +370,8 @@ public class FlowController extends AbstractController {
 					
 					if(curUser.getUserName().equals(preTask.getAssignee())){	
 						List<Role> assignRole = dataService.findRolesByArrShortName(roles);
-						List<User> userList = dataService.findUserByArrRoleShortName(curUser.getOrgan().getOrganId(), roles);
+						List<User> userList = dataService.findUserByArrRoleShortName(curUser.getOrgan().getOrganId(),
+								roles, curUser, false);
 						model.addObject("isForward", true);
 						model.addObject("userList", userList);
 						model.addObject("assignRole", assignRole);
@@ -700,7 +718,7 @@ public class FlowController extends AbstractController {
 					//Người đăng nhập là người tiếp nhận văn bản
 					if (curUser.getUserName().equals(preTask.getAssignee())) {
 						List<Role> assignRole = dataService.findRolesByArrShortName(roles);
-						List<User> userList = dataService.findUserByArrRoleShortName(organ.getOrganId(), roles);
+						List<User> userList = dataService.findUserByArrRoleShortName(organ.getOrganId(), roles, curUser, true);
 					
 						model.addObject("isForward", true);
 						model.addObject("userList", userList);

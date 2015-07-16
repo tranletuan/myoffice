@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.myoffice.myapp.utils.UtilMethod;
+
 @Entity
 @Table(name = "tenure")
 public class Tenure {
@@ -66,4 +68,12 @@ public class Tenure {
 	public void setTimeEnd(Date timeEnd) {
 		this.timeEnd = timeEnd;
 	}	
+	
+	public String getTimeStartString() {
+		return UtilMethod.dateToString(timeStart, "dd-MM-yyyy");
+	}
+	
+	public String getTimeEndString() {
+		return UtilMethod.dateToString(timeEnd, "dd-MM-yyyy");
+	}
 }

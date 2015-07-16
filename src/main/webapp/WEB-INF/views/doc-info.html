@@ -13,6 +13,10 @@ xmlns:th="http://www.thymeleaf.org">
 	
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 
+	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datetimepicker.min.css}" />
+
+	<script type="text/javascript" th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+
 	<script type="text/javascript" th:src="@{/js/doc-info.js}" ></script>
 
 	<style type="text/css">
@@ -104,7 +108,7 @@ xmlns:th="http://www.thymeleaf.org">
 							<!-- tenure -->
 							<tr>
 								<th scope="row"><h4><span>Năm (Nhiệm kỳ) : </span></h4></th>
-								<td><h4 th:text="${doc.tenure.tenureName}" class="tenure" th:attr="data=${doc.tenure.tenureId}"></h4></td>
+								<td><h4 th:text="${doc.tenure.tenureName} + ' (Từ ngày : ' + ${doc.tenure.getTimeStartString()} + ' -> ' + ${doc.tenure.getTimeEndString()} + ')'" class="tenure" th:attr="data=${doc.tenure.tenureId}"></h4></td>
 							</tr>
 
 							<!-- numberSign -->
@@ -118,7 +122,7 @@ xmlns:th="http://www.thymeleaf.org">
 							<!-- releaseTime -->
 							<tr th:if="${doc.releaseTime}">
 								<th scope="row"><h4><span>Ngày ban hành : </span></h4></th>
-								<td><h4 th:text="${doc.releaseTime}" class="releaseTime"></h4></td>
+								<td><h4 th:text="${doc.getReleaseTimeString()}" class="releaseTime"></h4></td>
 							</tr>
 
 							<!-- privacyLevel -->

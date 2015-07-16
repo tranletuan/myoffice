@@ -135,9 +135,10 @@ public class StoreController extends AbstractController {
 	public ModelAndView searchDocIn(
 			@RequestParam(value = "docName", required = false) String docName,
 			@RequestParam(value = "epitome", required = false) String epitome,
+			@RequestParam(value = "number", required = false) String number,
 			@RequestParam(value = "docTypeId", required = false) Integer docTypeId,
 			@RequestParam(value = "organTypeId", required = false) Integer organTypeId,
-			@RequestParam(value = "number", required = false) String number,
+			@RequestParam(value = "numberSign", required = false) String numberSign,
 			@RequestParam(value = "department" , required = false) String department,
 			@RequestParam(value = "minDay", required = false) String minDay,
 			@RequestParam(value = "maxDay", required = false) String maxDay,
@@ -161,10 +162,10 @@ public class StoreController extends AbstractController {
 			if(minDayRec != null) minDayRecSet = UtilMethod.toDate(minDayRec, "dd-MM-yyyy");
 			if(maxDayRec != null) maxDayRecSet = UtilMethod.toDate(maxDayRec, "dd-MM-yyyy");
 		} catch(Exception e){}
-		
+
 		List<DocumentRecipient> docList = dataService.findCompletedDocIn(organ.getOrganId(), docName, epitome, number,
-				docTypeId, organTypeId, department, minDaySet, maxDaySet, numberRec, minDayRecSet, maxDayRecSet, null,
-				null);
+				docTypeId, organTypeId, numberSign, department, minDaySet, maxDaySet, numberRec, minDayRecSet,
+				maxDayRecSet, null, null);
 
 		UtilMethod.preparePagination(rowList, elemList, docList, model, null);
 		model.addObject("docList", docList);

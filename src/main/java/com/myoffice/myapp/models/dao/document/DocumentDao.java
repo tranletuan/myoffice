@@ -109,6 +109,6 @@ public interface DocumentDao {
 			String department, Date minDay, Date maxDay, Integer firstResult, Integer maxResult);
 
 	List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
-			Integer docTypeId, Integer organTypeId, String department, Date minDay, Date maxDay, Integer numberRec,
+			Integer docTypeId, Integer organTypeId, String numberSign, String department, Date minDay, Date maxDay, Integer numberRec,
 			Date minDayRec, Date maxDayRec, Integer firstResult, Integer maxResult);
 } 
