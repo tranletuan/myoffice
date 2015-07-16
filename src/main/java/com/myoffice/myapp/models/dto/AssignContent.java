@@ -44,6 +44,10 @@ public class AssignContent {
 	@JoinColumn(name = "document_id")
 	private Document reportDoc;
 	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "owner_id")
+	private User owner;
+	
 	public AssignContent() {
 		super();
 	}
@@ -99,6 +103,14 @@ public class AssignContent {
 	
 	public String getTimeEndString(){
 		return UtilMethod.dateToString(timeEnd, "dd-MM-yyyy");
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 	
 }

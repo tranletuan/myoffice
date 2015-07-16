@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Nhiệm vụ cá nhân</title>
+
+	<script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}" ></script>
+		
+	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
+	
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+	
+	<script type="text/javascript" th:src="@{/js/my-task.js}" ></script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="fragment/menu :: menu"></div>
+		
+		<div th:replace="fragment/message :: message"></div>
+
+		<div class="row">
+			<div class="col-sm-2"></div>
+			<div class="container-fluid col-sm-8">
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#release-task" aria-controls="release-task" role="tab" data-toggle="tab">Văn bản chờ</a></li>
+					<li role="presentation"><a href="#receive-task" aria-controls="receive-task" role="tab" data-toggle="tab">Nhiệm vụ</a></li>
+					<li role="presentation"><a href="#own-task" aria-controls="own-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_MANAGER')">Nhiệm vụ đã giao</a></li>
+				</ul>
+
+				<div class="tab-content">
+					<!-- release task -->
+					<div role="tabpanel" class="tab-pane active" id="release-task">
+					 Release Task
+					</div>
+
+					<!-- receive task -->
+					<div role="tabpanel" class="tab-pane" id="receive-task">
+					Receive Task
+					</div>
+
+					<!-- owner -->
+					<div role="tabpanel" class="tab-pane" id="own-task">
+					Owner
+					</div>
+
+				</div>
+			</div>
+			<div class="col-sm-2"></div>
+		</div>
+
+		<div th:repalce="fragment/footer :: footer"></div>
+	</div>
+</body>
+</html>

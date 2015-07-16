@@ -773,6 +773,7 @@ public class FlowController extends AbstractController {
 			assContent.setTimeStart(startDate);
 			assContent.setTimeEnd(endDate);
 			assContent.setContent(content);
+			assContent.setOwner(curUser);
 			docRec.setAssignContent(assContent);
 			dataService.saveDocRecipient(docRec);
 		}
@@ -969,4 +970,12 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 
+	//============MY TASK==================
+	
+	@RequestMapping(value = "/my_task")
+	public ModelAndView myTask() {
+		ModelAndView model = new ModelAndView("my-task");
+		
+		return model;
+	}
 }
