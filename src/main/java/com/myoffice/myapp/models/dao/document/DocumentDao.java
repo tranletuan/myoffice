@@ -84,7 +84,7 @@ public interface DocumentDao {
 	DocumentFile findDocFileById(Integer docFileId);
 	
 	//Document Recipient
-	void saveDocRecipient(DocumentRecipient docRec);
+	boolean saveDocRecipient(DocumentRecipient docRec);
 
 	DocumentRecipient findDocRecipient(Integer docId, Integer organId);
 	

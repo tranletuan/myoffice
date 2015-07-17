@@ -32,10 +32,10 @@ public class Document {
 	@Column(name = "title", length = 60)
 	private String title;
 	
-	@Column(name = "number_sign", length = 60, unique = true)
+	@Column(name = "number_sign", length = 60)
 	private String numberSign;
 	
-	@Column(name = "number", nullable = false)
+	@Column(name = "number")
 	private Integer number;
 	
 	@Column(name = "departments", length = 60)
@@ -66,8 +66,11 @@ public class Document {
 	@Column(name = "is_sended")
 	private boolean sended = false;
 	
-	@Column(name =" is_enabled")
-	private boolean isEnabled = true;
+	@Column(name = "is_enabled")
+	private boolean enabled = true;
+	
+	@Column(name = "note", columnDefinition="varchar(500)")
+	private String note;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "doc_type_id", nullable = false)
@@ -258,13 +261,23 @@ public class Document {
 		this.sended = sended;
 	}
 
-	public void setEnabled(boolean enabled) {
-		this.isEnabled = enabled;
-	}
-	
 	public boolean isEnabled() {
-		return isEnabled;
+		return enabled;
 	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	
 	
 	
 

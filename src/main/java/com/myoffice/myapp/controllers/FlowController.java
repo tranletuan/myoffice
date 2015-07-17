@@ -273,42 +273,10 @@ public class FlowController extends AbstractController {
 			dataService.saveDocument(doc);
 		}
 		
-		//SAVE FILE
-		if(file != null){
-			try {
-				DocumentFile docFile = new DocumentFile();
-				
-				//File Path
-				String filePath = DataConfig.DIR_SERVER
-						+ tenure.getTenureName() + File.separator
-						+ docType.getDocTypeName() + File.separator;
-				//File Name
-				String fileName = number + "-" + docType.getShortName() + "-"
-						+ organ.getOrganType().getShortName() + "-" + docName;
-				
-				String[] parts = file.getOriginalFilename().split("\\.");
-				fileName += "." + parts[parts.length - 1];
-				docFile.setFilePath(filePath);
+		// SAVE FILE
+		UtilMethod.saveDocFile(file, tenure, docType, number, organ.getOrganType().getShortName(), docName, docId,
+				dataService, doc);
 
-				if (docId != null && docId > 0) {
-					Integer version = dataService.findNewestDocFile(docId).getVersion() + 1;
-					fileName = "Ver" + version + "-" + fileName;
-					docFile.setFileName(fileName);
-					docFile.setDocument(doc);
-					docFile.setVersion(version);
-				} else {
-					fileName = "Ver1-" + fileName;
-					docFile.setFileName(fileName);
-					docFile.setDocument(doc);
-				}
-
-				dataService.saveDocFile(docFile);
-				dataService.upLoadFile(filePath, file, fileName);
-			} catch (Exception e) {
-				logger.error(e.getMessage());
-			}
-		}
-		
 		model.setViewName("redirect:doc_info/" + doc.getDocId());
 		return model;
 	}
@@ -592,7 +560,7 @@ public class FlowController extends AbstractController {
 		return dataService.findMaxDocRecNumber(tenureId, organId);
 	}
 	
-	@RequestMapping(value = "/user_list", produces = "text/html;charset=UTF-8")
+	/*@RequestMapping(value = "/user_list", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.OK)
 	public String getUserList(
@@ -616,7 +584,7 @@ public class FlowController extends AbstractController {
 			}
 		}
 		return result;
-	}
+	}*/
 	
 	@RequestMapping(value = "/receive_doc", method = RequestMethod.POST)
 	public ModelAndView receiveDoc(
@@ -656,15 +624,11 @@ public class FlowController extends AbstractController {
 		}
 
 		Date recTime = new Date();
-		logger.info(recTime.toString());
-		logger.info(receiveTime);
 		try {
 			recTime = UtilMethod.toDate(receiveTime, "dd-MM-yyyy");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
-		logger.info(recTime.toString());
 		
 		docRec.setNumber(num);
 		docRec.setReceiveTime(recTime);
@@ -688,7 +652,8 @@ public class FlowController extends AbstractController {
 		Organ organ = curUser.getOrgan();
 		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
 		Document doc = docRec.getDocument();
-		DocumentFile file = dataService.findDocFileById(doc.getDocId());
+		DocumentFile file = dataService.findNewestDocFile(doc.getDocId());
+
 		if(docRec.getAssignContent() != null) model.addObject("acId", docRec.getAssignContent().getContentId());
 		
 		if(flowUtil.isEnded(docRec.getProcessInstanceId())){
@@ -849,6 +814,161 @@ public class FlowController extends AbstractController {
 		model.addObject("success", true);
 		model.addObject("successMessage", "Hoàn thành");
 		
+		return model;
+	}
+	
+	@RequestMapping(value = "/create_doc_in")
+	public ModelAndView createDocIn() {
+		ModelAndView model = new ModelAndView("create-doc-in");
+		
+		List<DocumentType> docTypeList = dataService.findAllDocType();
+		List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
+		List<PrivacyLevel> privacyList = dataService.findAllPrivacyLevel();
+		List<Tenure> tenureList = dataService.findAllTenure(); 
+		
+		if(docTypeList.size() == 0) {
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, chưa cập nhật danh sách loại văn bản");
+			return model;
+		}
+		
+		if(emeList.size() == 0) {
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, chưa cập nhật danh sách mức độ khẩn");
+			return model;
+		}
+		
+
+		if(privacyList.size() == 0) {
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, chưa cập nhật danh sách mức độ mật");
+			return model;
+		}
+		
+		if(tenureList.size() == 0) {
+			model.addObject("error", true);
+			model.addObject("errorMessage", "Lỗi, chưa cập nhật danh sách năm/nhiệm kỳ");
+			return model;
+		}
+		
+		model.addObject("docTypeList", docTypeList);
+		model.addObject("emeList", emeList);
+		model.addObject("privacyList", privacyList);
+		model.addObject("tenureList", tenureList);
+		model.addObject("docId", 0);
+		
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "/save_doc_in")
+	public ModelAndView submitNewDocIn(
+			@ModelAttribute("docId") Integer docId, 
+			@RequestParam("title") String title,
+			@RequestParam("docName") String docName, 
+			@RequestParam("epitome") String epitome, 
+			@RequestParam("docTypeId") Integer docTypeId,
+			@RequestParam("note") String note,
+			@RequestParam("number") String number,
+			@RequestParam("numberSign") String numberSign,
+			@RequestParam(value = "departments", required = false) String departments,
+			@RequestParam("tenureId") Integer tenureId,
+			@RequestParam(value = "releaseTime", required = false) String releaseTime,
+			@RequestParam(value = "file", required = false) MultipartFile file,
+			@RequestParam("privacyId") Integer privacyId, 
+			@RequestParam("emeId") Integer emeId,
+			RedirectAttributes reAttr) {
+		ModelAndView model = new ModelAndView("redirect:error");
+		User curUser = securityService.getCurrentUser();
+		Organ organ = curUser.getOrgan();
+		
+		DocumentRecipient docRec = new DocumentRecipient();
+		Document doc = new Document();
+		DocumentType docType = dataService.findDocTypeById(docTypeId);
+		Tenure tenure = dataService.findTenureById(tenureId);
+		PrivacyLevel privacyLevel = dataService.findPrivacyLevelById(privacyId);
+		EmergencyLevel emeLevel = dataService.findEmergencyLevelById(emeId);
+		numberSign = number + "-" + numberSign;
+		if(departments != null && departments.trim().length() > 0) numberSign += "-" + departments;
+		
+		if(docId != null && docId > 0) {
+			docRec = dataService.findDocRecipient(docId, organ.getOrganId());
+			doc = docRec.getDocument();
+		}
+		
+		doc.setTitle(title);
+		doc.setDocName(docName);
+		doc.setEpitome(epitome);
+		doc.setDocType(docType);
+		doc.setNote(note);
+		doc.setNumberSign(numberSign);
+		doc.setTenure(tenure);
+		doc.setPrivacyLevel(privacyLevel);
+		doc.setEmergencyLevel(emeLevel);
+		
+		Integer num = UtilMethod.parseNumDoc(number);
+		if (num > 0) {
+			doc.setNumber(num);
+		}
+
+		if(releaseTime != null && releaseTime.trim().length() > 0) {
+			try {
+				Date releaseDate = UtilMethod.toDate(releaseTime, "dd-MM-yyyy");
+				int cmpStart = releaseDate.compareTo(tenure.getTimeStart());
+				int cmpEnd = releaseDate.compareTo(tenure.getTimeEnd());
+
+				if (cmpStart >= 0 && cmpEnd <= 0) {
+					doc.setReleaseTime(releaseDate);
+				} else {
+					reAttr.addFlashAttribute("error", true);
+					reAttr.addFlashAttribute("errorMessage",
+							"Ngày ban hành phải thuộc khoảng thời gian trong năm đã chọn, vui lòng cập nhật lại");
+				}
+			} catch (Exception e) {}
+		}
+		
+		docRec.setDocument(doc);
+		
+		//LƯU VĂN BẢN VÀ TẠO LUỒNG XỬ LÝ
+		if (docId == null || docId <= 0) {
+			try {
+				String procDefId = flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_IN, DataConfig.PROC_DEF_KEY_FLOW_IN);
+				String procInsId = flowUtil.startProcess(procDefId);
+				boolean checkSave = false;
+				
+				if (procDefId == " " || procInsId == null) {
+					model.setViewName("error");
+					model.addObject("errorMessage", "Luồng văn bản chưa được tạo, vui lòng liên hệ admin");
+					return model;
+				} else {
+					dataService.saveDocument(doc);
+					doc.setCompleted(true);
+					doc.setSended(true);
+					doc.setIncoming(true);
+					
+					docRec.setDocument(doc);
+					docRec.setProcessInstanceId(procInsId);
+					docRec.setOrgan(organ);
+					checkSave = dataService.saveDocRecipient(docRec);
+					doc = docRec.getDocument();
+				}
+				
+				if (procInsId != null && !checkSave) {
+					flowUtil.deleteProcessInstanceById(procInsId, "can not create new document");
+					model.setViewName("error");
+					model.addObject("errorMessage", "Lỗi, không thể tạo văn bản");
+					return model;
+				}
+			} catch (Exception e) {}
+		} else {
+			dataService.saveDocRecipient(docRec);
+		}
+		
+		//LƯU TẬP TIN
+		String []sign = numberSign.split("/");
+		UtilMethod.saveDocFile(file, tenure, docType, number, sign[sign.length -1], docName, docId, dataService, doc);
+		
+		model.setViewName("redirect:doc_in_info/" + doc.getDocId());
 		return model;
 	}
 	

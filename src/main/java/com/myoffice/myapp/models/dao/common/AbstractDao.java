@@ -15,12 +15,14 @@ public abstract class AbstractDao {
 		return sessionFactory.getCurrentSession();
 	}
 
-	public void persist(Object obj) {
+	public boolean persist(Object obj) {
 		try {
 			getSession().saveOrUpdate(obj);
+			return true;
 		} catch (Exception e) {
 			System.out.println("ERROR : can't persit object :  "
 					+ obj.getClass() + " cause of session : " + e.getMessage());
+			return false;
 		}
 	}
 

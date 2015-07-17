@@ -81,7 +81,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findDocumentBy(Integer organId, Integer tenureId,
-			Integer docTypeId, Boolean completed, Integer firstResult, Integer maxResult, Boolean isEnabled) {
+			Integer docTypeId, Boolean completed, Integer firstResult, Integer maxResult, Boolean enabled) {
 		Criteria criteria = getSession().createCriteria(Document.class);
 		criteria.createAlias("organ", "o");
 		criteria.createAlias("tenure", "t");
@@ -106,8 +106,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			}
 		}
 		
-		if(isEnabled != null){
-			criteria.add(Restrictions.and(Restrictions.eq("isEnabled", isEnabled)));
+		if(enabled != null){
+			criteria.add(Restrictions.and(Restrictions.eq("enabled", enabled)));
 		}
 		criteria.addOrder(Order.desc("docId"));
 		if (firstResult != null && maxResult != null) {
@@ -293,8 +293,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 
 	@Override
-	public void saveDocRecipient(DocumentRecipient docRec) {
-		persist(docRec);
+	public boolean saveDocRecipient(DocumentRecipient docRec) {
+		return persist(docRec);
 	}
 
 	@Override
@@ -329,7 +329,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.createAlias("organ", "o");
 		criteria.createAlias("document", "d");
 		criteria.add(Restrictions.eq("o.organId", organId));
-		criteria.add(Restrictions.and(Restrictions.eq("d.isEnabled", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
 		
 		if(tenureId != null && tenureId > 0) {
 			criteria.add(Restrictions.and(Restrictions.eq("d.tenure.tenureId", tenureId)));
@@ -391,7 +391,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			Criterion rest2 = Restrictions.eq("dt.docTypeId", docType.getDocTypeId());
 			Criterion rest3 = Restrictions.eq("completed", completed);
 			Criterion rest4 = Restrictions.eq("sended", completed);
-			Criterion rest5 = Restrictions.eq("isEnabled", true);
+			Criterion rest5 = Restrictions.eq("enabled", true);
 			
 			if(completed == false) {
 				criteria.add(Restrictions.and(rest1, rest2, Restrictions.or(rest3, rest4), rest5));
@@ -427,7 +427,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			Criterion rest2 = Restrictions.eq("d.docType.docTypeId", docType.getDocTypeId());
 			Criterion rest3 = Restrictions.eq("completed", completed);
 			Criterion rest4 = Restrictions.eq("d.completed", true);
-			Criterion rest5 = Restrictions.eq("d.isEnabled", true);
+			Criterion rest5 = Restrictions.eq("d.enabled", true);
 			
 			criteria.add(Restrictions.and(rest1, rest2, rest3, rest4, rest5));
 			
@@ -491,7 +491,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.add(Restrictions.eq("o.organId", organId));
 		criteria.add(Restrictions.eq("completed", true));
 		criteria.add(Restrictions.eq("sended", true));
-		criteria.add(Restrictions.eq("isEnabled", true));
+		criteria.add(Restrictions.eq("enabled", true));
 		
 		if(docName != null)
 			criteria.add(Restrictions.and(Restrictions.like("docName", "%" + docName + "%")));
@@ -526,7 +526,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.createAlias("document", "d");
 		criteria.createAlias("organ", "o");
 		criteria.add(Restrictions.eq("o.organId", organId));
-		criteria.add(Restrictions.eq("d.isEnabled", true));
+		criteria.add(Restrictions.eq("d.enabled", true));
 		criteria.add(Restrictions.eq("completed", true));
 		
 		if(docName != null)

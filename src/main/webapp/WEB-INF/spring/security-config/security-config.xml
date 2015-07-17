@@ -17,6 +17,7 @@
 		<intercept-url pattern="/flow/**" access="isAuthenticated()"/>
 		<intercept-url pattern="/flow/**" access="!hasRole('ROLE_ADMIN')"/>
 		<intercept-url pattern="/flow/send/**" access="hasRole('ROLE_OUTPUTER')"/>
+		<intercept-url pattern="/flow/create_doc_in/**" access="hasRole('ROLE_INPUTER')"/>
 		<intercept-url pattern="/flow/status/**" access="hasRole('ROLE_MANAGER')"/>
 		
 		<intercept-url pattern="/calendar/**" access="isAuthenticated()"/>
@@ -40,7 +41,7 @@
 				expired-url="/signin-time-out"/>
 		</session-management>
 		
-		<access-denied-handler error-page="/error" />
+		<access-denied-handler error-page="/home" />
 		
 		<!-- enable csrf protection -->
 		<csrf />

@@ -237,8 +237,8 @@ public class DataService {
 	}
 	
 	//Document Recipient
-	public void saveDocRecipient(DocumentRecipient docRec){
-		docDao.saveDocRecipient(docRec);
+	public boolean saveDocRecipient(DocumentRecipient docRec){
+		return docDao.saveDocRecipient(docRec);
 	}
 	
 	public Integer findMaxDocRecNumber(Integer tenureId, Integer organId){

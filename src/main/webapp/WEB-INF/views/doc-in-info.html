@@ -85,7 +85,10 @@ xmlns:th="http://www.thymeleaf.org">
 				<div th:replace="fragment/report-info :: report_info"></div>
 
 				<div class="panel panel-info">
-					<div class="panel-heading"><h4>Thông Tin Văn Bản Đến</h4></div>
+					<div class="panel-heading">
+						<h4>Thông Tin Văn Bản Đến</h4>
+						<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#doc-in-form" sec:authorize="hasRole('ROLE_INPUTER')" th:unless="${doc.organ}">Sửa đổi</button>
+					</div>
 					
 					<!-- assignee -->
 					<div th:replace="fragment/assignee :: assignee"></div>
@@ -124,35 +127,44 @@ xmlns:th="http://www.thymeleaf.org">
 
 						<!-- tenure -->
 						<tr>
-							<th scope="row"><h4><span>Nhiệm kỳ : </span></h4></th>
-							<td><h4 th:text="${doc.tenure.tenureName}" class="tenure" th:attr="data=${doc.tenure.tenureId}"></h4></td>
+							<th scope="row"><h4><span>Năm (Nhiệm kỳ) : </span></h4></th>
+							<td><h4 th:text="${doc.tenure.tenureName} + ' (Từ ngày : ' + ${doc.tenure.getTimeStartString()} + ' -> ' + ${doc.tenure.getTimeEndString()} + ')'" class="tenure" th:attr="data=${doc.tenure.tenureId}"></h4></td>
 							<p class="hidden rOrgan" th:attr="data=${docRec.organ.organId}"></p>
 						</tr>
 
 						<!-- organ -->
-						<tr>
+						<tr th:if="${doc.organ}">
 							<th scope="row"><h4><span>Cơ quan ban hành : </span></h4></th>
 							<td><h4 th:text="${doc.organ.organName}" class="organ"></h4></td>
 						</tr>
 
+						<!-- note -->
+						<tr th:if="${doc.note}">
+							<th scope="row"><h4><span>Cơ quan ban hành : </span></h4></th>
+							<td><h4 th:text="${doc.note}" class="note"></h4></td>
+						</tr>
 
+						<tr>
+							<th scope="row"><h4><span>Số và ký hiệu đến : </span></h4></th>
+							<td><h4 th:text="${doc.numberSign}" class="numberSign"></h4></td>
+						</tr>
 
 						<!-- releaseTime -->
-						<tr>
+						<tr th:if="${doc.releaseTime}">
 							<th scope="row"><h4><span>Ngày ban hành : </span></h4></th>
-							<td><h4 th:text="${doc.releaseTime}" class="releaseTime"></h4></td>
+							<td><h4 th:text="${doc.getReleaseTimeString()}" class="releaseTime"></h4></td>
+						</tr>
+
+						<!-- number -->
+						<tr th:if="${docRec.number}">
+							<th scope="row"><h4><span>Số nhận: </span></h4></th>
+							<td><h4 th:text="${docRec.number}" class="numberRec"></h4></td>
 						</tr>
 
 						<!-- receiveTime -->
 						<tr th:if="${docRec.receiveTime}">
 							<th scope="row"><h4><span>Ngày tiếp nhận : </span></h4></th>
-							<td><h4 th:text="${docRec.receiveTime}" class="receiveTime"></h4></td>
-						</tr>
-
-						<!-- number -->
-						<tr th:if="${docRec.number}">
-							<th scope="row"><h4><span>Số : </span></h4></th>
-							<td><h4 th:text="${doc.number}" class="number"></h4></td>
+							<td><h4 th:text="${docRec.getReceiveTimeString()}" class="receiveTime"></h4></td>
 						</tr>
 
 						<!-- privacyLevel -->
@@ -183,5 +195,8 @@ xmlns:th="http://www.thymeleaf.org">
 		
 		<div th:replace="fragment/footer :: footer"></div>
 	</div>
+
+	<div sec:authorize="hasRole('ROLE_INPUTER')" th:unless="${doc.organ}" th:replace="fragment/doc-in-form :: doc_in_form"></div>
+
 </body>
 </html>

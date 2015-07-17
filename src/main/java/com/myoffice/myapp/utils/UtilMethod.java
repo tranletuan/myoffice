@@ -1,5 +1,6 @@
 package com.myoffice.myapp.utils;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,12 +12,18 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.myoffice.myapp.controllers.FlowController;
 import com.myoffice.myapp.models.dto.Document;
+import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
+import com.myoffice.myapp.models.dto.DocumentType;
+import com.myoffice.myapp.models.dto.Organ;
+import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.User;
+import com.myoffice.myapp.models.service.DataConfig;
 import com.myoffice.myapp.models.service.DataService;
 import com.myoffice.myapp.support.ItemDocInWait;
 import com.myoffice.myapp.support.ItemDocOutWait;
@@ -141,5 +148,44 @@ public class UtilMethod {
 		}
 		
 		return docInList;
+	}
+	
+	public static void saveDocFile(MultipartFile file, Tenure tenure, DocumentType docType, String number,
+			String organType, String docName, Integer docId, DataService dataService, Document doc) {
+		
+		// SAVE FILE
+		if (file != null && doc.getDocId() != null) {
+			try {
+				DocumentFile docFile = new DocumentFile();
+
+				// File Path
+				String filePath = DataConfig.DIR_SERVER + tenure.getTenureName() + File.separator
+						+ docType.getDocTypeName() + File.separator;
+				// File Name
+				String fileName = doc.getDocId() + "-" + number + "-" + docType.getShortName() + "-" + organType
+						+ "-" + docName;
+
+				String[] parts = file.getOriginalFilename().split("\\.");
+				fileName += "." + parts[parts.length - 1];
+				docFile.setFilePath(filePath);
+
+				if (docId != null && docId > 0) {
+					Integer version = dataService.findNewestDocFile(docId).getVersion() + 1;
+					fileName = "Ver" + version + "-" + fileName;
+					docFile.setFileName(fileName);
+					docFile.setDocument(doc);
+					docFile.setVersion(version);
+				} else {
+					fileName = "Ver1-" + fileName;
+					docFile.setFileName(fileName);
+					docFile.setDocument(doc);
+				}
+
+				dataService.saveDocFile(docFile);
+				dataService.upLoadFile(filePath, file, fileName);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+		}
 	}
 }
