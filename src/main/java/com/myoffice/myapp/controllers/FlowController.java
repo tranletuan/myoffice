@@ -190,7 +190,11 @@ public class FlowController extends AbstractController {
 		doc.setOrgan(organ);
 		doc.setNumberSign(numberSign);
 		if(departments != null && departments.trim().length() > 0) doc.setDepartments(departments);
+		else doc.setDepartments(null);
+		
 		if(comment != null && comment.trim().length() > 0) doc.setComment(comment);
+		else doc.setComment(null);
+		
 		if(releaseTime != null && releaseTime.trim().length() > 0) {
 			try {
 				Date releaseDate = UtilMethod.toDate(releaseTime, "dd-MM-yyyy");
@@ -560,32 +564,6 @@ public class FlowController extends AbstractController {
 		return dataService.findMaxDocRecNumber(tenureId, organId);
 	}
 	
-	/*@RequestMapping(value = "/user_list", produces = "text/html;charset=UTF-8")
-	@ResponseBody
-	@ResponseStatus(value = HttpStatus.OK)
-	public String getUserList(
-			@RequestParam("roleId") Integer roleId){
-		User curUser = securityService.getCurrentUser();
-		Organ organ = curUser.getOrgan();
-		List<User> userList = dataService.findAllUsers(organ.getOrganId(), roleId);
-		String result = "";
-		
-		if (userList.size() > 0) {
-			result = "<select class=\"form-control\" name=\"userId\">";
-			for (User u : userList) {
-				result += "<option value=\"" + u.getUserId() + "\">";
-				if (u.getUserDetail() != null) {
-					result += u.getUserName();
-				} else {
-					result += u.getUserDetail().getFullName();
-				}
-
-				result += "</option>";
-			}
-		}
-		return result;
-	}*/
-	
 	@RequestMapping(value = "/receive_doc", method = RequestMethod.POST)
 	public ModelAndView receiveDoc(
 			@ModelAttribute("docId") Integer docId, 
@@ -718,6 +696,24 @@ public class FlowController extends AbstractController {
 					} 
 				}
 			}
+		}
+		
+		if(curUser.checkRoleByShortName("inputer")) {
+			List<DocumentType> docTypeList = dataService.findAllDocType();
+			List<Tenure> tenureList = dataService.findAllTenure();
+			List<PrivacyLevel> privacyList = dataService.findAllPrivacyLevel();
+			List<EmergencyLevel> emeList = dataService.findAllEmergencyLevel();
+			
+			model.addObject("docTypeList", docTypeList);
+			model.addObject("tenureList", tenureList);
+			model.addObject("privacyList", privacyList);
+			model.addObject("emeList", emeList);
+ 		}
+		
+		String[] numberSign = doc.getNumberSign().split("-");
+		if(numberSign.length >= 2) {
+			model.addObject("numberSign", numberSign[1]);
+			model.addObject("number", numberSign[0]);
 		}
 		
 		model.setViewName("doc-in-info");
@@ -857,7 +853,6 @@ public class FlowController extends AbstractController {
 		model.addObject("tenureList", tenureList);
 		model.addObject("docId", 0);
 		
-		
 		return model;
 	}
 	
@@ -905,30 +900,40 @@ public class FlowController extends AbstractController {
 		doc.setTenure(tenure);
 		doc.setPrivacyLevel(privacyLevel);
 		doc.setEmergencyLevel(emeLevel);
+		if(departments != null && departments.trim().length() > 0) doc.setDepartments(departments);
+		else doc.setDepartments(null);
 		
 		Integer num = UtilMethod.parseNumDoc(number);
 		if (num > 0) {
 			doc.setNumber(num);
 		}
-
+	
 		if(releaseTime != null && releaseTime.trim().length() > 0) {
 			try {
 				Date releaseDate = UtilMethod.toDate(releaseTime, "dd-MM-yyyy");
 				int cmpStart = releaseDate.compareTo(tenure.getTimeStart());
 				int cmpEnd = releaseDate.compareTo(tenure.getTimeEnd());
-
-				if (cmpStart >= 0 && cmpEnd <= 0) {
+				int cmpReceive = 0;
+				if(docRec.getReceiveTime() != null) {
+					cmpReceive = releaseDate.compareTo(docRec.getReceiveTime());
+				}
+				if (cmpStart >= 0 && cmpEnd <= 0 && cmpReceive <=0) {
 					doc.setReleaseTime(releaseDate);
 				} else {
 					reAttr.addFlashAttribute("error", true);
-					reAttr.addFlashAttribute("errorMessage",
-							"Ngày ban hành phải thuộc khoảng thời gian trong năm đã chọn, vui lòng cập nhật lại");
+					if (cmpReceive < 0) {
+						reAttr.addFlashAttribute("errorMessage",
+								"Lỗi, ngày ban hành phải thuộc khoảng thời gian trong năm đã chọn, vui lòng cập nhật lại");
+					} else {
+						reAttr.addFlashAttribute("errorMessage",
+								"Lỗi, ngày ban hành phải nhỏ hơn hoặc bằng tiếp nhận");
+					}
 				}
 			} catch (Exception e) {}
 		}
 		
 		docRec.setDocument(doc);
-		
+
 		//LƯU VĂN BẢN VÀ TẠO LUỒNG XỬ LÝ
 		if (docId == null || docId <= 0) {
 			try {
@@ -961,6 +966,7 @@ public class FlowController extends AbstractController {
 				}
 			} catch (Exception e) {}
 		} else {
+			dataService.saveDocument(doc);
 			dataService.saveDocRecipient(docRec);
 		}
 		

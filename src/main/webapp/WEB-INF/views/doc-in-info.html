@@ -87,7 +87,7 @@ xmlns:th="http://www.thymeleaf.org">
 				<div class="panel panel-info">
 					<div class="panel-heading">
 						<h4>Thông Tin Văn Bản Đến</h4>
-						<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#doc-in-form" sec:authorize="hasRole('ROLE_INPUTER')" th:unless="${doc.organ}">Sửa đổi</button>
+						<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#doc-in-form" sec:authorize="hasRole('ROLE_INPUTER')" th:unless="${doc.organ}" id="btn-change-doc-in">Sửa đổi</button>
 					</div>
 					
 					<!-- assignee -->
@@ -125,13 +125,6 @@ xmlns:th="http://www.thymeleaf.org">
 							<td><h4 th:text="${doc.docType.docTypeName}" class="docType" th:attr="data=${doc.docType.docTypeId}"></h4></td>
 						</tr>
 
-						<!-- tenure -->
-						<tr>
-							<th scope="row"><h4><span>Năm (Nhiệm kỳ) : </span></h4></th>
-							<td><h4 th:text="${doc.tenure.tenureName} + ' (Từ ngày : ' + ${doc.tenure.getTimeStartString()} + ' -> ' + ${doc.tenure.getTimeEndString()} + ')'" class="tenure" th:attr="data=${doc.tenure.tenureId}"></h4></td>
-							<p class="hidden rOrgan" th:attr="data=${docRec.organ.organId}"></p>
-						</tr>
-
 						<!-- organ -->
 						<tr th:if="${doc.organ}">
 							<th scope="row"><h4><span>Cơ quan ban hành : </span></h4></th>
@@ -144,9 +137,24 @@ xmlns:th="http://www.thymeleaf.org">
 							<td><h4 th:text="${doc.note}" class="note"></h4></td>
 						</tr>
 
+						<!-- tenure -->
+						<tr>
+							<th scope="row"><h4><span>Năm (Nhiệm kỳ) : </span></h4></th>
+							<td><h4 th:text="${doc.tenure.tenureName} + ' (Từ ngày : ' + ${doc.tenure.getTimeStartString()} + ' -> ' + ${doc.tenure.getTimeEndString()} + ')'" class="tenure" th:attr="data=${doc.tenure.tenureId}"></h4></td>
+							<p class="hidden rOrgan" th:attr="data=${docRec.organ.organId}"></p>
+						</tr>
+
 						<tr>
 							<th scope="row"><h4><span>Số và ký hiệu đến : </span></h4></th>
-							<td><h4 th:text="${doc.numberSign}" class="numberSign"></h4></td>
+							<td>
+								<h4>
+									<span th:text="${number}" class="number"></span>
+									<span th:if="${numberSign}">-</span>
+									<span th:text="${numberSign}" class="numberSign"></span>
+									<span th:if="${doc.departments}">-</span>
+									<span th:text="${doc.departments}" class="departments" th:if="${doc.departments}"></span>
+								</h4>
+							</td>
 						</tr>
 
 						<!-- releaseTime -->

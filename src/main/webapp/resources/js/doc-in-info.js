@@ -64,23 +64,35 @@
  		var report = $('#showReport').html();
  		$('#report').html(report);
  	});
-/*
- 	$('#selectRole').on('change', function (e) {
- 		var optionSelected = $("option:selected", this);
- 		var valueSelected = this.value;
- 		var URL = $('#userList').attr('data');
- 		$('#userList').remove();
 
- 		$.ajax({
- 			type : "GET",
- 			url : URL,
- 			data : {
- 				"roleId" : valueSelected
- 			}
- 			success : function(response){
- 				$('#userList').append(response);
- 			}
- 		});
- 	});*/
+ 	$('#btn-change-doc-in').click(function() {
+
+ 		var title = $('.title').html();
+ 		var docName = $('.docName').html();
+ 		var epitome = $('.epitome').html();
+ 		var docType = $('.docType').attr('data');
+ 		var tenure = $('.tenure').attr('data');
+ 		var number = $('.number').html();
+ 		var numberSign = $('.numberSign').html();
+ 		var departments = $('.departments').html();
+ 		var privacyLevel = $('.privacyLevel').attr('data');
+ 		var emergencyLevel = $('.emergencyLevel').attr('data');
+ 		var releaseTime = $('.releaseTime').html();
+ 		var note = $('.note').html();
+
+ 		$('#title').val(title);
+ 		$('#docName').val(docName);
+ 		$('#epitome').val(epitome);
+ 		$('#docType').val(docType);
+ 		$('#tenure').val(tenure);
+ 		$('#number').val(number);
+ 		$('#numberSign').val(numberSign);
+ 		$('#departments').val(departments);
+ 		$('#privacyId').val(privacyLevel);
+ 		$('#emeId').val(emergencyLevel);
+ 		$('#releaseTime').val(releaseTime);
+ 		$('#note').val(note);
+
+ 	});
 
  });

@@ -166,6 +166,9 @@ public class UtilMethod {
 						+ "-" + docName;
 
 				String[] parts = file.getOriginalFilename().split("\\.");
+				String tail = parts[parts.length - 1];
+				if(tail.trim().length() <= 0) return;
+				
 				fileName += "." + parts[parts.length - 1];
 				docFile.setFilePath(filePath);
 
