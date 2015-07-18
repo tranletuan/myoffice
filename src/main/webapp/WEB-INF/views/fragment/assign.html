@@ -4,21 +4,20 @@
 	<title></title>
 </head>
 <body>
-	<div class="panel panel-default" th:if="${isAssign}" th:fragment="assign">
+	<div class="panel panel-default" th:if="${isAssignee} or ${isOwner}" th:fragment="assign">
 		<div class="panel-heading"><h4>Chỉ đạo thực hiện</h4></div>
-		<div class="panel-body">
+		<div class="panel-body form-inline">
 			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#assign-form" id="btnAssign">
-				Bổ sung/Chỉnh sửa chỉ đạo
+				<span th:unless="${docRec.assignContent}">Chỉ đạo</span>
+				<span th:if="${docRec.assignContent}">Sửa đổi/Bổ sung chỉ đạo</span>
 			</button>
-			
-			<div th:if="${isCheckTask}">
-				<a type="button" class="btn btn-warning" href="#" th:href="@{/flow/complete/1/doc_in_info}" th:if="${docRec.assignContent}">Phân công</a>
 
-				<a type="button" class="btn btn-success" href="#" th:href="@{/flow/complete_save}">Hoàn thành</a>
-			</div>
+			<a type="button" class="btn btn-warning" href="#" th:href="@{/flow/complete/1/doc_in_info}" th:if="${docRec.assignContent} and ${isCheckTask}">Phân công</a>
+
+			<a type="button" class="btn btn-success" href="#" th:href="@{/flow/complete_save}" th:if="${isCheckTask}">Hoàn thành</a>
 		</div>
 
-		<div class="modal fade" id="assign-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal fade" id="assign-form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" th:if="${isAssignee} or ${isOwner}">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">

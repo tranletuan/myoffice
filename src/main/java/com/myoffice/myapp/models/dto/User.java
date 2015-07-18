@@ -41,6 +41,9 @@ public class User {
 
 	@Column(name = "description", length = 255)
 	private String description;
+	
+	@Column(name = "color", length = 60)
+	private String color;
 
 	// mapping
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -176,6 +179,14 @@ public class User {
 
 	public void setLevel(Level level) {
 		this.level = level;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 	
 }

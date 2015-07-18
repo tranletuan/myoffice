@@ -343,7 +343,7 @@ public class FlowController extends AbstractController {
 					if(curUser.getUserName().equals(preTask.getAssignee())){	
 						List<Role> assignRole = dataService.findRolesByArrShortName(roles);
 						List<User> userList = dataService.findUserByArrRoleShortName(curUser.getOrgan().getOrganId(),
-								roles, curUser, false);
+								roles, curUser, null);
 						model.addObject("isForward", true);
 						model.addObject("userList", userList);
 						model.addObject("assignRole", assignRole);
@@ -631,7 +631,8 @@ public class FlowController extends AbstractController {
 		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
 		Document doc = docRec.getDocument();
 		DocumentFile file = dataService.findNewestDocFile(doc.getDocId());
-
+		AssignContent assContent = docRec.getAssignContent();
+		
 		if(docRec.getAssignContent() != null) model.addObject("acId", docRec.getAssignContent().getContentId());
 		
 		if(flowUtil.isEnded(docRec.getProcessInstanceId())){
@@ -650,6 +651,29 @@ public class FlowController extends AbstractController {
 			String []roles = taskName[0].split(",");
 			
 			model.addObject("taskDescription", curTask.getDescription());
+	
+			//Tự động bổ sung tên người nhận nhiệm vụ
+			if(curTask != null && taskName[taskName.length - 1].equals("report")) {
+				String candidateName = null;
+				if(curTask.getAssignee() != null) candidateName = curTask.getAssignee();
+				else {
+					HistoricTaskInstance preCandidateTask = flowUtil
+							.getPreviousCompletedTaskWithName(docRec.getProcessInstanceId(), curTask.getName());
+					if(preCandidateTask != null)
+						candidateName = preCandidateTask.getAssignee();
+				}
+				
+				if(candidateName != null && !candidateName.equals(assContent.getCandidateName())) {
+					assContent.setCandidateName(candidateName);
+					dataService.saveAssignContent(assContent);
+				}
+			}
+			
+			//Tên người nhận nhiệm vụ
+			if(assContent != null && assContent.getCandidateName() != null) {
+				User candidate = dataService.findUserByName(assContent.getCandidateName());
+				model.addObject("candidate", candidate);
+			}
 			
 			//Khi hoàn thành task trước và chưa chuyển quyền
 			if (curTask.getAssignee() == null) {
@@ -661,8 +685,8 @@ public class FlowController extends AbstractController {
 					//Người đăng nhập là người tiếp nhận văn bản
 					if (curUser.getUserName().equals(preTask.getAssignee())) {
 						List<Role> assignRole = dataService.findRolesByArrShortName(roles);
-						List<User> userList = dataService.findUserByArrRoleShortName(organ.getOrganId(), roles, curUser, true);
-					
+						String cmpValue = taskName[taskName.length - 1].equals("check") ? null : "lt";
+						List<User> userList = dataService.findUserByArrRoleShortName(organ.getOrganId(), roles, curUser, cmpValue);			
 						model.addObject("isForward", true);
 						model.addObject("userList", userList);
 						model.addObject("assignRole", assignRole);
@@ -688,12 +712,15 @@ public class FlowController extends AbstractController {
 					model.addObject("isAccess", true);
 					
 					if(taskName[taskName.length - 1].equals("check")){
-						model.addObject("isAssign", true);
+						model.addObject("isAssignee", true);
 						model.addObject("isCheckTask", true);
+						model.addObject("isOwner", true);
 					} 
 					else if(taskName[taskName.length - 1].equals("report")){
 						model.addObject("isReport", true);
 					} 
+				} else if(assContent != null && assContent.getOwner().getUserId() == curUser.getUserId()){
+					model.addObject("isOwner", true);
 				}
 			}
 		}
@@ -736,10 +763,11 @@ public class FlowController extends AbstractController {
 			RedirectAttributes reAttr) throws ParseException{
 		ModelAndView model = new ModelAndView("redirect:/store/list/out/1");
 		if(docId < 0) return model;
-		AssignContent assContent = new AssignContent();
 		User curUser = securityService.getCurrentUser();
 		Organ organ = curUser.getOrgan();
 		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
+		AssignContent assContent = docRec.getAssignContent();
+		if(assContent == null) assContent = new AssignContent();
 		
 		Date startDate = UtilMethod.toDate(timeStart, "dd-MM-yyyy");
 		Date endDate = UtilMethod.toDate(timeEnd, "dd-MM-yyyy");
@@ -761,6 +789,7 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
+	
 	@RequestMapping(value = "/send_report", method = RequestMethod.POST)
 	public ModelAndView reportTask(
 			@ModelAttribute("docId") Integer docId,
@@ -779,6 +808,7 @@ public class FlowController extends AbstractController {
 		model.setViewName("redirect:/flow/doc_in_info/" + docId);
 		return model;
 	}
+	
 	
 	@RequestMapping(value = "/complete_save")
 	public ModelAndView completeDocIn(
@@ -812,6 +842,7 @@ public class FlowController extends AbstractController {
 		
 		return model;
 	}
+	
 	
 	@RequestMapping(value = "/create_doc_in")
 	public ModelAndView createDocIn() {
@@ -855,6 +886,7 @@ public class FlowController extends AbstractController {
 		
 		return model;
 	}
+	
 	
 	@RequestMapping(value = "/save_doc_in")
 	public ModelAndView submitNewDocIn(
@@ -978,6 +1010,7 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
+	
 	//=============WAITING DOC=============
 	@RequestMapping(value = "/wait_list/{type}")
 	public ModelAndView waitingPage(@PathVariable("type") String type) {
@@ -1010,6 +1043,7 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 
+	
 	@RequestMapping(value = "/wait_list/{type}/{docTypeId}")
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.OK)

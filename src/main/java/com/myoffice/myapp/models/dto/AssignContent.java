@@ -48,6 +48,9 @@ public class AssignContent {
 	@JoinColumn(name = "owner_id")
 	private User owner;
 	
+	@Column(name = "candidate_name")
+	private String candidateName;
+	
 	public AssignContent() {
 		super();
 	}
@@ -112,5 +115,14 @@ public class AssignContent {
 	public void setOwner(User owner) {
 		this.owner = owner;
 	}
+
+	public String getCandidateName() {
+		return candidateName;
+	}
+
+	public void setCandidateName(String candidateName) {
+		this.candidateName = candidateName;
+	}
+
 	
 }

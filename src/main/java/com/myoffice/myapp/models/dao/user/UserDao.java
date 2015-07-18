@@ -13,7 +13,7 @@ public interface UserDao {
 	
 	List<User> findAllUsers(Integer organId, Integer roleId);
 	
-	List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, User nUser, boolean checkValue);
+	List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, User nUser, String compareValue);
 	
 	void saveUser(User user);
 	

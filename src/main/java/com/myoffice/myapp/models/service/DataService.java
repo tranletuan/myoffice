@@ -93,8 +93,8 @@ public class DataService {
 	@Autowired
 	private UserDao userDao;
 	
-	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, User nUser, boolean checkValue){
-		return userDao.findUserByArrRoleShortName(organId, arrRoleShortName, nUser, checkValue);
+	public List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, User nUser, String compareValue){
+		return userDao.findUserByArrRoleShortName(organId, arrRoleShortName, nUser, compareValue);
 	}
 	
 	public List<User> findAllUsers(Integer organId, Integer roleId){
