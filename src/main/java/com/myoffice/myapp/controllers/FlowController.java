@@ -795,14 +795,14 @@ public class FlowController extends AbstractController {
 			reAttr.addFlashAttribute("error", true);
 			reAttr.addFlashAttribute("errorMessage", "Lỗi, không tồn tại file báo cáo");
 			return model;
-		} else {
+		} /*else {
 			String reportProcId = docRec.getAssignContent().getReportDoc().getProcessInstanceId();
 			if(!flowUtil.isEnded(reportProcId)){
 				reAttr.addFlashAttribute("error", true);
 				reAttr.addFlashAttribute("errorMessage", "Lỗi, file báo cáo chưa hoàn thành");
 				return model;
 			}
-		}
+		}*/
 		
 		docRec.setCompleted(true);
 		dataService.saveDocRecipient(docRec);
@@ -984,11 +984,14 @@ public class FlowController extends AbstractController {
 		ModelAndView model = new ModelAndView("wait");
 		User curUser = securityService.getCurrentUser();
 		Organ organ = curUser.getOrgan();
-
+		List<Integer> elemList = new ArrayList<Integer>();
+		List<Integer> rowList = new ArrayList<Integer>();
+		
 		if (type.equals("in")) {
 			List<DocTypeMenuItem> typeInList = dataService.findMenuDocIn(organ.getOrganId(), false, null);
 			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), null, null, false, 0, 9);
 			List<ItemDocInWait> docInList = UtilMethod.getListDocInWait(dataService, flowUtil, docList, null);
+			UtilMethod.preparePagination(rowList, elemList, docInList, model, null);
 			
 			model.addObject("typeInList", typeInList);
 			model.addObject("docList", docInList);
@@ -998,7 +1001,8 @@ public class FlowController extends AbstractController {
 			List<DocTypeMenuItem> typeOutList = dataService.findMenuDocOut(organ.getOrganId(), false, null);
 			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, null, false, 0, 9, true);
 			List<ItemDocOutWait> docOutList = UtilMethod.getListDocOutWait(dataService, flowUtil, docList, null);
-
+			UtilMethod.preparePagination(rowList, elemList, docOutList, model, null);
+			
 			model.addObject("typeOutList", typeOutList);
 			model.addObject("docList", docOutList);
 			model.addObject("out", true);
@@ -1043,6 +1047,17 @@ public class FlowController extends AbstractController {
 	@RequestMapping(value = "/my_task")
 	public ModelAndView myTask() {
 		ModelAndView model = new ModelAndView("my-task");
+		User curUser = securityService.getCurrentUser();
+		Organ organ = curUser.getOrgan();
+		
+		List<Document> docOutList = dataService.findDocumentBy(organ.getOrganId(), null, null, false, null, null, true);
+		List<DocumentRecipient> docInList = dataService.findDocRecipient(organ.getOrganId(), null, null, false, null, null);
+		
+		List<ItemDocOutWait> docOutWaitList = UtilMethod.getListDocOutWait(dataService, flowUtil, docOutList, curUser.getUserName());
+		List<ItemDocInWait> docInWaitList = UtilMethod.getListDocInWait(dataService, flowUtil, docInList, curUser.getUserName());
+		
+		model.addObject("docOutList", docOutWaitList);
+		model.addObject("docInList", docInWaitList);
 		
 		return model;
 	}

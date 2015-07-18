@@ -19,8 +19,9 @@
 
 <script type="text/javascript" th:src="@{/js/jquery.bootpag.min.js}" ></script>
 
+<!-- <link rel="stylesheet" type="text/css" th:href="@{/css/sticky-footer.css}"/>
+ -->
 </head>
-
 <body>
 	<div class="container-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
@@ -59,54 +60,13 @@
 							</div>
 						</th>
 						<td id="show-content">
-							<div class="list-group doc-group" th:if="${out}">
-								<div th:each="d : ${docList}" class="doc">
-									<a href="#" class="list-group-item panel panel-warning" th:href="@{/flow/doc_info/} + ${d.doc.docId}">
-										<div class="panel-heading">
-											<h4 class="list-group-item-heading" th:text="${d.doc.numberSign} + ' - ' + ${d.doc.docName}"></h4>
-										</div>
-
-										<div class="panel-body">
-											<p class="list-group-item-text p-doc" th:text="${d.doc.epitome}"></p>
-										</div>
-
-										<ul class="list-group">
-											<li class="list-group-item" th:if="${d.user}">
-												<span>Người giữ quyền : </span>
-												<strong th:text="${d.user.userDetail} ? 
-													${d.user.userDetail.fullName} + ' - ' + ${d.user.level.levelName} : 
-													${d.user.userName} + ' - ' + ${d.user.level.levelName}">
-												</strong>
-											</li>
-											<li class="list-group-item" th:unless="${d.user}">
-												<strong>Đã hoàn thành, chưa gửi</strong>
-											</li>
-										</ul>
-									</a>
-								</div>
-							</div>
-
-							<div class="list-group doc-group" th:if="${in}">
-								<div th:each="d : ${docList}" class="doc">
-									<a href="#" class="list-group-item panel panel-info" th:href="@{/flow/doc_in_info/} + ${d.docRec.document.docId}">
-										<div class="panel-heading">
-											<h4 class="list-group-item-heading" th:text="'Nhận số : ' + ${d.docRec.number} + ' - ' + ${d.docRec.getReceiveTimeString()}" th:if="${d.docRec.number}"></h4>
-											<h4 class="list-group-item-heading" th:unless="${d.docRec.number}">Chưa tiếp nhận</h4>
-											<h4 class="list-group-item-heading" th:text="'Đến số : ' + ${d.docRec.document.numberSign} + ' : ' + ${d.docRec.document.docName}"></h4>
-										</div>
-
-										<div class="panel-body">
-											<p class="list-group-item-text p-doc" th:text="${d.docRec.document.epitome}"></p>
-										</div>
-									</a> 
-								</div>
-							</div>
+							<div th:replace="fragment/wait-element :: wait_element"></div>
 						</td>
 					</tr>
 				</tbody>
 			</table>
-		</div>
-		<div th:replace="fragment/footer :: footer"></div>
+		</div>	
 	</div>
+	<div th:replace="fragment/footer :: footer"></div>
 </body>
 </html>

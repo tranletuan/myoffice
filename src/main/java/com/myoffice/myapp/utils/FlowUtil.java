@@ -11,6 +11,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
@@ -185,6 +186,21 @@ public class FlowUtil {
 		}
 		catch(ActivitiException e){
 			logger.error("PRE TASK : " + e.getMessage());
+			return null;
+		}
+	}
+	
+	public HistoricProcessInstance getProcessCompled(String processInstanceId) {
+		try {
+		HistoricProcessInstance preCompletedInstance = historyService.createHistoricProcessInstanceQuery()
+				.processInstanceId(processInstanceId)
+				.finished()
+				.singleResult();
+		if(preCompletedInstance != null) {
+			logger.info("Completed Process : " + preCompletedInstance.getName());
+		}
+		return preCompletedInstance;
+		} catch (ActivitiException e) {
 			return null;
 		}
 	}

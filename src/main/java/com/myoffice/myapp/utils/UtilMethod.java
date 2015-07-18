@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
@@ -33,6 +34,17 @@ public class UtilMethod {
 	private static final Logger logger = LoggerFactory
 			.getLogger(UtilMethod.class);
 
+	//Between two day
+	public static int betweenTwoDay(Date d1, Date d2) {
+		if(d1 == null || d2 == null) return -1;
+		if(d1.before(d2)) {
+			return (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+		} else {
+			return (int) ((d1.getTime() - d2.getTime()) / (1000 * 60 * 60 * 24));
+		}
+		
+	}
+	
 	//Covert String to Date
 	public static Date toDate(String dateString, String dateFormat) throws ParseException{
 	    DateFormat df = new SimpleDateFormat(dateFormat); 
@@ -87,6 +99,7 @@ public class UtilMethod {
 			User user = null;
 			Date taskTime = null;
 			boolean checkUser = false;
+			
 			if (!flowUtil.isEnded(doc.getProcessInstanceId())) {
 				Task task = flowUtil.getCurrentTask(doc.getProcessInstanceId());
 				if (task.getAssignee() == null) {
@@ -102,6 +115,11 @@ public class UtilMethod {
 					user = dataService.findUserByName(task.getAssignee());
 					taskTime = task.getCreateTime();
 					checkUser = true;
+				}
+			} else {
+				HistoricProcessInstance completedProc = flowUtil.getProcessCompled(doc.getProcessInstanceId());
+				if(completedProc != null) {
+					taskTime = completedProc.getEndTime();
 				}
 			}
 			

@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
 <body>
+<div th:fragment="wait_element">
 	<div id="content"></div>
 	<div id="page-selection" th:if="${rowList.size()} gt ${elemList.size()}"></div>
 	<div class="hidden" id="totalPage" th:attr="data=${rowList.size()}"></div>
@@ -33,6 +34,10 @@
 					<li class="list-group-item" th:unless="${docList[Index].user}">
 						<strong>Đã hoàn thành, chưa gửi</strong>
 					</li>
+					<li class="list-group-item" th:if="${docList[Index].duration >= 0}">
+						<span>Thời gian chờ :</span>
+						<strong th:text="${docList[Index].duration}"></strong> ngày
+					</li>
 				</ul>
 			</a>
 		</div>
@@ -59,11 +64,13 @@
 		var totalPage = $('#totalPage').attr('data');
 		$('#content').html($('#content-1').html());
 		$('#content').css('height', $(window).height() * 3 / 4);
+		$('#content').css('overflow-y', 'scroll');
+		
 		$(window).resize(function(){
 			var windowHeight = $(window).height() * 3 / 4;
 			$('#content').css('height', windowHeight );
 			$('#content').css('max-height', windowHeight);
-			$('#content').css('overflow-y', 'scroll');
+			
 		});
 
 
@@ -77,5 +84,6 @@
             	$("#content").removeClass('hidden');
             });
 	</script>
+</div>
 </body>
 </html>

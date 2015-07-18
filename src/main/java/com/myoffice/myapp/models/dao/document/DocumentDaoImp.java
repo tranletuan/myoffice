@@ -353,7 +353,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId,

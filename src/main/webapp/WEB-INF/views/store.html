@@ -23,12 +23,14 @@
 
 <script type="text/javascript" th:src="@{/js/jquery.bootpag.min.js}" ></script>
 
-
+<!-- <link rel="stylesheet" type="text/css" th:href="@{/css/sticky-footer.css}" />
+ -->
 </head>
 <body>
 <div class="container-fluid">
 	<div th:replace="fragment/menu :: menu"></div>
-	<div>
+	
+	<div id="content-container">
 		<table class="table">
 			<colgroup>
 				<col class="col-xs-3 col-md-2" />
@@ -114,6 +116,7 @@
 			</tbody>
 		</table>
 	</div>
+
 	<div th:replace="fragment/footer :: footer"></div>
 </div>
 </body>
