@@ -115,7 +115,7 @@
             head_th.bind("click", handler);
         }
         function init_select_tr_event() {
-            /*cur_table.find("tbody>tr").click(function(event) {
+            cur_table.find("tbody>tr").click(function(event) {
                 var table_tr_contextual_classes = ['active', 'success', 'info', 'warning', 'danger'];
                 var selected=$(this).hasClass("info");
                 var cur_tr = $(this);
@@ -136,7 +136,7 @@
                     });
                     $(this).addClass("info");
                 }
-            });*/
+            });
         }
         function set_header_status(head_th, type) {
             head_th.attr("sort_status", type);

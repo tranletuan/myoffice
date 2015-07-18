@@ -36,7 +36,7 @@ xmlns:th="http://www.thymeleaf.org">
 					<!-- release task -->
 					<div role="tabpanel" class="tab-pane active" id="release-task">
 						<div id="content-out"></div>
-						<div id="page-selection-out" th:if="${rowListDocOut.size() >  ${elemList.size()}"></div>
+						<div id="page-selection-out" th:if="${rowListDocOut.size()} >  ${elemList.size()}"></div>
 						<div class="hidden" id="totalPageDocOut" th:attr="data=${rowListDocOut.size()}"></div>
 
 						<!-- List document out -->

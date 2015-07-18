@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Test2</title>
+
+	<script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}" ></script>
+		
+	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
+	
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+	<script type="text/javascript" th:src="@{/js/jquery.table-sort.js}" ></script>
+
+	<script type="text/javascript" th:src="@{/js/jquery.bootpag.min.js}" ></script>
+</head>
+<body>
+<div class="container-fluid">
+	<div id="content"></div>
+	<div id="page-selection"></div>
+	<div class="hidden" id="totalPage" th:attr="data=${rowList.size()}"></div>
+
+    <div th:each="row : ${rowList}" th:attr="id='content-' + (${row}  + 1)" class="hidden row">
+        <div class="col-md-12">
+            <h2> table </h2>
+            <table class="table sort_table" th:attr="id='table-' + (${row}  + 1)">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+	                   <tr  th:each="elem : ${elemList}" th:with="Index=${row} * ${elemList.size()} + ${elem}" >
+	                   		<td th:if="${Index} lt ${testList.size()}" th:text="${Index}"><a href="https://google.com.vn"></a></td>
+	                   		<td th:if="${Index} lt ${testList.size()}" th:text="${testList[Index]}"></td>
+	                   </tr>
+                </tbody>
+            </table> 
+        </div>
+    </div>
+</div>
+<script>
+$(function(){
+    // jQuery methods go here...
+
+
+    var totalPage = $('#totalPage').attr('data');
+    $('#content').html($('#content-1').html());
+    $('#content').css('height', $(window).height() * 3 / 4);
+    $(window).resize(function(){
+    	var windowHeight = $(window).height() * 3 / 4;
+    	$('#content').css('height', windowHeight );
+    	$('#content').css('max-height', windowHeight);
+    	$('#content').css('overflow-y', 'scroll');
+    });
+
+
+    $('#page-selection').bootpag({
+    	total : totalPage,
+    	page : 1,
+    	maxVisible : 10
+    }).on("page", function(event, num){
+    	var idShow = '#content-' + num;
+            	$("#content").html($(idShow).html()); // some ajax content loading...
+            	$("#content").removeClass('hidden');
+        var tableShow = "#table-" + num;
+            	   $(tableShow).sort_table({
+            		"action" : "init"
+            	});
+            });
+
+    $("#table-1").sort_table({
+            		"action" : "init"
+     });
+ 
+});
+</script>
+</body>
+</html>

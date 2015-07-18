@@ -25,7 +25,7 @@ public class TestController extends AbstractController {
 	
 	@RequestMapping(value = "/test")
 	public ModelAndView pagination() {
-		ModelAndView model = new ModelAndView("test");
+		ModelAndView model = new ModelAndView("test/test2");
 		List<Integer> elemList = new ArrayList<Integer>();
 		List<Integer> rowList = new ArrayList<Integer>();	
 		List<String> testList = new ArrayList<String>();
