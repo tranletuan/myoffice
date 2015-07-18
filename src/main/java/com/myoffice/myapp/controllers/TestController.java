@@ -33,7 +33,7 @@ public class TestController extends AbstractController {
 			testList.add("Content : " + i);
 		}
 
-		UtilMethod.preparePagination(rowList, elemList, testList, model, null);
+		UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", testList, model, null);
 		
 		model.addObject("testList", testList);
 		return model;  

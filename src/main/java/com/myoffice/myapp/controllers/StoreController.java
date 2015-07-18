@@ -50,12 +50,17 @@ public class StoreController extends AbstractController {
 		model.addObject("organTypeList", organTypeList);
 		model.addObject("organ", organ);
 		
+		List<Integer> rowList = new ArrayList<Integer>();
+		List<Integer> elemList = new ArrayList<Integer>();
+		
 		if(type.equals("out")) {
 			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, null, true, 0, 9, true);
+			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docList, model, null);
 			model.addObject("docList", docList);
 			model.addObject("out", true);
 		} else {
 			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), null, null, true, 0, 9);
+			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docList, model, null);
 			model.addObject("docList", docList);
 			model.addObject("in", true);
 		}
@@ -79,13 +84,13 @@ public class StoreController extends AbstractController {
 		if (type.equals("out")) {
 			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), tenureId, docTypeId, true, null,
 					null, true);
-			UtilMethod.preparePagination(rowList, elemList, docList, model, null);
+			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docList, model, null);
 			model.addObject("docList", docList);
 			model.addObject("out", true);
 		} else {
 			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), tenureId, docTypeId,
 					true, null, null);
-			UtilMethod.preparePagination(rowList, elemList, docList, model, null);
+			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docList, model, null);
 			model.addObject("docList", docList);
 			model.addObject("in", true);
 		}
@@ -120,7 +125,7 @@ public class StoreController extends AbstractController {
 		
 		List<Document> docList = dataService.findCompletedDocOut(organ.getOrganId(), docName, epitome, number, docTypeId,
 				department, minDaySet, maxDaySet, null, null);
-		UtilMethod.preparePagination(rowList, elemList, docList, model, null);
+		UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docList, model, null);
 		model.addObject("docList", docList);
 		model.addObject("out", true);
 
@@ -167,7 +172,7 @@ public class StoreController extends AbstractController {
 				docTypeId, organTypeId, numberSign, department, minDaySet, maxDaySet, numberRec, minDayRecSet,
 				maxDayRecSet, null, null);
 
-		UtilMethod.preparePagination(rowList, elemList, docList, model, null);
+		UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docList, model, null);
 		model.addObject("docList", docList);
 		model.addObject("in", true);
 

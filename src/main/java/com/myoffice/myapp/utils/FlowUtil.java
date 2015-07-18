@@ -197,7 +197,7 @@ public class FlowUtil {
 				.finished()
 				.singleResult();
 		if(preCompletedInstance != null) {
-			logger.info("Completed Process : " + preCompletedInstance.getName());
+			logger.info("Completed Process : " + preCompletedInstance.getProcessDefinitionId());
 		}
 		return preCompletedInstance;
 		} catch (ActivitiException e) {

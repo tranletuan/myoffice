@@ -90,7 +90,8 @@
 						</div>
 					</th>
 					<td id="show-content">
-						<div class="list-group doc-group" th:if="${out}">
+						<div th:replace="fragment/store-element :: store_element"></div>
+						<!-- <div class="list-group doc-group" th:if="${out}">
 							<div th:each="doc : ${docList}" class="doc">
 								<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_info/} + ${doc.docId}">
 									<h4 class="list-group-item-heading" th:text="'Số : ' + ${doc.numberSign} + ' : ' + ${doc.docName}"></h4>
@@ -107,7 +108,7 @@
 									<p class="list-group-item-text p-doc" th:text="${docRec.document.epitome}"></p>
 								</a> 
 							</div>
-						</div>
+						</div> -->
 					</td>
 					<td>
 						<div th:replace="fragment/search :: search"></div>

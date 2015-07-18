@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
 <body>
+<div th:fragment="store_element">
 	<div id="content"></div>
 	<div id="page-selection" th:if="${rowList.size() > 1}"></div>
 	<div class="hidden" id="totalPage" th:attr="data=${rowList.size()}"></div>
@@ -13,9 +14,13 @@
 	<!-- List document out -->
 	<div th:each="row : ${rowList}" th:attr="id='content-' + (${row}  + 1)" class="hidden list-group doc-group" th:if="${out}">
 		<div th:each="elem : ${elemList}" th:with="Index=${row} * ${elemList.size()} + ${elem}" class="doc">
-			<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_info/} + ${docList[Index].docId}" th:if="${Index} lt ${docList.size()}">
-				<h4 class="list-group-item-heading" th:text="'Số : ' + ${docList[Index].numberSign} + ' : ' + ${docList[Index].docName}"></h4>
-				<p class="list-group-item-text p-doc" th:text="${docList[Index].epitome}"></p>
+			<a href="#" class="list-group-item panel panel-success" th:href="@{/flow/doc_info/} + ${docList[Index].docId}" th:if="${Index} lt ${docList.size()}">
+				<div class="panel-heading">	
+					<h4 class="list-group-item-heading" th:text="'Số : ' + ${docList[Index].numberSign} + ' : ' + ${docList[Index].docName}"></h4>
+				</div>
+				<div class="panel-body">
+					<p class="list-group-item-text p-doc" th:text="${docList[Index].epitome}"></p>
+				</div>
 			</a>
 		</div>
 	</div>
@@ -23,10 +28,16 @@
 	<!-- List document in -->
 	<div th:each="row : ${rowList}" th:attr="id='content-' + (${row}  + 1)" class="hidden list-group doc-group" th:if="${in}">
 		<div th:each="elem : ${elemList}" th:with="Index=${row} * ${elemList.size()} + ${elem}" class="doc">
-			<a href="#" class="list-group-item list-group-item-success" th:href="@{/flow/doc_in_info/} + ${docList[Index].document.docId}" th:if="${Index} lt ${docList.size()}">
-				<h4 class="list-group-item-heading" th:text="'Nhận số : ' + ${docList[Index].number} + ' - ' + ${docList[Index].getReceiveTimeString()}" th:if="${docList[Index].number}"></h4>
-				<h4 class="list-group-item-heading" th:text="'Đến số : ' + ${docList[Index].document.numberSign} + ' : ' + ${docList[Index].document.docName}"></h4>
-				<p class="list-group-item-text p-doc" th:text="${docList[Index].document.epitome}"></p>
+			<a href="#" class="list-group-item panel panel-success" th:href="@{/flow/doc_in_info/} + ${docList[Index].document.docId}" th:if="${Index} lt ${docList.size()}">
+				<div class="panel-heading">
+					<h4 class="list-group-item-heading" th:text="'Nhận số : ' + ${docList[Index].number} + ' - ' + ${docList[Index].getReceiveTimeString()}" th:if="${docList[Index].number}"></h4>
+					<h4 class="list-group-item-heading" th:text="'Đến số : ' + ${docList[Index].document.numberSign} + ' : ' + ${docList[Index].document.docName}"></h4>
+				</div>
+				
+				<div class="panel-body">
+					<p class="list-group-item-text p-doc" th:text="${docList[Index].document.epitome}"></p>
+				</div>
+			
 			</a> 
 		</div>
 	</div>
@@ -34,15 +45,6 @@
 	<script>
 		var totalPage = $('#totalPage').attr('data');
 		$('#content').html($('#content-1').html());
-		$('#content').css('height', $(window).height() * 3 / 4);
-		$(window).resize(function(){
-			var windowHeight = $(window).height() * 3 / 4;
-			$('#content').css('height', windowHeight );
-			$('#content').css('max-height', windowHeight);
-			$('#content').css('overflow-y', 'scroll');
-		});
-
-
 		$('#page-selection').bootpag({
 			total : totalPage,
 			page : 1,
@@ -53,5 +55,6 @@
             	$("#content").removeClass('hidden');
             });
 	</script>
+</div>
 </body>
 </html>

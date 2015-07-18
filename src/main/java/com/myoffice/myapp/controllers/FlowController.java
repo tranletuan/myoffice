@@ -991,7 +991,7 @@ public class FlowController extends AbstractController {
 			List<DocTypeMenuItem> typeInList = dataService.findMenuDocIn(organ.getOrganId(), false, null);
 			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), null, null, false, 0, 9);
 			List<ItemDocInWait> docInList = UtilMethod.getListDocInWait(dataService, flowUtil, docList, null);
-			UtilMethod.preparePagination(rowList, elemList, docInList, model, null);
+			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docInList, model, null);
 			
 			model.addObject("typeInList", typeInList);
 			model.addObject("docList", docInList);
@@ -1001,7 +1001,7 @@ public class FlowController extends AbstractController {
 			List<DocTypeMenuItem> typeOutList = dataService.findMenuDocOut(organ.getOrganId(), false, null);
 			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, null, false, 0, 9, true);
 			List<ItemDocOutWait> docOutList = UtilMethod.getListDocOutWait(dataService, flowUtil, docList, null);
-			UtilMethod.preparePagination(rowList, elemList, docOutList, model, null);
+			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docOutList, model, null);
 			
 			model.addObject("typeOutList", typeOutList);
 			model.addObject("docList", docOutList);
@@ -1025,7 +1025,7 @@ public class FlowController extends AbstractController {
 		if (type.equals("in")) {
 			List<DocumentRecipient> docList = dataService.findDocRecipient(organ.getOrganId(), null, docTypeId, false, null, null);
 			List<ItemDocInWait> docInList = UtilMethod.getListDocInWait(dataService, flowUtil, docList, null);
-			UtilMethod.preparePagination(rowList, elemList, docList, model, null);
+			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docList, model, null);
 			
 			model.addObject("docList", docInList);
 			model.addObject("in", true);
@@ -1033,7 +1033,7 @@ public class FlowController extends AbstractController {
 		} else if (type.equals("out")) { // flow out
 			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, docTypeId, false, null, null, true);
 			List<ItemDocOutWait> docOutList = UtilMethod.getListDocOutWait(dataService, flowUtil, docList, null);
-			UtilMethod.preparePagination(rowList, elemList, docOutList, model, null);
+			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docOutList, model, null);
 			
 			model.addObject("docList", docOutList);
 			model.addObject("out", true);
@@ -1049,6 +1049,8 @@ public class FlowController extends AbstractController {
 		ModelAndView model = new ModelAndView("my-task");
 		User curUser = securityService.getCurrentUser();
 		Organ organ = curUser.getOrgan();
+		List<Integer> elemListOut = new ArrayList<Integer>();
+		List<Integer> rowListOut = new ArrayList<Integer>();
 		
 		List<Document> docOutList = dataService.findDocumentBy(organ.getOrganId(), null, null, false, null, null, true);
 		List<DocumentRecipient> docInList = dataService.findDocRecipient(organ.getOrganId(), null, null, false, null, null);
@@ -1056,6 +1058,9 @@ public class FlowController extends AbstractController {
 		List<ItemDocOutWait> docOutWaitList = UtilMethod.getListDocOutWait(dataService, flowUtil, docOutList, curUser.getUserName());
 		List<ItemDocInWait> docInWaitList = UtilMethod.getListDocInWait(dataService, flowUtil, docInList, curUser.getUserName());
 		
+		
+		UtilMethod.preparePagination(rowListOut, "rowListOut", elemListOut, "elemListOut", docOutWaitList, model, null);
+	
 		model.addObject("docOutList", docOutWaitList);
 		model.addObject("docInList", docInWaitList);
 		

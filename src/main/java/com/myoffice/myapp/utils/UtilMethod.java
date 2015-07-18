@@ -70,7 +70,7 @@ public class UtilMethod {
 		return integer;
 	}
 	
-	public static void preparePagination(List<Integer> rowList, List<Integer> elemList, List infoList,
+	public static void preparePagination(List<Integer> rowList, String rowListName, List<Integer> elemList, String elemListName, List infoList,
 			ModelAndView model, Integer maxElementPerRow) {
 		int maxElem = 10;
 		if(maxElementPerRow != null) maxElem = maxElementPerRow;
@@ -86,8 +86,8 @@ public class UtilMethod {
 		}
 		
 
-		model.addObject("rowList", rowList);
-		model.addObject("elemList", elemList);
+		model.addObject(rowListName, rowList);
+		model.addObject(elemListName, elemList);
 	}
 	
 	public static List<ItemDocOutWait> getListDocOutWait(DataService dataService, FlowUtil flowUtil,

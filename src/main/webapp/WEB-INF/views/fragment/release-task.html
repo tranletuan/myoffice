@@ -3,28 +3,15 @@
 xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-	<title>Test2</title>
-
-	<script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}" ></script>
-		
-	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
-	
-	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-
-	<script type="text/javascript" th:src="@{/js/jquery.table-sort.js}" ></script>
-
-	<script type="text/javascript" th:src="@{/js/jquery.bootpag.min.js}" ></script>
 </head>
 <body>
 <div th:fragment="release_task">
     <div class="container-fluid">
     	<div id="contain-release"></div>
-    	<div id="page-selection-release"></div>
-    	<div class="hidden" id="total-page-release" th:attr="data=${rowList.size()}"></div>
+    	<div id="page-selection-release" th:if="${rowListOut.size() > 1}"></div>
+    	<div class="hidden" id="total-page-release" th:attr="data=${rowListOut.size()}"></div>
 
-        <div th:each="row : ${rowList}" th:attr="id='contain-release-' + (${row}  + 1)" class="hidden row">
+        <div th:each="row : ${rowListOut}" th:attr="id='contain-release-' + (${row}  + 1)" class="hidden row">
             <div>
                 <table class="table sort_table" th:attr="id='table-release-' + (${row}  + 1)">
                     <thead>
@@ -35,9 +22,9 @@ xmlns:th="http://www.thymeleaf.org">
                         </tr>
                     </thead>
                     <tbody>
-    	                   <tr  th:each="elem : ${elemList}" th:with="Index=${row} * ${elemList.size()} + ${elem}" >
+    	                   <tr  th:each="elem : ${elemListOut}" th:with="Index=${row} * ${elemListOut.size()} + ${elem}" >
     	                   		<td th:if="${Index} lt ${docOutList.size()}">
-                                    <a href="#" class="panel panel-warning" th:href="@{/flow/doc_info/} + ${docOutList[Index].doc.docId}">
+                                    <a href="#" class="list-group-item panel panel-warning" th:href="@{/flow/doc_info/} + ${docOutList[Index].doc.docId}">
                                         <div class="panel-heading">
                                             <h4 class="list-group-item-heading" th:text="${docOutList[Index].doc.numberSign} + ' - ' + ${docOutList[Index].doc.docName}"></h4>
                                         </div>
