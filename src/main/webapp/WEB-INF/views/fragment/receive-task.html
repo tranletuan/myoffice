@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+</head>
+<body>
+<div th:fragment="receive_task">
+    <div class="container-fluid">
+    	<div id="contain-receive"></div>
+    	<div id="page-selection-receive" th:if="${rowListReceive.size() > 1}"></div>
+    	<div class="hidden" id="total-page-receive" th:attr="data=${rowListReceive.size()}"></div>
+
+        <div th:each="row : ${rowListReceive}" th:attr="id='contain-receive-' + (${row}  + 1)" class="hidden row">
+            <div>
+                <table class="table sort_table" th:attr="id='table-receive-' + (${row}  + 1)">
+                    <thead>
+                        <tr>
+                            <th>Văn bản</th>
+                            <th>Thời gian chờ</th>
+                            <th>Mức độ khẩn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    	                   <tr  th:each="elem : ${elemListReceive}" th:with="Index=${row} * ${elemListReceive.size()} + ${elem}" >
+    	                   		<td th:if="${Index} lt ${docReceiveList.size()}">
+                                    <a href="#" class="list-group-item panel panel-warning" th:href="@{/flow/doc_in_info/} + ${docReceiveList[Index].docRec.document.docId}">
+                                        <div class="panel-heading">
+                                            <h4 class="list-group-item-heading" th:text="'Đến số : ' + ${docReceiveList[Index].docRec.document.numberSign} + ' : ' + ${docReceiveList[Index].docRec.document.docName}"></h4>
+                                        </div>
+
+                                        <div class="panel-body">
+                                            <p class="list-group-item-text p-doc" th:text="${docReceiveList[Index].docRec.document.epitome}"></p>
+                                        </div>
+                                    </a>
+                                </td>
+
+    	                   		<td th:if="${Index} lt ${docReceiveList.size()}">
+                                   <p th:text="${docReceiveList[Index].duration} + ' ngày'"></p>
+                                </td>
+
+                                <td th:if="${Index} lt ${docReceiveList.size()}">
+                                     <p th:text="${docReceiveList[Index].docRec.document.emergencyLevel.emeName}"></p>   
+                                </td>
+    	                   </tr>
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+    </div>
+    <script>
+        var total_page_receive = $('#total-page-receive').attr('data');
+        $('#contain-receive').html($('#contain-receive-1').html());
+
+        $('#page-selection-receive').bootpag({
+        	total : total_page_receive,
+        	page : 1,
+        	maxVisible : 10
+        }).on("page", function(event, num){
+        	var idShow = '#contain-receive-' + num;
+            $("#contain-receive").html($(idShow).html()); // some ajax contain-receive loading...
+            $("#contain-receive").removeClass('hidden');
+            var tableShow = "#table-receive-" + num;
+            $(tableShow).sort_table({
+                "action" : "init"
+            });
+        });
+
+        $("#table-receive-1").sort_table({
+            "action" : "init"
+        });
+    </script>
+</div>
+</body>
+</html>

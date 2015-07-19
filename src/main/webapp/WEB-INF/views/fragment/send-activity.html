@@ -49,11 +49,11 @@ xmlns:th="http://www.thymeleaf.org">
         </div>
     </div>
     <script>
-        var totalPageSendActivity = $('#total-page-send-activity').attr('data');
+        var total_page_send_activity = $('#total-page-send-activity').attr('data');
         $('#contain-send-activity').html($('#contain-send-activity-1').html());
 
         $('#page-selection-send-activity').bootpag({
-        	total : totalPageSendActivity,
+        	total : total_page_send_activity,
         	page : 1,
         	maxVisible : 10
         }).on("page", function(event, num){

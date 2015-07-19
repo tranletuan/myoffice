@@ -227,8 +227,12 @@ public class DataService {
 	}
 	
 	//NUMBER
-	public Integer findMaxNumber(Integer tenureId, Integer docTypeId, Integer organId, boolean incoming){
-		return docDao.findMaxNumber(tenureId, docTypeId, organId, incoming);
+	public Integer findMaxDocNumber(Integer tenureId, Integer docTypeId, Integer organId){
+		return docDao.findMaxDocNumber(tenureId, docTypeId, organId);
+	}
+	
+	public Integer findMaxDocRecNumber(Integer tenureId, Integer organId){
+		return docDao.findMaxDocRecNumber(tenureId, organId);
 	}
 	
 	public boolean isDocumentExist(Integer organId, String docPath){
@@ -240,10 +244,7 @@ public class DataService {
 		return docDao.saveDocRecipient(docRec);
 	}
 	
-	public Integer findMaxDocRecNumber(Integer tenureId, Integer organId){
-		return docDao.findMaxDocRecNumber(tenureId, organId);
-	}
-	
+
 	public DocumentRecipient findDocRecipient(Integer docId, Integer organId){
 		return docDao.findDocRecipient(docId, organId);
 	}

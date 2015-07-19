@@ -48,7 +48,7 @@ xmlns:th="http://www.thymeleaf.org">
 					</li>
 
 					<li role="presentation">
-						<a href="#receive-task" aria-controls="receive-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_INTPUTER')">Văn bản chờ nhận <span class="badge">0</span></a>
+						<a href="#receive-task" aria-controls="receive-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_INPUTER')">Văn bản chờ nhận <span class="badge" th:text="${docReceiveList.size()}">0</span></a>
 					</li>
 				</ul>
 
@@ -73,9 +73,9 @@ xmlns:th="http://www.thymeleaf.org">
 						<div th:replace="fragment/send-activity :: send_activity"></div>
 					</div>
 
-					<!-- send -->
+					<!-- receive -->
 					<div role="tabpanel" class="tab-pane" id="receive-task" sec:authorize="hasRole('ROLE_INPUTER')">
-					Sender
+						<div th:replace="fragment/receive-task :: receive_task"></div>
 					</div>
 
 				</div>

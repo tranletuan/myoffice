@@ -107,7 +107,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 
 	//DOCTYPE
-	//DocumentType
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentType> findAllDocType() {
@@ -139,7 +138,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 
 	
-	//EME
 	@Override
 	public EmergencyLevel findEmergencyLevelById(Integer emergencyLevelId) {
 		return (EmergencyLevel) getSession().get(EmergencyLevel.class,
@@ -190,7 +188,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 
 	//TENURE
 	
-	//TENURE
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Tenure> findAllTenure() {
@@ -231,28 +228,33 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 
 	
 	//NUMBER
-	@SuppressWarnings("unchecked")
 	@Override
-	public Integer findMaxNumber(Integer tenureId, Integer docTypeId,
-			Integer organId, boolean incoming) {
-		Query query = (Query) getSession()
-				.createQuery(
-						"SELECT number from Document where tenure_id=? and doc_type_id=? and "
-						+ "organ_id=? and incoming=? ORDER BY number DESC");
-		query.setParameter(0, tenureId);
-		query.setParameter(1, docTypeId);
-		query.setParameter(2, organId);
-		query.setParameter(3, incoming);
-		query.setMaxResults(1);
-		List<Integer> numbers = query.list();
-		if (query.list().size() > 0) {
-			return numbers.get(0) + 1;
-		}
-
-		return 1;
+	public Integer findMaxDocNumber(Integer tenureId, Integer docTypeId,
+			Integer organId) {
+		Criteria criteria = getSession().createCriteria(Document.class);
+		Criterion rest1 = Restrictions.eq("tenure.tenureId", tenureId);
+		Criterion rest2 = Restrictions.eq("docType.docTypeId", docTypeId);
+		Criterion rest3 = Restrictions.eq("organ.organId", organId);
+		Criterion rest4 = Restrictions.eq("incoming", false);
+		criteria.add(Restrictions.and(rest1, rest2, rest3, rest4));
+		criteria.setProjection(Projections.rowCount());
+		Long result = (Long) criteria.uniqueResult();
+		return result.intValue() + 1;
 	}
 
-	
+	@Override
+	public Integer findMaxDocRecNumber(Integer tenureId, Integer organId) {
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("document", "d");
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("d.tenure.tenureId", tenureId));
+		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
+		criteria.setProjection(Projections.rowCount());
+		Long result = (Long) criteria.uniqueResult();
+		return result.intValue();
+
+	}
+
 	@Override
 	public boolean isDocumentExist(Integer organId, String docPath) {
 		Query query = (Query)getSession().createQuery("select count(*) from Document where organ_id=? and document_path=?");
@@ -323,21 +325,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 
 	
-	@Override
-	public Integer findMaxDocRecNumber(Integer tenureId, Integer organId) {
-		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
-		criteria.createAlias("document", "d");
-		criteria.createAlias("organ", "o");
-		criteria.add(Restrictions.eq("d.tenure.tenureId", tenureId));
-		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
-		criteria.addOrder(Order.desc("number"));
-		criteria.setMaxResults(1);
-		DocumentRecipient docRec = (DocumentRecipient)criteria.uniqueResult();
-		if(docRec.getNumber() == null) return 1;
-		return (docRec.getNumber() + 1);
-	}
 
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findDocRecipient(Integer organId,
@@ -357,9 +345,9 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		if(completed != null)
 			criteria.add(Restrictions.and(Restrictions.eq("completed", completed)));
 		else {
-			Criterion rest1 = Restrictions.isEmpty("number");
 			Criterion rest2 = Restrictions.isNull("number");
-			criteria.add(Restrictions.and(Restrictions.or(rest1, rest2)));
+			Criterion rest1 = Restrictions.isNull("receiveTime");
+			criteria.add(Restrictions.and(rest1, rest2));
 		}
 			
 		

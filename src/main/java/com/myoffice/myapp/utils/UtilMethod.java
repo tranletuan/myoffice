@@ -103,6 +103,8 @@ public class UtilMethod {
 			
 			if (!flowUtil.isEnded(doc.getProcessInstanceId())) {
 				Task task = flowUtil.getCurrentTask(doc.getProcessInstanceId());
+				taskTime = task.getCreateTime();
+				
 				if (task.getAssignee() == null) {
 					HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(doc.getProcessInstanceId());
 					if (preTask != null) {
@@ -114,7 +116,6 @@ public class UtilMethod {
 					}
 				} else if(userName == null || (userName != null && userName.equals(task.getAssignee()))){
 					user = dataService.findUserByName(task.getAssignee());
-					taskTime = task.getCreateTime();
 					checkUser = true;
 				}
 			} else {
@@ -146,6 +147,7 @@ public class UtilMethod {
 			boolean checkUser = false;
 			if (!flowUtil.isEnded(docRec.getProcessInstanceId())) {
 				Task task = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
+				taskTime = task.getCreateTime();
 				
 				if (task.getAssignee() == null) {
 					HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(docRec.getProcessInstanceId());
@@ -158,7 +160,6 @@ public class UtilMethod {
 					}
 				} else if(userName == null || (userName != null && userName.equals(task.getAssignee()))){
 					user = dataService.findUserByName(task.getAssignee());
-					taskTime = task.getCreateTime();
 					checkUser = true;
 				}
 			}

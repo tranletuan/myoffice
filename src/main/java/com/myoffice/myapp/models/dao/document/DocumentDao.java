@@ -70,7 +70,9 @@ public interface DocumentDao {
 	void deleteTenure(Tenure tenure);
 	
 	//Number
-	Integer findMaxNumber(Integer tenureId, Integer docTypeId, Integer organId, boolean incoming);
+	Integer findMaxDocNumber(Integer tenureId, Integer docTypeId, Integer organId);
+	
+	Integer findMaxDocRecNumber(Integer tenureId, Integer organId);
 	
 	boolean isDocumentExist(Integer organId, String docPath);
 	
@@ -87,9 +89,7 @@ public interface DocumentDao {
 	boolean saveDocRecipient(DocumentRecipient docRec);
 
 	DocumentRecipient findDocRecipient(Integer docId, Integer organId);
-	
-	Integer findMaxDocRecNumber(Integer tenureId, Integer organId);
-	
+
 	List<DocumentRecipient> findDocRecipient(Integer organId, Integer tenureId, Integer docTypeId, Boolean completed, Integer firstResult, Integer maxResult);
 	
 	List<DocumentRecipient> findDocRecByAssignDate(Integer organId, Boolean completed, Date start, Date end);
