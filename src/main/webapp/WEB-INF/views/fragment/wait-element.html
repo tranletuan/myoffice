@@ -24,14 +24,14 @@
 				</div>
 
 				<ul class="list-group">
-					<li class="list-group-item" th:if="${docList[Index].user}">
+					<li class="list-group-item" th:if="${docList[Index].assignee}">
 						<span>Người giữ quyền : </span>
-						<strong th:text="${docList[Index].user.userDetail} ? 
-							${docList[Index].user.userDetail.fullName} + ' - ' + ${docList[Index].user.level.levelName} : 
-							${docList[Index].user.userName} + ' - ' + ${docList[Index].user.level.levelName}">
+						<strong th:text="${docList[Index].assignee.userDetail} ? 
+							${docList[Index].assignee.userDetail.fullName} + ' - ' + ${docList[Index].assignee.level.levelName} : 
+							${docList[Index].assignee.userName} + ' - ' + ${docList[Index].assignee.level.levelName}">
 						</strong>
 					</li>
-					<li class="list-group-item" th:unless="${docList[Index].user}">
+					<li class="list-group-item" th:unless="${docList[Index].assignee}">
 						<strong>Đã hoàn thành, chưa gửi</strong>
 					</li>
 					<li class="list-group-item" th:if="${docList[Index].duration >= 0}">
@@ -56,6 +56,20 @@
 				<div class="panel-body">
 					<p class="list-group-item-text p-doc" th:text="${docList[Index].docRec.document.epitome}"></p>
 				</div>
+
+				<ul class="list-group">
+					<li class="list-group-item" th:if="${docList[Index].assignee}">
+						<span>Người giữ quyền : </span>
+						<strong th:text="${docList[Index].assignee.userDetail} ? 
+							${docList[Index].assignee.userDetail.fullName} + ' - ' + ${docList[Index].assignee.level.levelName} : 
+							${docList[Index].assignee.userName} + ' - ' + ${docList[Index].assignee.level.levelName}">
+						</strong>
+					</li>
+					<li class="list-group-item" th:if="${docList[Index].duration >= 0}">
+						<span>Thời gian chờ :</span>
+						<strong th:text="${docList[Index].duration}"></strong> ngày
+					</li>
+				</ul>
 			</a> 
 		</div>
 	</div>

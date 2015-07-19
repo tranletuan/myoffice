@@ -11,13 +11,13 @@ import com.myoffice.myapp.utils.UtilMethod;
 public class ItemDocOutWait {
 
 	private Document doc;
-	private User user;
+	private User assignee;
 	private Date taskTime;
 	private int duration;
 	public ItemDocOutWait(Document doc, User user, Date taskTime) {
 		super();
 		this.doc = doc;
-		this.user = user;
+		this.assignee = user;
 		this.taskTime = taskTime;
 	}
 	
@@ -32,11 +32,13 @@ public class ItemDocOutWait {
 	public void setDoc(Document doc) {
 		this.doc = doc;
 	}
-	public User getUser() {
-		return user;
+
+	public User getAssignee() {
+		return assignee;
 	}
-	public void setUser(User user) {
-		this.user = user;
+
+	public void setAssignee(User assignee) {
+		this.assignee = assignee;
 	}
 
 	public Date getTaskTime() {

@@ -1032,7 +1032,7 @@ public class FlowController extends AbstractController {
 
 		} else if (type.equals("out")) {
 			List<DocTypeMenuItem> typeOutList = dataService.findMenuDocOut(organ.getOrganId(), false, null);
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, null, false, 0, 9, true);
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, null, false, false, 0, 9, true);
 			List<ItemDocOutWait> docOutList = UtilMethod.getListDocOutWait(dataService, flowUtil, docList, null);
 			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docOutList, model, null);
 			
@@ -1065,7 +1065,7 @@ public class FlowController extends AbstractController {
 			model.addObject("in", true);
 
 		} else if (type.equals("out")) { // flow out
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, docTypeId, false, null, null, true);
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, docTypeId, false, false, null, null, true);
 			List<ItemDocOutWait> docOutList = UtilMethod.getListDocOutWait(dataService, flowUtil, docList, null);
 			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docOutList, model, null);
 			
@@ -1083,18 +1083,52 @@ public class FlowController extends AbstractController {
 		ModelAndView model = new ModelAndView("my-task");
 		User curUser = securityService.getCurrentUser();
 		Organ organ = curUser.getOrgan();
+		
+		
+		
+	
+		
+		//Văn bản chờ xử lý
+		List<Document> docOutList = dataService.findDocumentBy(organ.getOrganId(), null, null, false, false, null, null, true);
+		List<ItemDocOutWait> docOutWaitList = UtilMethod.getListDocOutWait(dataService, flowUtil, docOutList, curUser.getUserName());
+		
 		List<Integer> elemListOut = new ArrayList<Integer>();
 		List<Integer> rowListOut = new ArrayList<Integer>();
-		
-		List<Document> docOutList = dataService.findDocumentBy(organ.getOrganId(), null, null, false, null, null, true);
-		List<DocumentRecipient> docInList = dataService.findDocRecipient(organ.getOrganId(), null, null, false, null, null);
-		
-		List<ItemDocOutWait> docOutWaitList = UtilMethod.getListDocOutWait(dataService, flowUtil, docOutList, curUser.getUserName());
-		List<ItemDocInWait> docInWaitList = UtilMethod.getListDocInWait(dataService, flowUtil, docInList, curUser.getUserName());
-		
-		
 		UtilMethod.preparePagination(rowListOut, "rowListOut", elemListOut, "elemListOut", docOutWaitList, model, null);
 	
+		//Văn bản được phân công nhiệm vụ
+		List<DocumentRecipient> docInList = dataService.findDocRecipient(organ.getOrganId(), null, null, false, null, null);
+		List<ItemDocInWait> docInWaitList = UtilMethod.getListDocInWait(dataService, flowUtil, docInList, curUser.getUserName());
+		
+		List<Integer> elemListIn = new ArrayList<Integer>();
+		List<Integer> rowListIn = new ArrayList<Integer>();
+		UtilMethod.preparePagination(rowListIn, "rowListIn", elemListIn, "elemListIn", docInWaitList, model, null);
+		
+		//Văn bản đã phân công nhiệm vụ
+		
+		//Văn bản chờ gửi
+		if(curUser.checkRoleByShortName("outputer")) {
+			List<Document> docSendList = dataService.findDocumentBy(organ.getOrganId(), null, null, true, false, null, null, true);
+			List<ItemDocOutWait> docSendWaitList = UtilMethod.getListDocOutWait(dataService, flowUtil, docSendList, null);
+			
+			List<Integer> elemListSend = new ArrayList<Integer>();
+			List<Integer> rowListSend = new ArrayList<Integer>();
+			UtilMethod.preparePagination(rowListSend, "rowListSend", elemListSend, "elemListSend", docSendWaitList, model, null);
+			model.addObject("docSendList", docSendWaitList);
+		}
+		
+		//Văn bản chờ nhận
+		if(curUser.checkRoleByShortName("inputer")) {
+			List<DocumentRecipient> docReceiveList = dataService.findDocRecipient(organ.getOrganId(), null, null, null, null, null);
+			List<ItemDocInWait> docReceiveWaitList = UtilMethod.getListDocInWait(dataService, flowUtil, docReceiveList, null);
+			
+			List<Integer> elemListReceive = new ArrayList<Integer>();
+			List<Integer> rowListReceive = new ArrayList<Integer>();
+			UtilMethod.preparePagination(rowListReceive, "rowListReceive", elemListReceive, "elemListReceive", docReceiveWaitList, model, null);
+			model.addObject("docReceiveList", docReceiveWaitList);
+		}
+		
+		
 		model.addObject("docOutList", docOutWaitList);
 		model.addObject("docInList", docInWaitList);
 		

@@ -77,48 +77,36 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		delete(doc);
 	}
 	
-	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Document> findDocumentBy(Integer organId, Integer tenureId,
-			Integer docTypeId, Boolean completed, Integer firstResult, Integer maxResult, Boolean enabled) {
+	public List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, Boolean completed,
+			Boolean sended, Integer firstResult, Integer maxResult, Boolean enabled) {
 		Criteria criteria = getSession().createCriteria(Document.class);
 		criteria.createAlias("organ", "o");
 		criteria.createAlias("tenure", "t");
 		criteria.createAlias("docType", "dt");
 		criteria.add(Restrictions.eq("o.organId", organId));
-		if(tenureId != null) {
+		if (tenureId != null)
 			criteria.add(Restrictions.and(Restrictions.eq("t.tenureId", tenureId)));
-		}
-		
-		if(docTypeId != null) {
-			criteria.add(Restrictions.and(Restrictions.eq("dt.docTypeId", docTypeId)));	
-		}
-
-		if(completed != null) {
-			Criterion rest1 = Restrictions.eq("completed", completed);
-			Criterion rest2 = Restrictions.eq("sended", completed);
-			
-			if(completed) {
-				criteria.add(Restrictions.and(rest1, rest2));
-			} else {
-				criteria.add(Restrictions.and(Restrictions.or(rest1, rest2)));
-			}
-		}
-		
-		if(enabled != null){
+		if (docTypeId != null)
+			criteria.add(Restrictions.and(Restrictions.eq("dt.docTypeId", docTypeId)));
+		if (completed != null)
+			criteria.add(Restrictions.and(Restrictions.eq("completed", completed)));
+		if (sended != null && completed != null)
+			criteria.add(Restrictions.and(Restrictions.eq("sended", sended)));
+		if (enabled != null)
 			criteria.add(Restrictions.and(Restrictions.eq("enabled", enabled)));
-		}
 		criteria.addOrder(Order.desc("docId"));
 		if (firstResult != null && maxResult != null) {
 			criteria.setFirstResult(firstResult);
 			criteria.setMaxResults(maxResult);
-		} 
+		}
 		
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 
+	//DOCTYPE
 	//DocumentType
 	@SuppressWarnings("unchecked")
 	@Override
@@ -128,11 +116,13 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
+	
 	@Override
 	public DocumentType findDocTypeById(Integer typeId) {
 		return (DocumentType) getSession().get(DocumentType.class, typeId);
 	}
 
+	
 	@Override
 	public void saveDocType(DocumentType docType) {
 		persist(docType);
@@ -148,24 +138,29 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
+	
+	//EME
 	@Override
 	public EmergencyLevel findEmergencyLevelById(Integer emergencyLevelId) {
 		return (EmergencyLevel) getSession().get(EmergencyLevel.class,
 				emergencyLevelId);
 	}
 
+	
 	@Override
 	public void saveEmergency(EmergencyLevel emergency) {
 		persist(emergency);
 		
 	}
 
+	
 	@Override
 	public void deleteEmergency(EmergencyLevel emergency) {
 		delete(emergency);
 	}
 
 	// =======PRIVACY LEVEL
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PrivacyLevel> findAllPrivacyLevel() {
@@ -174,22 +169,27 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
+	
 	@Override
 	public PrivacyLevel findPrivacyLevelById(Integer privacyLevelId) {
 		return (PrivacyLevel) getSession().get(PrivacyLevel.class,
 				privacyLevelId);
 	}
 
+	
 	@Override
 	public void savePrivacyLevel(PrivacyLevel privacy) {
 		persist(privacy);
 	}
 
+	
 	@Override
 	public void deletePrivacyLevel(PrivacyLevel privacy) {
 		delete(privacy);
 	}
 
+	//TENURE
+	
 	//TENURE
 	@SuppressWarnings("unchecked")
 	@Override
@@ -201,20 +201,24 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
+	
 	@Override
 	public Tenure findTenureById(Integer tenureId) {
 		return (Tenure)getSession().get(Tenure.class, tenureId);
 	}
 
+	
 	@Override
 	public void saveTenure(Tenure tenure) {
 		persist(tenure);
 	}
 
+	
 	@Override
 	public void deleteTenure(Tenure tenure) {
 		delete(tenure);
 	}
+	
 	
 	@Override
 	public Tenure findLastTenure() {
@@ -225,6 +229,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return (Tenure) criteria.uniqueResult();
 	}
 
+	
+	//NUMBER
 	@SuppressWarnings("unchecked")
 	@Override
 	public Integer findMaxNumber(Integer tenureId, Integer docTypeId,
@@ -246,6 +252,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return 1;
 	}
 
+	
 	@Override
 	public boolean isDocumentExist(Integer organId, String docPath) {
 		Query query = (Query)getSession().createQuery("select count(*) from Document where organ_id=? and document_path=?");
@@ -256,6 +263,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return false;
 	}
 
+	
+	//FILE
 	@Override
 	public DocumentFile findNewestDocFile(Integer docId) {
 		Criteria criteria = getSession().createCriteria(DocumentFile.class);
@@ -271,11 +280,13 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return null;
 	}
 
+	
 	@Override
 	public void saveDocFile(DocumentFile docFile) {
 		persist(docFile);
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentFile> findAllFile(Integer docId) {
@@ -287,16 +298,20 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
+	
 	@Override
 	public DocumentFile findDocFileById(Integer docFileId) {
 		return (DocumentFile) getSession().get(DocumentFile.class, docFileId);
 	}
 
+	
+	//DOC REC
 	@Override
 	public boolean saveDocRecipient(DocumentRecipient docRec) {
 		return persist(docRec);
 	}
 
+	
 	@Override
 	public DocumentRecipient findDocRecipient(Integer docId, Integer organId) {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
@@ -307,6 +322,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return (DocumentRecipient) criteria.uniqueResult(); 
 	}
 
+	
 	@Override
 	public Integer findMaxDocRecNumber(Integer tenureId, Integer organId) {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
@@ -321,6 +337,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return (docRec.getNumber() + 1);
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findDocRecipient(Integer organId,
@@ -331,17 +348,20 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.add(Restrictions.eq("o.organId", organId));
 		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
 		
-		if(tenureId != null && tenureId > 0) {
+		if(tenureId != null && tenureId > 0) 
 			criteria.add(Restrictions.and(Restrictions.eq("d.tenure.tenureId", tenureId)));
-		}
 		
-		if(docTypeId != null && docTypeId > 0) {
+		if(docTypeId != null && docTypeId > 0)
 			criteria.add(Restrictions.and(Restrictions.eq("d.docType.docTypeId", docTypeId)));
-		}
 				
-		if(completed != null) {
+		if(completed != null)
 			criteria.add(Restrictions.and(Restrictions.eq("completed", completed)));
+		else {
+			Criterion rest1 = Restrictions.isEmpty("number");
+			Criterion rest2 = Restrictions.isNull("number");
+			criteria.add(Restrictions.and(Restrictions.or(rest1, rest2)));
 		}
+			
 		
 		criteria.addOrder(Order.desc("receiveTime"));
 		if (firstResult != null && maxResult != null) {
@@ -353,6 +373,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId,
@@ -376,6 +397,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 	
 	//DOCTYPE MENU
+	
+	//TYPE MENU
 	@Override
 	public List<DocTypeMenuItem> findMenuDocOut(Integer organId, boolean completed, Integer tenureId) {
 		List<DocumentType> docTypeList = findAllDocType();
@@ -412,6 +435,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 
 	//IN
+	
 	@Override
 	public List<DocTypeMenuItem> findMenuDocIn(Integer organId, boolean completed, Integer tenureId) {
 		List<DocumentType> docTypeList = findAllDocType();
@@ -444,6 +468,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 	
 	//TENURE MENU
+	
+	//TENURE MENU
 	@Override
 	public List<TenureMenuItem> findMenuTenureOut(Integer organId) {
 		List<TenureMenuItem> tenureItemList = new ArrayList<TenureMenuItem>();
@@ -462,6 +488,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return tenureItemList;
 	}
 
+	
 	@Override
 	public List<TenureMenuItem> findMenuTenureIn(Integer organId) {
 		List<TenureMenuItem> tenureItemList = new ArrayList<TenureMenuItem>();
@@ -481,6 +508,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 
 	//STORE
+	
+	//SEARCH
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findCompletedDocOut(Integer organId, String docName, String epitome, String number,
@@ -516,6 +545,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
@@ -562,14 +592,5 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

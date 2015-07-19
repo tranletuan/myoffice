@@ -29,7 +29,7 @@ public interface DocumentDao {
 	
 	void deleteDocument(Document doc);
 	
-	List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, Boolean completed,
+	List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, Boolean completed, Boolean sended,
 			Integer firstResult, Integer maxResult, Boolean enabled);
 	
 	//DocumentType
@@ -111,4 +111,6 @@ public interface DocumentDao {
 	List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
 			Integer docTypeId, Integer organTypeId, String numberSign, String department, Date minDay, Date maxDay, Integer numberRec,
 			Date minDayRec, Date maxDayRec, Integer firstResult, Integer maxResult);
+	
+	//MY TASK
 } 

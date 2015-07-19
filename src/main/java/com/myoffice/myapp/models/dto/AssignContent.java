@@ -51,6 +51,9 @@ public class AssignContent {
 	@Column(name = "candidate_name")
 	private String candidateName;
 	
+	@Column(name = "progress", length = 2)
+	private Integer progress = 0;
+	
 	public AssignContent() {
 		super();
 	}

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.myoffice.myapp.controllers.FlowController;
+import com.myoffice.myapp.models.dto.AssignContent;
 import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
@@ -124,11 +125,11 @@ public class UtilMethod {
 			}
 			
 			if (userName == null || checkUser == true) {
-				ItemDocOutWait docInfo = new ItemDocOutWait();
-				docInfo.setDoc(doc);
-				docInfo.setUser(user);
-				docInfo.setTaskTime(taskTime);
-				docOutList.add(docInfo);
+				ItemDocOutWait item = new ItemDocOutWait();
+				item.setDoc(doc);
+				item.setAssignee(user);
+				item.setTaskTime(taskTime);
+				docOutList.add(item);
 			}
 		}
 		
@@ -141,7 +142,7 @@ public class UtilMethod {
 		
 		for (DocumentRecipient docRec : docList) {
 			User user = null;
-			
+			Date taskTime = null;
 			boolean checkUser = false;
 			if (!flowUtil.isEnded(docRec.getProcessInstanceId())) {
 				Task task = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
@@ -151,17 +152,36 @@ public class UtilMethod {
 					if (preTask != null) {
 						if (userName == null || (userName != null && userName.equals(preTask.getAssignee()))) {
 							user = dataService.findUserByName(preTask.getAssignee());
+							taskTime = preTask.getCreateTime();
 							checkUser = true;
 						}
 					}
 				} else if(userName == null || (userName != null && userName.equals(task.getAssignee()))){
 					user = dataService.findUserByName(task.getAssignee());
+					taskTime = task.getCreateTime();
 					checkUser = true;
 				}
 			}
 			
 			if (userName == null || checkUser == true) {
-				docInList.add(new ItemDocInWait(docRec, user));
+				User owner = null;
+				User candidate = null;
+				
+				if(docRec.getAssignContent() != null) {
+					AssignContent assContent = docRec.getAssignContent();
+					owner = assContent.getOwner();
+					if(assContent.getCandidateName() != null) {
+						candidate = dataService.findUserByName(assContent.getCandidateName());
+					}
+				}
+				
+				ItemDocInWait item = new ItemDocInWait();
+				item.setDocRec(docRec);
+				item.setAssignee(user);
+				item.setOwner(owner);
+				item.setCandidate(candidate);
+				item.setTaskTime(taskTime);
+				docInList.add(item);
 			}
 		}
 		

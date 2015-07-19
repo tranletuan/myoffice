@@ -54,7 +54,7 @@ public class StoreController extends AbstractController {
 		List<Integer> elemList = new ArrayList<Integer>();
 		
 		if(type.equals("out")) {
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, null, true, 0, 9, true);
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), null, null, true, true, 0, 9, true);
 			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docList, model, null);
 			model.addObject("docList", docList);
 			model.addObject("out", true);
@@ -82,7 +82,7 @@ public class StoreController extends AbstractController {
 		List<Integer> rowList = new ArrayList<Integer>();	
 
 		if (type.equals("out")) {
-			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), tenureId, docTypeId, true, null,
+			List<Document> docList = dataService.findDocumentBy(organ.getOrganId(), tenureId, docTypeId, true, true, null,
 					null, true);
 			UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docList, model, null);
 			model.addObject("docList", docList);

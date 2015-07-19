@@ -31,11 +31,25 @@ xmlns:th="http://www.thymeleaf.org">
 			
 			<div class="container-fluid col-sm-10">
 				<ul class="nav nav-tabs" role="tablist">
-					<li role="presentation" class="active"><a href="#release-task" aria-controls="release-task" role="tab" data-toggle="tab">Văn bản chờ</a></li>
-					<li role="presentation"><a href="#assgin-task" aria-controls="receive-task" role="tab" data-toggle="tab">Nhiệm vụ được giao</a></li>
-					<li role="presentation"><a href="#own-task" aria-controls="own-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_MANAGER')">Nhiệm vụ đã giao</a></li>
-					<li role="presentation"><a href="#send-task" aria-controls="own-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_OUTPUTER')">Văn bản chờ gửi</a></li>
-					<li role="presentation"><a href="#receive-task" aria-controls="own-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_INTPUTER')">Văn bản chờ nhận</a></li>
+					<li role="presentation" class="active">
+						<a href="#release-task" aria-controls="release-task" role="tab" data-toggle="tab">Văn bản chờ <span class="badge" th:text="${docOutList.size()}">0</span></a>
+					</li>
+
+					<li role="presentation">
+						<a href="#assgin-task" aria-controls="assgin-task" role="tab" data-toggle="tab">Nhiệm vụ được giao <span class="badge">0</span></a>
+					</li>
+
+					<li role="presentation">
+						<a href="#own-task" aria-controls="own-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_MANAGER')">Nhiệm vụ đã giao <span class="badge">0</span></a>
+					</li>
+
+					<li role="presentation">
+						<a href="#send-activity" aria-controls="send-activity" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_OUTPUTER')">Văn bản chờ gửi <span class="badge" th:text="${docSendList.size()}">0</span></a>
+					</li>
+
+					<li role="presentation">
+						<a href="#receive-task" aria-controls="receive-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_INTPUTER')">Văn bản chờ nhận <span class="badge">0</span></a>
+					</li>
 				</ul>
 
 				<div class="tab-content">
@@ -44,7 +58,7 @@ xmlns:th="http://www.thymeleaf.org">
 						<div th:replace="fragment/release-task :: release_task"></div>
 					</div>
 
-					<!-- receive task -->
+					<!-- assgin task -->
 					<div role="tabpanel" class="tab-pane" id="assgin-task">
 					Receive Task
 					</div>
@@ -55,8 +69,8 @@ xmlns:th="http://www.thymeleaf.org">
 					</div>
 
 					<!-- send -->
-					<div role="tabpanel" class="tab-pane" id="send-task" sec:authorize="hasRole('ROLE_OUTPUTER')">
-					Sender
+					<div role="tabpanel" class="tab-pane" id="send-activity" sec:authorize="hasRole('ROLE_OUTPUTER')">
+						<div th:replace="fragment/send-activity :: send_activity"></div>
 					</div>
 
 					<!-- send -->

@@ -36,7 +36,7 @@ xmlns:th="http://www.thymeleaf.org">
                                 </td>
 
     	                   		<td th:if="${Index} lt ${docOutList.size()}">
-                                   <p th:text="${docOutList[Index].duration}"></p>
+                                   <p th:text="${docOutList[Index].duration} + ' ngày'"></p>
                                 </td>
 
                                 <td th:if="${Index} lt ${docOutList.size()}">

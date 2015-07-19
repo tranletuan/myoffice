@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+</head>
+<body>
+<div th:fragment="send_activity">
+    <div class="container-fluid">
+    	<div id="contain-send-activity"></div>
+    	<div id="page-selection-send-activity" th:if="${rowListSend.size() > 1}"></div>
+    	<div class="hidden" id="total-page-send-activity" th:attr="data=${rowListSend.size()}"></div>
+
+        <div th:each="row : ${rowListSend}" th:attr="id='contain-send-activity-' + (${row}  + 1)" class="hidden row">
+            <div>
+                <table class="table sort_table" th:attr="id='table-send-activity-' + (${row}  + 1)">
+                    <thead>
+                        <tr>
+                            <th>Văn bản</th>
+                            <th>Thời gian chờ</th>
+                            <th>Mức độ khẩn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    	                   <tr  th:each="elem : ${elemListSend}" th:with="Index=${row} * ${elemListSend.size()} + ${elem}" >
+    	                   		<td th:if="${Index} lt ${docSendList.size()}">
+                                    <a href="#" class="list-group-item panel panel-warning" th:href="@{/flow/doc_info/} + ${docSendList[Index].doc.docId}">
+                                        <div class="panel-heading">
+                                            <h4 class="list-group-item-heading" th:text="${docSendList[Index].doc.numberSign} + ' - ' + ${docSendList[Index].doc.docName}"></h4>
+                                        </div>
+
+                                        <div class="panel-body">
+                                            <p class="list-group-item-text p-doc" th:text="${docSendList[Index].doc.epitome}"></p>
+                                        </div>
+                                    </a>
+                                </td>
+
+    	                   		<td th:if="${Index} lt ${docSendList.size()}">
+                                   <p th:text="${docSendList[Index].duration} + ' ngày'"></p>
+                                </td>
+
+                                <td th:if="${Index} lt ${docSendList.size()}">
+                                     <p th:text="${docSendList[Index].doc.emergencyLevel.emeName}"></p>   
+                                </td>
+    	                   </tr>
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+    </div>
+    <script>
+        var totalPageSendActivity = $('#total-page-send-activity').attr('data');
+        $('#contain-send-activity').html($('#contain-send-activity-1').html());
+
+        $('#page-selection-send-activity').bootpag({
+        	total : totalPageSendActivity,
+        	page : 1,
+        	maxVisible : 10
+        }).on("page", function(event, num){
+        	var idShow = '#contain-send-activity-' + num;
+            $("#contain-send-activity").html($(idShow).html()); // some ajax contain-send-activity loading...
+            $("#contain-send-activity").removeClass('hidden');
+            var tableShow = "#table-send-activity-" + num;
+            $(tableShow).sort_table({
+                "action" : "init"
+            });
+        });
+
+        $("#table-send-activity-1").sort_table({
+            "action" : "init"
+        });
+    </script>
+</div>
+</body>
+</html>

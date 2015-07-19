@@ -153,8 +153,8 @@ public class DataService {
 	}
 	
 	public List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, 
-			Boolean completed, Integer firstResult, Integer maxResult, Boolean enabled){
-		return docDao.findDocumentBy(organId, tenureId, docTypeId, completed, firstResult, maxResult, enabled);
+			Boolean completed, Boolean sended, Integer firstResult, Integer maxResult, Boolean enabled){
+		return docDao.findDocumentBy(organId, tenureId, docTypeId, completed, sended, firstResult, maxResult, enabled);
 	}
 	
 	//DOCUMENT TYPE
@@ -169,7 +169,6 @@ public class DataService {
 	public void saveDocType(DocumentType docType){
 		docDao.saveDocType(docType);
 	}
-	
 	
 	
 	//EMERGENCY LEVEL
