@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+</head>
+<body>
+<div th:fragment="own_task">
+    <div class="container-fluid">
+    	<div id="contain-owner"></div>
+    	<div id="page-selection-owner" th:if="${rowListOwner.size() > 1}"></div>
+    	<div class="hidden" id="total-page-owner" th:attr="data=${rowListOwner.size()}"></div>
+
+        <div th:each="row : ${rowListOwner}" th:attr="id='contain-owner-' + (${row}  + 1)" class="hidden row">
+            <div>
+                <table class="table sort_table" th:attr="id='table-owner-' + (${row}  + 1)">
+                    <thead>
+                        <tr>
+                            <th>Văn bản</th>
+                            <th>Người thực hiện</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Thời gian chờ</th>
+                            <th>Tiến độ</th>
+                            <th>Mức độ khẩn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="elem : ${elemListOwner}" th:with="Index=${row} * ${elemListOwner.size()} + ${elem}" >
+                            <div th:if="${Index} lt ${docOwnerList.size()}" th:with="ac=${docOwnerList[Index].docRec.assignContent}">
+                                <td>
+                                    <a href="#" class="list-group-item panel panel-info" th:href="@{/flow/doc_in_info/} + ${docOwnerList[Index].docRec.document.docId}">
+                                        <div class="panel-heading">
+                                            <h4 class="list-group-item-heading" th:text="'Nhận số : ' + ${docOwnerList[Index].docRec.number} + ' - ' + ${docOwnerList[Index].docRec.getReceiveTimeString()}" th:if="${docOwnerList[Index].docRec.number}"></h4>
+                                            <h4 class="list-group-item-heading" th:text="'Đến số : ' + ${docOwnerList[Index].docRec.document.numberSign} + ' : ' + ${docOwnerList[Index].docRec.document.docName}"></h4>
+                                        </div>
+
+                                        <div class="panel-body">
+                                            <p class="list-group-item-text p-doc" th:text="${docOwnerList[Index].docRec.document.epitome}"></p>
+                                        </div>
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <p th:if="${docOwnerList[Index].candidate}" th:with="canUser=${docOwnerList[Index].candidate}">
+                                        <span th:if="canUser.userDetail" th:text="${canUser.userDetail.fullName}"></span>
+                                        <span th:unless="canUser.userDetail" th:text="${canUser.userName}"></span>
+                                    </p>
+                                    <p th:unless="${docOwnerList[Index].candidate}">Chưa phân công</p>
+                                </td>
+
+                                <td>
+                                    <p th:text="${ac.getTimeStartString()}"></p>   
+                                </td>
+
+                                <td>
+                                    <p th:text="${ac.getTimeEndString()}"></p>   
+                                </td>
+
+                                <td>
+                                    <p th:text="${docOwnerList[Index].duration} + ' ngày'"></p>
+                                </td>
+
+                                <td>
+                                    <p th:text="${ac.progress} + ' %'"></p>   
+                                </td>
+
+                                <td>
+                                    <p th:text="${docOwnerList[Index].docRec.document.emergencyLevel.emeName}"></p>   
+                                </td>
+                            </div>
+                        </tr>
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+    </div>
+    <script>
+        var total_page_owner = $('#total-page-owner').attr('data');
+        $('#contain-owner').html($('#contain-owner-1').html());
+
+        $('#page-selection-owner').bootpag({
+        	total : total_page_owner,
+        	page : 1,
+        	maxVisible : 10
+        }).on("page", function(event, num){
+        	var idShow = '#contain-owner-' + num;
+            $("#contain-owner").html($(idShow).html()); // some ajax contain-owner loading...
+            $("#contain-owner").removeClass('hidden');
+            var tableShow = "#table-owner-" + num;
+            $(tableShow).sort_table({
+                "action" : "init"
+            });
+        });
+
+        $("#table-owner-1").sort_table({
+            "action" : "init"
+        });
+    </script>
+</div>
+</body>
+</html>

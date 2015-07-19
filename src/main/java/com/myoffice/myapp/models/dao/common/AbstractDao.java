@@ -1,5 +1,6 @@
 package com.myoffice.myapp.models.dao.common;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -19,7 +20,7 @@ public abstract class AbstractDao {
 		try {
 			getSession().saveOrUpdate(obj);
 			return true;
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			System.out.println("ERROR : can't persit object :  "
 					+ obj.getClass() + " cause of session : " + e.getMessage());
 			return false;
@@ -29,7 +30,7 @@ public abstract class AbstractDao {
 	public void delete(Object obj) {
 		try {
 			getSession().delete(obj);
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 
 			System.out.println("ERROR : can't delete object : "
 					+ obj.getClass() + " cause of session : " + e.getMessage());

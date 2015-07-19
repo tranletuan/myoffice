@@ -24,7 +24,7 @@ xmlns:th="http://www.thymeleaf.org">
                     <tbody>
     	                   <tr  th:each="elem : ${elemListReceive}" th:with="Index=${row} * ${elemListReceive.size()} + ${elem}" >
     	                   		<td th:if="${Index} lt ${docReceiveList.size()}">
-                                    <a href="#" class="list-group-item panel panel-warning" th:href="@{/flow/doc_in_info/} + ${docReceiveList[Index].docRec.document.docId}">
+                                    <a href="#" class="list-group-item panel panel-info" th:href="@{/flow/doc_in_info/} + ${docReceiveList[Index].docRec.document.docId}">
                                         <div class="panel-heading">
                                             <h4 class="list-group-item-heading" th:text="'Đến số : ' + ${docReceiveList[Index].docRec.document.numberSign} + ' : ' + ${docReceiveList[Index].docRec.document.docName}"></h4>
                                         </div>

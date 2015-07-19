@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+</head>
+<body>
+<div th:fragment="candidate_task">
+    <div class="container-fluid">
+    	<div id="contain-candidate"></div>
+    	<div id="page-selection-candidate" th:if="${rowListCandidate.size() > 1}"></div>
+    	<div class="hidden" id="total-page-candidate" th:attr="data=${rowListCandidate.size()}"></div>
+
+        <div th:each="row : ${rowListCandidate}" th:attr="id='contain-candidate-' + (${row}  + 1)" class="hidden row">
+            <div>
+                <table class="table sort_table" th:attr="id='table-candidate-' + (${row}  + 1)">
+                    <thead>
+                        <tr>
+                            <th>Văn bản</th>
+                            <th>Người giao</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Thời gian chờ</th>
+                            <th>Tiến độ</th>
+                            <th>Mức độ khẩn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="elem : ${elemListCandidate}" th:with="Index=${row} * ${elemListCandidate.size()} + ${elem}" >
+                            <div th:if="${Index} lt ${docCandidateList.size()}" th:with="ac=${docCandidateList[Index].docRec.assignContent}">
+                                <td>
+                                    <a href="#" class="list-group-item panel panel-info" th:href="@{/flow/doc_in_info/} + ${docCandidateList[Index].docRec.document.docId}">
+                                        <div class="panel-heading">
+                                            <h4 class="list-group-item-heading" th:text="'Nhận số : ' + ${docCandidateList[Index].docRec.number} + ' - ' + ${docCandidateList[Index].docRec.getReceiveTimeString()}" th:if="${docCandidateList[Index].docRec.number}"></h4>
+                                            <h4 class="list-group-item-heading" th:text="'Đến số : ' + ${docCandidateList[Index].docRec.document.numberSign} + ' : ' + ${docCandidateList[Index].docRec.document.docName}"></h4>
+                                        </div>
+
+                                        <div class="panel-body">
+                                            <p class="list-group-item-text p-doc" th:text="${docCandidateList[Index].docRec.document.epitome}"></p>
+                                        </div>
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <p th:with="owner=${docCandidateList[Index].owner}">
+                                        <span th:if="owner.userDetail" th:text="${owner.userDetail.fullName}"></span>
+                                        <span th:unless="owner.userDetail" th:text="${owner.userName}"></span>
+                                    </p>
+                                </td>
+
+                                <td>
+                                    <p th:text="${ac.getTimeStartString()}"></p>   
+                                </td>
+
+                                <td>
+                                    <p th:text="${ac.getTimeEndString()}"></p>   
+                                </td>
+
+                                <td>
+                                    <p th:text="${docCandidateList[Index].duration} + ' ngày'"></p>
+                                </td>
+
+                                <td>
+                                    <p th:text="${ac.progress} + ' %'"></p>   
+                                </td>
+
+                                <td>
+                                    <p th:text="${docCandidateList[Index].docRec.document.emergencyLevel.emeName}"></p>   
+                                </td>
+                            </div>
+                        </tr>
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+    </div>
+    <script>
+        var total_page_candidate = $('#total-page-candidate').attr('data');
+        $('#contain-candidate').html($('#contain-candidate-1').html());
+
+        $('#page-selection-candidate').bootpag({
+        	total : total_page_candidate,
+        	page : 1,
+        	maxVisible : 10
+        }).on("page", function(event, num){
+        	var idShow = '#contain-candidate-' + num;
+            $("#contain-candidate").html($(idShow).html()); // some ajax contain-candidate loading...
+            $("#contain-candidate").removeClass('hidden');
+            var tableShow = "#table-candidate-" + num;
+            $(tableShow).sort_table({
+                "action" : "init"
+            });
+        });
+
+        $("#table-candidate-1").sort_table({
+            "action" : "init"
+        });
+    </script>
+</div>
+</body>
+</html>

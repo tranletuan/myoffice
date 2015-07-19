@@ -18,15 +18,15 @@ xmlns:th="http://www.thymeleaf.org">
 	<script type="text/javascript" th:src="@{/js/jquery.bootpag.min.js}" ></script>
 </head>
 <body>
-<div th:fragment="release_task">
+<div th:fragment="test_task">
     <div class="container-fluid">
-    	<div id="contain-release"></div>
-    	<div id="page-selection-release"></div>
-    	<div class="hidden" id="total-page-release" th:attr="data=${rowList.size()}"></div>
+    	<div id="contain-test"></div>
+    	<div id="page-selection-test"></div>
+    	<div class="hidden" id="total-page-test" th:attr="data=${rowList.size()}"></div>
 
-        <div th:each="row : ${rowList}" th:attr="id='contain-release-' + (${row}  + 1)" class="hidden row">
+        <div th:each="row : ${rowList}" th:attr="id='contain-test-' + (${row}  + 1)" class="hidden row">
             <div>
-                <table class="table sort_table" th:attr="id='table-release-' + (${row}  + 1)">
+                <table class="table sort_table" th:attr="id='table-test-' + (${row}  + 1)">
                     <thead>
                         <tr>
                             <th>Văn bản</th>
@@ -35,51 +35,45 @@ xmlns:th="http://www.thymeleaf.org">
                         </tr>
                     </thead>
                     <tbody>
-    	                   <tr  th:each="elem : ${elemList}" th:with="Index=${row} * ${elemList.size()} + ${elem}" >
-    	                   		<td th:if="${Index} lt ${docOutList.size()}">
-                                    <a href="#" class="panel panel-warning" th:href="@{/flow/doc_info/} + ${docOutList[Index].doc.docId}">
-                                        <div class="panel-heading">
-                                            <h4 class="list-group-item-heading" th:text="${docOutList[Index].doc.numberSign} + ' - ' + ${docOutList[Index].doc.docName}"></h4>
-                                        </div>
+                        <tr  th:each="elem : ${elemList}" th:with="Index=${row} * ${elemList.size()} + ${elem}" >
+                          <div th:if="${Index} lt ${testList.size()}">
+                            <td>
+                                <a href="#" class="panel panel-warning">
+                                    <div class="panel-heading">
+                                       <h4 th:text="${Index}"></h4>
+                                    </div>
+                                </a>
+                            </td>
 
-                                        <div class="panel-body">
-                                            <p class="list-group-item-text p-doc" th:text="${docOutList[Index].doc.epitome}"></p>
-                                        </div>
-                                    </a>
-                                </td>
-
-    	                   		<td th:if="${Index} lt ${docOutList.size()}">
-                                   <p th:text="${docOutList[Index].duration}"></p>
-                                </td>
-
-                                <td th:if="${Index} lt ${docOutList.size()}">
-                                     <p th:text="${docOutList[Index].doc.emergencyLevel.emeName}"></p>   
-                                </td>
-    	                   </tr>
+                            <td>
+                                <p th:text="${testList[Index]}"></p>
+                            </td>
+                        </div>
+                        </tr>
                     </tbody>
                 </table> 
             </div>
         </div>
     </div>
     <script>
-        var totalPageRelease = $('#total-page-release').attr('data');
-        $('#contain-release').html($('#contain-release-1').html());
+        var totalPagetest = $('#total-page-test').attr('data');
+        $('#contain-test').html($('#contain-test-1').html());
 
-        $('#page-selection-release').bootpag({
-        	total : totalPageRelease,
+        $('#page-selection-test').bootpag({
+        	total : totalPagetest,
         	page : 1,
         	maxVisible : 10
         }).on("page", function(event, num){
-        	var idShow = '#contain-release-' + num;
-            $("#contain-release").html($(idShow).html()); // some ajax contain-release loading...
-            $("#contain-release").removeClass('hidden');
-            var tableShow = "#table-release-" + num;
+        	var idShow = '#contain-test-' + num;
+            $("#contain-test").html($(idShow).html()); // some ajax contain-test loading...
+            $("#contain-test").removeClass('hidden');
+            var tableShow = "#table-test-" + num;
             $(tableShow).sort_table({
                 "action" : "init"
             });
         });
 
-        $("#table-release-1").sort_table({
+        $("#table-test-1").sort_table({
             "action" : "init"
         });
     </script>

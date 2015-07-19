@@ -1,5 +1,6 @@
 package com.myoffice.myapp.controllers;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,5 +19,8 @@ public class AbstractController {
 	
 	@Autowired
 	protected SecurityService securityService;
+	
+	@Autowired
+	protected SessionFactory sessionFactory;
 
 }

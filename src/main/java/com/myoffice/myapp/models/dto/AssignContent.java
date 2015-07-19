@@ -45,7 +45,7 @@ public class AssignContent {
 	private Document reportDoc;
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "owner_id")
+	@JoinColumn(name = "owner_id", nullable = false)
 	private User owner;
 	
 	@Column(name = "candidate_name")
@@ -127,5 +127,12 @@ public class AssignContent {
 		this.candidateName = candidateName;
 	}
 
+	public Integer getProgress() {
+		return progress;
+	}
+
+	public void setProgress(Integer progress) {
+		this.progress = progress;
+	}
 	
 }

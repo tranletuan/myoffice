@@ -148,8 +148,8 @@ public class DataService {
 		docDao.saveDocument(doc);
 	}
 	
-	public void deleteDocument(Document doc){
-		docDao.deleteDocument(doc);
+	public void deleteDocumentIn(Document doc){
+		docDao.deleteDocumentIn(doc);
 	}
 	
 	public List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, 
@@ -244,7 +244,6 @@ public class DataService {
 		return docDao.saveDocRecipient(docRec);
 	}
 	
-
 	public DocumentRecipient findDocRecipient(Integer docId, Integer organId){
 		return docDao.findDocRecipient(docId, organId);
 	}
@@ -254,7 +253,6 @@ public class DataService {
 		return docDao.findDocRecipient(organId, tenureId, docTypeId, completed, firstResult, maxResult);
 	}
 
-	
 	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId, Boolean completed, Date start, Date end){
 		return docDao.findDocRecByAssignDate(organId, completed, start, end);
 	}
@@ -308,6 +306,15 @@ public class DataService {
 				department, minDay, maxDay, numberRec, minDayRec, maxDayRec, firstResult, maxResult);
 	}
 
+	//MY TASK
+	public List<DocumentRecipient> findDocRecByOwner(Integer organId, Integer userId) {
+		return docDao.findDocRecByOwner(organId, userId);
+	}
+	
+	public List<DocumentRecipient> findDocRecByCandidate(Integer organId, String userName) {
+		return docDao.findDocRecByCandidate(organId, userName);
+	}
+	
 	//=====================
 	@Autowired
 	private ParameterDao paramDao;

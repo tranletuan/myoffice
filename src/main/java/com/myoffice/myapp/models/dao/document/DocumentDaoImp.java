@@ -14,6 +14,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.ResultTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -72,9 +73,23 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		persist(doc);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public void deleteDocument(Document doc) {
-		delete(doc);
+	public void deleteDocumentIn(Document doc) {
+		try {
+			if (doc.isIncoming()) {
+				Criteria criteria = getSession().createCriteria(DocumentFile.class);
+				criteria.add(Restrictions.eq("document.docId", doc.getDocId()));
+				List<DocumentFile> listFile = criteria.list();
+				for (DocumentFile df : listFile) {
+					getSession().delete(df);
+				}
+
+				getSession().delete(doc);
+			}
+		} catch (Exception e) {
+			logger.error("DELETE DOC IN : CAN'T NOT DELETE DOC : " + doc.getDocId());
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -114,20 +129,17 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
-
 	
 	@Override
 	public DocumentType findDocTypeById(Integer typeId) {
 		return (DocumentType) getSession().get(DocumentType.class, typeId);
 	}
-
 	
 	@Override
 	public void saveDocType(DocumentType docType) {
 		persist(docType);
 	}
 	
-
 	// ========EMERGENCY LEVEL
 	@SuppressWarnings("unchecked")
 	@Override
@@ -136,14 +148,12 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
-
 	
 	@Override
 	public EmergencyLevel findEmergencyLevelById(Integer emergencyLevelId) {
 		return (EmergencyLevel) getSession().get(EmergencyLevel.class,
 				emergencyLevelId);
 	}
-
 	
 	@Override
 	public void saveEmergency(EmergencyLevel emergency) {
@@ -151,14 +161,12 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		
 	}
 
-	
 	@Override
 	public void deleteEmergency(EmergencyLevel emergency) {
 		delete(emergency);
 	}
 
 	// =======PRIVACY LEVEL
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PrivacyLevel> findAllPrivacyLevel() {
@@ -167,19 +175,16 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
-	
 	@Override
 	public PrivacyLevel findPrivacyLevelById(Integer privacyLevelId) {
 		return (PrivacyLevel) getSession().get(PrivacyLevel.class,
 				privacyLevelId);
 	}
 
-	
 	@Override
 	public void savePrivacyLevel(PrivacyLevel privacy) {
 		persist(privacy);
 	}
-
 	
 	@Override
 	public void deletePrivacyLevel(PrivacyLevel privacy) {
@@ -187,7 +192,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 
 	//TENURE
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Tenure> findAllTenure() {
@@ -198,24 +202,20 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
-	
 	@Override
 	public Tenure findTenureById(Integer tenureId) {
 		return (Tenure)getSession().get(Tenure.class, tenureId);
 	}
 
-	
 	@Override
 	public void saveTenure(Tenure tenure) {
 		persist(tenure);
 	}
 
-	
 	@Override
 	public void deleteTenure(Tenure tenure) {
 		delete(tenure);
 	}
-	
 	
 	@Override
 	public Tenure findLastTenure() {
@@ -226,7 +226,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return (Tenure) criteria.uniqueResult();
 	}
 
-	
 	//NUMBER
 	@Override
 	public Integer findMaxDocNumber(Integer tenureId, Integer docTypeId,
@@ -265,7 +264,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return false;
 	}
 
-	
 	//FILE
 	@Override
 	public DocumentFile findNewestDocFile(Integer docId) {
@@ -282,13 +280,11 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return null;
 	}
 
-	
 	@Override
 	public void saveDocFile(DocumentFile docFile) {
 		persist(docFile);
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentFile> findAllFile(Integer docId) {
@@ -300,20 +296,17 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
-	
 	@Override
 	public DocumentFile findDocFileById(Integer docFileId) {
 		return (DocumentFile) getSession().get(DocumentFile.class, docFileId);
 	}
 
-	
 	//DOC REC
 	@Override
 	public boolean saveDocRecipient(DocumentRecipient docRec) {
 		return persist(docRec);
 	}
 
-	
 	@Override
 	public DocumentRecipient findDocRecipient(Integer docId, Integer organId) {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
@@ -323,8 +316,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 				Restrictions.and(Restrictions.eq("o.organId", organId)));
 		return (DocumentRecipient) criteria.uniqueResult(); 
 	}
-
-	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -385,8 +376,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 	
 	//DOCTYPE MENU
-	
-	//TYPE MENU
 	@Override
 	public List<DocTypeMenuItem> findMenuDocOut(Integer organId, boolean completed, Integer tenureId) {
 		List<DocumentType> docTypeList = findAllDocType();
@@ -422,8 +411,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return docTypeOutList;
 	}
 
-	//IN
-	
 	@Override
 	public List<DocTypeMenuItem> findMenuDocIn(Integer organId, boolean completed, Integer tenureId) {
 		List<DocumentType> docTypeList = findAllDocType();
@@ -456,8 +443,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	}
 	
 	//TENURE MENU
-	
-	//TENURE MENU
 	@Override
 	public List<TenureMenuItem> findMenuTenureOut(Integer organId) {
 		List<TenureMenuItem> tenureItemList = new ArrayList<TenureMenuItem>();
@@ -475,7 +460,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		
 		return tenureItemList;
 	}
-
 	
 	@Override
 	public List<TenureMenuItem> findMenuTenureIn(Integer organId) {
@@ -495,8 +479,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return tenureItemList;
 	}
 
-	//STORE
-	
 	//SEARCH
 	@SuppressWarnings("unchecked")
 	@Override
@@ -533,7 +515,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
@@ -580,5 +561,42 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
+	//MY TASK
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentRecipient> findDocRecByOwner(Integer organId, Integer userId) {
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("document", "d");
+		criteria.createAlias("assignContent", "ac");
+		criteria.createAlias("organ", "o");
+		
+		Criterion rest1 = Restrictions.eq("d.enabled", true);
+		Criterion rest2 = Restrictions.eq("o.organId", organId);
+		Criterion rest3 = Restrictions.isNotNull("assignContent");
+		Criterion rest4 = Restrictions.eq("ac.owner.userId", userId);
+		
+		criteria.add(Restrictions.and(rest1, rest2, rest3, rest4));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentRecipient> findDocRecByCandidate(Integer organId, String userName) {
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("document", "d");
+		criteria.createAlias("assignContent", "ac");
+		criteria.createAlias("organ", "o");
+		
+		Criterion rest1 = Restrictions.eq("d.enabled", true);
+		Criterion rest2 = Restrictions.eq("o.organId", organId);
+		Criterion rest3 = Restrictions.isNotNull("assignContent");
+		Criterion rest4 = Restrictions.eq("ac.candidateName", userName);
+		
+		criteria.add(Restrictions.and(rest1, rest2, rest3, rest4));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+	
 	
 }

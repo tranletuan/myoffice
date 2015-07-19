@@ -18,6 +18,8 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.cmd.FindActiveActivityIdsCmd;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.task.Task;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.junit.runner.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -707,20 +709,26 @@ public class FlowController extends AbstractController {
 			else { //task đã được giao quyền
 				User rUser = dataService.findUserByName(curTask.getAssignee());
 				model.addObject("assignee", rUser);
-						
+				
+				//User đang là người giữ quyền
 				if(curUser.getUserName().equals(curTask.getAssignee())){
 					model.addObject("isAccess", true);
 					
 					if(taskName[taskName.length - 1].equals("check")){
 						model.addObject("isAssignee", true);
 						model.addObject("isCheckTask", true);
-						model.addObject("isOwner", true);
 					} 
 					else if(taskName[taskName.length - 1].equals("report")){
 						model.addObject("isReport", true);
 					} 
+				//User không giữ quyền nhưng là người phân công
 				} else if(assContent != null && assContent.getOwner().getUserId() == curUser.getUserId()){
 					model.addObject("isOwner", true);
+					String[] ownerRole = {"mng"};
+					List<Role> assignRole = dataService.findRolesByArrShortName(ownerRole);
+					List<User> userList = dataService.findUserByArrRoleShortName(organ.getOrganId(), ownerRole, curUser, null);
+					model.addObject("userList", userList);
+					model.addObject("assignRole", assignRole);
 				}
 			}
 		}
@@ -789,7 +797,6 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
-	
 	@RequestMapping(value = "/send_report", method = RequestMethod.POST)
 	public ModelAndView reportTask(
 			@ModelAttribute("docId") Integer docId,
@@ -809,6 +816,55 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/complete_report")
+	public ModelAndView completeReportTask(
+			@ModelAttribute("docId") Integer docId,
+			@ModelAttribute("procId") String procId) {
+		ModelAndView model = new ModelAndView("redirect:/flow/doc_in_info/" + docId);
+		if(docId != null && docId > 0){
+			Task curTask = flowUtil.getCurrentTask(procId);
+			User curUser = securityService.getCurrentUser();
+			DocumentRecipient docRec = dataService.findDocRecipient(docId, curUser.getOrgan().getOrganId());
+			AssignContent assContent = docRec.getAssignContent();
+			User owner = assContent.getOwner();
+			
+			if (curTask == null || assContent == null)
+				return model;
+
+			String[] taskName = curTask.getName().split(" ");
+			if (curUser.checkRoleByShortName(taskName[0]) && curTask.getAssignee().equals(curUser.getUserName())) {
+				String taskId = curTask.getId();
+				flowUtil.getTaskService().complete(taskId);
+				curTask = flowUtil.getCurrentTask(procId);
+				flowUtil.getTaskService().setAssignee(curTask.getId(), owner.getUserName());
+				logger.info("Owner : " + owner.getUserName());
+			}
+		}
+		return model;
+	}
+	
+	@RequestMapping("/transfer_manage")
+	public ModelAndView transferManage(
+			@ModelAttribute("docId") Integer docId, 
+			@ModelAttribute("acId") Integer acId,
+			@RequestParam("userId") Integer userId,
+			RedirectAttributes reAttr) {
+		ModelAndView model = new ModelAndView("redirect:/flow/doc_in_info/" + docId);
+		AssignContent assContent = dataService.findAssignContentById(acId);
+		User curUser = securityService.getCurrentUser();
+		User transferUser = dataService.findUserById(userId);
+		DocumentRecipient docRec = dataService.findDocRecipient(docId, curUser.getOrgan().getOrganId());
+		if(docRec.getAssignContent().getContentId() != assContent.getContentId()) return model;
+		if(curUser.getUserId() != assContent.getOwner().getUserId()) return model;
+		if(!transferUser.checkRoleByShortName("mng")) return model;
+		
+		assContent.setOwner(transferUser);
+		dataService.saveAssignContent(assContent);
+		reAttr.addFlashAttribute("success", true);
+		reAttr.addFlashAttribute("successMessage", "Chuyển quyền theo dõi, kiểm tra tiến độ nhiệm vụ thành công!");
+		
+		return model;
+	}
 	
 	@RequestMapping(value = "/complete_save")
 	public ModelAndView completeDocIn(
@@ -842,7 +898,6 @@ public class FlowController extends AbstractController {
 		
 		return model;
 	}
-	
 	
 	@RequestMapping(value = "/create_doc_in")
 	public ModelAndView createDocIn() {
@@ -886,7 +941,6 @@ public class FlowController extends AbstractController {
 		
 		return model;
 	}
-	
 	
 	@RequestMapping(value = "/save_doc_in")
 	public ModelAndView submitNewDocIn(
@@ -990,9 +1044,10 @@ public class FlowController extends AbstractController {
 					checkSave = dataService.saveDocRecipient(docRec);
 					doc = docRec.getDocument();
 				}
-				
+
 				if (procInsId != null && !checkSave) {
 					flowUtil.deleteProcessInstanceById(procInsId, "can not create new document");
+					dataService.deleteDocumentIn(doc);
 					model.setViewName("error");
 					model.addObject("errorMessage", "Lỗi, không thể tạo văn bản");
 					return model;
@@ -1010,7 +1065,6 @@ public class FlowController extends AbstractController {
 		model.setViewName("redirect:doc_in_info/" + doc.getDocId());
 		return model;
 	}
-	
 	
 	//=============WAITING DOC=============
 	@RequestMapping(value = "/wait_list/{type}")
@@ -1044,7 +1098,6 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 
-	
 	@RequestMapping(value = "/wait_list/{type}/{docTypeId}")
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.OK)
@@ -1092,17 +1145,28 @@ public class FlowController extends AbstractController {
 		List<Integer> elemListOut = new ArrayList<Integer>();
 		List<Integer> rowListOut = new ArrayList<Integer>();
 		UtilMethod.preparePagination(rowListOut, "rowListOut", elemListOut, "elemListOut", docOutWaitList, model, null);
-	
-		//Văn bản được phân công nhiệm vụ
-		List<DocumentRecipient> docInList = dataService.findDocRecipient(organ.getOrganId(), null, null, false, null, null);
-		List<ItemDocInWait> docInWaitList = UtilMethod.getListDocInWait(dataService, flowUtil, docInList, curUser.getUserName());
+		model.addObject("docOutList", docOutWaitList);
 		
-		List<Integer> elemListIn = new ArrayList<Integer>();
-		List<Integer> rowListIn = new ArrayList<Integer>();
-		UtilMethod.preparePagination(rowListIn, "rowListIn", elemListIn, "elemListIn", docInWaitList, model, null);
+		//Văn bản được phân công nhiệm vụ
+		List<DocumentRecipient> docCandidateList = dataService.findDocRecByCandidate(organ.getOrganId(), curUser.getUserName());
+		List<ItemDocInWait> docCandidateWaitList = UtilMethod.getListDocInWait(dataService, flowUtil, docCandidateList, curUser.getUserName());
+		
+		List<Integer> elemListCandidate = new ArrayList<Integer>();
+		List<Integer> rowListCandidate = new ArrayList<Integer>();
+		UtilMethod.preparePagination(rowListCandidate, "rowListCandidate", elemListCandidate, "elemListCandidate", docCandidateWaitList, model, null);
+		model.addObject("docCandidateList", docCandidateWaitList);
 		
 		//Văn bản đã phân công nhiệm vụ
-		
+		if(curUser.checkRoleByShortName("mng")) {
+			List<DocumentRecipient> docOwnerList = dataService.findDocRecByOwner(organ.getOrganId(), curUser.getUserId());
+			List<ItemDocInWait> docOwnerWaitList = UtilMethod.getListDocInWait(dataService, flowUtil, docOwnerList, null);
+			
+			List<Integer> elemListOwner = new ArrayList<Integer>();
+			List<Integer> rowListOwner = new ArrayList<Integer>();
+			UtilMethod.preparePagination(rowListOwner, "rowListOwner", elemListOwner, "elemListOwner", docOwnerWaitList, model, null);
+			model.addObject("docOwnerList", docOwnerWaitList);
+		}
+			
 		//Văn bản chờ gửi
 		if(curUser.checkRoleByShortName("outputer")) {
 			List<Document> docSendList = dataService.findDocumentBy(organ.getOrganId(), null, null, true, false, null, null, true);
@@ -1126,8 +1190,7 @@ public class FlowController extends AbstractController {
 		}
 		
 		
-		model.addObject("docOutList", docOutWaitList);
-		model.addObject("docInList", docInWaitList);
+		
 		
 		return model;
 	}

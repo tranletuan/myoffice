@@ -27,7 +27,7 @@ public interface DocumentDao {
 	
 	void saveDocument(Document doc);
 	
-	void deleteDocument(Document doc);
+	void deleteDocumentIn(Document doc);
 	
 	List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, Boolean completed, Boolean sended,
 			Integer firstResult, Integer maxResult, Boolean enabled);
@@ -113,4 +113,7 @@ public interface DocumentDao {
 			Date minDayRec, Date maxDayRec, Integer firstResult, Integer maxResult);
 	
 	//MY TASK
+	List<DocumentRecipient> findDocRecByOwner(Integer organId, Integer userId);
+	
+	List<DocumentRecipient> findDocRecByCandidate(Integer organId, String userName);
 } 

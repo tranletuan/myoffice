@@ -27,20 +27,20 @@ xmlns:th="http://www.thymeleaf.org">
 		<div th:replace="fragment/message :: message"></div>
 
 		<div class="row">
-			<div class="col-sm-1"></div>
+			<div class="col-sm-0"></div>
 			
-			<div class="container-fluid col-sm-10">
+			<div class="container-fluid col-sm-12">
 				<ul class="nav nav-tabs" role="tablist">
 					<li role="presentation" class="active">
 						<a href="#release-task" aria-controls="release-task" role="tab" data-toggle="tab">Văn bản chờ <span class="badge" th:text="${docOutList.size()}">0</span></a>
 					</li>
 
 					<li role="presentation">
-						<a href="#assgin-task" aria-controls="assgin-task" role="tab" data-toggle="tab">Nhiệm vụ được giao <span class="badge">0</span></a>
+						<a href="#candidate-task" aria-controls="candidate-task" role="tab" data-toggle="tab">Nhiệm vụ được giao <span class="badge" th:text="${docCandidateList.size()}">0</span></a>
 					</li>
 
 					<li role="presentation">
-						<a href="#own-task" aria-controls="own-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_MANAGER')">Nhiệm vụ đã giao <span class="badge">0</span></a>
+						<a href="#own-task" aria-controls="own-task" role="tab" data-toggle="tab" sec:authorize="hasRole('ROLE_MANAGER')">Nhiệm vụ đã giao <span class="badge" th:text="${docOwnerList.size()}">0</span></a>
 					</li>
 
 					<li role="presentation">
@@ -58,14 +58,14 @@ xmlns:th="http://www.thymeleaf.org">
 						<div th:replace="fragment/release-task :: release_task"></div>
 					</div>
 
-					<!-- assgin task -->
-					<div role="tabpanel" class="tab-pane" id="assgin-task">
-					Receive Task
+					<!-- candidate task -->
+					<div role="tabpanel" class="tab-pane" id="candidate-task">
+						<div th:replace="fragment/candidate-task :: candidate_task"></div>
 					</div>
 
 					<!-- owner -->
 					<div role="tabpanel" class="tab-pane" id="own-task" sec:authorize="hasRole('ROLE_MANAGER')">
-					Owner
+						<div th:replace="fragment/own-task :: own_task"></div>
 					</div>
 
 					<!-- send -->
@@ -80,7 +80,7 @@ xmlns:th="http://www.thymeleaf.org">
 
 				</div>
 			</div>
-			<div class="col-sm-1"></div>
+			<div class="col-sm-0"></div>
 		</div>
 
 		<div th:repalce="fragment/footer :: footer"></div>
