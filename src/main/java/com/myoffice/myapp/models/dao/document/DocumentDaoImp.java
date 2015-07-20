@@ -565,19 +565,39 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findDocRecByOwner(Integer organId, Integer userId) {
+		List<DocumentRecipient> docHasAssignee = new ArrayList<DocumentRecipient>();
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
 		criteria.createAlias("document", "d");
-		criteria.createAlias("assignContent", "ac");
 		criteria.createAlias("organ", "o");
+		criteria.createAlias("assignContent", "ac");
 		
-		Criterion rest1 = Restrictions.eq("d.enabled", true);
-		Criterion rest2 = Restrictions.eq("o.organId", organId);
-		Criterion rest3 = Restrictions.isNotNull("assignContent");
-		Criterion rest4 = Restrictions.eq("ac.owner.userId", userId);
-		
-		criteria.add(Restrictions.and(rest1, rest2, rest3, rest4));
+		criteria.add(Restrictions.eq("completed", false));
+		criteria.add(Restrictions.and(Restrictions.eq("d.completed", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
+		criteria.add(Restrictions.and(Restrictions.eq("ac.owner.userId", userId)));
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		return criteria.list();
+		docHasAssignee = criteria.list();
+		
+		List<DocumentRecipient> docNotAssignee = new ArrayList<DocumentRecipient>();
+		criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("document", "d");
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("completed", false));
+		criteria.add(Restrictions.and(Restrictions.eq("d.completed", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
+		criteria.add(Restrictions.and(Restrictions.isNotNull("number")));
+		criteria.add(Restrictions.and(Restrictions.isNotNull("receiveTime")));
+		criteria.add(Restrictions.and(Restrictions.isNull("assignContent")));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		docNotAssignee = criteria.list();
+		
+		List<DocumentRecipient> listResult = new ArrayList<DocumentRecipient>();
+		listResult.addAll(docHasAssignee);
+		listResult.addAll(docNotAssignee);
+		
+		return listResult;
 	}
 
 	@SuppressWarnings("unchecked")

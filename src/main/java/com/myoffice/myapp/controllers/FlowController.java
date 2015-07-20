@@ -801,15 +801,22 @@ public class FlowController extends AbstractController {
 	public ModelAndView reportTask(
 			@ModelAttribute("docId") Integer docId,
 			@ModelAttribute("procId") String procId,
-			@RequestParam(value = "report", required = false) String report){
+			@RequestParam(value = "report", required = false) String report, 
+			@RequestParam("progressValue") Integer progressValue){
 		ModelAndView model = new ModelAndView("redirect:/store/list/out/1");
 		User curUser = securityService.getCurrentUser();
 		Organ organ = curUser.getOrgan();
 		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
 		AssignContent assContent = docRec.getAssignContent();
-		if(assContent == null) return model;
+		if (assContent == null)
+			return model;
+
+		if (report != null && report.trim().length() > 0)
+			assContent.setReport(report);
+
+		if (progressValue >= 0 && progressValue <= 100)
+			assContent.setProgress(progressValue);
 		
-		assContent.setReport(report);
 		dataService.saveDocRecipient(docRec);
 		
 		model.setViewName("redirect:/flow/doc_in_info/" + docId);
@@ -837,7 +844,8 @@ public class FlowController extends AbstractController {
 				flowUtil.getTaskService().complete(taskId);
 				curTask = flowUtil.getCurrentTask(procId);
 				flowUtil.getTaskService().setAssignee(curTask.getId(), owner.getUserName());
-				logger.info("Owner : " + owner.getUserName());
+				assContent.setProgress(100);
+				dataService.saveAssignContent(assContent);
 			}
 		}
 		return model;
@@ -1159,7 +1167,9 @@ public class FlowController extends AbstractController {
 		//Văn bản đã phân công nhiệm vụ
 		if(curUser.checkRoleByShortName("mng")) {
 			List<DocumentRecipient> docOwnerList = dataService.findDocRecByOwner(organ.getOrganId(), curUser.getUserId());
-			List<ItemDocInWait> docOwnerWaitList = UtilMethod.getListDocInWait(dataService, flowUtil, docOwnerList, null);
+			List<ItemDocInWait> docOwnerWaitList = UtilMethod.getListOwnerWait(dataService, flowUtil, docOwnerList, curUser.getUserName());
+			logger.info(String.valueOf(docOwnerList.size()));
+			logger.info(String.valueOf(docOwnerWaitList.size()));
 			
 			List<Integer> elemListOwner = new ArrayList<Integer>();
 			List<Integer> rowListOwner = new ArrayList<Integer>();

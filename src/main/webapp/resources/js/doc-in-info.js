@@ -19,7 +19,7 @@
  	});
 
  	$('.form_date').datetimepicker("setDate", new Date());
- 	var timeWidth = $('#number').css('width');
+ 	var timeWidth = $('#numberRec').css('width');
  	$('#receiveTime').css('width', timeWidth);
  	
  	$(window).resize(function(){
@@ -62,6 +62,20 @@
 
  	$('#btnTempReport').click(function(){
  		var report = $('#showReport').html();
+ 		var progressValue = $('.progressValue').html();
+
+ 		$("#v-slider").slider({
+	 		orientation: "horizontal",
+	 		range: "min",
+	 		min: 0,
+	 		max: 100,
+	 		value: progressValue,
+	 		slide: function (event, ui) {
+	 			$("#amount").val(ui.value);
+	 		}
+	 	});
+
+	 	$("#amount").val($("#v-slider").slider("value"));
  		$('#report').html(report);
  	});
 
@@ -95,4 +109,8 @@
 
  	});
 
+ 	$("#amount").val($("#v-slider").slider("value"));
+ 	$("#amount").change(function(){
+ 		$("#v-slider").slider("value", $("#amount").val());
+ 	});
  });

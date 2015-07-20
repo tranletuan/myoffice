@@ -19,9 +19,15 @@
 					</div>
 
 					<div class="form-group">
-						<label for="showComplete" class="col-sm-3 control-label">Tiến độ</label>
+						<label for="showComplete" class="col-sm-3 control-label">Tiến độ ước lượng</label>
 						<div class="col-sm-9" id="showComplete">
-							
+							<div class="progress">
+								<div class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" th:attr="style='min-width:5%; width:' + ${docRec.assignContent.progress} +'%'">
+									<span th:if="${docRec.assignContent.progress eq 100}" th:text="'Hoàn thành'"></span>
+									<span th:if="${docRec.assignContent.progress lt 100}" th:text="${docRec.assignContent.progress} +'%'"></span>
+								</div>
+								<p class="hidden progressValue" th:text="${docRec.assignContent.progress}"></p>
+							</div>   
 						</div>
 					</div>
 
