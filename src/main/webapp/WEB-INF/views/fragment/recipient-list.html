@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<div>
+	<div class="modal fade" id="recipient-list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" th:fragment="recipient_list" th:if="${recipientList}">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Danh sách các cơ quan đã gửi</h4>
+				</div>
+				<div class="modal-body">
+					<div>
+						<div class="container-fluid">
+							<div id="contain-recipient"></div>
+							<div id="page-selection-recipient" th:if="${rowListRecipient.size() > 1}"></div>
+							<div class="hidden" id="total-page-recipient" th:attr="data=${rowListRecipient.size()}"></div>
+
+							<div th:each="row : ${rowListRecipient}" th:attr="id='contain-recipient-' + (${row}  + 1)" class="hidden row">
+								<div>
+									<table class="table sort_table" th:attr="id='table-recipient-' + (${row}  + 1)">
+										<thead>
+											<tr>
+												<th>STT</th>
+												<th>Đơn vị nhận</th>
+												<th>Ngày gửi</th>
+												<th>Ngày nhận</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr  th:each="elem : ${elemListRecipient}" th:with="Index=${row} * ${elemListRecipient.size()} + ${elem}" >
+												<div th:if="${Index} lt ${recipientList.size()}">
+													<td th:text="${Index + 1}"></td>
+													<td th:text="${recipientList[Index].organ.unit.unitName} + ' - ' + ${recipientList[Index].organ.organName}"></td>
+													<td th:text="${recipientList[Index].getComingTimeString()}"></td>
+													<td>
+														<span th:if="${recipientList[Index].receiveTime}" th:text="${recipientList[Index].getReceiveTimeString()}"></span>
+														<span th:unless="${recipientList[Index].receiveTime}">Chưa nhận</span>
+													</td>
+												</div>
+											</tr>
+										</tbody>
+									</table> 
+								</div>
+							</div>
+						</div>
+						<script>
+							var total_page_recipient = $('#total-page-recipient').attr('data');
+							$('#contain-recipient').html($('#contain-recipient-1').html());
+
+							$('#page-selection-recipient').bootpag({
+								total : total_page_recipient,
+								page : 1,
+								maxVisible : 10
+							}).on("page", function(event, num){
+								var idShow = '#contain-recipient-' + num;
+					            $("#contain-recipient").html($(idShow).html()); // some ajax contain-recipient loading...
+					            $("#contain-recipient").removeClass('hidden');
+					            var tableShow = "#table-recipient-" + num;
+					            $(tableShow).sort_table({
+					            	"action" : "init"
+					            });
+					        });
+
+							$("#table-recipient-1").sort_table({
+								"action" : "init"
+							});
+						</script>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

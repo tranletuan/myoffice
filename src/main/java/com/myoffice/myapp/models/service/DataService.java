@@ -124,14 +124,6 @@ public class DataService {
 	@Autowired
 	private DocumentDao docDao;
 	
-	/*public Integer countDocument(boolean incoming, boolean completed, Integer docTypeId){
-		return docDao.countDocument(incoming, completed, docTypeId);
-	}
-	*/
-	/*public List<Document> findWaitingDocByType(boolean incoming, boolean completed, Integer docTypeId){
-		return docDao.findWaitingDocByType(incoming, completed, docTypeId);
-	}*/
-	
 	public Document findDocumentById(Integer docId){
 		return docDao.findDocumentById(docId);
 	}
@@ -255,6 +247,10 @@ public class DataService {
 
 	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId, Boolean completed, Date start, Date end){
 		return docDao.findDocRecByAssignDate(organId, completed, start, end);
+	}
+	
+	public List<DocumentRecipient> findRecipients(Integer docId) {
+		return docDao.findRecipients(docId);
 	}
 	
 	//FILE

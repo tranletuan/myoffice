@@ -19,6 +19,10 @@ xmlns:th="http://www.thymeleaf.org">
 
 	<script type="text/javascript" th:src="@{/js/doc-info.js}" ></script>
 
+	<script type="text/javascript" th:src="@{/js/jquery.table-sort.js}" ></script>
+
+	<script type="text/javascript" th:src="@{/js/jquery.bootpag.min.js}" ></script>
+
 	<style type="text/css">
 		.p-doc {
 			max-height: 80px;
@@ -63,7 +67,8 @@ xmlns:th="http://www.thymeleaf.org">
 				<div class="panel panel-info">
 					<div class="panel-heading">
 						<h3>Thông Tin Văn Bản</h3>
-						<button type="button" id="btnChange" class="btn btn-info" data-toggle="modal" data-target="#doc-out-form" th:if="${isAccess}">Sửa đổi</button>
+						<button type="button" id="btnRecipients" class="btn btn-info" data-toggle="modal" data-target="#recipient-list" th:if="${recipientList}">Danh sách nhận</button>
+						<button type="button" id="btnChange" class="btn btn-warning" data-toggle="modal" data-target="#doc-out-form" th:if="${isAccess}">Sửa đổi</button>
 						<a href="#" class="btn btn-danger" th:if="${doc.enabled}" sec:authorize="hasRole('ROLE_MANAGER')" th:href="@{/flow/status/false}">Thu hồi / Ẩn</a>
 						<a href="#" class="btn btn-success" th:unless="${doc.enabled}" sec:authorize="hasRole('ROLE_MANAGER')" th:href="@{/flow/status/true}">Hiện</a>
 					</div>
@@ -167,6 +172,7 @@ xmlns:th="http://www.thymeleaf.org">
 
 	<div th:replace="fragment/doc-out-form :: doc_out_form"></div>
 	
+	<div th:replace="fragment/recipient-list :: recipient_list"></div>
 
 </body>
 </html>

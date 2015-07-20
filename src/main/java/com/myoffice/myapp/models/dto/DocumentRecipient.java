@@ -41,6 +41,10 @@ public class DocumentRecipient implements Serializable{
 	@Temporal(TemporalType.DATE)
 	@Column(name = "receive_time", columnDefinition = "DATETIME")
 	private Date receiveTime;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "coming_time", columnDefinition = "DATETIME", nullable = false)
+	private Date comingTime;
 
 	@Column(name = "number")
 	private Integer number;
@@ -119,6 +123,17 @@ public class DocumentRecipient implements Serializable{
 		this.assignContent = assignContent;
 	}
 
+	public Date getComingTime() {
+		return comingTime;
+	}
+
+	public void setComingTime(Date comingTime) {
+		this.comingTime = comingTime;
+	}
+
+	public String getComingTimeString() {
+		return UtilMethod.dateToString(comingTime, "dd-MM-yyyy");
+	}
 	
 
 }

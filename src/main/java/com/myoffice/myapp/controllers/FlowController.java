@@ -320,6 +320,14 @@ public class FlowController extends AbstractController {
 					dataService.saveDocument(doc);
 				}
 				
+				List<DocumentRecipient> recipientList = dataService.findRecipients(doc.getDocId());
+				if (recipientList.size() > 0) {
+					List<Integer> rowListRecipient = new ArrayList<Integer>();
+					List<Integer> elemListRecipient = new ArrayList<Integer>();
+					UtilMethod.preparePagination(rowListRecipient, "rowListRecipient", elemListRecipient, "elemListRecipient", recipientList, model, null);
+					model.addObject("recipientList", recipientList);
+				}
+				
 				List<Organ> organList = dataService.findAllOrgan();
 				for (Organ o : organList) {
 					if (o.getOrganId() == curUser.getOrgan().getOrganId()) {
@@ -506,6 +514,7 @@ public class FlowController extends AbstractController {
 				DocumentRecipient docRec = new DocumentRecipient();
 				docRec.setDocument(doc);
 				docRec.setOrgan(o);
+				docRec.setComingTime(new Date());
 				
 				procDefId = flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_IN, DataConfig.PROC_DEF_KEY_FLOW_IN);
 				procInsId = flowUtil.startProcess(procDefId);

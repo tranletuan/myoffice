@@ -94,6 +94,8 @@ public interface DocumentDao {
 	
 	List<DocumentRecipient> findDocRecByAssignDate(Integer organId, Boolean completed, Date start, Date end);
 	
+	List<DocumentRecipient> findRecipients(Integer docId);
+	
 	//DOCTYPE MENU
 	List<DocTypeMenuItem> findMenuDocOut(Integer organId, boolean completed, Integer tenureId);
 	

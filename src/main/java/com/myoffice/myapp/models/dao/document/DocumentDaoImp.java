@@ -312,8 +312,11 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
 		criteria.createAlias("document", "d");
 		criteria.createAlias("organ", "o");
-		criteria.add(Restrictions.eq("d.docId", docId)).add(
-				Restrictions.and(Restrictions.eq("o.organId", organId)));
+		
+		Criterion rest1 = Restrictions.eq("d.docId", docId);
+		Criterion rest2 = Restrictions.eq("o.organId", organId);
+		
+		criteria.add(Restrictions.and(rest1, rest2));
 		return (DocumentRecipient) criteria.uniqueResult(); 
 	}
 
@@ -374,6 +377,16 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentRecipient> findRecipients(Integer docId) {
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("document", "d");
+		criteria.add(Restrictions.eq("d.docId", docId));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+
 	//DOCTYPE MENU
 	@Override
 	public List<DocTypeMenuItem> findMenuDocOut(Integer organId, boolean completed, Integer tenureId) {
