@@ -192,7 +192,10 @@ public class UtilMethod {
 	public static List<ItemDocInWait> getListOwnerWait(DataService dataService, FlowUtil flowUtil,
 			List<DocumentRecipient> docList, String userName) {
 		List<ItemDocInWait> docInList = new ArrayList<ItemDocInWait>();
-		if(userName == null) return docInList;
+		if(userName == null) {
+			logger.error("ERROR : User name of Owner Wait List can not null");
+			return docInList;
+		}
 		
 		for (DocumentRecipient docRec : docList) {
 			User assignee = null;
@@ -200,21 +203,19 @@ public class UtilMethod {
 			User candidate = null;
 			Date taskTime = null;
 			AssignContent assContent = docRec.getAssignContent();
-			logger.info(String.valueOf(docRec.getDocument().getDocId()));
+		
 			if (!flowUtil.isEnded(docRec.getProcessInstanceId())) {
 				Task task = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
 				taskTime = task.getCreateTime();
 				
-				if (assContent == null && task.getAssignee() != null) {
+				if (assContent == null && task.getAssignee() != null && task.getAssignee().equals(userName)) {
 					assignee = dataService.findUserByName(task.getAssignee());
 					owner = assignee;
-					logger.info("test 1 : " + String.valueOf(owner.getUserName()));
 				} 
 				
 				if(assContent != null && assContent.getOwner().getUserName().equals(userName)){
 					assignee = assContent.getOwner();
 					owner = assContent.getOwner();
-					logger.info(String.valueOf(owner.getUserName()));
 					candidate = dataService.findUserByName(assContent.getCandidateName());
 				}
 			} 
@@ -233,6 +234,50 @@ public class UtilMethod {
 		return docInList;
 	}
 
+	public static List<ItemDocInWait> getListInputerWait(DataService dataService, FlowUtil flowUtil,
+			List<DocumentRecipient> docList, String userName) {
+		List<ItemDocInWait> docInList = new ArrayList<ItemDocInWait>();
+		if(userName == null) {
+			logger.error("ERROR : User name of Inputer Wait List can not null");
+			return docInList;
+		}
+		
+		for (DocumentRecipient docRec : docList) {
+			User assignee = null;
+			User owner = null;
+			User candidate = null;
+			Date taskTime = null;
+			AssignContent assContent = docRec.getAssignContent();
+			
+			if (!flowUtil.isEnded(docRec.getProcessInstanceId())) {
+				Task task = flowUtil.getCurrentTask(docRec.getProcessInstanceId());
+				taskTime = task.getCreateTime();
+				if (docRec.getReceiveTime() != null && docRec.getNumber() != null && assContent == null) {
+					if (task.getAssignee() == null) {
+						HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTask(docRec.getProcessInstanceId());
+						if (preTask != null && preTask.getAssignee().equals(userName)) {
+							assignee = dataService.findUserByName(preTask.getAssignee());
+							taskTime = preTask.getCreateTime();
+						}
+					}
+				}
+			}
+
+			if (docRec.getReceiveTime() == null || docRec.getNumber() == null || assignee != null) {
+				
+				ItemDocInWait item = new ItemDocInWait();
+				item.setDocRec(docRec);
+				item.setAssignee(assignee);
+				item.setOwner(owner);
+				item.setCandidate(candidate);
+				item.setTaskTime(taskTime);
+				docInList.add(item);
+			}
+		}
+
+		return docInList;
+	}
+	
 	public static void saveDocFile(MultipartFile file, Tenure tenure, DocumentType docType, String number,
 			String organType, String docName, Integer docId, DataService dataService, Document doc) {
 		

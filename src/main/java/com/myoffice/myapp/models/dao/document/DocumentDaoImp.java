@@ -326,6 +326,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.createAlias("document", "d");
 		criteria.add(Restrictions.eq("o.organId", organId));
 		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("d.completed", true)));
 		
 		if(tenureId != null && tenureId > 0) 
 			criteria.add(Restrictions.and(Restrictions.eq("d.tenure.tenureId", tenureId)));
@@ -340,7 +341,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			Criterion rest1 = Restrictions.isNull("receiveTime");
 			criteria.add(Restrictions.and(rest1, rest2));
 		}
-			
 		
 		criteria.addOrder(Order.desc("receiveTime"));
 		if (firstResult != null && maxResult != null) {
@@ -352,7 +352,6 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		return criteria.list();
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findDocRecByAssignDate(Integer organId,
@@ -565,6 +564,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DocumentRecipient> findDocRecByOwner(Integer organId, Integer userId) {
+		
+		//Trường hợp văn bản đã được phân công (tồn tại người phân công)
 		List<DocumentRecipient> docHasAssignee = new ArrayList<DocumentRecipient>();
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
 		criteria.createAlias("document", "d");
@@ -579,6 +580,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		docHasAssignee = criteria.list();
 		
+		//Trường hợp văn bản chưa được phân công nhưng trên task đã được giao quyền
 		List<DocumentRecipient> docNotAssignee = new ArrayList<DocumentRecipient>();
 		criteria = getSession().createCriteria(DocumentRecipient.class);
 		criteria.createAlias("document", "d");
@@ -614,6 +616,30 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		Criterion rest4 = Restrictions.eq("ac.candidateName", userName);
 		
 		criteria.add(Restrictions.and(rest1, rest2, rest3, rest4));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentRecipient> findDocRecForInputer(Integer organId) {
+		
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("document", "d");
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
+		criteria.add(Restrictions.and(Restrictions.eq("completed", false)));
+		
+		//Trường hợp chưa đánh số
+		Criterion rest1 = Restrictions.isNull("receiveTime");
+		Criterion rest2 = Restrictions.isNull("number");
+		
+		//Trường hợp đã đánh số nhưng chưa chuyển quyền
+		Criterion rest3 = Restrictions.isNull("assignContent");
+		
+		criteria.add(Restrictions.or(rest1, rest2, rest3));
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}

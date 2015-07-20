@@ -786,6 +786,7 @@ public class FlowController extends AbstractController {
 		} else {
 			// Lưu phân công
 			assContent.setTimeStart(startDate);
+			assContent.setProgress(0);
 			assContent.setTimeEnd(endDate);
 			assContent.setContent(content);
 			assContent.setOwner(curUser);
@@ -1168,8 +1169,6 @@ public class FlowController extends AbstractController {
 		if(curUser.checkRoleByShortName("mng")) {
 			List<DocumentRecipient> docOwnerList = dataService.findDocRecByOwner(organ.getOrganId(), curUser.getUserId());
 			List<ItemDocInWait> docOwnerWaitList = UtilMethod.getListOwnerWait(dataService, flowUtil, docOwnerList, curUser.getUserName());
-			logger.info(String.valueOf(docOwnerList.size()));
-			logger.info(String.valueOf(docOwnerWaitList.size()));
 			
 			List<Integer> elemListOwner = new ArrayList<Integer>();
 			List<Integer> rowListOwner = new ArrayList<Integer>();
@@ -1190,9 +1189,9 @@ public class FlowController extends AbstractController {
 		
 		//Văn bản chờ nhận
 		if(curUser.checkRoleByShortName("inputer")) {
-			List<DocumentRecipient> docReceiveList = dataService.findDocRecipient(organ.getOrganId(), null, null, null, null, null);
-			List<ItemDocInWait> docReceiveWaitList = UtilMethod.getListDocInWait(dataService, flowUtil, docReceiveList, null);
-
+			List<DocumentRecipient> docReceiveList = dataService.findDocRecForInputer(organ.getOrganId());
+			List<ItemDocInWait> docReceiveWaitList = UtilMethod.getListInputerWait(dataService, flowUtil, docReceiveList, curUser.getUserName());
+			
 			List<Integer> elemListReceive = new ArrayList<Integer>();
 			List<Integer> rowListReceive = new ArrayList<Integer>();
 			UtilMethod.preparePagination(rowListReceive, "rowListReceive", elemListReceive, "elemListReceive", docReceiveWaitList, model, null);

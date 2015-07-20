@@ -116,4 +116,6 @@ public interface DocumentDao {
 	List<DocumentRecipient> findDocRecByOwner(Integer organId, Integer userId);
 	
 	List<DocumentRecipient> findDocRecByCandidate(Integer organId, String userName);
+	
+	List<DocumentRecipient> findDocRecForInputer(Integer organId);
 } 

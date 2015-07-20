@@ -315,6 +315,10 @@ public class DataService {
 		return docDao.findDocRecByCandidate(organId, userName);
 	}
 	
+	public List<DocumentRecipient> findDocRecForInputer(Integer organId) {
+		return docDao.findDocRecForInputer(organId);
+	}
+	
 	//=====================
 	@Autowired
 	private ParameterDao paramDao;
