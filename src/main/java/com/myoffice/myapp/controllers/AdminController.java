@@ -99,6 +99,7 @@ public class AdminController extends AbstractController {
 
 	@RequestMapping(value = "/save_user", method = RequestMethod.POST)
 	public ModelAndView saveUser(
+			@RequestParam("userColor") String userColor,
 			@RequestParam("userId") Integer userId,
 			@RequestParam("userName") String userName,
 			@RequestParam("levelId") Integer levelId,
@@ -113,11 +114,13 @@ public class AdminController extends AbstractController {
 			user = dataService.findUserById(userId);
 		}
 
+		user.setColor(userColor);
+		
 		// userName
 		user.setUsername(userName);
 
 		// password
-		if (password != "") {
+		if (user.checkNewPassword(password)) {
 			user.setPassword(password);
 		}
 

@@ -3,10 +3,8 @@
  	var unitName;
  	var address;
  	var shortName;
-
- 	/*$("table.sort_table").sort_table({
- 		"action" : "init"
- 	});*/
+ 	
+ 	
 
  	$("#table-body").remove();
 
@@ -18,7 +16,7 @@
  		unitName = $(this).find('.unitName').html();
  		address = $(this).find('.address').html();
  		shortName = $(this).find('.shortName').html();
-
+ 		
  		if(unitId > 0){
  			$("#btn-change").removeAttr('disabled');
  		}
@@ -30,6 +28,7 @@
  		$('#unitName').val(unitName);
  		$('#address').val(address);
  		$('#shortName').val(shortName);
+ 		
  	});
 
  	$('#btn-add').click(function(){

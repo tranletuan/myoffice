@@ -25,6 +25,7 @@ import com.myoffice.myapp.models.dto.DocumentType;
 import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.User;
+import com.myoffice.myapp.models.dto.UserDetail;
 import com.myoffice.myapp.models.service.DataConfig;
 import com.myoffice.myapp.models.service.DataService;
 import com.myoffice.myapp.support.ItemDocInWait;
@@ -35,6 +36,18 @@ public class UtilMethod {
 	private static final Logger logger = LoggerFactory
 			.getLogger(UtilMethod.class);
 
+	//Get User Name 
+	public static String getFullName(User user) {
+		String result = user.getUserName();
+		UserDetail userDetail = user.getUserDetail();
+		if (userDetail != null) {
+			if (userDetail.getFullName() != null && userDetail.getFullName().trim().length() > 0) {
+				result = userDetail.getFullName();
+			}
+		}
+		return result;
+	}
+	
 	//Between two day
 	public static int betweenTwoDay(Date d1, Date d2) {
 		if(d1 == null || d2 == null) return -1;
