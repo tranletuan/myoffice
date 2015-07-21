@@ -23,6 +23,7 @@
 				<!-- hasn't Admin role -->
 				<ul class="nav navbar-nav" sec:authorize="!hasRole('ROLE_ADMIN')">
 					<li><a href="#" th:href="@{/store/list/out}">Lưu trữ</a></li>
+					<li><a href="#" th:href="@{/history/show}">Lịch sử</a></li>
 					<li><a href="#" th:href="@{/calendar/show}">Lịch</a></li>
 
 					<li class="dropdown" >

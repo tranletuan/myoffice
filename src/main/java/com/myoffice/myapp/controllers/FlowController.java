@@ -836,7 +836,8 @@ public class FlowController extends AbstractController {
 	@RequestMapping(value = "/complete_report")
 	public ModelAndView completeReportTask(
 			@ModelAttribute("docId") Integer docId,
-			@ModelAttribute("procId") String procId) {
+			@ModelAttribute("procId") String procId,
+			RedirectAttributes reAttr) {
 		ModelAndView model = new ModelAndView("redirect:/flow/doc_in_info/" + docId);
 		if(docId != null && docId > 0){
 			Task curTask = flowUtil.getCurrentTask(procId);
@@ -844,6 +845,13 @@ public class FlowController extends AbstractController {
 			DocumentRecipient docRec = dataService.findDocRecipient(docId, curUser.getOrgan().getOrganId());
 			AssignContent assContent = docRec.getAssignContent();
 			User owner = assContent.getOwner();
+			
+			//Không thể hoàn thành task nếu chưa có file báo cáo
+			if(docRec.getAssignContent().getReportDoc() == null){
+				reAttr.addFlashAttribute("error", true);
+				reAttr.addFlashAttribute("errorMessage", "Lỗi, không tồn tại file báo cáo");
+				return model;
+			}
 			
 			if (curTask == null || assContent == null)
 				return model;
@@ -858,6 +866,7 @@ public class FlowController extends AbstractController {
 				dataService.saveAssignContent(assContent);
 			}
 		}
+		
 		return model;
 	}
 	

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>Lịch sử xử lý</title>
+
+	<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	
+	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
+	
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datetimepicker.min.css}" />
+
+	<script type="text/javascript" th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+
+	<script type="text/javascript" th:src="@{/js/highcharts.js}" ></script>
+
+	<script type="text/javascript" th:src="@{/js/exporting.js}" ></script>
+
+	<script type="text/javascript" th:src="@{/js/history-report.js}" ></script>
+
+	<style type="text/css">
+		#history-table {
+			border-top: none !important; 
+		}
+	</style>
+
+</head>
+<body>
+<div class="container-fluid">
+	<div th:replace="fragment/menu :: menu"></div>
+	<div class="row">
+		<div class="col-sm-1"></div>
+		<div class="col-sm-10">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h4 class="panel-title">Thông tin cơ quan</h4>
+				</div>
+
+				<table class="table table-hover" id="history-table">
+					<tbody>
+						<tr>
+							<td><h4><span class="glyphicon glyphicon-star" style="color:#337ab7;"></span> Tên cơ quan</h4></td>
+							<td><h4 th:text="${organ.organName}"></h4></td>
+						</tr>
+
+						<tr>
+							<td><h4><span class="glyphicon glyphicon-asterisk" style="color:#337ab7;"></span> Tên viết tắt</h4></td>
+							<td><h4 th:text="${organ.shortName}"></h4></td>
+						</tr>
+
+						<tr>
+							<td><h4><span class="glyphicon glyphicon-level-up" style="color:#337ab7;"></span> Cấp cơ quan</h4></td>
+							<td><h4 th:text="${organ.organType.organTypeName}"></h4></td>
+						</tr>
+
+						<tr>
+							<td><h4><span class="glyphicon glyphicon-lock" style="color:#337ab7;"></span> Đơn vị chủ quản</h4></td>
+							<td><h4 th:text="${organ.unit.unitName}"></h4></td>
+						</tr>
+
+						<tr>
+							<td><h4><span class="glyphicon glyphicon-tag" style="color:#337ab7;"></span> Địa chỉ</h4></td>
+							<td><h4 th:text="${organ.unit.address}"></h4></td>
+						</tr>
+
+						<tr>
+							<td><h4><span class="glyphicon glyphicon-phone-alt" style="color:#337ab7;"></span> Số điện thoại</h4></td>
+							<td><h4 th:text="${organ.phoneNumber}"></h4></td>
+						</tr>
+
+						<tr>
+							<td><h4><span class="glyphicon glyphicon-envelope" style="color:#337ab7;"></span> Email</h4></td>
+							<td><h4 th:text="${organ.email}"></h4></td>
+						</tr>
+
+						<tr>
+							<td><h4><span class="glyphicon glyphicon-transfer" style="color:#337ab7;"></span> Lịch sử</h4></td>
+							<td>
+								<form class="form-horizontal" th:action="@{/history/search}" method="post" autocompleted="off" id="history-form">
+									<div class="form-inline">
+										<label for="timeStart" class="control-label">Từ ngày</label>
+										<div class="input-group date form_date date-start" data-date="" data-date-format="dd MM yyyy" data-link-field="timeStart" data-link-format="dd-mm-yyyy">
+											<input class="form-control" size="16" type="text" value="" required="true" th:name="timeStart" id="timeStart"/>
+											<!-- <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> -->
+											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+										</div>
+
+										<label for="timeEnd" class="control-label">Đến ngày</label>
+										<div class="input-group date form_date date-end" data-date="" data-date-format="dd MM yyyy" data-link-field="timeEnd" data-link-format="dd-mm-yyyy">
+											<input class="form-control" size="16" type="text" value="" required="true" th:name="timeEnd" id="timeEnd"/>
+											<!-- <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> -->
+											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+										</div>
+
+										<button type="submit" data-loading-text="Đang xử lý..." class="btn btn-primary btn-search">Xem</button>
+									</div>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+  				</table>
+			</div>
+
+			<div id="show-history"></div>
+		</div>
+		<div class="col-sm-1"></div>
+	</div>
+</div>
+</body>
+</html>
