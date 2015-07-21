@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.activiti.engine.ActivitiException;
@@ -14,6 +16,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -203,6 +206,37 @@ public class FlowUtil {
 		} catch (ActivitiException e) {
 			return null;
 		}
+	}
+	
+	public List<String> getListProcessInstanceIdByDate(String resourceName, String key, Date startTime, Date endTime, Boolean finished) {
+		List<String> listProcInstId = new ArrayList<String>();
+		List<ProcessDefinition> listProcDef = repositoryService.createProcessDefinitionQuery()
+				.processDefinitionKey(key)
+				.processDefinitionResourceName(resourceName)
+				.list();
+		
+		for(ProcessDefinition procDef : listProcDef) {
+			String procDefId = procDef.getId();
+			List<HistoricProcessInstance> listHisProc = null;
+			if (finished == null) {
+				listHisProc = historyService.createHistoricProcessInstanceQuery().processDefinitionId(procDefId)
+						.startedAfter(startTime).startedBefore(endTime).list();
+			} else {
+				if (finished) {
+					listHisProc = historyService.createHistoricProcessInstanceQuery().processDefinitionId(procDefId)
+							.startedAfter(startTime).startedBefore(endTime).finished().list();
+				} else {
+					listHisProc = historyService.createHistoricProcessInstanceQuery().processDefinitionId(procDefId)
+							.startedAfter(startTime).startedBefore(endTime).unfinished().list();
+				}
+			}
+	
+			for(HistoricProcessInstance hisProc : listHisProc) {
+				listProcInstId.add(hisProc.getId());
+			}
+		}
+		
+		return listProcInstId;
 	}
 	
 	public RuntimeService getRuntimeService() {

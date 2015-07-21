@@ -106,7 +106,8 @@ public class StoreController extends AbstractController {
 			@RequestParam(value = "docName", required = false) String docName,
 			@RequestParam(value = "epitome", required = false) String epitome,
 			@RequestParam(value = "number", required = false) String number,
-			@RequestParam(value = "docTypeId") int docTypeId,
+			@RequestParam(value = "docTypeId", required = false) Integer docTypeId,
+			@RequestParam(value = "numberSign", required = false) String numberSign,
 			@RequestParam(value = "department" , required = false) String department,
 			@RequestParam(value = "minDay", required = false) String minDay,
 			@RequestParam(value = "maxDay", required = false) String maxDay){
@@ -118,20 +119,20 @@ public class StoreController extends AbstractController {
 		
 		Date minDaySet = null;
 		Date maxDaySet = null;
+		
 		try {
 			if(minDay != null) minDaySet = UtilMethod.toDate(minDay, "dd-MM-yyyy");
 			if(maxDay != null) maxDaySet = UtilMethod.toDate(maxDay, "dd-MM-yyyy");
 		} catch(Exception e){}
 		
 		List<Document> docList = dataService.findCompletedDocOut(organ.getOrganId(), docName, epitome, number, docTypeId,
-				department, minDaySet, maxDaySet, null, null);
+				numberSign, department, minDaySet, maxDaySet, null, null);
 		UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", docList, model, null);
 		model.addObject("docList", docList);
 		model.addObject("out", true);
 
 		return model;
 	}
-	
 	
 	//Search Document In
 	@RequestMapping(value = "/search_doc_in", method = RequestMethod.POST)

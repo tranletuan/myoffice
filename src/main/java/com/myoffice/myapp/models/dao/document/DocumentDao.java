@@ -107,7 +107,7 @@ public interface DocumentDao {
 	List<TenureMenuItem> findMenuTenureIn(Integer organId);
 	
 	//STORE
-	List<Document> findCompletedDocOut(Integer organId, String docName, String epitome, String number, int docTypeId,
+	List<Document> findCompletedDocOut(Integer organId, String docName, String epitome, String number, Integer docTypeId, String numberSign,
 			String department, Date minDay, Date maxDay, Integer firstResult, Integer maxResult);
 
 	List<DocumentRecipient> findCompletedDocIn(Integer organId, String docName, String epitome, String number,
@@ -120,4 +120,10 @@ public interface DocumentDao {
 	List<DocumentRecipient> findDocRecByCandidate(Integer organId, String userName);
 	
 	List<DocumentRecipient> findDocRecForInputer(Integer organId);
+	
+	//HISTORY
+	Integer countDocByProcessIdList(Integer organId, List<String> processIdList);
+	
+	Integer countDocRecByProcessIdList(Integer organId, List<String> processIdList);
+	
 } 

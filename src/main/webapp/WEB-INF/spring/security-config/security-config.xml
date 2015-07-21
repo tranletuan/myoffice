@@ -24,7 +24,7 @@
 		
 		<form-login 
 			login-page="/signin" 
-			default-target-url="/calendar/show"
+			default-target-url="/flow/my_task"
 			always-use-default-target="false"
 			login-processing-url="/j_spring_security_check"
 			authentication-failure-url="/signin-error" 

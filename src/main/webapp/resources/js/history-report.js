@@ -15,16 +15,19 @@ $(document).ready(function(){
  	$('.form_date').datetimepicker("setDate", new Date());
 
  	$('#history-form').submit(function(e){
+ 		$('.btn-search').button('loading');
 
  		$.ajax({
  			type : $(this).attr('method'),
  			url : $(this).attr('action'),
  			data : $(this).serialize(),
  			success : function(response) {
- 				$('#show-history').html(response);
+ 				$('#panel-document-history').removeClass('hidden');
+ 				showHighChart('#show-document-history', response.jsChart);
  				$('.btn-search').button('reset');
  			},
  			error : function(){
+ 				$('#panel-document-history').addClass('hidden');
  				$('.btn-search').button('reset');
  			}
  		});
@@ -32,66 +35,66 @@ $(document).ready(function(){
  		e.preventDefault();
  	});
 
- 	$('#show-history').highcharts({
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Historic World Population by Region'
-        },
-        subtitle: {
-            text: 'Source: <a href="https://en.wikipedia.org/wiki/World_population">Wikipedia.org</a>'
-        },
-        xAxis: {
-            categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
-            title: {
-                text: null
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Population (millions)',
-                align: 'high'
-            },
-            labels: {
-                overflow: 'justify'
-            }
-        },
-        /*tooltip: {
-            valueSuffix: ' millions'
-        },*/
-        plotOptions: {
-            bar: {
-                dataLabels: {
-                    enabled: true
-                }
-            }
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'top',
-            x: -40,
-            y: 80,
-            floating: true,
-            borderWidth: 1,
-            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-            shadow: true
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Year 1800',
-            data: [107, 31, 635, 203, 2]
-        }, {
-            name: 'Year 1900',
-            data: [133, 156, 947, 408, 6]
-        }, {
-            name: 'Year 2012',
-            data: [1052, 954, 4250, 740, 38]
-        }]
-    });
+ 	$('#basic-info-table').on('hidden.bs.collapse', function () {
+  		$('#span-basic-info').attr('class', 'glyphicon glyphicon-chevron-up');
+	});
 
+	$('#basic-info-table').on('shown.bs.collapse', function () {
+  		$('#span-basic-info').attr('class', 'glyphicon glyphicon-chevron-down');
+	});
+
+	function showHighChart(divName, jsData) {
+	 	$(divName).highcharts({
+	        chart: {
+	            type: jsData.type
+	        },
+	        title: {
+	            text: jsData.title
+	        },
+	        subtitle: {
+	            text: jsData.subtitle
+	        },
+	        xAxis: {
+	            categories: jsData.xAxisCategories,
+	            title: {
+	                text: jsData.xAxisTitle
+	            }
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: jsData.yAxisTitle,
+	                align: 'high'
+	            },
+	            labels: {
+	                overflow: 'justify'
+	            }
+	        },
+	        tooltip: {
+	            valueSuffix: jsData.valueSuffix
+	        },
+	        plotOptions: {
+	            bar: {
+	                dataLabels: {
+	                    enabled: true
+	                }
+	            }
+	        },
+	        legend: {
+	            layout: jsData.legendLayout,
+	            align: jsData.legendAlign,
+	            verticalAlign: jsData.legendVerticalAlign,
+	            x: jsData.legendX,
+	            y: jsData.legendY,
+	            floating: jsData.legendFloating,
+	            borderWidth: jsData.legendBorderWidth,
+	            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+	            shadow: jsData.legendShadow
+	        },
+	        credits: {
+	            enabled: false
+	        },
+	        series: jsData.series
+	    });
+	}
 });

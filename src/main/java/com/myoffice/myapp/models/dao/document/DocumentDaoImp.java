@@ -8,8 +8,10 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
@@ -495,7 +497,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Document> findCompletedDocOut(Integer organId, String docName, String epitome, String number,
-			int docTypeId, String department, Date minDay, Date maxDay, Integer firstResult, Integer maxResult) {
+			Integer docTypeId, String numberSign, String department, Date minDay, Date maxDay, Integer firstResult, Integer maxResult) {
 		Criteria criteria = getSession().createCriteria(Document.class);
 		criteria.createAlias("organ", "o");
 		criteria.add(Restrictions.eq("o.organId", organId));
@@ -509,6 +511,8 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			criteria.add(Restrictions.and(Restrictions.like("epitome", "%" + epitome + "%")));
 		if (number != null)
 			criteria.add(Restrictions.and(Restrictions.like("numberSign", "%" + number + "%")));
+		if (numberSign != null)
+			criteria.add(Restrictions.and(Restrictions.like("numberSign", "%" + numberSign + "%")));
 		if (docTypeId > 0)
 			criteria.add(Restrictions.and(Restrictions.eq("docType.docTypeId", docTypeId)));
 		if (department != null)
@@ -656,6 +660,46 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
+
+	@Override
+	public Integer countDocByProcessIdList(Integer organId, List<String> processIdList) {
+		if(processIdList.size() == 0) return 0;
+		Criteria criteria = getSession().createCriteria(Document.class);
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		Disjunction disj = Restrictions.disjunction();
+		for(String procId : processIdList) {
+			disj.add(Restrictions.eq("processInstanceId", procId));			
+		}
+	
+		criteria.add(Restrictions.and(disj));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		criteria.setProjection(Projections.rowCount());
+		Long result = (Long) criteria.uniqueResult();
+		return result.intValue();
+	
+	}
+
+	@Override
+	public Integer countDocRecByProcessIdList(Integer organId, List<String> processIdList) {
+		if(processIdList.size() == 0) return 0;
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		Disjunction disj = Restrictions.disjunction();
+		for(String procId : processIdList) {
+			disj.add(Restrictions.eq("processInstanceId", procId));			
+		}
+	
+		criteria.add(Restrictions.and(disj));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		criteria.setProjection(Projections.rowCount());
+		Long result = (Long) criteria.uniqueResult();
+		return result.intValue();
+	}
+	
+	
+
 	
 	
 }

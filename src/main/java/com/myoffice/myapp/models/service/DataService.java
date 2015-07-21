@@ -289,9 +289,9 @@ public class DataService {
 	}
 	
 	//STORE
-	public List<Document> findCompletedDocOut(Integer organId, String docName, String epitome, String number, int docTypeId,
+	public List<Document> findCompletedDocOut(Integer organId, String docName, String epitome, String number, Integer docTypeId, String numberSign,
 			String department, Date minDaySet, Date maxDaySet, Integer firstResult, Integer maxResult) {
-		return docDao.findCompletedDocOut(organId, docName, epitome, number, docTypeId, department, minDaySet, maxDaySet,
+		return docDao.findCompletedDocOut(organId, docName, epitome, number, docTypeId, numberSign, department, minDaySet, maxDaySet,
 				firstResult, maxResult);
 	}
 
@@ -313,6 +313,15 @@ public class DataService {
 	
 	public List<DocumentRecipient> findDocRecForInputer(Integer organId) {
 		return docDao.findDocRecForInputer(organId);
+	}
+	
+	//HISTORY
+	public Integer countDocByProcessIdList(Integer organId, List<String> processIdList) {
+		return docDao.countDocByProcessIdList(organId, processIdList);
+	}
+	
+	public Integer countDocRecByProcessIdList(Integer organId, List<String> processIdList) {
+		return docDao.countDocRecByProcessIdList(organId, processIdList);
 	}
 	
 	//=====================

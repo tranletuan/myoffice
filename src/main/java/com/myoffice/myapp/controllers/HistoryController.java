@@ -1,7 +1,9 @@
 package com.myoffice.myapp.controllers;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.User;
+import com.myoffice.myapp.models.service.DataConfig;
+import com.myoffice.myapp.support.JSSeries;
+import com.myoffice.myapp.support.JSonChart;
 import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
@@ -37,10 +42,12 @@ public class HistoryController extends AbstractController {
 	public Map<String, Object> searchHistory(
 			@RequestParam("timeStart") String timeStart,
 			@RequestParam("timeEnd") String timeEnd) {
-		//ModelAndView model = new ModelAndView("fragment/history-show");
+		User curUser = securityService.getCurrentUser();
+		Organ organ = curUser.getOrgan();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Date startDay = null;
 		Date endDay = null;
+		
 		try {
 			startDay = UtilMethod.toDate(timeStart, "dd-MM-yyyy");
 			endDay = UtilMethod.toDate(timeEnd, "dd-MM-yyyy");
@@ -48,8 +55,8 @@ public class HistoryController extends AbstractController {
 			return null;
 		}
 		
-		
-		
+		UtilMethod.prepageJSChartHistoryDocument(flowUtil, dataService, organ, map, startDay, endDay);
+		map.put("myObject", 123);
 		return map;
 	}
 }

@@ -1068,6 +1068,7 @@ public class FlowController extends AbstractController {
 					docRec.setDocument(doc);
 					docRec.setProcessInstanceId(procInsId);
 					docRec.setOrgan(organ);
+					docRec.setComingTime(new Date());
 					checkSave = dataService.saveDocRecipient(docRec);
 					doc = docRec.getDocument();
 				}
