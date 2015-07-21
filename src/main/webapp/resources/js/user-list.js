@@ -23,7 +23,8 @@
 	
 	
 	//form
-
+    var successLabel = "glyphicon-ok";
+    var errorLabel = "glyphicon-remove";
  	var userId = -1;
  	var userName;
  	var organId;
@@ -76,6 +77,27 @@
  	});
 
     $("#table-body").remove();
+    $('#password').focusin(function(){ $('.checkNewPassword').empty();});
+    $('#password').focusout(function(){  
+        var URL = $(this).attr('data');
+        var newPassword = $(this).val();
+        $('.checkNewPassword').empty();
+
+        $.ajax({
+            type : "GET",
+            url : URL,
+            data : {
+                "newPassword" : newPassword 
+            },
+            success: function(response){
+                if(response) {
+                    $('.checkNewPassword').append("<span style='color:green;' class='glyphicon " + successLabel + "'></span>");
+                } else {
+                    $('.checkNewPassword').append("<span style='color:red;' class='glyphicon " + errorLabel + "'></span>");
+                }
+            }
+        });
+    });
 
     //color picker
     $('#myColor').colorpicker({

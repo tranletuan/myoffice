@@ -78,13 +78,13 @@ xmlns:th="http://www.thymeleaf.org">
 	
 							<div class="form-group hidden">
 								<label for="userId" class="col-sm-2 control-label">ID</label>
-								<div class="col-sm-10">
+								<div class="col-sm-9">
 									<input type="text" class="form-control" id="userId" th:name="userId" value=""/>
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="userColor" class="col-sm-2 control-label">Màu tài khoản</label>
-								<div class="col-sm-10">
+								<div class="col-sm-9">
 									<div class="input-group myColor">
 										<input type="text" value="" class="form-control myColor" th:name="userColor" required="true" id="myColor"/>
 										<span class="input-group-addon"  id="showColor"><span class="glyphicon glyphicon-user"></span></span>
@@ -94,21 +94,22 @@ xmlns:th="http://www.thymeleaf.org">
 
 							<div class="form-group">
 								<label for="userName" class="col-sm-2 control-label">Tên tài khoản</label>
-								<div class="col-sm-10">
+								<div class="col-sm-9">
 									<input type="text" class="form-control" id="userName" placeholder="Tên tài khoản" autofocus="true" th:name="userName" required="true"/>
 								</div>
 							</div>
 
 							<div class="form-group">
 								<label for="password" class="col-sm-2 control-label">Mật khẩu</label>
-								<div class="col-sm-10">
-									<input type="password" class="form-control change-required" id="password" placeholder="Mật khẩu" th:name="password" value="" />
+								<div class="col-sm-9">
+									<input type="password" class="form-control change-required" id="password" placeholder="Mật khẩu" th:name="password" value="" th:attr="data=@{/check_new_password}"/>
 								</div>
+								<div class="col-sm-1 checkNewPassword checkPassword"></div>
 							</div>
 
 							<div class="form-group">
 								<label for="organ" class="col-sm-2 control-label">Cơ quan</label>
-								<div class="col-sm-10">
+								<div class="col-sm-9">
 									<select class="form-control" id="organ"  th:name="organId" required="true">
 										<option th:each="organ : ${organList}"
 												th:value="${organ.organId}"
@@ -120,7 +121,7 @@ xmlns:th="http://www.thymeleaf.org">
 
 							<div class="form-group">
 								<label for="level" class="col-sm-2 control-label">Chức vụ</label>
-								<div class="col-sm-10">
+								<div class="col-sm-9">
 									<select class="form-control" th:name="levelId" id="level">
 										<option th:each="level : ${levelList}"
 												th:value="${level.levelId}"
@@ -132,7 +133,7 @@ xmlns:th="http://www.thymeleaf.org">
 
 							<div class="form-group">
 								<label for="select-roles" class="col-sm-2 control-label">Quyền hạn</label>
-								<div class="col-sm-10">
+								<div class="col-sm-9">
 									<select class="form-control change-required" th:name="roles" multiple="true" id="select-roles">
 										<option th:each="role : ${roleList}"
 												th:value="${role.roleId}"
@@ -144,7 +145,7 @@ xmlns:th="http://www.thymeleaf.org">
 
 							<div class="form-group">
 								<label for="enabled" class="col-sm-2 control-label">Khả dụng</label>
-								<div class="col-sm-10">
+								<div class="col-sm-9">
 									<div class="checkbox">
 										<label>
 											<input type="checkbox" value="true" checked="unchecked" th:name="enabled" id="enabled"/>
@@ -154,7 +155,7 @@ xmlns:th="http://www.thymeleaf.org">
 							</div>
 	
 							<div class="form-group">
-								<div class="col-sm-offset-2 col-sm-10">
+								<div class="col-sm-offset-2 col-sm-9">
 									<button type="submit" class="btn btn-primary">Lưu</button>
 									<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close" aria-hidden="true">Bỏ qua</button>
 								</div>
