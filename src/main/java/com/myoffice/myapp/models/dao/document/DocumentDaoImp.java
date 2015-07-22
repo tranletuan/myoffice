@@ -109,7 +109,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 			criteria.add(Restrictions.and(Restrictions.eq("dt.docTypeId", docTypeId)));
 		if (completed != null)
 			criteria.add(Restrictions.and(Restrictions.eq("completed", completed)));
-		if (sended != null && completed != null)
+		if (sended != null && completed != null && completed == true)
 			criteria.add(Restrictions.and(Restrictions.eq("sended", sended)));
 		if (enabled != null)
 			criteria.add(Restrictions.and(Restrictions.eq("enabled", enabled)));
@@ -385,6 +385,24 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
 		criteria.createAlias("document", "d");
 		criteria.add(Restrictions.eq("d.docId", docId));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentRecipient> findDocRecByProcessIdList(Integer organId, List<String> processIdList) {
+		if(processIdList.size() == 0) return null;
+		Criteria criteria = getSession().createCriteria(DocumentRecipient.class);
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		
+		Disjunction disj = Restrictions.disjunction();
+		for(String procId : processIdList) {
+			disj.add(Restrictions.eq("processInstanceId", procId));			
+		}
+	
+		criteria.add(Restrictions.and(disj));
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}

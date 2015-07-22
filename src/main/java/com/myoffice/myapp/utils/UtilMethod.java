@@ -64,9 +64,25 @@ public class UtilMethod {
 
 	// Covert String to Date
 	public static Date toDate(String dateString, String dateFormat) throws ParseException {
-		DateFormat df = new SimpleDateFormat(dateFormat);
-		Date rsDate = df.parse(dateString);
-		return rsDate;
+		try {
+			DateFormat df = new SimpleDateFormat(dateFormat);
+			Date rsDate = df.parse(dateString);
+			return rsDate;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	//Convert Date to Date
+	public static Date toDate(Date date, String dateFormat) {
+		try {
+			DateFormat df = new SimpleDateFormat(dateFormat);
+			String dateString = df.format(date);
+			Date rsDate = df.parse(dateString);
+			return rsDate;
+		} catch (ParseException e) {
+			return null;
+		}
 	}
 
 	// Convert Date to String
@@ -341,23 +357,22 @@ public class UtilMethod {
 			Map<String, Object> map, Date startDay, Date endDay) {
 		// Văn bản đi
 		List<String> finishDocOutProcIdList = flowUtil.getListProcessInstanceIdByDate(DataConfig.RSC_NAME_FLOW_OUT,
-				DataConfig.PROC_DEF_KEY_FLOW_OUT, startDay, endDay, true);
+				DataConfig.PROC_DEF_KEY_FLOW_OUT, startDay, endDay, true, organ.getOrganId().toString());
 		List<String> unfinishDocOutProcIdList = flowUtil.getListProcessInstanceIdByDate(DataConfig.RSC_NAME_FLOW_OUT,
-				DataConfig.PROC_DEF_KEY_FLOW_OUT, startDay, endDay, false);
+				DataConfig.PROC_DEF_KEY_FLOW_OUT, startDay, endDay, false, organ.getOrganId().toString());
 		Integer countFinishDocOut = dataService.countDocByProcessIdList(organ.getOrganId(), finishDocOutProcIdList);
 		Integer countUnfinishDocOut = dataService.countDocByProcessIdList(organ.getOrganId(), unfinishDocOutProcIdList);
 		
-		logger.info(String.valueOf(finishDocOutProcIdList.size()));
-		logger.info(String.valueOf(unfinishDocOutProcIdList.size()));
 		// Văn bản đến
 		List<String> finishDocInProcIdList = flowUtil.getListProcessInstanceIdByDate(DataConfig.RSC_NAME_FLOW_IN,
-				DataConfig.PROC_DEF_KEY_FLOW_IN, startDay, endDay, true);
+				DataConfig.PROC_DEF_KEY_FLOW_IN, startDay, endDay, true, organ.getOrganId().toString());
 		List<String> unfinishDocInProcIdList = flowUtil.getListProcessInstanceIdByDate(DataConfig.RSC_NAME_FLOW_IN,
-				DataConfig.PROC_DEF_KEY_FLOW_IN, startDay, endDay, false);
+				DataConfig.PROC_DEF_KEY_FLOW_IN, startDay, endDay, false, organ.getOrganId().toString());
 		Integer countFinishDocIn = dataService.countDocRecByProcessIdList(organ.getOrganId(), finishDocInProcIdList);
 		Integer countUnfinishDocIn = dataService.countDocRecByProcessIdList(organ.getOrganId(),
 				unfinishDocInProcIdList);
-
+		
+		
 		JSonChart jsChart = new JSonChart();
 		jsChart.setType("bar");
 		jsChart.setTitle("Thống kê văn bản từ " + UtilMethod.dateToString(startDay, "dd-MM-yyyy") + " đến "

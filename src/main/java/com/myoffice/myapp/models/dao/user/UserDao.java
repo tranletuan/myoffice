@@ -15,6 +15,8 @@ public interface UserDao {
 	
 	List<User> findUserByArrRoleShortName(Integer organId, String[] arrRoleShortName, User nUser, String compareValue);
 	
+	List<User> findAllUserByOrgan(Integer organId);
+	
 	void saveUser(User user);
 	
 	void deleteUser(User user);

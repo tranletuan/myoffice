@@ -84,10 +84,12 @@ public class FlowUtil {
 
 	}
 
-	public String startProcess(String processDefinitionId) {
+	public String startProcess(String processDefinitionId, String processName) {
 		try {
 			// Start process instance
 			ProcessInstance procInst = runtimeService.startProcessInstanceById(processDefinitionId);
+			runtimeService.setProcessInstanceName(procInst.getId(), processName);
+			
 			logger.info("Process Instances Id: " + procInst.getId());
 			return procInst.getId();
 
@@ -208,7 +210,7 @@ public class FlowUtil {
 		}
 	}
 	
-	public List<String> getListProcessInstanceIdByDate(String resourceName, String key, Date startTime, Date endTime, Boolean finished) {
+	public List<String> getListProcessInstanceIdByDate(String resourceName, String key, Date startTime, Date endTime, Boolean finished, String processName) {
 		List<String> listProcInstId = new ArrayList<String>();
 		List<ProcessDefinition> listProcDef = repositoryService.createProcessDefinitionQuery()
 				.processDefinitionKey(key)
@@ -220,13 +222,16 @@ public class FlowUtil {
 			List<HistoricProcessInstance> listHisProc = null;
 			if (finished == null) {
 				listHisProc = historyService.createHistoricProcessInstanceQuery().processDefinitionId(procDefId)
+						.processInstanceName(processName)
 						.startedAfter(startTime).startedBefore(endTime).list();
 			} else {
 				if (finished) {
 					listHisProc = historyService.createHistoricProcessInstanceQuery().processDefinitionId(procDefId)
+							.processInstanceName(processName)
 							.startedAfter(startTime).startedBefore(endTime).finished().list();
 				} else {
 					listHisProc = historyService.createHistoricProcessInstanceQuery().processDefinitionId(procDefId)
+							.processInstanceName(processName)
 							.startedAfter(startTime).startedBefore(endTime).unfinished().list();
 				}
 			}

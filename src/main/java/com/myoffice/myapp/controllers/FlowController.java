@@ -3,6 +3,7 @@ package com.myoffice.myapp.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.security.spec.MGF1ParameterSpec;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -226,7 +227,7 @@ public class FlowController extends AbstractController {
 				String procDefId = flowUtil.getProcessDefinitionId(
 						DataConfig.RSC_NAME_FLOW_OUT,
 						DataConfig.PROC_DEF_KEY_FLOW_OUT);
-				String procInsId = flowUtil.startProcess(procDefId);
+				String procInsId = flowUtil.startProcess(procDefId, organ.getOrganId().toString());
 
 				if (procDefId == " " || procInsId == null) {
 					model.setViewName("error");
@@ -517,7 +518,7 @@ public class FlowController extends AbstractController {
 				docRec.setComingTime(new Date());
 				
 				procDefId = flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_IN, DataConfig.PROC_DEF_KEY_FLOW_IN);
-				procInsId = flowUtil.startProcess(procDefId);
+				procInsId = flowUtil.startProcess(procDefId, o.getOrganId().toString());
 				
 				if(procDefId != " " && procInsId != null){
 					docRec.setProcessInstanceId(procInsId);
@@ -663,8 +664,9 @@ public class FlowController extends AbstractController {
 			
 			model.addObject("taskDescription", curTask.getDescription());
 	
-			//Tự động bổ sung tên người nhận nhiệm vụ
+			//Tự động bổ sung tên người nhận nhiệm vụ và ngày hết hạn
 			if(curTask != null && taskName[taskName.length - 1].equals("report")) {
+				//Người nhận nhiệm vụ
 				String candidateName = null;
 				if(curTask.getAssignee() != null) candidateName = curTask.getAssignee();
 				else {
@@ -677,6 +679,19 @@ public class FlowController extends AbstractController {
 				if(candidateName != null && !candidateName.equals(assContent.getCandidateName())) {
 					assContent.setCandidateName(candidateName);
 					dataService.saveAssignContent(assContent);
+				}
+				
+				//Ngày hết hạn
+				Date dueDate = curTask.getDueDate();
+				Date today = UtilMethod.toDate(new Date(), "dd-MM-yyyy");
+				if(dueDate == null || today.compareTo(dueDate) < 0) {
+					flowUtil.getTaskService().setDueDate(curTask.getId(), assContent.getTimeEnd());
+				}
+				
+				//Người giao nhiệm vụ
+				String ownerName = curTask.getOwner();
+				if(ownerName == null || !ownerName.equals(assContent.getOwner().getUserName())) {
+					flowUtil.getTaskService().setOwner(curTask.getId(), assContent.getOwner().getUserName());
 				}
 			}
 			
@@ -774,9 +789,9 @@ public class FlowController extends AbstractController {
 	public ModelAndView assignTask(
 			@ModelAttribute("docId") Integer docId,
 			@ModelAttribute("procId") String procId,
-			@RequestParam("timeStart") String timeStart,
-			@RequestParam("timeEnd") String timeEnd,
-			@RequestParam("content") String content,
+			@RequestParam(value = "timeStart", required = false) String timeStart,
+			@RequestParam(value = "timeEnd", required = false) String timeEnd,
+			@RequestParam(value = "content", required = false) String content,
 			RedirectAttributes reAttr) throws ParseException{
 		ModelAndView model = new ModelAndView("redirect:/store/list/out/1");
 		if(docId < 0) return model;
@@ -784,20 +799,37 @@ public class FlowController extends AbstractController {
 		Organ organ = curUser.getOrgan();
 		DocumentRecipient docRec = dataService.findDocRecipient(docId, organ.getOrganId());
 		AssignContent assContent = docRec.getAssignContent();
-		if(assContent == null) assContent = new AssignContent();
 		
 		Date startDate = UtilMethod.toDate(timeStart, "dd-MM-yyyy");
 		Date endDate = UtilMethod.toDate(timeEnd, "dd-MM-yyyy");
 		
-		if(startDate.after(endDate)){
+		if(assContent == null) {
+			if(startDate == null || endDate == null || (content == null && content.trim().length() > 0)) {
+				reAttr.addFlashAttribute("error", true);
+				reAttr.addFlashAttribute("errorMessage", "Lỗi, vui lòng điền đầy đủ thông tin nhiệm vụ");
+				return model;
+			}
+			assContent = new AssignContent();
+		}
+		
+		Date today = UtilMethod.toDate(new Date(), "dd-MM-yyyy");
+	
+		if(endDate.compareTo(today) < 0) {
 			reAttr.addFlashAttribute("error", true);
-			reAttr.addFlashAttribute("errorMessage", "Lỗi, ngày kết thúc phải lớn hơn ngày bắt đầu");
+			reAttr.addFlashAttribute("errorMessage", "Lỗi, ngày kết thúc phải lớn hơn hoặc bằng hôm nay");
+		}
+		else if(startDate.compareTo(endDate) > 0){
+			reAttr.addFlashAttribute("error", true);
+			reAttr.addFlashAttribute("errorMessage", "Lỗi, ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu");
 		} else {
 			// Lưu phân công
-			assContent.setTimeStart(startDate);
 			assContent.setProgress(0);
-			assContent.setTimeEnd(endDate);
-			assContent.setContent(content);
+			if (startDate != null)
+				assContent.setTimeStart(startDate);
+			if (endDate != null)
+				assContent.setTimeEnd(endDate);
+			if (content != null && content.trim().length() > 0)
+				assContent.setContent(content);
 			assContent.setOwner(curUser);
 			docRec.setAssignContent(assContent);
 			dataService.saveDocRecipient(docRec);
@@ -806,7 +838,7 @@ public class FlowController extends AbstractController {
 		model.setViewName("redirect:/flow/doc_in_info/" + docId);
 		return model;
 	}
-	
+
 	@RequestMapping(value = "/send_report", method = RequestMethod.POST)
 	public ModelAndView reportTask(
 			@ModelAttribute("docId") Integer docId,
@@ -1052,7 +1084,7 @@ public class FlowController extends AbstractController {
 		if (docId == null || docId <= 0) {
 			try {
 				String procDefId = flowUtil.getProcessDefinitionId(DataConfig.RSC_NAME_FLOW_IN, DataConfig.PROC_DEF_KEY_FLOW_IN);
-				String procInsId = flowUtil.startProcess(procDefId);
+				String procInsId = flowUtil.startProcess(procDefId, organ.getOrganId().toString());
 				boolean checkSave = false;
 				
 				if (procDefId == " " || procInsId == null) {

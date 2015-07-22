@@ -28,8 +28,16 @@
  	$('#btn-change').click(function(){
  		$('#tenureId').val(tenureId);
  		$('#tenureName').val(tenureName);
- 		$('#timeStart').val(timeStart);
- 		$('#timeEnd').val(timeEnd);
+ 		
+ 		var strStart = timeStart.split('-');
+ 		var strEnd = timeEnd.split('-');
+
+ 		/*$('#timeStart').val($('#showTimeStart').html());
+ 		$('#timeEnd').val($('#showTimeEnd').html());*/
+
+ 		$('.date-start').datetimepicker('setDate', new Date(strStart[2], strStart[1] - 1, strStart[0]));
+ 		$('.date-end').datetimepicker('setDate', new Date(strEnd[2], strEnd[1] - 1, strEnd[0]));
+
 
  	});
 

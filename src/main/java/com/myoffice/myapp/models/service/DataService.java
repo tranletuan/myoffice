@@ -113,6 +113,10 @@ public class DataService {
 		return userDao.findAllUsers();
 	}
 
+	public List<User> findAllUserByOrgan(Integer organId) {
+		return userDao.findAllUserByOrgan(organId);
+	}
+	
 	public void deleteUser(User user) {
 		userDao.deleteUser(user);
 	}
@@ -253,6 +257,9 @@ public class DataService {
 		return docDao.findRecipients(docId);
 	}
 	
+	public List<DocumentRecipient> findDocRecByProcessIdList(Integer organId, List<String> processIdList) {
+		return docDao.findDocRecByProcessIdList(organId, processIdList);
+	}
 	//FILE
 	public DocumentFile findNewestDocFile(Integer docId){
 		return docDao.findNewestDocFile(docId);

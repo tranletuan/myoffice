@@ -90,6 +90,16 @@ public class UserDaoImp extends AbstractDao implements UserDao {
 		return criteria.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> findAllUserByOrgan(Integer organId) {
+		Criteria criteria = getSession().createCriteria(User.class);
+		criteria.createAlias("organ", "o");
+		criteria.add(Restrictions.eq("o.organId", organId));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
+
 	@Override
 	public void saveUser(User user) {
 		persist(user);

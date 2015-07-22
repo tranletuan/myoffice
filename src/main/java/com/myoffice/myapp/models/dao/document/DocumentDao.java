@@ -96,6 +96,8 @@ public interface DocumentDao {
 	
 	List<DocumentRecipient> findRecipients(Integer docId);
 	
+	List<DocumentRecipient> findDocRecByProcessIdList(Integer organId, List<String> processIdList);
+	
 	//DOCTYPE MENU
 	List<DocTypeMenuItem> findMenuDocOut(Integer organId, boolean completed, Integer tenureId);
 	
