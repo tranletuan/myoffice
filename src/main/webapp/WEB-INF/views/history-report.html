@@ -5,7 +5,7 @@ xmlns:th="http://www.thymeleaf.org">
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<title>Lịch sử xử lý</title>
+	<title>Thống kê</title>
 
 	<script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -14,6 +14,9 @@ xmlns:th="http://www.thymeleaf.org">
 	
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 
+	<link rel="stylesheet" th:href="@{/css/bootstrap-table.min.css}" />
+
+
 	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datetimepicker.min.css}" />
 
 	<script type="text/javascript" th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
@@ -21,6 +24,10 @@ xmlns:th="http://www.thymeleaf.org">
 	<script type="text/javascript" th:src="@{/js/highcharts.js}" ></script>
 
 	<script type="text/javascript" th:src="@{/js/exporting.js}" ></script>
+
+	<script type="text/javascript" th:src="@{/js/bootstrap-table.min.js}" ></script>
+
+	<script type="text/javascript" th:src="@{/js/bootstrap-table-vi-VN.min.js}" ></script>
 
 	<script type="text/javascript" th:src="@{/js/history-report.js}" ></script>
 
@@ -99,7 +106,7 @@ xmlns:th="http://www.thymeleaf.org">
   							<tr>
 								<td><h4><span class="glyphicon glyphicon-transfer" style="color:#337ab7;"></span> Số liệu thống kế</h4></td>
 								<td>
-									<form class="form-horizontal" th:action="@{/history/search}" method="post" autocompleted="off" id="history-form">
+									<form class="form-horizontal" th:action="@{/history/view}" method="post" autocompleted="off" id="history-form">
 										<div class="form-inline">
 											<label for="timeStart" class="control-label">Từ ngày</label>
 											<div class="input-group date form_date date-start" data-date="" data-date-format="dd MM yyyy" data-link-field="timeStart" data-link-format="dd-mm-yyyy">
@@ -136,12 +143,25 @@ xmlns:th="http://www.thymeleaf.org">
 			</div>
 
 			<!-- Process History -->
-			<div class="panel panel-success hidden" id="panel-process-history">
+			<div class="panel panel-success hidden" id="panel-staff-history">
 				<div class="panel-heading">
-					<h4 class="panel-title">Thống kê công việc</h4>
+					<h4 class="panel-title">Thống kê nhân viên</h4>
 				</div>
 				<div class="panel-body">
-					<div id="show-process-history"></div>
+					<div id="show-staff-history">
+						<table class="table table-hover" id="table-staff">
+ 							<thead>
+ 								<tr>
+ 									<th data-field="id" data-align="center" data-sortable="true">ID</th>
+ 									<th data-field="fullName" data-sortable="true">Họ Tên</th>
+ 									<th data-field="level" data-sortable="true">Chức vụ</th>
+ 									<th data-field="countTask" data-sortable="true">Số nhiệm vụ</th>
+ 									<th data-field="countLate" data-sortable="true">Trễ hạn</th>
+ 									<th data-field="countCompleted" data-sortable="true">Hoàn thành</th>
+ 								</tr>
+ 							</thead>
+						</table>
+					</div>
 				</div>
 			</div>
 

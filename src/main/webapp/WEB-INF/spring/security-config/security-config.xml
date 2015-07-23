@@ -18,6 +18,7 @@
 		<intercept-url pattern="/flow/send/**" access="hasRole('ROLE_OUTPUTER')"/>
 		<intercept-url pattern="/flow/create_doc_in/**" access="hasRole('ROLE_INPUTER')"/>
 		<intercept-url pattern="/flow/status/**" access="hasRole('ROLE_MANAGER')"/>
+		<intercept-url pattern="/flow/disable_list/**" access="hasRole('ROLE_MANAGER')"/>
 		
 		<intercept-url pattern="/calendar/**" access="isAuthenticated()"/>
 		<intercept-url pattern="/calendar/**" access="!hasRole('ROLE_ADMIN')"/>

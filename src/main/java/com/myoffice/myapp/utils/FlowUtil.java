@@ -244,6 +244,25 @@ public class FlowUtil {
 		return listProcInstId;
 	}
 	
+	public List<HistoricTaskInstance> getHistoryTask(String processInstanceId) {
+		try{
+			List<HistoricTaskInstance> preTasks = historyService.createHistoricTaskInstanceQuery()
+					.orderByHistoricTaskInstanceEndTime()
+					.desc()
+					.processInstanceId(processInstanceId)
+					.list();
+			if(preTasks.size() > 0) {
+				logger.info("Pre Task : " + preTasks.size());
+				return preTasks; 
+			}
+			return null;
+		}
+		catch(ActivitiException e){
+			logger.error("PRE TASK : " + e.getMessage());
+			return null;
+		}
+	}
+	
 	public RuntimeService getRuntimeService() {
 		return runtimeService;
 	}

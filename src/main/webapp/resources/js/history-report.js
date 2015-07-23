@@ -22,12 +22,17 @@ $(document).ready(function(){
  			url : $(this).attr('action'),
  			data : $(this).serialize(),
  			success : function(response) {
+ 				console.log(response.jsTable)
+ 				$('#panel-staff-history').removeClass('hidden');
  				$('#panel-document-history').removeClass('hidden');
+ 				
+ 				$('#table-staff').bootstrapTable({data : response.jsTable});
  				showHighChart('#show-document-history', response.jsChart);
  				$('.btn-search').button('reset');
  			},
  			error : function(){
  				$('#panel-document-history').addClass('hidden');
+ 				$('#panel-staff-history').addClass('hidden');
  				$('.btn-search').button('reset');
  			}
  		});
@@ -97,4 +102,5 @@ $(document).ready(function(){
 	        series: jsData.series
 	    });
 	}
+
 });

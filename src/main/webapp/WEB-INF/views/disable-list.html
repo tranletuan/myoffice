@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	
+<title>Lưu trữ</title>
+
+<script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}" ></script>
+
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}" ></script>
+
+<link rel="stylesheet" href="#" th:href="@{/css/bootstrap.min.css}" />
+
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datetimepicker.min.css}" />
+
+<script type="text/javascript" th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/jquery.bootpag.min.js}" ></script>
+
+</head>
+<body>
+<div class="container-fluid">
+	<div th:replace="fragment/menu :: menu"></div>
+
+	<div class="row">
+		<div class="col-sm-1"></div>
+
+		<div class="container-fuild col-sm-10">
+			<div id="content"></div>
+			<div id="page-selection" th:if="${rowList.size() > 1}"></div>
+			<div class="hidden" id="totalPage" th:attr="data=${rowList.size()}"></div>
+
+			<!-- List document out -->
+			<div th:each="row : ${rowList}" th:attr="id='content-' + (${row}  + 1)" class="hidden list-group doc-group" th:if="${out}">
+				<div th:each="elem : ${elemList}" th:with="Index=${row} * ${elemList.size()} + ${elem}" class="doc">
+				<a href="#" class="list-group-item panel panel-danger" th:href="@{/flow/doc_info/} + ${docList[Index].docId}" th:if="${Index} lt ${docList.size()}">
+						<div class="panel-heading">	
+							<h4 class="list-group-item-heading" th:text="'Số : ' + ${docList[Index].numberSign} + ' : ' + ${docList[Index].docName}"></h4>
+						</div>
+						<div class="panel-body">
+							<p class="list-group-item-text p-doc" th:text="${docList[Index].epitome}"></p>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-1"></div>
+
+	</div>
+
+	<div th:replace="fragment/footer :: footer"></div>
+</div>
+<script>
+	var totalPage = $('#totalPage').attr('data');
+	$('#content').html($('#content-1').html());
+	$('#page-selection').bootpag({
+		total : totalPage,
+		page : 1,
+		maxVisible : 10
+	}).on("page", function(event, num){
+		var idShow = '#content-' + num;
+            	$("#content").html($(idShow).html()); // some ajax content loading...
+            	$("#content").removeClass('hidden');
+            });
+</script>
+</body>
+</html>

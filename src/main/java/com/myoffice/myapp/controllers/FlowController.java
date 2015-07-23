@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.Utilities;
 
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.cmd.FindActiveActivityIdsCmd;
@@ -1190,6 +1191,22 @@ public class FlowController extends AbstractController {
 		return model;
 	}
 
+	@RequestMapping(value = "/disable_list")
+	public ModelAndView disableList() {
+		ModelAndView model = new ModelAndView("disable-list");
+		User curUser = securityService.getCurrentUser();
+		Organ organ = curUser.getOrgan();
+		
+		List<Document> disableList = dataService.findDocumentBy(organ.getOrganId(), null, null, null, null, null, null, false);
+		List<Integer> elemList = new ArrayList<Integer>();
+		List<Integer> rowList = new ArrayList<Integer>();
+		UtilMethod.preparePagination(rowList, "rowList", elemList, "elemList", disableList, model, null);
+		logger.info(String.valueOf(disableList.size()));
+		model.addObject("docList", disableList);
+		model.addObject("out", true);
+		return model;
+	}
+	
 	//============MY TASK==================
 	
 	@RequestMapping(value = "/my_task")

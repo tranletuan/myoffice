@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ import com.myoffice.myapp.support.ItemDocInWait;
 import com.myoffice.myapp.support.ItemDocOutWait;
 import com.myoffice.myapp.support.JSSeries;
 import com.myoffice.myapp.support.JSonChart;
+import com.myoffice.myapp.support.JSonRow;
 
 public class UtilMethod {
 
@@ -353,7 +355,7 @@ public class UtilMethod {
 		}
 	}
 
-	public static void prepageJSChartHistoryDocument(FlowUtil flowUtil, DataService dataService, Organ organ,
+	public static void prepareJSChartHistoryDocument(FlowUtil flowUtil, DataService dataService, Organ organ,
 			Map<String, Object> map, Date startDay, Date endDay) {
 		// Văn bản đi
 		List<String> finishDocOutProcIdList = flowUtil.getListProcessInstanceIdByDate(DataConfig.RSC_NAME_FLOW_OUT,
@@ -420,5 +422,64 @@ public class UtilMethod {
 		jsChart.setSeries(series);
 
 		map.put("jsChart", jsChart);
+	}
+
+	public static Map<Integer, JSonRow> userListToMap(List<User> userList) {
+		Map<Integer, JSonRow> map = new HashMap<Integer, JSonRow>();
+		
+		for(User u : userList) {
+			JSonRow row = new JSonRow();
+			row.setId(u.getUserId());
+			row.setFullName(getFullName(u));
+			row.setLevel(u.getLevel().getLevelName());
+			map.put(u.getUserId(), row);
+		}
+		
+		return map;
+	}
+
+	public static void prepareJSTableHistory(FlowUtil flowUtil, DataService dataService, Organ organ,
+			Map<String, Object> map, Date startDay, Date endDay) {
+
+		List<String> processIdList = flowUtil.getListProcessInstanceIdByDate(DataConfig.RSC_NAME_FLOW_IN,
+				DataConfig.PROC_DEF_KEY_FLOW_IN, startDay, endDay, null, organ.getOrganId().toString());
+		List<DocumentRecipient> docRecList = dataService.findDocRecByProcessIdList(organ.getOrganId(), processIdList);
+		List<User> userList = dataService.findAllUserByOrgan(organ.getOrganId());
+		Map<Integer, JSonRow> mapUser = UtilMethod.userListToMap(userList);
+
+		for (DocumentRecipient docRec : docRecList) {
+			AssignContent assContent = docRec.getAssignContent();
+			List<HistoricTaskInstance> preTasks = flowUtil.getHistoryTask(docRec.getProcessInstanceId());
+			for (HistoricTaskInstance preTask : preTasks) {
+				String[] taskName = preTask.getName().split(" ");
+				if (taskName[taskName.length - 1].equals("report")) {
+					User cand = dataService.findUserByName(preTask.getAssignee());
+					Integer id = cand.getUserId();
+					mapUser.get(id).increaseCountTask();
+
+					// Kiểm tra hoàn thành
+					if (preTask.getEndTime() != null) {
+						mapUser.get(cand.getUserId()).increaseCountCompleted();
+
+						// Kiểm tra trễ hạn
+						Date endTime = preTask.getEndTime();
+						Date dueTime = preTask.getDueDate();
+						Date today = UtilMethod.toDate(new Date(), "dd-MM-yyyy");
+						if (dueTime != null && (endTime.after(dueTime) || today.after(dueTime))) {
+							mapUser.get(id).increaseCountLate();
+						}
+					} else {
+						// Kiểm tra trễ hạn
+						Date dueTime = preTask.getDueDate();
+						Date today = UtilMethod.toDate(new Date(), "dd-MM-yyyy");
+						if (dueTime != null && today.after(dueTime)) {
+							mapUser.get(id).increaseCountLate();
+						}
+					}
+				}
+			}
+		}
+
+		map.put("jsTable", mapUser.values().toArray());
 	}
 }

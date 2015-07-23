@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.Utilities;
+
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,12 +20,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.myoffice.myapp.models.dto.AssignContent;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
 import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataConfig;
 import com.myoffice.myapp.support.JSSeries;
 import com.myoffice.myapp.support.JSonChart;
+import com.myoffice.myapp.support.JSonRow;
 import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
@@ -42,7 +47,7 @@ public class HistoryController extends AbstractController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	@RequestMapping(value = "/view", method = RequestMethod.POST)
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.OK)
 	public Map<String, Object> searchHistory(
@@ -61,15 +66,8 @@ public class HistoryController extends AbstractController {
 			return null;
 		}
 		
-		UtilMethod.prepageJSChartHistoryDocument(flowUtil, dataService, organ, map, startDay, endDay);
-		List<String> processIdList = flowUtil.getListProcessInstanceIdByDate(DataConfig.RSC_NAME_FLOW_IN,
-				DataConfig.PROC_DEF_KEY_FLOW_IN, startDay, endDay, null, organ.getOrganId().toString());
-		List<DocumentRecipient> listDocRec = dataService.findDocRecByProcessIdList(organ.getOrganId(), processIdList);
-		List<User> listUser = dataService.findAllUserByOrgan(organ.getOrganId());
-		
-		
-		
-		logger.info(String.valueOf(processIdList.size()));
+		UtilMethod.prepareJSChartHistoryDocument(flowUtil, dataService, organ, map, startDay, endDay);
+		UtilMethod.prepareJSTableHistory(flowUtil, dataService, organ, map, startDay, endDay);
 		return map;
 	}
 }
