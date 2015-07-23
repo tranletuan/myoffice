@@ -117,7 +117,7 @@ public interface DocumentDao {
 			Date minDayRec, Date maxDayRec, Integer firstResult, Integer maxResult);
 	
 	//MY TASK
-	List<DocumentRecipient> findDocRecByOwner(Integer organId, Integer userId);
+	List<DocumentRecipient> findDocRecByOwner(Integer organId, String userName);
 	
 	List<DocumentRecipient> findDocRecByCandidate(Integer organId, String userName);
 	

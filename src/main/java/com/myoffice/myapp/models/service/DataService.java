@@ -310,8 +310,8 @@ public class DataService {
 	}
 
 	//MY TASK
-	public List<DocumentRecipient> findDocRecByOwner(Integer organId, Integer userId) {
-		return docDao.findDocRecByOwner(organId, userId);
+	public List<DocumentRecipient> findDocRecByOwner(Integer organId, String ownerName) {
+		return docDao.findDocRecByOwner(organId, ownerName);
 	}
 	
 	public List<DocumentRecipient> findDocRecByCandidate(Integer organId, String userName) {

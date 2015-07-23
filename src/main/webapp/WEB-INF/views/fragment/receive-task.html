@@ -14,6 +14,11 @@ xmlns:th="http://www.thymeleaf.org">
         <div th:each="row : ${rowListReceive}" th:attr="id='contain-receive-' + (${row}  + 1)" class="hidden row">
             <div>
                 <table class="table sort_table" th:attr="id='table-receive-' + (${row}  + 1)">
+                    <colgroup>
+                        <col class="col-xs-10 col-md-6"/>
+                        <col class="col-xs-4 col-md-3"/>
+                        <col class="col-xs-4 col-md-3"/>
+                    </colgroup>
                     <thead>
                         <tr>
                             <th>Văn bản</th>

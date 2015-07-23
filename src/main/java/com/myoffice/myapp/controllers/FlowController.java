@@ -243,8 +243,10 @@ public class FlowController extends AbstractController {
 					dataService.saveDocument(doc);
 					model.addObject("docId", doc.getDocId());
 					
+					
 					//Văn bản báo cáo luồng văn bản đến
 					AssignContent assContent = dataService.findAssignContentById(acId);
+					logger.info("AC ID : " + assContent.getContentId());
 					if(assContent != null){
 						assContent.setReportDoc(doc);
 						dataService.saveAssignContent(assContent);
@@ -645,8 +647,13 @@ public class FlowController extends AbstractController {
 		Document doc = docRec.getDocument();
 		DocumentFile file = dataService.findNewestDocFile(doc.getDocId());
 		AssignContent assContent = docRec.getAssignContent();
-		
-		if(docRec.getAssignContent() != null) model.addObject("acId", docRec.getAssignContent().getContentId());
+		User owner = null;
+		if(assContent != null) {
+			owner = dataService.findUserByName(assContent.getOwnerName());
+			model.addObject("owner", owner);
+			model.addObject("acId", docRec.getAssignContent().getContentId());
+			
+		}
 		
 		if(flowUtil.isEnded(docRec.getProcessInstanceId())){
 			if(docRec.isCompleted() == false) {
@@ -691,8 +698,8 @@ public class FlowController extends AbstractController {
 				
 				//Người giao nhiệm vụ
 				String ownerName = curTask.getOwner();
-				if(ownerName == null || !ownerName.equals(assContent.getOwner().getUserName())) {
-					flowUtil.getTaskService().setOwner(curTask.getId(), assContent.getOwner().getUserName());
+				if(ownerName == null || !ownerName.equals(assContent.getOwnerName())) {
+					flowUtil.getTaskService().setOwner(curTask.getId(), assContent.getOwnerName());
 				}
 			}
 			
@@ -747,13 +754,16 @@ public class FlowController extends AbstractController {
 						model.addObject("isReport", true);
 					} 
 				//User không giữ quyền nhưng là người phân công
-				} else if(assContent != null && assContent.getOwner().getUserId() == curUser.getUserId()){
-					model.addObject("isOwner", true);
-					String[] ownerRole = {"mng"};
-					List<Role> assignRole = dataService.findRolesByArrShortName(ownerRole);
-					List<User> userList = dataService.findUserByArrRoleShortName(organ.getOrganId(), ownerRole, curUser, null);
-					model.addObject("userList", userList);
-					model.addObject("assignRole", assignRole);
+				} else if(assContent != null){
+					if (owner.getUserId() == curUser.getUserId()) {
+						model.addObject("isOwner", true);
+						String[] ownerRole = { "mng" };
+						List<Role> assignRole = dataService.findRolesByArrShortName(ownerRole);
+						List<User> userList = dataService.findUserByArrRoleShortName(organ.getOrganId(), ownerRole,
+								curUser, null);
+						model.addObject("userList", userList);
+						model.addObject("assignRole", assignRole);
+					}
 				}
 			}
 		}
@@ -831,7 +841,7 @@ public class FlowController extends AbstractController {
 				assContent.setTimeEnd(endDate);
 			if (content != null && content.trim().length() > 0)
 				assContent.setContent(content);
-			assContent.setOwner(curUser);
+			assContent.setOwnerName(curUser.getUserName());
 			docRec.setAssignContent(assContent);
 			dataService.saveDocRecipient(docRec);
 		}
@@ -877,7 +887,7 @@ public class FlowController extends AbstractController {
 			User curUser = securityService.getCurrentUser();
 			DocumentRecipient docRec = dataService.findDocRecipient(docId, curUser.getOrgan().getOrganId());
 			AssignContent assContent = docRec.getAssignContent();
-			User owner = assContent.getOwner();
+			User owner = dataService.findUserByName(assContent.getOwnerName());
 			
 			//Không thể hoàn thành task nếu chưa có file báo cáo
 			if(docRec.getAssignContent().getReportDoc() == null){
@@ -914,11 +924,12 @@ public class FlowController extends AbstractController {
 		User curUser = securityService.getCurrentUser();
 		User transferUser = dataService.findUserById(userId);
 		DocumentRecipient docRec = dataService.findDocRecipient(docId, curUser.getOrgan().getOrganId());
+		User owner = dataService.findUserByName(assContent.getOwnerName());
 		if(docRec.getAssignContent().getContentId() != assContent.getContentId()) return model;
-		if(curUser.getUserId() != assContent.getOwner().getUserId()) return model;
+		if(curUser.getUserId() != owner.getUserId()) return model;
 		if(!transferUser.checkRoleByShortName("mng")) return model;
 		
-		assContent.setOwner(transferUser);
+		assContent.setOwnerName(transferUser.getUserName());
 		dataService.saveAssignContent(assContent);
 		reAttr.addFlashAttribute("success", true);
 		reAttr.addFlashAttribute("successMessage", "Chuyển quyền theo dõi, kiểm tra tiến độ nhiệm vụ thành công!");
@@ -1235,7 +1246,7 @@ public class FlowController extends AbstractController {
 		
 		//Văn bản đã phân công nhiệm vụ
 		if(curUser.checkRoleByShortName("mng")) {
-			List<DocumentRecipient> docOwnerList = dataService.findDocRecByOwner(organ.getOrganId(), curUser.getUserId());
+			List<DocumentRecipient> docOwnerList = dataService.findDocRecByOwner(organ.getOrganId(), curUser.getUserName());
 			List<ItemDocInWait> docOwnerWaitList = UtilMethod.getListOwnerWait(dataService, flowUtil, docOwnerList, curUser.getUserName());
 			
 			List<Integer> elemListOwner = new ArrayList<Integer>();

@@ -64,7 +64,7 @@ public class CalendarController extends AbstractController {
 	
 		for(DocumentRecipient docRec : docRecList) {
 			AssignContent assContent = docRec.getAssignContent();
-			User owner = assContent.getOwner();
+			User owner = dataService.findUserByName(assContent.getOwnerName());
 			JSonEvent event = new JSonEvent();
 			String title = docRec.getNumber() + "-" + docRec.getDocument().getDocName();
 			

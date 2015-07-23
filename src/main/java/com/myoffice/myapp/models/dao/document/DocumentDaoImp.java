@@ -598,7 +598,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 	//MY TASK
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DocumentRecipient> findDocRecByOwner(Integer organId, Integer userId) {
+	public List<DocumentRecipient> findDocRecByOwner(Integer organId, String  userName) {
 		
 		//Trường hợp văn bản đã được phân công (tồn tại người phân công)
 		List<DocumentRecipient> docHasAssignee = new ArrayList<DocumentRecipient>();
@@ -611,7 +611,7 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		criteria.add(Restrictions.and(Restrictions.eq("d.completed", true)));
 		criteria.add(Restrictions.and(Restrictions.eq("d.enabled", true)));
 		criteria.add(Restrictions.and(Restrictions.eq("o.organId", organId)));
-		criteria.add(Restrictions.and(Restrictions.eq("ac.owner.userId", userId)));
+		criteria.add(Restrictions.and(Restrictions.eq("ac.ownerName", userName)));
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		docHasAssignee = criteria.list();
 		

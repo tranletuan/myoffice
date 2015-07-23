@@ -44,9 +44,8 @@ public class AssignContent {
 	@JoinColumn(name = "document_id")
 	private Document reportDoc;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "owner_id", nullable = false)
-	private User owner;
+	@Column(name = "owner_name", nullable = false)
+	private String ownerName;
 	
 	@Column(name = "candidate_name")
 	private String candidateName;
@@ -111,12 +110,12 @@ public class AssignContent {
 		return UtilMethod.dateToString(timeEnd, "dd-MM-yyyy");
 	}
 
-	public User getOwner() {
-		return owner;
+	public String getOwnerName() {
+		return ownerName;
 	}
 
-	public void setOwner(User owner) {
-		this.owner = owner;
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
 	}
 
 	public String getCandidateName() {

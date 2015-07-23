@@ -204,7 +204,7 @@ public class UtilMethod {
 
 				if (docRec.getAssignContent() != null) {
 					AssignContent assContent = docRec.getAssignContent();
-					owner = assContent.getOwner();
+					owner = dataService.findUserByName(assContent.getOwnerName());
 					if (assContent.getCandidateName() != null) {
 						candidate = dataService.findUserByName(assContent.getCandidateName());
 					}
@@ -247,9 +247,9 @@ public class UtilMethod {
 					owner = assignee;
 				}
 
-				if (assContent != null && assContent.getOwner().getUserName().equals(userName)) {
-					assignee = assContent.getOwner();
-					owner = assContent.getOwner();
+				if (assContent != null && assContent.getOwnerName().equals(userName)) {
+					assignee = dataService.findUserByName(assContent.getOwnerName());
+					owner = assignee;
 					candidate = dataService.findUserByName(assContent.getCandidateName());
 				}
 			}

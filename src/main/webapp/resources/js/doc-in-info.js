@@ -21,6 +21,7 @@
  	$('.form_date').datetimepicker("setDate", new Date());
  	var timeWidth = $('#numberRec').css('width');
  	$('#receiveTime').css('width', timeWidth);
+ 	$('#receiveTime').css('min-width', timeWidth);
  	
  	$(window).resize(function(){
  			timeWidth = $('#number').css('width');
@@ -115,4 +116,11 @@
  	$("#amount").change(function(){
  		$("#v-slider").slider("value", $("#amount").val());
  	});
+
+ 	$('#receiveTime').resize(function(){
+ 		console.log("oke");
+ 		var timeWidth = $('#numberRec').css('width');
+ 		$('#receiveTime').css('width', timeWidth);
+ 	});
+
  });

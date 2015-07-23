@@ -13,83 +13,55 @@
 
 <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 
-<style type="text/css">
-body {
-	padding-top: 40px;
-	padding-bottom: 40px;
-	background-color: #eee;
-}
+<link rel="stylesheet" th:href="@{/css/signin.css}" />
 
-.form-signin {
-	max-width: 330px;
-	padding: 15px;
-	margin: 0 auto;
-}
+<script type="text/javascript" th:src="@{/js/signin.js}" ></script>
 
-.form-signin .form-signin-heading, .form-signin .checkbox {
-	margin-bottom: 10px;
-}
-
-.form-signin .checkbox {
-	font-weight: normal;
-}
-
-.form-signin .form-control {
-	position: relative;
-	height: auto;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	padding: 10px;
-	font-size: 16px;
-}
-
-.form-signin .form-control:focus {
-	z-index: 2;
-}
-
-.form-signin input[type="text"] {
-	margin-bottom: -1px;
-	border-bottom-right-radius: 0;
-	border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-	margin-bottom: 10px;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
-}
-</style>
 </head>
 
 <body>
 	<div class="container-fluid">
-		<form th:action="@{/j_spring_security_check}" method="post"
-			class="form-signin" autocomplete="off">
-			<h2 class="form-signin-heading">Vui lòng đăng nhập</h2>
+		<div class="row">
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8">
+				<div >
+					<img th:src="@{/img/signin-cover/cover1.jpg}" id="cover"/>
+				</div>
 
-			<div th:if="${error}" class="alert alert-danger" role="alert">
-				<span class="glyphicon glyphicon-exclamation-sign"
-					aria-hidden="true"></span> <span class="sr-only">Lỗi:</span> Sai
-				tên hoặc mật khẩu
+				<div class="panel panel-info">
+					<div class="panel-body">
+						<form th:action="@{/j_spring_security_check}" method="post"
+						class="form-signin" autocomplete="off">
+						<h2 class="form-signin-heading">Vui lòng đăng nhập</h2>
+
+						<div th:if="${error}" class="alert alert-danger" role="alert">
+							<span class="glyphicon glyphicon-exclamation-sign"
+							aria-hidden="true"></span> <span class="sr-only">Lỗi:</span> Sai
+							tên hoặc mật khẩu
+						</div>
+
+						<div th:if="${signout}" class="alert alert-success" role="alert">
+							<span class="glyphicon glyphicon-exclamation-sign"
+							aria-hidden="true"></span> <span class="sr-only">Thông báo:</span>
+							Đăng xuất thành công
+						</div>
+
+						<label for="j_username" class="sr-only">Tên tài khoản</label> <input
+						type="text" id="j_username" name="j_username" class="form-control"
+						placeholder="Tên tài khoản" required="true" autofocus="true" /> <label
+						for="j_password" class="sr-only">Mật khẩu</label> <input
+						type="password" id="j_password" name="j_password"
+						class="form-control" placeholder="Mật khẩu" required="true" />
+						<button class="btn btn-lg btn-primary btn-block" type="submit">Đăng
+							nhập</button>
+						</form>
+					</div>
+				</div>
+
+
 			</div>
-
-			<div th:if="${signout}" class="alert alert-success" role="alert">
-				<span class="glyphicon glyphicon-exclamation-sign"
-					aria-hidden="true"></span> <span class="sr-only">Thông báo:</span>
-				Đăng xuất thành công
-			</div>
-
-			<label for="j_username" class="sr-only">Tên tài khoản</label> <input
-				type="text" id="j_username" name="j_username" class="form-control"
-				placeholder="Tên tài khoản" required="true" autofocus="true" /> <label
-				for="j_password" class="sr-only">Mật khẩu</label> <input
-				type="password" id="j_password" name="j_password"
-				class="form-control" placeholder="Mật khẩu" required="true" />
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Đăng
-				nhập</button>
-		</form>
-
+			<div class="col-sm-2"></div>
+		</div>
 	</div>
 	<!-- /container -->
 </body>

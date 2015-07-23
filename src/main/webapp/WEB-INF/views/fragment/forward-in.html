@@ -29,15 +29,6 @@
 						<form class="form-horizontal" th:action="@{/flow/forward/doc_in_info}" method="post" autocompleted="off">
 
 							<div class="form-group">
-								<label for="assignole" class="col-sm-3 control-label">Quyền xử lý</label>
-								<div class="col-sm-9">
-									<h4 id="assigneeRole">
-										<span th:each="cr : ${assignRole}" th:text="${cr.fullName}">,</span>
-									</h4>
-								</div>
-							</div>
-
-							<div class="form-group">
 								<label for="assignee" class="col-sm-3 control-label">Người dùng</label>
 								<div class="col-sm-9">
 									<select class="form-control" th:name="userId" id="assignee" required="true">
@@ -48,6 +39,15 @@
 											th:value="${u.userId}">
 										</option>
 									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="assignole" class="col-sm-3 control-label">Quyền xử lý</label>
+								<div class="col-sm-9">
+									<h4 id="assigneeRole">
+										<span th:each="cr : ${assignRole}" th:text="${cr.fullName}">,</span>
+									</h4>
 								</div>
 							</div>
 
@@ -75,7 +75,9 @@
 							<div class="form-group">
 								<label for="preUserName" class="col-sm-3 control-label">Người dùng</label>
 								<div class="col-sm-9">
-									<h4 th:text="${preUser.userName}" id="preUserName"></h4>
+									<h4 th:text="${preUser.userDetail}? 
+											${preUser.userDetail.fullName} + ' - ' + ${preUser.level.levelName} : 
+											${preUser.userName} + ' - ' + ${preUser.level.levelName}" id="preUserName"></h4>
 								</div>
 							</div>
 

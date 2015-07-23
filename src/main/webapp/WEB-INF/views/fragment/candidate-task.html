@@ -14,6 +14,15 @@ xmlns:th="http://www.thymeleaf.org">
         <div th:each="row : ${rowListCandidate}" th:attr="id='contain-candidate-' + (${row}  + 1)" class="hidden row">
             <div>
                 <table class="table sort_table" th:attr="id='table-candidate-' + (${row}  + 1)">
+                    <colgroup>
+                        <col class="col-xs-6 col-md-5"/>
+                        <col class="col-xs-2 col-md-2"/>
+                        <col class="col-xs-2 col-md-1"/>
+                        <col class="col-xs-2 col-md-1"/>
+                        <col class="col-xs-2 col-md-1"/>
+                        <col class="col-xs-2 col-md-1"/>
+                        <col class="col-xs-2 col-md-1"/>
+                    </colgroup>
                     <thead>
                         <tr>
                             <th>Văn bản</th>

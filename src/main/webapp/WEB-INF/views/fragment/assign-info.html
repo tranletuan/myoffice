@@ -8,12 +8,12 @@
 			<div class="panel-heading"><h4>Thông Tin Nhiệm Vụ</h4></div>
 			<div class="panel-body">
 				<div>
-					<div class="form-group" th:if="${docRec.assignContent.owner}">
+					<div class="form-group" th:if="${docRec.assignContent}">
 						<label for="onwer" class="col-sm-3 control-label">Người phân công</label>
 						<div class="col-sm-9">
 							<p id="owner">
-								<span th:if="${docRec.assignContent.owner.userDetail}" th:text="${docRec.assignContent.owner.userDetail.fullName}"></span>
-								<span th:unless="${docRec.assignContent.owner.userDetail}" th:text="${docRec.assignContent.owner.userName}"></span>
+								<span th:if="${owner.userDetail}" th:text="${owner.userDetail.fullName}"></span>
+								<span th:unless="${owner.userDetail}" th:text="${owner.userName}"></span>
 							</p>
 						</div>
 					</div>

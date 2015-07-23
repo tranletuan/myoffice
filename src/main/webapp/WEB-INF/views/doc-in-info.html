@@ -120,7 +120,7 @@ xmlns:th="http://www.thymeleaf.org">
 						<!-- epitome -->
 						<tr>
 							<th scope="row"><h4><span>Trích yếu : </span></h4></th>
-							<td><h5 th:text="${doc.epitome}" class="epitome"></h5></td>
+							<td><textarea class="form-control epitome" rows="8" maxlength="1500" th:text="${doc.epitome}" disabled="true"></textarea></td>
 						</tr>
 
 						<!-- docType -->
@@ -195,7 +195,7 @@ xmlns:th="http://www.thymeleaf.org">
 						<tr>
 							<th scope="row"><h4><span>Tập tin : </span></h4></th>
 							<td>
-								<a href="#" class="btn btn-primary" th:href="@{/flow/download_document/} + ${file.fileId}">Tải xuống <span class="glyphicon glyphicon-download"></span></a>
+								<a href="#" class="btn btn-primary" th:href="@{/flow/download_document/} + ${file.fileId}" id="btn-download">Tải xuống <span class="glyphicon glyphicon-download"></span></a>
 							</td>
 						</tr>
 					</tbody>			
