@@ -4,7 +4,9 @@
  	var address;
  	var shortName;
  	
- 	
+ 	$('.modal').on('shown.bs.modal', function() {
+	  $(this).find('[autofocus]').focus();
+	});
 
  	$("#table-body").remove();
 

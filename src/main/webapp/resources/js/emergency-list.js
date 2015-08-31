@@ -3,10 +3,10 @@
  	var emeName;
  	var description;
 
- 	/*$("table.sort_table").sort_table({
- 		"action" : "init"
- 	});*/
-
+ 	$('.modal').on('shown.bs.modal', function() {
+	  $(this).find('[autofocus]').focus();
+	});
+	
  	$("#table-body").remove();
 
  	$('.table tr').click(function() {

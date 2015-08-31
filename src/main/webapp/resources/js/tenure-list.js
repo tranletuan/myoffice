@@ -8,6 +8,7 @@
  		$(this).find('[autofocus]').focus();
  	});
 
+ 	
  	$("#table-body").remove();
 
  	$('.table tr').click(function() {
@@ -46,6 +47,7 @@
  		$('#tenureName').val("");
  		$('#timeStart').val("");
  		$('#timeEnd').val("");
+ 		$('.date').datetimepicker('setDate', new Date());
 
  	});
 

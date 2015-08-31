@@ -148,6 +148,10 @@ public class DataService {
 		docDao.deleteDocumentIn(doc);
 	}
 	
+	public void deleteErrorDoc(Document doc){
+		docDao.deleteErrorDoc(doc);
+	}
+	
 	public List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, 
 			Boolean completed, Boolean sended, Integer firstResult, Integer maxResult, Boolean enabled){
 		return docDao.findDocumentBy(organId, tenureId, docTypeId, completed, sended, firstResult, maxResult, enabled);

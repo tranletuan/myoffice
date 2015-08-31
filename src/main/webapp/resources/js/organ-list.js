@@ -7,9 +7,9 @@
  	var unitId;
  	var organTypeId;
 
- 	/*$("table.sort_table").sort_table({
- 		"action" : "init"
- 	});*/
+ 	$('.modal').on('shown.bs.modal', function() {
+	  $(this).find('[autofocus]').focus();
+	});
 
  	$('.table tr').click(function() {
  		$('.table tr').attr('class', ' ');

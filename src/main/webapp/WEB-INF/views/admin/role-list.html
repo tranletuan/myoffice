@@ -19,7 +19,8 @@ xmlns:th="http://www.thymeleaf.org">
 <body>
 	<div class="container-fluid">
 		<div th:replace="fragment/menu :: menu"></div>
-		<div class="container">
+		<div th:replace="fragment/message :: message"/>
+		<div class="container" th:unless="${error}">
 			<div>
 				<button id="btn-add" type="button" class="btn btn-info" data-toggle="modal" data-target=".form-role">Thêm</button>
 				<button id="btn-change" type="button" class="btn btn-warning" disabled="true" data-toggle="modal" data-target=".form-role">Sửa</button>	

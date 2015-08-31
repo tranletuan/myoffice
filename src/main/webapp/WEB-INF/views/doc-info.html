@@ -129,7 +129,7 @@ xmlns:th="http://www.thymeleaf.org">
 							</tr>
 
 							<!-- privacyLevel -->
-							<tr>
+							<tr th:if="${doc.privacyLevel}">
 								<th scope="row"><h4><span>Mức độ mật : </span></h4></th>
 								<td><h4 th:text="${doc.privacyLevel.privacyName}" class="privacyLevel" th:attr="data=${doc.privacyLevel.privacyId}"></h4></td>
 							</tr>
@@ -150,7 +150,7 @@ xmlns:th="http://www.thymeleaf.org">
 											Tải xuống <span class="glyphicon glyphicon-download"></span>
 										</button>
 										<ul class="dropdown-menu">
-											<li th:each="f : ${fileList}" ><a href="#" th:text="'Phiên bản : ' + ${f.version}" th:href="@{/flow/download_document/} + ${f.fileId}"></a></li>
+											<li th:each="f : ${fileList}" ><a href="#" th:text="'Phiên bản : ' + ${f.version} + ', Người cập nhật : ' + ${f.changeUser} + ', Ngày cập nhật : ' + ${f.changeDate}" th:href="@{/flow/download_document/} + ${f.fileId}"></a></li>
 										</ul>
 									</div>
 								</td>

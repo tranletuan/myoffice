@@ -1,5 +1,9 @@
 package com.myoffice.myapp.models.dto;
 
+
+
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "document_file")
@@ -28,6 +34,13 @@ public class DocumentFile {
 	
 	@Column(name = "version", nullable = false)
 	private Integer version = 1;
+	
+	@Column(name = "change_user")
+	private String changeUser;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "change_date", columnDefinition = "DATETIME")
+	private Date changeDate;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "document_id")
@@ -71,6 +84,22 @@ public class DocumentFile {
 
 	public void setDocument(Document document) {
 		this.document = document;
+	}
+
+	public String getChangeUser() {
+		return changeUser;
+	}
+
+	public void setChangeUser(String changeUser) {
+		this.changeUser = changeUser;
+	}
+
+	public Date getChangeDate() {
+		return changeDate;
+	}
+
+	public void setChangeDate(Date changeDate) {
+		this.changeDate = changeDate;
 	}
 	
 	

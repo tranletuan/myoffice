@@ -180,7 +180,7 @@ xmlns:th="http://www.thymeleaf.org">
 						</tr>
 
 						<!-- privacyLevel -->
-						<tr>
+						<tr th:if="${doc.privacyLevel}">
 							<th scope="row"><h4><span>Mức độ mật : </span></h4></th>
 							<td><h4 th:text="${doc.privacyLevel.privacyName}" class="privacyLevel" th:attr="data=${doc.privacyLevel.privacyId}"></h4></td>
 						</tr>

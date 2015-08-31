@@ -109,7 +109,6 @@ public class FlowController extends AbstractController {
 			model.addObject("errorMessage", "Lỗi, chưa cập nhật danh sách mức độ khẩn");
 			return model;
 		}
-		
 
 		if(privacyList.size() == 0) {
 			model.addObject("error", true);
@@ -156,7 +155,7 @@ public class FlowController extends AbstractController {
 			@RequestParam("title") String title,
 			@RequestParam("epitome") String epitome,
 			@RequestParam("docTypeId") Integer docTypeId,
-			@RequestParam("privacyId") Integer privacyId,
+			@RequestParam(value = "privacyId", required = false) Integer privacyId,
 			@RequestParam("emeId") Integer emeId,
 			@RequestParam("tenureId") Integer tenureId,
 			@RequestParam(value = "releaseTime", required = false) String releaseTime,
@@ -188,7 +187,8 @@ public class FlowController extends AbstractController {
 		doc.setTitle(title);
 		doc.setEpitome(epitome);
 		doc.setDocType(docType);
-		doc.setPrivacyLevel(dataService.findPrivacyLevelById(privacyId));
+		if (privacyId != null && privacyId > 0)
+			doc.setPrivacyLevel(dataService.findPrivacyLevelById(privacyId));
 		doc.setEmergencyLevel(dataService.findEmergencyLevelById(emeId));
 		doc.setTenure(tenure);
 		doc.setOrgan(organ);
@@ -246,7 +246,7 @@ public class FlowController extends AbstractController {
 					
 					//Văn bản báo cáo luồng văn bản đến
 					AssignContent assContent = dataService.findAssignContentById(acId);
-					logger.info("AC ID : " + assContent.getContentId());
+					
 					if(assContent != null){
 						assContent.setReportDoc(doc);
 						dataService.saveAssignContent(assContent);
@@ -270,7 +270,9 @@ public class FlowController extends AbstractController {
 					if (procInsId != null) {
 						flowUtil.deleteProcessInstanceById(procInsId,
 								"can not create new out document");
+						dataService.deleteErrorDoc(doc);
 					}
+					
 					model.setViewName("error");
 					model.addObject("errorMessage", e.getMessage());
 				}
@@ -358,6 +360,7 @@ public class FlowController extends AbstractController {
 						List<Role> assignRole = dataService.findRolesByArrShortName(roles);
 						List<User> userList = dataService.findUserByArrRoleShortName(curUser.getOrgan().getOrganId(),
 								roles, curUser, null);
+						
 						model.addObject("isForward", true);
 						model.addObject("userList", userList);
 						model.addObject("assignRole", assignRole);

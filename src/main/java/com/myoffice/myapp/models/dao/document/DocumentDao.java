@@ -32,6 +32,8 @@ public interface DocumentDao {
 	List<Document> findDocumentBy(Integer organId, Integer tenureId, Integer docTypeId, Boolean completed, Boolean sended,
 			Integer firstResult, Integer maxResult, Boolean enabled);
 	
+	void deleteErrorDoc(Document doc);
+	
 	//DocumentType
 	DocumentType findDocTypeById(Integer typeId);
 	

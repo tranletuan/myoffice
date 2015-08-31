@@ -22,8 +22,10 @@ xmlns:th="http://www.thymeleaf.org">
 </head>
 <body>
 	<div class="container-fluid">
+		
 		<div th:replace="fragment/menu :: menu"></div>
-		<div class="container">
+		<div th:replace="fragment/message :: message"/>
+		<div class="container" th:unless="${error}">
 			<div th:if="${error}" class="alert alert-danger" role="alert">
 				<span class="glyphicon glyphicon-exclamation-sign"
 				aria-hidden="true"></span> <span class="sr-only">Thông báo:</span><p th:text="${errorMessage}"></p>

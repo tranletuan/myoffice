@@ -18,8 +18,10 @@ xmlns:th="http://www.thymeleaf.org">
 </head>
 <body>
 	<div class="container-fluid">
+
 		<div th:replace="fragment/menu :: menu"></div>
-		<div class="container">
+		<div th:replace="fragment/message :: message"/>
+		<div class="container" th:unless="${error}">
 			<div>
 				<button id="btn-add" type="button" class="btn btn-info" data-toggle="modal" data-target=".form-type">Thêm</button>
 				<button id="btn-change" type="button" class="btn btn-warning" disabled="true" data-toggle="modal" data-target=".form-type">Sửa</button>	
@@ -65,7 +67,7 @@ xmlns:th="http://www.thymeleaf.org">
 							<div class="form-group">
 								<label for="docTypeName" class="col-sm-3 control-label">Tên loại</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="docTypeName" th:name="docTypeName" required="true"/>
+									<input type="text" class="form-control" id="docTypeName" th:name="docTypeName" required="true" autofocus="true"/>
 								</div>
 							</div>
 

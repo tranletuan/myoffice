@@ -75,6 +75,15 @@ public class DocumentDaoImp extends AbstractDao implements DocumentDao {
 		persist(doc);
 	}
 
+	@Override
+	public void deleteErrorDoc(Document doc) {
+		if(doc == null || doc.getDocId() == null) return;
+		Query query = (Query)getSession().createQuery("delete from document_file where document_id=?");
+		query.setParameter(0, doc.getDocId());
+		query.executeUpdate();
+		delete(doc);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteDocumentIn(Document doc) {

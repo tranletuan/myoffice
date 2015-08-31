@@ -22,8 +22,10 @@ xmlns:th="http://www.thymeleaf.org">
 </head>
 <body>
 	<div class="container-fluid">
+		
 		<div th:replace="fragment/menu :: menu"></div>
-		<div class="container">
+		<div th:replace="fragment/message :: message"/>
+		<div class="container" th:unless="${error}">
 			<div th:replace="fragment/message :: message"></div>
 			
 			<div>
@@ -71,7 +73,7 @@ xmlns:th="http://www.thymeleaf.org">
 							<div class="form-group">
 								<label for="levelName" class="col-sm-3 control-label">Tên chức vụ</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="levelName" th:name="levelName" placeholder="Tên chức vụ" required="true"/>
+									<input type="text" class="form-control" id="levelName" th:name="levelName" placeholder="Tên chức vụ" required="true" autofocus="true"/>
 								</div>
 							</div>
 

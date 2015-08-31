@@ -16,8 +16,10 @@ xmlns:th="http://www.thymeleaf.org">
 </head>
 <body>
 	<div class="container-fluid">
+		
 		<div th:replace="fragment/menu :: menu"></div>
-		<div class="container">
+		<div th:replace="fragment/message :: message"/>
+		<div class="container" th:unless="${error}">
 			<table class="table">
 				<colgroup>
 					<col class="col-xs-3 col-md-1" />
