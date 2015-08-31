@@ -827,7 +827,8 @@ public class FlowController extends AbstractController {
 		}
 		
 		Date today = UtilMethod.toDate(new Date(), "dd-MM-yyyy");
-	
+		logger.info(today.toString());
+		logger.info(endDate.toString());
 		if(endDate.compareTo(today) < 0) {
 			reAttr.addFlashAttribute("error", true);
 			reAttr.addFlashAttribute("errorMessage", "Lỗi, ngày kết thúc phải lớn hơn hoặc bằng hôm nay");
