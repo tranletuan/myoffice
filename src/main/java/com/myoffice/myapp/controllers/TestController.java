@@ -29,18 +29,19 @@ public class TestController extends AbstractController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(TestController.class);
 
+	@Autowired
+	private OfficeMail officeMail;
+	
 	@RequestMapping(value = "/test")
 	public ModelAndView pagination() throws AddressException, MessagingException {
 		ModelAndView model = new ModelAndView("test/testmail");
-		String fromMail = "tranletuan.game@gmail.com";
-		String password = "tlt0919582239";
-		String toMail = "tranletuan1405@gmail.com";
+
+		String[] toMail = {"tranletuan1405@gmail.com"};
 		String subject = "Test Mail";
 		String text = "text email";
-		OfficeMail officeMail = new OfficeMail();
+	
+		officeMail.sendMail(toMail, null, null, subject, text);
 		
-		officeMail.sendMail(fromMail, password, toMail, subject, text);
-		model.addObject("from", fromMail);
 		model.addObject("to", toMail);
 		model.addObject("subject", subject);
 		model.addObject("text", text);
