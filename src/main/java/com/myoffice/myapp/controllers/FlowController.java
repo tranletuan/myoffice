@@ -529,6 +529,8 @@ public class FlowController extends AbstractController {
 				if(procDefId != " " && procInsId != null){
 					docRec.setProcessInstanceId(procInsId);
 					dataService.saveDocRecipient(docRec);
+					
+					
 				} else {
 					reAttr.addFlashAttribute("error", true);
 					reAttr.addFlashAttribute("errorMessage", "Gửi thất bại đến " + o.getOrganName());

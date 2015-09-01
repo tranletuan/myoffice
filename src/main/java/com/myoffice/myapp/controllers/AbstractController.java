@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.myoffice.myapp.models.service.DataService;
 import com.myoffice.myapp.models.service.SecurityService;
+import com.myoffice.myapp.support.OfficeMail;
 import com.myoffice.myapp.utils.FlowUtil;
 
 public class AbstractController {
@@ -23,4 +24,6 @@ public class AbstractController {
 	@Autowired
 	protected SessionFactory sessionFactory;
 
+	@Autowired
+	protected OfficeMail officeMail;
 }

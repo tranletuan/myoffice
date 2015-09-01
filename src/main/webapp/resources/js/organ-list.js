@@ -22,6 +22,7 @@
  		shortName = $(this).find('.shortName').html();
  		unitId = $(this).find('.unit').attr('data');
  		organTypeId = $(this).find('.organType').attr('data');
+ 		mailForm = $(this).find('.mailForm').html();
 
  		if(organId > 0){
  			$("#btn-change").removeAttr('disabled');
@@ -42,6 +43,10 @@
 
  		if(organTypeId > 0){
  			$('#organType').val(organTypeId);
+ 		}
+
+ 		if(mailForm.length > 0) {
+ 			$("#mailForm").val(mailForm);
  		}
  	});
 

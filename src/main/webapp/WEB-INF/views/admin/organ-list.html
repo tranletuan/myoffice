@@ -51,6 +51,7 @@ xmlns:th="http://www.thymeleaf.org">
 								<td th:text="${organ.unit.unitName}" class="unit" th:attr="data=${organ.unit.unitId}"></td>
 								<td th:text="${organ.organType.organTypeName}" class="organType" th:attr="data=${organ.organType.organTypeId}"></td>
 								<td th:text="${organ.shortName}" class="shortName"></td>
+								<td class="hidden mailForm" th:text="${organ.mailForm}" th:if="${organ.mailForm}"></td>
 							</tr> 
 						</tbody>
 					</table>
@@ -118,6 +119,24 @@ xmlns:th="http://www.thymeleaf.org">
 								<label for="shortName" class="col-sm-3 control-label">Viết tắt</label>
 								<div class="col-sm-9">
 									<input type="text" class="form-control" id="shortName" th:name="shortName" required="true"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="mailForm" class="col-sm-3 control-label">Mail Form</label>
+								<div class="col-sm-9">
+									<textarea class="form-control" rows="25" maxlenght="2000" id="mailForm" th:name="mailForm" required="true">Chào mọi người,
+	- Thư hệ thống gửi từ [don_vi_gui], mời đơn vị [don_vi_nhan] tiếp nhận văn bản qua link sau :
+[link_van_ban]
+
+Trân trọng!
+===================
+Thông tin quản trị hệ thống
+Email : 
+Điện thoại : 
+Địa chỉ : 
+
+									</textarea>
 								</div>
 							</div>
 

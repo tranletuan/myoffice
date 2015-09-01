@@ -211,7 +211,8 @@ public class AdminController extends AbstractController {
 			@RequestParam("email") String email,
 			@RequestParam(value = "phoneNumber", required = false) String phoneNumber,
 			@RequestParam("unitId") Integer unitId,
-			@RequestParam("organTypeId") Integer organTypeId){
+			@RequestParam("organTypeId") Integer organTypeId,
+			@RequestParam("mailForm") String mailForm){
 		ModelAndView model = new ModelAndView("redirect:organ_list");
 		Organ organ = new Organ();
 		
@@ -225,6 +226,7 @@ public class AdminController extends AbstractController {
 		organ.setPhoneNumber(phoneNumber);
 		organ.setOrganType(dataService.findOrganTypeById(organTypeId));
 		organ.setUnit(dataService.findUnitById(unitId));
+		organ.setMailForm(mailForm);
 		
 		dataService.saveOrgan(organ);
 		return model;
