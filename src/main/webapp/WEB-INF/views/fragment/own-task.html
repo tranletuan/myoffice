@@ -52,8 +52,8 @@ xmlns:th="http://www.thymeleaf.org">
 
                                 <td>
                                     <p th:if="${docOwnerList[Index].candidate}" th:with="canUser=${docOwnerList[Index].candidate}">
-                                        <span th:if="canUser.userDetail" th:text="${canUser.userDetail.fullName}"></span>
-                                        <span th:unless="canUser.userDetail" th:text="${canUser.userName}"></span>
+                                        <span th:if="${canUser.userDetail}" th:text="${canUser.userDetail.fullName}"></span>
+                                        <span th:unless="${canUser.userDetail}" th:text="${canUser.userName}"></span>
                                     </p>
                                     <p th:unless="${docOwnerList[Index].candidate}">Chưa phân công</p>
                                 </td>

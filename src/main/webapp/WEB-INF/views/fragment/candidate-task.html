@@ -52,8 +52,8 @@ xmlns:th="http://www.thymeleaf.org">
 
                                 <td>
                                     <p th:with="owner=${docCandidateList[Index].owner}">
-                                        <span th:if="owner.userDetail" th:text="${owner.userDetail.fullName}"></span>
-                                        <span th:unless="owner.userDetail" th:text="${owner.userName}"></span>
+                                        <span th:if="${owner.userDetail}" th:text="${owner.userDetail.fullName}"></span>
+                                        <span th:unless="${owner.userDetail}" th:text="${owner.userName}"></span>
                                     </p>
                                 </td>
 
