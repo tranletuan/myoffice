@@ -36,8 +36,9 @@ public class Organ {
 	@Column(name = "email", length = 50)
 	private String email;
 	
-	@Column(name = "mail_form", columnDefinition="VARCHAR(2500)")
-	private String mailForm;
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "email_form", nullable = false)
+	private EmailForm emailForm;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "unit_id", nullable = false)
@@ -106,13 +107,15 @@ public class Organ {
 	public void setOrganType(OrganType organType) {
 		this.organType = organType;
 	}
-	
-	public String getMailForm() {
-		return mailForm;
+
+	public EmailForm getEmailForm() {
+		return emailForm;
 	}
 
-	public void setMailForm(String mailForm) {
-		this.mailForm = mailForm;
+	public void setEmailForm(EmailForm emailForm) {
+		this.emailForm = emailForm;
 	}
+	
+	
 
 }

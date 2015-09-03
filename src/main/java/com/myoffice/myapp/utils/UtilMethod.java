@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
@@ -24,6 +27,7 @@ import com.myoffice.myapp.models.dto.Document;
 import com.myoffice.myapp.models.dto.DocumentFile;
 import com.myoffice.myapp.models.dto.DocumentRecipient;
 import com.myoffice.myapp.models.dto.DocumentType;
+import com.myoffice.myapp.models.dto.EmailForm;
 import com.myoffice.myapp.models.dto.Organ;
 import com.myoffice.myapp.models.dto.Tenure;
 import com.myoffice.myapp.models.dto.User;
@@ -35,6 +39,7 @@ import com.myoffice.myapp.support.ItemDocOutWait;
 import com.myoffice.myapp.support.JSSeries;
 import com.myoffice.myapp.support.JSonChart;
 import com.myoffice.myapp.support.JSonRow;
+import com.myoffice.myapp.support.OfficeMail;
 
 public class UtilMethod {
 
@@ -481,5 +486,46 @@ public class UtilMethod {
 		}
 
 		map.put("jsTable", mapUser.values().toArray());
+	}
+
+	public static String replaceDynamicSendingDocument(String originString, Document doc, String contextPath) {
+		String result = originString.replace("[loai_van_ban]", doc.getDocType().getDocTypeName());
+		result = result.replace("[so_ky_hieu]", doc.getNumberSign());
+		result = result.replace("[ten_van_ban]", doc.getDocName());
+		result = result.replace("[ngay_ban_hanh]", doc.getReleaseTimeString());
+		
+		result = result.replace("[ten_co_quan_ban_hanh]", doc.getOrgan().getOrganName());
+		result = result.replace("[ten_co_quan_ban_hanh_viet_tat]", doc.getOrgan().getShortName());
+		result = result.replace("[ten_don_vi_chu_quan_ban_hanh]", doc.getOrgan().getUnit().getUnitName());
+		result = result.replace("[ten_don_vi_chu_quan_ban_hanh_viet_tat]", doc.getOrgan().getUnit().getShortName());
+		
+		result = result.replace("[link_van_ban_den]", contextPath + "/doc_in_info/" + doc.getDocId());
+		
+		return result;
+	}
+
+	public static void sendEmailDocOut(OfficeMail officeMail, Document doc, List<String> toList, List<String> ccList, List<String> bccList, String contextPath) throws AddressException, MessagingException {
+		String originSubject = doc.getOrgan().getEmailForm().getSubject();
+		String originBody = doc.getOrgan().getEmailForm().getBody();
+		String subject = replaceDynamicSendingDocument(originSubject, doc, contextPath);
+		String body = replaceDynamicSendingDocument(originBody, doc, contextPath);
+		
+		String[] toMail = new String[toList.size()];
+		String[] ccMail = null;
+		String[] bccMail = null;
+		
+		toList.toArray(toMail);
+		
+		if(ccList != null && ccList.size() > 0) {
+			ccMail = new String[ccList.size()];
+			ccList.toArray(ccMail);
+		}
+		
+		if(bccList != null && bccList.size() > 0) {
+			bccMail = new String[bccList.size()];
+			bccList.toArray(bccMail);
+		}
+		
+		officeMail.sendMail(toMail, ccMail, bccMail, subject, body);
 	}
 }

@@ -51,7 +51,8 @@ xmlns:th="http://www.thymeleaf.org">
 								<td th:text="${organ.unit.unitName}" class="unit" th:attr="data=${organ.unit.unitId}"></td>
 								<td th:text="${organ.organType.organTypeName}" class="organType" th:attr="data=${organ.organType.organTypeId}"></td>
 								<td th:text="${organ.shortName}" class="shortName"></td>
-								<td class="hidden mailForm" th:text="${organ.mailForm}" th:if="${organ.mailForm}"></td>
+								<td class="hidden subjectMail" th:text="${organ.emailForm.subject}" th:if="${organ.emailForm}"></td>
+								<td class="hidden bodyMail" th:text="${organ.emailForm.body}" th:if="${organ.emailForm}"></td>
 							</tr> 
 						</tbody>
 					</table>
@@ -123,11 +124,19 @@ xmlns:th="http://www.thymeleaf.org">
 							</div>
 
 							<div class="form-group">
-								<label for="mailForm" class="col-sm-3 control-label">Mail Form</label>
+								<label for="subjectMail" class="col-sm-3 control-label">Tiêu đề mail tự động</label>
 								<div class="col-sm-9">
-									<textarea class="form-control" rows="25" maxlenght="2000" id="mailForm" th:name="mailForm" required="true">Chào mọi người,
-	- Thư hệ thống gửi từ [don_vi_gui], mời đơn vị [don_vi_nhan] tiếp nhận văn bản qua link sau :
-[link_van_ban]
+									<input type="text" class="form-control" th:name="subjectMail" id="subjectMail" required="true" value="[[loai_van_ban]] [so_ky_hieu] [ten_van_ban] [ngay_ban_hanh]">
+									</input>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="bodyMail" class="col-sm-3 control-label">Nội dung mail</label>
+								<div class="col-sm-9">
+									<textarea class="form-control" rows="25" maxlenght="2000" id="bodyMail" th:name="bodyMail" required="true">Chào mọi người,
+- Thư hệ thống gửi từ [ten_co_quan_ban_hanh], mời tiếp nhận văn bản qua link sau :
+[link_van_ban_den]
 
 Trân trọng!
 ===================

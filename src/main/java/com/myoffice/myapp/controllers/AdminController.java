@@ -42,6 +42,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.myoffice.myapp.models.dto.DocumentType;
+import com.myoffice.myapp.models.dto.EmailForm;
 import com.myoffice.myapp.models.dto.EmergencyLevel;
 import com.myoffice.myapp.models.dto.Level;
 import com.myoffice.myapp.models.dto.Organ;
@@ -212,13 +213,19 @@ public class AdminController extends AbstractController {
 			@RequestParam(value = "phoneNumber", required = false) String phoneNumber,
 			@RequestParam("unitId") Integer unitId,
 			@RequestParam("organTypeId") Integer organTypeId,
-			@RequestParam("mailForm") String mailForm){
+			@RequestParam("subjectMail") String subject,
+			@RequestParam("bodyMail") String body){
 		ModelAndView model = new ModelAndView("redirect:organ_list");
 		Organ organ = new Organ();
+		EmailForm emailForm = new EmailForm();
 		
 		if(organId > 0) {
 			organ = dataService.findOrganById(organId);
+			emailForm = organ.getEmailForm();
 		}
+		
+		emailForm.setSubject(subject);
+		emailForm.setBody(body);
 		
 		organ.setOrganName(organName);
 		organ.setShortName(shortName);
@@ -226,7 +233,7 @@ public class AdminController extends AbstractController {
 		organ.setPhoneNumber(phoneNumber);
 		organ.setOrganType(dataService.findOrganTypeById(organTypeId));
 		organ.setUnit(dataService.findUnitById(unitId));
-		organ.setMailForm(mailForm);
+		organ.setEmailForm(emailForm);
 		
 		dataService.saveOrgan(organ);
 		return model;

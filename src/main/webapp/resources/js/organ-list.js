@@ -6,6 +6,8 @@
  	var shortName;
  	var unitId;
  	var organTypeId;
+ 	var subjectMail;
+ 	var bodyMail;
 
  	$('.modal').on('shown.bs.modal', function() {
 	  $(this).find('[autofocus]').focus();
@@ -22,7 +24,8 @@
  		shortName = $(this).find('.shortName').html();
  		unitId = $(this).find('.unit').attr('data');
  		organTypeId = $(this).find('.organType').attr('data');
- 		mailForm = $(this).find('.mailForm').html();
+ 		subjectMail = $(this).find('.subjectMail').html();
+ 		bodyMail = $(this).find('.bodyMail').html();
 
  		if(organId > 0){
  			$("#btn-change").removeAttr('disabled');
@@ -36,7 +39,9 @@
  		$('#phoneNumber').val(phoneNumber);
  		$('#email').val(email);
  		$('#shortName').val(shortName);
-
+ 		$('#subjectMail').val(subjectMail);
+ 		$('#bodyMail').val(bodyMail);
+ 		
  		if(unitId > 0){
  			$('#unit').val(unitId);
  		}
@@ -45,9 +50,7 @@
  			$('#organType').val(organTypeId);
  		}
 
- 		if(mailForm.length > 0) {
- 			$("#mailForm").val(mailForm);
- 		}
+ 		
  	});
 
  	$('#btn-add').click(function(){

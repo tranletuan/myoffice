@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.Utilities;
 
@@ -26,6 +29,7 @@ import org.junit.runner.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -509,13 +513,15 @@ public class FlowController extends AbstractController {
 	public ModelAndView sendDoc(
 			@ModelAttribute("docId") Integer docId,
 			@RequestParam("recipients") Integer[] recipients,
-			RedirectAttributes reAttr){
+			RedirectAttributes reAttr, 
+			HttpServletRequest request) throws AddressException, MessagingException{
 		ModelAndView model = new ModelAndView("redirect:doc_info/" + docId);
 		Document doc = dataService.findDocumentById(docId);
 		List<Organ> organList = dataService.findOrganByArray(recipients);
 		
 		String procDefId = null;
 		String procInsId = null; 
+		List<String> toList = new ArrayList<String>();
 		for(Organ o : organList){
 			try{
 				DocumentRecipient docRec = new DocumentRecipient();
@@ -530,21 +536,24 @@ public class FlowController extends AbstractController {
 					docRec.setProcessInstanceId(procInsId);
 					dataService.saveDocRecipient(docRec);
 					
+					//Lấy địa chỉ email
+					toList.add(o.getEmail());
 					
 				} else {
 					reAttr.addFlashAttribute("error", true);
-					reAttr.addFlashAttribute("errorMessage", "Gửi thất bại đến " + o.getOrganName());
+					reAttr.addFlashAttribute("errorMessage", "Gửi thất bại do chưa tạo luồng xử lý, vui lòng liên hệ admin");
 					return model;
 				}
 			}
 			catch(Exception e) {
 				logger.error(e.getMessage());
-				
 			}
 		}
 		
 		doc.setSended(true);
 		dataService.saveDocument(doc);
+		String contextPath = request.getContextPath();
+		UtilMethod.sendEmailDocOut(officeMail, doc, toList, null, null, contextPath);
 		reAttr.addFlashAttribute("success", true);
 		reAttr.addFlashAttribute("successMessage", "Gửi thành công");
 		return model;

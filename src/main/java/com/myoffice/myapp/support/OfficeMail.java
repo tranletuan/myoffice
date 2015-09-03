@@ -24,14 +24,14 @@ public class OfficeMail {
 		this.mailSender = mailSender;
 	}
 
-	public void sendMail(String[] toMail, String[] ccMail, String[] bccMail, String subject, String text) throws AddressException, MessagingException {
+	public void sendMail(String[] toMail, String[] ccMail, String[] bccMail, String subject, String body) throws AddressException, MessagingException {
 		SimpleMailMessage message = new SimpleMailMessage();
 	
 		message.setTo(toMail);
 		if(ccMail != null) message.setCc(ccMail);
 		if(bccMail != null) message.setBcc(bccMail);
 		message.setSubject(subject);
-		message.setText(text);
+		message.setText(body);
 		mailSender.send(message);
 	}
 }
