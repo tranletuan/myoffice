@@ -48,10 +48,39 @@ public class TestController extends AbstractController {
 		List<String> ccList = new ArrayList<String>();
 		ccList.add("tranletuanuit@gmail.com");
 		
-		UtilMethod.sendEmailDocOut(officeMail, doc, toList, ccList, null, contextPath);
+		UtilMethod.sendEmailDocOut(officeMail, doc, toList, ccList, null, request);
 		
 		model.addObject("to", toMail);
 		
+		/*String host = request.getRemoteHost();
+		logger.info(host);
+		
+		int port = request.getLocalPort();
+		logger.info(String.valueOf(port));
+		
+		int portSv = request.getServerPort();
+		logger.info(String.valueOf(portSv));
+		
+		String path = (String) request.getAttribute("javax.servlet.forward.request_uri");
+		logger.info(path);
+		
+		String scheme = request.getProtocol();
+		logger.info(scheme);
+		
+		StringBuffer url = request.getRequestURL();
+		
+		String urlStr = url.toString();
+		logger.info(url.toString());
+		
+		String uri = request.getRequestURI();
+		logger.info(uri);
+		
+
+		String contextPath = request.getContextPath();
+		logger.info(contextPath);
+		
+		String docURL = urlStr.replace(uri, contextPath + "/doc_in_info/" + 4);
+		logger.info(docURL);*/
 		return model;  
 	}
 	

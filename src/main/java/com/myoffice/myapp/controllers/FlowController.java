@@ -552,8 +552,7 @@ public class FlowController extends AbstractController {
 		
 		doc.setSended(true);
 		dataService.saveDocument(doc);
-		String contextPath = request.getContextPath();
-		UtilMethod.sendEmailDocOut(officeMail, doc, toList, null, null, contextPath);
+		UtilMethod.sendEmailDocOut(officeMail, doc, toList, null, null, request);
 		reAttr.addFlashAttribute("success", true);
 		reAttr.addFlashAttribute("successMessage", "Gửi thành công");
 		return model;

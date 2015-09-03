@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -488,7 +489,7 @@ public class UtilMethod {
 		map.put("jsTable", mapUser.values().toArray());
 	}
 
-	public static String replaceDynamicSendingDocument(String originString, Document doc, String contextPath) {
+	public static String replaceDynamicSendingDocument(String originString, Document doc, String url) {
 		String result = originString.replace("[loai_van_ban]", doc.getDocType().getDocTypeName());
 		result = result.replace("[so_ky_hieu]", doc.getNumberSign());
 		result = result.replace("[ten_van_ban]", doc.getDocName());
@@ -499,16 +500,22 @@ public class UtilMethod {
 		result = result.replace("[ten_don_vi_chu_quan_ban_hanh]", doc.getOrgan().getUnit().getUnitName());
 		result = result.replace("[ten_don_vi_chu_quan_ban_hanh_viet_tat]", doc.getOrgan().getUnit().getShortName());
 		
-		result = result.replace("[link_van_ban_den]", contextPath + "/doc_in_info/" + doc.getDocId());
+		result = result.replace("[link_van_ban_den]", url + "/flow/doc_in_info/" + doc.getDocId());
 		
 		return result;
 	}
 
-	public static void sendEmailDocOut(OfficeMail officeMail, Document doc, List<String> toList, List<String> ccList, List<String> bccList, String contextPath) throws AddressException, MessagingException {
+	public static void sendEmailDocOut(OfficeMail officeMail, Document doc, List<String> toList, List<String> ccList, List<String> bccList, HttpServletRequest request) throws AddressException, MessagingException {
 		String originSubject = doc.getOrgan().getEmailForm().getSubject();
 		String originBody = doc.getOrgan().getEmailForm().getBody();
-		String subject = replaceDynamicSendingDocument(originSubject, doc, contextPath);
-		String body = replaceDynamicSendingDocument(originBody, doc, contextPath);
+		
+		String requestUrl = request.getRequestURL().toString();
+		String uri = request.getRequestURI();
+		String contextPath = request.getContextPath();
+		String url = requestUrl.replace(uri, contextPath);
+		
+		String subject = replaceDynamicSendingDocument(originSubject, doc, url);
+		String body = replaceDynamicSendingDocument(originBody, doc, url);
 		
 		String[] toMail = new String[toList.size()];
 		String[] ccMail = null;
