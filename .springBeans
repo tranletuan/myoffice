@@ -11,6 +11,7 @@
 		<config>src/main/webapp/WEB-INF/spring/dao-config/dao-config.xml</config>
 		<config>src/main/webapp/WEB-INF/spring/security-config/security-config.xml</config>
 		<config>src/main/webapp/WEB-INF/spring/system-config/spring-mail.xml</config>
+		<config>src/main/webapp/WEB-INF/spring/system-config/schedule-service.xml</config>
 	</configs>
 	<autoconfigs>
 		<config>src/main/webapp/WEB-INF/spring/system-config/activiti-config.xml</config>
