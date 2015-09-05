@@ -4,4 +4,5 @@ encoding//src/main/java/com/myoffice/myapp/controllers/FlowController.java=UTF-8
 encoding//src/main/java/com/myoffice/myapp/controllers/HistoryController.java=UTF-8
 encoding//src/main/java/com/myoffice/myapp/controllers/MainController.java=UTF-8
 encoding//src/main/java/com/myoffice/myapp/models/dao/document/DocumentDaoImp.java=UTF-8
+encoding//src/main/java/com/myoffice/myapp/models/service/ScheduleService.java=UTF-8
 encoding//src/main/java/com/myoffice/myapp/utils/UtilMethod.java=UTF-8

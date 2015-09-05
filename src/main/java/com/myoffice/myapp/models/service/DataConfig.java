@@ -14,5 +14,7 @@ public class DataConfig {
 	public static final String PROC_DEF_KEY_FLOW_IN = "receive_document_process";
 	public static final String DIR_SERVER_NAME_FLOW_IN = DIR_FILE_FLOW + RSC_NAME_FLOW_IN;
 	
+	public static final String DATE_FORMAT_STRING = "dd-MM-yyyy";
+	
 
 }

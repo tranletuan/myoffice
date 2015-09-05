@@ -98,6 +98,10 @@ public class Document {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "document")
 	private Set<DocumentFile> files = new HashSet<DocumentFile>(0);
 	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "time_reminder_id")
+	private TimeReminder timeReminder;
+	
 	public Document() {
 	}
 
@@ -275,6 +279,14 @@ public class Document {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public TimeReminder getTimeReminder() {
+		return timeReminder;
+	}
+
+	public void setTimeReminder(TimeReminder timeReminder) {
+		this.timeReminder = timeReminder;
 	}
 
 	

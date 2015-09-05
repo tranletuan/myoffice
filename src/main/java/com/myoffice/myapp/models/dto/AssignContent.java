@@ -53,6 +53,10 @@ public class AssignContent {
 	@Column(name = "progress", length = 2)
 	private Integer progress = 0;
 	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "time_reminder_id")
+	private TimeReminder timeReminder;
+	
 	public AssignContent() {
 		super();
 	}
@@ -133,5 +137,15 @@ public class AssignContent {
 	public void setProgress(Integer progress) {
 		this.progress = progress;
 	}
+
+	public TimeReminder getTimeReminder() {
+		return timeReminder;
+	}
+
+	public void setTimeReminder(TimeReminder timeReminder) {
+		this.timeReminder = timeReminder;
+	}
+	
+	
 	
 }

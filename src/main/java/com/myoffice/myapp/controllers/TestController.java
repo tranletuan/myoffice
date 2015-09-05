@@ -1,6 +1,7 @@
 package com.myoffice.myapp.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.myoffice.myapp.models.dto.Document;
+import com.myoffice.myapp.models.dto.TimeReminder;
 import com.myoffice.myapp.models.service.DataConfig;
 import com.myoffice.myapp.support.OfficeMail;
 import com.myoffice.myapp.utils.FlowUtil;
@@ -38,19 +40,17 @@ public class TestController extends AbstractController {
 	public ModelAndView pagination(HttpServletRequest request) throws AddressException, MessagingException {
 		ModelAndView model = new ModelAndView("test/testmail");
 
-		String[] toMail = {"tranletuan1405@gmail.com"};
-		String contextPath = request.getContextPath();
-		Document doc = dataService.findDocumentById(4);
+		TimeReminder time = new TimeReminder();
+		time.setPreTaskMail("tranletuan1405@gmail.com");
+		time.setCurTaskMail("tranletuan.game@gmail.com");
+		time.setRemindContent("test content");
 		
-		List<String> toList = new ArrayList<String>();
-		toList.add("tranletuan1405@gmail.com");
-		
-		List<String> ccList = new ArrayList<String>();
-		ccList.add("tranletuanuit@gmail.com");
-		
-		UtilMethod.sendEmailDocOut(officeMail, doc, toList, ccList, null, request);
-		
-		model.addObject("to", toMail);
+		Date date = UtilMethod.toDate(new Date(), DataConfig.DATE_FORMAT_STRING);
+		logger.info("Today: " + date.toString());
+		List<TimeReminder> list = dataService.findActiveTimeReminder(date);
+		for(TimeReminder t : list) {
+			logger.info(t.getRemindeTimeString());
+		}
 		
 		/*String host = request.getRemoteHost();
 		logger.info(host);

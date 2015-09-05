@@ -29,6 +29,7 @@ import com.myoffice.myapp.models.dao.document.DocumentDao;
 import com.myoffice.myapp.models.dao.level.LevelDao;
 import com.myoffice.myapp.models.dao.parameter.ParameterDao;
 import com.myoffice.myapp.models.dao.role.RoleDao;
+import com.myoffice.myapp.models.dao.timereminder.TimeReminderDao;
 import com.myoffice.myapp.models.dao.unit.UnitDao;
 import com.myoffice.myapp.models.dao.user.UserDao;
 import com.myoffice.myapp.models.dto.AssignContent;
@@ -44,6 +45,7 @@ import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Tenure;
+import com.myoffice.myapp.models.dto.TimeReminder;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.support.DocTypeMenuItem;
@@ -466,7 +468,8 @@ public class DataService {
 	}
 	
 	//======================
-	@Autowired LevelDao levelDao;
+	@Autowired 
+	private LevelDao levelDao;
 	
 	public List<Level> findAllLevel() {
 		return levelDao.findAllLevel(); 
@@ -480,5 +483,24 @@ public class DataService {
 		levelDao.saveLevel(level);
 	}
 	
+	//========================
+	@Autowired 
+	private TimeReminderDao timeReminderDao;
+	
+	public TimeReminder findTimeReminderById(Integer timeId){
+		return timeReminderDao.findTimeReminderById(timeId);
+	}
+	
+	public List<TimeReminder> findAllTimeReminder() {
+		return timeReminderDao.findAllTimeReminder();
+	}
+	
+	public List<TimeReminder> findActiveTimeReminder(Date toDay) {
+		return timeReminderDao.findActiveTimeReminder(toDay);
+	}
+	
+	public void saveTimeReminder(TimeReminder timeReminder) {
+		timeReminderDao.saveTimeReminder(timeReminder);
+	}
 	
 }
