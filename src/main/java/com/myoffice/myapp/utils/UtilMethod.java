@@ -535,4 +535,24 @@ public class UtilMethod {
 		
 		officeMail.sendMail(toMail, ccMail, bccMail, subject, body);
 	}
+	
+	public static void sendEmailReminderDocOut(OfficeMail officeMail, String toMail, String ccMail, Document doc, String name, HttpServletRequest request) {
+		String requestUrl = request.getRequestURL().toString();
+		String uri = request.getRequestURI();
+		String contextPath = request.getContextPath();
+		String url = requestUrl.replace(uri, contextPath);
+		
+		String subject = "[Nhắc nhở] " + doc.getNumberSign() + " " + doc.getDocName();
+		String body = "Chào " + name + "\n"
+				+ "Bạn có 1 văn bản đang chờ xử lý quá hạn, vui lòng truy cập " + url + "/flow/doc_info/" + doc.getDocId();
+		try {
+			officeMail.sendMail(toMail, ccMail, null, subject, body);
+		} catch (AddressException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

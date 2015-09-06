@@ -29,25 +29,15 @@ public class ScheduleService {
 	@Autowired
 	private OfficeMail officeMail;
 	
-	@Scheduled(fixedDelay = 15000)
+	//43200000 = 12g
+	@Scheduled(fixedDelay = 43200000)
 	public void schedulingDocInTask() {
 		Date toDay = UtilMethod.toDate(new Date(), DataConfig.DATE_FORMAT_STRING);
 		List<TimeReminder> timeReminderList = dataService.findActiveTimeReminder(toDay);
 
 		for (TimeReminder t : timeReminderList) {
 			try {
-				List<String> toList = new ArrayList<String>();
-				toList.add(t.getCurTaskMail());
-				
-				List<String> ccList = new ArrayList<String>();
-				ccList.add(t.getPreTaskMail());
-				
-				String[] toMail = new String[toList.size()];
-				String[] ccMail = new String[ccList.size()];
-				toList.toArray(toMail);
-				ccList.toArray(ccMail);
-				
-				officeMail.sendMail(toMail, ccMail, null, t.getRemindSubject(), t.getRemindContent());
+				officeMail.sendMail(t.getCurTaskMail(), t.getPreTaskMail(), null, t.getRemindSubject(), t.getRemindContent());
 				
 			} catch (MailSendException e) {
 				e.printStackTrace();

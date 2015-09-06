@@ -15,6 +15,6 @@ public class DataConfig {
 	public static final String DIR_SERVER_NAME_FLOW_IN = DIR_FILE_FLOW + RSC_NAME_FLOW_IN;
 	
 	public static final String DATE_FORMAT_STRING = "dd-MM-yyyy";
-	
+	public static final String SYSTEM_MAIL = "tranletuan.game@gmail.com"; 
 
 }

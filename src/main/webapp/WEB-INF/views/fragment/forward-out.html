@@ -28,8 +28,8 @@
 					<div class="modal-body">
 						<form class="form-horizontal" th:action="@{/flow/forward/doc_info}" method="post" autocompleted="off">
 							<div class="form-group">
-								<label for="assignee" class="col-sm-3 control-label">Người dùng</label>
-								<div class="col-sm-9">
+								<label for="assignee" class="col-sm-4 control-label">Người dùng</label>
+								<div class="col-sm-8">
 									<select class="form-control" th:name="userId" id="assignee" required="true">
 										<option th:each="u : ${userList}"
 											th:text="${u.userDetail}? 
@@ -42,8 +42,16 @@
 							</div>
 
 							<div class="form-group">
-								<label for="assignole" class="col-sm-3 control-label">Quyền xử lý</label>
-								<div class="col-sm-9">
+								<label for="elapsedTime" class="col-sm-4 control-label">Thời gian nhắc nhở</label>
+								<div class="col-sm-8 form-inline">
+									<input type="number" class="form-control" min="1" th:name="elapsedTime" required="true" id="elapsedTime" value="1" />
+									<span>ngày</span>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="assignole" class="col-sm-4 control-label">Quyền xử lý</label>
+								<div class="col-sm-8">
 									<h4 id="assigneeRole">
 										<span th:each="cr : ${assignRole}" th:text="${cr.fullName}">,</span>
 									</h4>
@@ -72,8 +80,8 @@
 						<form class="form-horizontal" th:action="@{/flow/forward/doc_info}" method="post" autocompleted="off">
 	
 							<div class="form-group">
-								<label for="preUserName" class="col-sm-3 control-label">Người dùng</label>
-								<div class="col-sm-9">
+								<label for="preUserName" class="col-sm-4 control-label">Người dùng</label>
+								<div class="col-sm-8">
 									<h4 th:text="${preUser.userDetail}? 
 											${preUser.userDetail.fullName} + ' - ' + ${preUser.level.levelName} : 
 											${preUser.userName} + ' - ' + ${preUser.level.levelName}" id="preUserName"></h4>
@@ -81,8 +89,16 @@
 							</div>
 
 							<div class="form-group">
-								<label for="preUserRole" class="col-sm-3 control-label">Quyền hạn</label>
-								<div class="col-sm-9">
+								<label for="elapsedTime" class="col-sm-4 control-label">Thời gian nhắc nhở</label>
+								<div class="col-sm-8 form-inline">
+									<input type="number" class="form-control" min="1" th:name="elapsedTime" required="true" id="elapsedTime" value="1" />
+									<span>ngày</span>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="preUserRole" class="col-sm-4 control-label">Quyền hạn</label>
+								<div class="col-sm-8">
 									<h4 th:text="${preUser.getRoleNames()}" id="preUserRole"></h4>
 								</div>
 							</div>

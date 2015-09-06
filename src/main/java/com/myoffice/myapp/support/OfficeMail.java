@@ -15,11 +15,12 @@ import javax.mail.internet.MimeMessage.RecipientType;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
+import com.myoffice.myapp.models.service.DataConfig;
+
 
 public class OfficeMail {
 
 	private MailSender mailSender;
-	
 	public void setMailSender(MailSender mailSender) {
 		this.mailSender = mailSender;
 	}
@@ -27,7 +28,19 @@ public class OfficeMail {
 	public void sendMail(String[] toMail, String[] ccMail, String[] bccMail, String subject, String body) throws AddressException, MessagingException {
 		SimpleMailMessage message = new SimpleMailMessage();
 	
-		message.setFrom("tranletuan.game@gmail.com");
+		message.setFrom(DataConfig.SYSTEM_MAIL);
+		message.setTo(toMail);
+		if(ccMail != null) message.setCc(ccMail);
+		if(bccMail != null) message.setBcc(bccMail);
+		message.setSubject(subject);
+		message.setText(body);
+		mailSender.send(message);
+	}
+	
+	public void sendMail(String toMail, String ccMail, String bccMail, String subject, String body) throws AddressException, MessagingException {
+		SimpleMailMessage message = new SimpleMailMessage();
+	
+		message.setFrom(DataConfig.SYSTEM_MAIL);
 		message.setTo(toMail);
 		if(ccMail != null) message.setCc(ccMail);
 		if(bccMail != null) message.setBcc(bccMail);

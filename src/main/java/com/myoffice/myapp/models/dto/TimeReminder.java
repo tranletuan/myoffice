@@ -33,10 +33,10 @@ public class TimeReminder {
 	@Column(name = "remind_content", nullable = false)
 	private String remindContent;
 	
-	@Column(name = "pre_task_mail", nullable = false)
+	@Column(name = "pre_task_mail")
 	private String preTaskMail;
 	
-	@Column(name = "cur_task_mail", nullable = false)
+	@Column(name = "cur_task_mail")
 	private String curTaskMail;
 	
 	@Column(name = "completed")

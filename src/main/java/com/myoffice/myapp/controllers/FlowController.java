@@ -6,6 +6,7 @@ import java.security.spec.MGF1ParameterSpec;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -60,6 +61,7 @@ import com.myoffice.myapp.models.dto.Parameter;
 import com.myoffice.myapp.models.dto.PrivacyLevel;
 import com.myoffice.myapp.models.dto.Role;
 import com.myoffice.myapp.models.dto.Tenure;
+import com.myoffice.myapp.models.dto.TimeReminder;
 import com.myoffice.myapp.models.dto.Unit;
 import com.myoffice.myapp.models.dto.User;
 import com.myoffice.myapp.models.service.DataConfig;
@@ -327,6 +329,9 @@ public class FlowController extends AbstractController {
 				if (doc.getReleaseTime() == null || !doc.isCompleted()) {
 					doc.setCompleted(true);
 					doc.setReleaseTime(new Date());
+					if(doc.getTimeReminder() != null){
+						doc.getTimeReminder().setCompleted(true);
+					}
 					dataService.saveDocument(doc);
 				}
 				
@@ -420,7 +425,9 @@ public class FlowController extends AbstractController {
 			@PathVariable("direct") String direct,
 			@ModelAttribute("docId") Integer docId,
 			@ModelAttribute("procId") String procId,
-			@RequestParam(value = "userId", required = false) Integer userId){
+			@RequestParam(value = "userId", required = false) Integer userId,
+			@RequestParam(value = "elapsedTime", required = false) Integer elapsedTime,
+			HttpServletRequest request) {
 		ModelAndView model = new ModelAndView("redirect:/flow/" + direct + "/" + docId);
 		
 		User curUser = securityService.getCurrentUser();
@@ -429,17 +436,74 @@ public class FlowController extends AbstractController {
 		
 		if(curTask == null) return model;		
 		String[] taskName = curTask.getName().split(" ");
+		String preUserEmail = null;
+		String curUserEmail = null;
 		
 		if (preCompletedTask.getAssignee().equals(curUser.getUserName())) {
+			if(curUser.getUserDetail() != null) {
+				preUserEmail = curUser.getUserDetail().getEmail();
+			}
+			
 			if (userId != null) {
 				User user = dataService.findUserById(userId);
 				if (user.checkRoleByShortName(taskName[0])) {
 					flowUtil.getTaskService().setAssignee(curTask.getId(), user.getUserName());
+					if(user.getUserDetail() != null) {
+						curUserEmail = user.getUserDetail().getEmail();
+					}
 				}
 			} else {
 				HistoricTaskInstance preTask = flowUtil.getPreviousCompletedTaskWithName(procId, curTask.getName());
 				if (preTask != null) {
-					flowUtil.getTaskService().setAssignee(curTask.getId(), preTask.getAssignee());
+					User user = dataService.findUserByName(preTask.getAssignee());
+					flowUtil.getTaskService().setAssignee(curTask.getId(), user.getUserName());
+					if(user.getUserDetail() != null) {
+						curUserEmail = user.getUserDetail().getEmail();
+					}
+				}
+			}
+		}
+		
+		if(direct.equals("doc_info")) {
+			if(preUserEmail != null && curUserEmail != null && elapsedTime != null) {
+				Document doc = dataService.findDocumentById(docId);
+				TimeReminder timeReminder = new TimeReminder();
+				if(doc.getTimeReminder() != null) {
+					timeReminder = doc.getTimeReminder();
+				}
+				
+				String requestUrl = request.getRequestURL().toString();
+				String uri = request.getRequestURI();
+				String contextPath = request.getContextPath();
+				String url = requestUrl.replace(uri, contextPath);
+				
+				timeReminder.setCompleted(false);
+				timeReminder.setPreTaskMail(preUserEmail);
+				timeReminder.setCurTaskMail(curUserEmail);
+				timeReminder.setRemindSubject("[Nhắc nhở] " + doc.getNumberSign() + " " + doc.getDocName());
+				timeReminder.setRemindContent("Chào bạn, \n\n-Bạn có 1 văn bản chờ xử lý vui lòng truy cập : " + url
+						+ "/flow/doc_info/" + doc.getDocId() + " để xử lý văn bản");
+				
+				Date remindTime;
+				Calendar c = Calendar.getInstance();
+				c.getTime();
+				c.add(Calendar.DATE, elapsedTime);
+				remindTime = UtilMethod.toDate(c.getTime(), DataConfig.DATE_FORMAT_STRING);
+				timeReminder.setRemindTime(remindTime);
+				doc.setTimeReminder(timeReminder);
+				dataService.saveDocument(doc);
+			}
+		} else if(direct.equals("doc_in_info")) {
+			if(preUserEmail != null && curUserEmail != null) {
+				DocumentRecipient docRec = dataService.findDocRecipient(docId, curUser.getOrgan().getOrganId());
+				if(docRec.getAssignContent() != null) {
+					if(docRec.getAssignContent().getTimeReminder() != null) {
+						TimeReminder timeReminder = docRec.getAssignContent().getTimeReminder();
+						timeReminder.setCompleted(false);
+						timeReminder.setCurTaskMail(curUserEmail);
+						timeReminder.setPreTaskMail(preUserEmail);
+						dataService.saveTimeReminder(timeReminder);
+					}
 				}
 			}
 		}
@@ -823,6 +887,8 @@ public class FlowController extends AbstractController {
 			@RequestParam(value = "timeStart", required = false) String timeStart,
 			@RequestParam(value = "timeEnd", required = false) String timeEnd,
 			@RequestParam(value = "content", required = false) String content,
+			@RequestParam(value = "elapsedTime", required = false) Integer elapsedTime,
+			HttpServletRequest request,
 			RedirectAttributes reAttr) throws ParseException{
 		ModelAndView model = new ModelAndView("redirect:/store/list/out/1");
 		if(docId < 0) return model;
@@ -844,8 +910,6 @@ public class FlowController extends AbstractController {
 		}
 		
 		Date today = UtilMethod.toDate(new Date(), "dd-MM-yyyy");
-		logger.info(today.toString());
-		logger.info(endDate.toString());
 		if(endDate.compareTo(today) < 0) {
 			reAttr.addFlashAttribute("error", true);
 			reAttr.addFlashAttribute("errorMessage", "Lỗi, ngày kết thúc phải lớn hơn hoặc bằng hôm nay");
@@ -863,6 +927,33 @@ public class FlowController extends AbstractController {
 			if (content != null && content.trim().length() > 0)
 				assContent.setContent(content);
 			assContent.setOwnerName(curUser.getUserName());
+			
+			if(elapsedTime != null && startDate != null && endDate != null) {
+				Document doc = dataService.findDocumentById(docId);
+				TimeReminder timeReminder = new TimeReminder();
+				if(doc.getTimeReminder() != null) {
+					timeReminder = doc.getTimeReminder();
+				}
+				
+				String requestUrl = request.getRequestURL().toString();
+				String uri = request.getRequestURI();
+				String contextPath = request.getContextPath();
+				String url = requestUrl.replace(uri, contextPath);
+				
+				timeReminder.setCompleted(false);
+				timeReminder.setRemindSubject("[Nhắc nhở] " + doc.getNumberSign() + " " + doc.getDocName());
+				timeReminder.setRemindContent("Chào bạn, \n\n-Bạn có 1 nhiệm vụ chờ xử lý vui lòng truy cập : " + url
+						+ "/flow/doc_in_info/" + doc.getDocId() + " để theo dõi");
+				
+				Date remindTime;
+				Calendar c = Calendar.getInstance();
+				c.setTime(endDate);
+				c.add(Calendar.DATE, -elapsedTime);
+				remindTime = UtilMethod.toDate(c.getTime(), DataConfig.DATE_FORMAT_STRING);
+				timeReminder.setRemindTime(remindTime);
+				assContent.setTimeReminder(timeReminder);
+			}
+			
 			docRec.setAssignContent(assContent);
 			dataService.saveDocRecipient(docRec);
 		}
@@ -951,6 +1042,14 @@ public class FlowController extends AbstractController {
 		if(!transferUser.checkRoleByShortName("mng")) return model;
 		
 		assContent.setOwnerName(transferUser.getUserName());
+		if(assContent.getTimeReminder() != null){
+			TimeReminder timeReminder = assContent.getTimeReminder();
+			if(transferUser.getUserDetail() != null) {
+				timeReminder.setPreTaskMail(transferUser.getUserDetail().getEmail());
+			}
+			assContent.setTimeReminder(timeReminder);
+		}
+		
 		dataService.saveAssignContent(assContent);
 		reAttr.addFlashAttribute("success", true);
 		reAttr.addFlashAttribute("successMessage", "Chuyển quyền theo dõi, kiểm tra tiến độ nhiệm vụ thành công!");

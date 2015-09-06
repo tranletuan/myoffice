@@ -99,7 +99,7 @@ public class Document {
 	private Set<DocumentFile> files = new HashSet<DocumentFile>(0);
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "time_reminder_id")
+	@JoinColumn(name = "time_reminder_id", insertable = true, updatable = true)
 	private TimeReminder timeReminder;
 	
 	public Document() {

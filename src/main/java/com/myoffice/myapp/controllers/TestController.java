@@ -40,17 +40,8 @@ public class TestController extends AbstractController {
 	public ModelAndView pagination(HttpServletRequest request) throws AddressException, MessagingException {
 		ModelAndView model = new ModelAndView("test/testmail");
 
-		TimeReminder time = new TimeReminder();
-		time.setPreTaskMail("tranletuan1405@gmail.com");
-		time.setCurTaskMail("tranletuan.game@gmail.com");
-		time.setRemindContent("test content");
-		
-		Date date = UtilMethod.toDate(new Date(), DataConfig.DATE_FORMAT_STRING);
-		logger.info("Today: " + date.toString());
-		List<TimeReminder> list = dataService.findActiveTimeReminder(date);
-		for(TimeReminder t : list) {
-			logger.info(t.getRemindeTimeString());
-		}
+		TimeReminder t = dataService.findTimeReminderById(7);
+		officeMail.sendMail(t.getPreTaskMail(), t.getCurTaskMail(), null, t.getRemindSubject(), t.getRemindContent());
 		
 		/*String host = request.getRemoteHost();
 		logger.info(host);
