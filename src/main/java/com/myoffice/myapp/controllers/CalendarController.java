@@ -25,7 +25,7 @@ import com.myoffice.myapp.support.JSonEvent;
 import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
-@RequestMapping(value = "/calendar")
+@RequestMapping(value = "/calendar**")
 public class CalendarController extends AbstractController {
 	
 	private static final Logger logger = LoggerFactory

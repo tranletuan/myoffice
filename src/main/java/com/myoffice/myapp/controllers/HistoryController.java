@@ -31,7 +31,7 @@ import com.myoffice.myapp.support.JSonRow;
 import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
-@RequestMapping(value = "/history")
+@RequestMapping(value = "/history**")
 public class HistoryController extends AbstractController {
 	
 	private static final Logger logger = LoggerFactory

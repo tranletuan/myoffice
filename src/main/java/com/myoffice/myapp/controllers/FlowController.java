@@ -74,7 +74,7 @@ import com.myoffice.myapp.utils.FlowUtil;
 import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
-@RequestMapping(value = "/flow")
+@RequestMapping(value = "/flow**")
 @SessionAttributes({"docId", "procId", "acId"})
 public class FlowController extends AbstractController {
 	

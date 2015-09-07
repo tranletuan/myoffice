@@ -27,7 +27,7 @@ import com.myoffice.myapp.support.TenureMenuItem;
 import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
-@RequestMapping(value = "/store")
+@RequestMapping(value = "/store**")
 public class StoreController extends AbstractController {
 
 	private static final Logger logger = LoggerFactory

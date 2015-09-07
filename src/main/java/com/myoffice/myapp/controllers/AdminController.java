@@ -57,7 +57,7 @@ import com.myoffice.myapp.models.service.DataConfig;
 import com.myoffice.myapp.utils.UtilMethod;
 
 @Controller
-@RequestMapping(value = "/admin")
+@RequestMapping(value = "/admin**")
 public class AdminController extends AbstractController {
 
 	private static final Logger logger = LoggerFactory
