@@ -291,9 +291,11 @@ public class FlowController extends AbstractController {
 			dataService.saveDocument(doc);
 		}
 		
+		User user = securityService.getCurrentUser();
+		
 		// SAVE FILE
 		UtilMethod.saveDocFile(file, tenure, docType, number, organ.getOrganType().getShortName(), docName, docId,
-				dataService, doc);
+				dataService, doc, user.getUserName());
 
 		model.setViewName("redirect:doc_info/" + doc.getDocId());
 		return model;
@@ -1252,7 +1254,7 @@ public class FlowController extends AbstractController {
 		
 		//LƯU TẬP TIN
 		String []sign = numberSign.split("/");
-		UtilMethod.saveDocFile(file, tenure, docType, number, sign[sign.length -1], docName, docId, dataService, doc);
+		UtilMethod.saveDocFile(file, tenure, docType, number, sign[sign.length -1], docName, docId, dataService, doc, null);
 		
 		model.setViewName("redirect:doc_in_info/" + doc.getDocId());
 		return model;

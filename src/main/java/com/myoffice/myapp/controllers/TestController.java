@@ -36,13 +36,12 @@ public class TestController extends AbstractController {
 	@Autowired
 	private OfficeMail officeMail;
 	
-	@RequestMapping(value = "/test")
+	@RequestMapping(value = "/test**")
 	public ModelAndView pagination(HttpServletRequest request) throws AddressException, MessagingException {
 		ModelAndView model = new ModelAndView("test/testmail");
 
-		TimeReminder t = dataService.findTimeReminderById(7);
-		officeMail.sendMail(t.getPreTaskMail(), t.getCurTaskMail(), null, t.getRemindSubject(), t.getRemindContent());
 		
+		officeMail.sendMail("tranletuanuit@gmail.com", null, null, "test mail", "test mail");
 		/*String host = request.getRemoteHost();
 		logger.info(host);
 		

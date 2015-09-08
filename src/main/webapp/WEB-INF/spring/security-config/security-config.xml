@@ -27,6 +27,8 @@
 		<intercept-url pattern="/calendar**" access="!hasRole('ROLE_ADMIN')"/>
 		<intercept-url pattern="/calendar/**" access="!hasRole('ROLE_ADMIN')"/>
 		
+		<intercept-url pattern="/test**" access="hasRole('ROLE_ADMIN')"/>
+		
 		<form-login 
 			login-page="/signin" 
 			default-target-url="/flow/my_task"

@@ -319,7 +319,7 @@ public class UtilMethod {
 	}
 
 	public static void saveDocFile(MultipartFile file, Tenure tenure, DocumentType docType, String number,
-			String organType, String docName, Integer docId, DataService dataService, Document doc) {
+			String organType, String docName, Integer docId, DataService dataService, Document doc, String userName) {
 
 		// SAVE FILE
 		if (file != null && doc.getDocId() != null) {
@@ -352,7 +352,12 @@ public class UtilMethod {
 					docFile.setFileName(fileName);
 					docFile.setDocument(doc);
 				}
+				Date today = UtilMethod.toDate(new Date(), DataConfig.DATE_FORMAT_STRING);
+				docFile.setChangeDate(today);
 
+				if (userName != null)
+					docFile.setChangeUser(userName);
+				
 				dataService.saveDocFile(docFile);
 				dataService.upLoadFile(filePath, file, fileName);
 			} catch (Exception e) {
